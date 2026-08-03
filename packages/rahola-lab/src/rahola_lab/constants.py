@@ -58,6 +58,11 @@ PF_PARTICLES = 2_000
 CEILING_WINDOWS_PER_CAMPAIGN = 2_000
 CEILING_BOOTSTRAP_REPLICATES = 2_000
 CEILING_BOOTSTRAP_SEED = 31_415
+# Gate-open B1 grid and kills, frozen before any B1 calibration or test scoring.
+GRAYBOX_AUXILIARY_WEIGHT_GRID = (0.25, 1.0)
+GRAYBOX_TRANSFER_FPR_REDUCTION = 0.15
+GRAYBOX_TRANSFER_ROTATIONS_REQUIRED = 2
+GRAYBOX_STIFFNESS_MAE_LIMIT = 0.10
 # Wave-group stratification treats twice the elevation-envelope amplitude as
 # instantaneous wave height. A critical run must exceed 0.75 Hs for 1.5 Tp.
 WAVE_GROUP_HEIGHT_HS_FRACTION = 0.75
