@@ -11,6 +11,7 @@ from scipy.stats import binom
 from rahola_lab.campaigns import load_campaign_split
 from rahola_lab.conformal import SplitCQRUpper
 from rahola_lab.constants import FORECAST_HORIZONS_S, SeedBlock
+from rahola_lab.evaluation import clopper_pearson_interval
 from rahola_lab.experiments.common import (
     FAMILIES,
     MODEL_NAMES,
@@ -40,7 +41,9 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
                 conformal = SplitCQRUpper.calibrate(calibration_y, calibration_raw[model_name])
                 for alpha in alphas:
                     bound = conformal.upper_bound(test_raw[model_name], float(alpha))
-                    rate = float(np.mean(test_y > bound))
+                    misses = int(np.sum(test_y > bound))
+                    rate = misses / len(test_y)
+                    interval = clopper_pearson_interval(len(test_y) - misses, len(test_y))
                     rows.append(
                         {
                             "family": family,
@@ -48,8 +51,14 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
                             "model": model_name,
                             "alpha": float(alpha),
                             "exceedance_rate": rate,
+                            "coverage": 1.0 - rate,
+                            "coverage_interval": [interval.lower, interval.upper],
                             "n": len(test_y),
                             "coverage_delta_pp": 100.0 * ((1.0 - rate) - (1.0 - alpha)),
+                            "coverage_delta_interval_pp": [
+                                100.0 * (interval.lower - (1.0 - alpha)),
+                                100.0 * (interval.upper - (1.0 - alpha)),
+                            ],
                         }
                     )
 
@@ -89,12 +98,14 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
     plt.close(figure)
 
     deltas = np.asarray([row["coverage_delta_pp"] for row in rows], dtype=np.float64)
+    worst = rows[int(np.argmax(np.abs(deltas)))]
     payload: dict[str, object] = {
         "experiment": "E1",
         "alphas": alphas.tolist(),
         "rows": rows,
         "mean_absolute_coverage_delta_pp": float(np.mean(np.abs(deltas))),
         "max_absolute_coverage_delta_pp": float(np.max(np.abs(deltas))),
+        "worst_cell": worst,
         "figure": str(figure_path),
     }
     write_result(output_root, "e1_coverage", payload)

@@ -20,7 +20,12 @@ from rahola_lab.constants import (
     ACI_GAMMA_GRID,
     SeedBlock,
 )
-from rahola_lab.evaluation import EpisodeConfig, TrajectoryScores, evaluate_alarms
+from rahola_lab.evaluation import (
+    EpisodeConfig,
+    TrajectoryScores,
+    clopper_pearson_interval,
+    evaluate_alarms,
+)
 from rahola_lab.experiments.common import (
     campaign_path,
     fit_forecasters,
@@ -96,6 +101,24 @@ def _recovery_time(times, coverage):
     return None
 
 
+def _coverage_summary(bounded, start_s: float, end_s: float | None):
+    selected_errors = []
+    for stream, _, errors in bounded:
+        selected = stream.times_s >= start_s
+        if end_s is not None:
+            selected &= stream.times_s <= end_s
+        selected_errors.append(errors[selected])
+    values = np.concatenate(selected_errors)
+    covered = int(np.sum(~values))
+    interval = clopper_pearson_interval(covered, len(values))
+    return {
+        "coverage": covered / len(values),
+        "coverage_interval": [interval.lower, interval.upper],
+        "covered": covered,
+        "windows": len(values),
+    }
+
+
 def run(data_root: Path, output_root: Path) -> dict[str, object]:
     training = load_campaign_split(campaign_path(data_root, "softening", "stationary"), "train")
     models = fit_forecasters(training, HORIZON_S)
@@ -158,6 +181,12 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
         and adaptive_metrics.false_positives_per_hour
         > ACI_EXPLOSION_FACTOR * fixed_metrics.false_positives_per_hour
     )
+    fixed_horizon_complete = _coverage_summary(fixed, 120.0, 240.0)
+    fixed_straddling = _coverage_summary(fixed, 250.0, 290.0)
+    fixed_post = _coverage_summary(fixed, TRANSITION_S, None)
+    aci_horizon_complete = _coverage_summary(adaptive, 120.0, 240.0)
+    aci_straddling = _coverage_summary(adaptive, 250.0, 290.0)
+    aci_post = _coverage_summary(adaptive, TRANSITION_S, None)
 
     output_root.mkdir(parents=True, exist_ok=True)
     figure_path = output_root / "e3_transition.png"
@@ -188,13 +217,29 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
         "alpha": ALPHA,
         "selected_gamma": gamma,
         "gamma_calibration": gamma_rows,
-        "fixed_pre_coverage": float(np.mean(fixed_coverage[pre])),
-        "fixed_post_coverage": float(np.mean(fixed_coverage[post])),
-        "aci_pre_coverage": float(np.mean(adaptive_coverage[pre])),
-        "aci_post_coverage": float(np.mean(adaptive_coverage[post])),
+        "fixed_trailing_curve_mean_before_step": float(np.mean(fixed_coverage[pre])),
+        "fixed_trailing_curve_mean_after_step": float(np.mean(fixed_coverage[post])),
+        "aci_trailing_curve_mean_before_step": float(np.mean(adaptive_coverage[pre])),
+        "aci_trailing_curve_mean_after_step": float(np.mean(adaptive_coverage[post])),
+        "coverage_regions": {
+            "fixed_horizon_complete": fixed_horizon_complete,
+            "fixed_transition_straddling": fixed_straddling,
+            "fixed_post_transition": fixed_post,
+            "aci_horizon_complete": aci_horizon_complete,
+            "aci_transition_straddling": aci_straddling,
+            "aci_post_transition": aci_post,
+        },
         "aci_recovery_time_s": recovery,
         "fixed_fpr_per_hour": fixed_metrics.false_positives_per_hour,
+        "fixed_fpr_per_hour_interval": [
+            fixed_metrics.false_positives_per_hour_interval.lower,
+            fixed_metrics.false_positives_per_hour_interval.upper,
+        ],
         "aci_fpr_per_hour": adaptive_metrics.false_positives_per_hour,
+        "aci_fpr_per_hour_interval": [
+            adaptive_metrics.false_positives_per_hour_interval.lower,
+            adaptive_metrics.false_positives_per_hour_interval.upper,
+        ],
         "kill_criterion": {
             "absolute_fpr_per_hour": ACI_EXPLOSION_FPR_PER_HOUR,
             "relative_to_fixed": ACI_EXPLOSION_FACTOR,

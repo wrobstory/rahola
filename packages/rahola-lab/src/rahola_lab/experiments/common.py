@@ -34,6 +34,8 @@ class Forecaster(Protocol):
 class TrajectoryForecast:
     times_s: FloatArray
     targets_rad: FloatArray
+    angle_rad: FloatArray
+    rate_rad_s: FloatArray
     raw_upper_rad: dict[str, FloatArray]
     record_end_s: float
     t_capsize_s: float | None
@@ -141,6 +143,8 @@ def trajectory_forecasts(
                 TrajectoryForecast(
                     times_s=samples.history_end_s[selected],
                     targets_rad=samples.targets_rad[selected, 0],
+                    angle_rad=samples.histories[selected, -1, 0],
+                    rate_rad_s=samples.histories[selected, -1, 1],
                     raw_upper_rad={name: values[selected] for name, values in predictions.items()},
                     record_end_s=float(chunk.time_s[-1]),
                     t_capsize_s=cap_time,

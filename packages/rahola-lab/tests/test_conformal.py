@@ -8,7 +8,9 @@ from rahola_lab.conformal import (
     SplitCQRUpper,
     adaptive_conformal_bounds,
     conformal_quantile,
+    dynamically_tuned_aci_bounds,
     normalized_alarm_scores,
+    sliding_recalibrated_aci_bounds,
 )
 from scipy.stats import binomtest
 
@@ -52,6 +54,31 @@ def test_split_cqr_wraps_a_deliberately_bad_forecaster() -> None:
     targets = np.array([2.0, 3.0, 4.0, 5.0])
     calibration = SplitCQRUpper.calibrate(targets, np.full(4, -10.0))
     assert calibration.upper_bound(np.array([-10.0]), alpha=0.5)[0] >= 4.0
+
+
+def test_single_expert_dtaci_reduces_to_scalar_aci() -> None:
+    rng = np.random.default_rng(19)
+    scores = rng.normal(size=100)
+    targets = rng.normal(size=200)
+    raw = np.zeros_like(targets)
+    scalar = adaptive_conformal_bounds(scores, raw, targets, alpha=0.1, gamma=0.01)
+    tuned = dynamically_tuned_aci_bounds(scores, raw, targets, alpha=0.1, gamma_experts=(0.01,))
+    np.testing.assert_allclose(tuned.upper_bounds, scalar.upper_bounds)
+    np.testing.assert_allclose(tuned.working_alpha, scalar.working_alpha)
+    np.testing.assert_array_equal(tuned.errors, scalar.errors)
+
+
+def test_recent_score_recalibration_repairs_a_shifted_score_stream() -> None:
+    rng = np.random.default_rng(21)
+    scores = rng.normal(size=200)
+    raw = np.zeros(2_000)
+    targets = rng.normal(loc=2.0, size=len(raw))
+    fixed = SplitCQRUpper(scores).upper_bound(raw, 0.1)
+    sliding = sliding_recalibrated_aci_bounds(
+        scores, raw, targets, alpha=0.1, gamma=0.02, window_size=50
+    )
+    assert np.mean(targets > fixed) > 0.5
+    assert abs(np.mean(sliding.errors[-1_000:]) - 0.1) < 0.03
 
 
 @pytest.mark.slow

@@ -36,7 +36,11 @@ def extract_forecast_dataset(
     Candidate histories must be fully finite and horizons truncated by the
     nominal record end are dropped. If capsize occurs inside a horizon, its
     target is raised to at least the relevant escape angle even when absorbing
-    termination leaves no sample exactly at the event time.
+    termination leaves no sample exactly at the event time. For asymmetric
+    biased-family runs, the scalar absolute-roll target conservatively uses the
+    smaller of the positive and negative escape magnitudes for both directions.
+    A positive excursion is therefore judged against the tighter negative-side
+    margin; a signed target is deferred rather than implying side correctness.
     """
     if history_s <= 0 or not horizons_s or min(horizons_s) <= 0 or stride_s <= 0:
         raise ValueError("history, horizons, and stride must be positive")

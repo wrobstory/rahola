@@ -4,7 +4,9 @@ from rahola_lab.evaluation.episodes import AlarmEpisode, EpisodeConfig, alarm_ep
 from rahola_lab.evaluation.metrics import (
     AlarmMetrics,
     OperatingPoint,
+    RateInterval,
     TrajectoryScores,
+    clopper_pearson_interval,
     evaluate_alarms,
     operating_curve,
 )
@@ -15,9 +17,11 @@ __all__ = [
     "AlarmMetrics",
     "EpisodeConfig",
     "OperatingPoint",
+    "RateInterval",
     "ReserveBlockError",
     "TrajectoryScores",
     "alarm_episodes",
+    "clopper_pearson_interval",
     "evaluate_alarms",
     "operating_curve",
     "seeds_for",

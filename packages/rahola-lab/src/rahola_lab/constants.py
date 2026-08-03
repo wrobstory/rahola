@@ -23,6 +23,12 @@ ACI_EXPLOSION_FPR_PER_HOUR = 2.0
 ACI_EXPLOSION_FACTOR = 4.0
 # Small predeclared grid spans slow adaptation through deliberately aggressive updates.
 ACI_GAMMA_GRID = (0.001, 0.005, 0.01, 0.02, 0.05)
+# Gibbs--Candes' published DtACI expert grid; aggregation removes manual gamma selection.
+DTACI_GAMMA_EXPERTS = (0.001, 0.002, 0.004, 0.008, 0.016, 0.032, 0.064, 0.128)
+# Calibration-only E3b grid for recent-score recalibration memory.
+SLIDING_RECALIBRATION_WINDOWS = (25, 50, 100)
+# Fitted-config bound brackets always-on through selective physics alarms.
+DANGER_SCORE_THRESHOLDS_RAD_S = tuple(-1.75 + 0.025 * index for index in range(91))
 
 # Disjoint 100k-wide ranges prevent phase reuse across statistical roles.
 SEED_BLOCK_SIZE = 100_000

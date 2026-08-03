@@ -6,6 +6,7 @@ from rahola_lab.evaluation import (
     EpisodeConfig,
     TrajectoryScores,
     alarm_episodes,
+    clopper_pearson_interval,
     evaluate_alarms,
     operating_curve,
 )
@@ -62,6 +63,23 @@ def test_sustained_episode_overlapping_horizon_is_a_detection() -> None:
     assert metrics.lead_times_s.tolist() == [90.0]
 
 
+def test_repeated_episodes_inside_event_horizon_are_not_false() -> None:
+    trajectory = TrajectoryScores(
+        times_s=np.arange(9, dtype=np.float64) * 10,
+        scores=np.array([0, 0, 0, 1, 1, 0, 1, 1, 0], dtype=np.float64),
+        record_end_s=90.0,
+        t_capsize_s=85.0,
+    )
+    metrics = evaluate_alarms(
+        [trajectory],
+        EpisodeConfig(threshold=0.5, debounce_windows=2, refractory_windows=1),
+        horizon_s=60.0,
+    )
+    assert metrics.sensitivity == 1.0
+    assert metrics.false_episode_count == 0
+    assert metrics.lead_times_s.tolist() == [55.0]
+
+
 def test_exposure_and_events_begin_at_first_scorable_time() -> None:
     early = TrajectoryScores(
         times_s=np.array([120.0]),
@@ -96,3 +114,12 @@ def test_operating_curve_sweeps_thresholds() -> None:
     )
     assert points[0].metrics.false_episode_count == 1
     assert points[1].metrics.false_episode_count == 0
+
+
+def test_clopper_pearson_interval_handles_edge_counts() -> None:
+    none = clopper_pearson_interval(0, 10)
+    all_success = clopper_pearson_interval(10, 10)
+    assert none.lower == 0.0
+    assert none.upper == pytest.approx(1.0 - 0.025 ** (1.0 / 10.0))
+    assert all_success.lower == pytest.approx(0.025 ** (1.0 / 10.0))
+    assert all_success.upper == 1.0
