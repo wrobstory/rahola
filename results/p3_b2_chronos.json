@@ -1,0 +1,350 @@
+{
+  "checkpoint": "amazon/chronos-t5-tiny",
+  "chronos_package_version": "2.3.1",
+  "compute_subsample": {
+    "finetune_max_windows": 1024,
+    "reason": "CPU-only 8M-parameter transformer probe; all comparators share test subset",
+    "trajectories_per_campaign_split": 128
+  },
+  "d5_leakage_audit_triggered": {
+    "finetune": false,
+    "frozen": false
+  },
+  "d5_within_regime_auc": {
+    "finetune": 0.4909271204033215,
+    "frozen": 0.3763661835211546
+  },
+  "experiment": "B2 Chronos transfer probe",
+  "kill": {
+    "fired": false,
+    "qualifying_rotations": 1,
+    "verbatim": "Kill for the probe: no rotation shows >=10% FPR/h improvement over the from-scratch CNN."
+  },
+  "license": "Apache-2.0",
+  "modes": [
+    "frozen encoder embedding + linear head",
+    "full encoder fine-tune + head"
+  ],
+  "revision": "29d808298f1a62493e7b9a5e08529d0d930fa189",
+  "rotations": [
+    {
+      "chronos": {
+        "finetune": {
+          "decorrelation_time_s": 350.0,
+          "earns_10_percent_improvement": false,
+          "false_episodes_per_hour": 7.543488011943859,
+          "false_episodes_per_hour_interval": [
+            6.523337064134492,
+            8.675144204289719
+          ],
+          "lead_time_quantiles_s": [
+            119.74,
+            278.20000000000005,
+            359.34
+          ],
+          "relative_fpr_reduction_vs_cnn": -1.865671641791045,
+          "sensitivity": 1.0,
+          "sensitivity_interval": [
+            0.9431276476679837,
+            1.0
+          ],
+          "threshold": 0.01318641547113657
+        },
+        "frozen": {
+          "decorrelation_time_s": 350.0,
+          "earns_10_percent_improvement": false,
+          "false_episodes_per_hour": 2.4752070039190786,
+          "false_episodes_per_hour_interval": [
+            1.903455956780879,
+            3.163765214205809
+          ],
+          "lead_time_quantiles_s": [
+            44.73999999999999,
+            88.20000000000005,
+            147.20000000000002
+          ],
+          "relative_fpr_reduction_vs_cnn": 0.05970149253731338,
+          "sensitivity": 0.9047619047619048,
+          "sensitivity_interval": [
+            0.804143979441893,
+            0.9642409881346669
+          ],
+          "threshold": 0.2611485600471497
+        }
+      },
+      "from_scratch_cnn": {
+        "decorrelation_time_s": 360.0,
+        "false_episodes_per_hour": 2.632363004167909,
+        "false_episodes_per_hour_interval": [
+          2.041644031491586,
+          3.339645642356218
+        ],
+        "lead_time_quantiles_s": [
+          198.0,
+          240.10000000000002,
+          289.80000000000007
+        ],
+        "sensitivity": 0.9682539682539683,
+        "sensitivity_interval": [
+          0.8899806265911197,
+          0.9961320175035812
+        ],
+        "threshold": -0.2294231943786142
+      },
+      "graybox_full_d2": {
+        "false_episodes_per_hour": 9.106860630922366,
+        "false_episodes_per_hour_interval": [
+          8.868598815597645,
+          9.34977487869344
+        ],
+        "lead_time_quantiles_s": [
+          76.66000000000001,
+          160.90000000000003,
+          259.52000000000004
+        ],
+        "sensitivity": 0.9596330275229358,
+        "sensitivity_interval": [
+          0.9395196720337629,
+          0.9745322795725
+        ],
+        "threshold": -0.6232861191034317
+      },
+      "held_out_family": "softening",
+      "rotation_qualifies": false,
+      "twenty_capsize_cnn": {
+        "decorrelation_time_s": 360.0,
+        "false_episodes_per_hour": 2.5930740041057017,
+        "false_episodes_per_hour_interval": [
+          2.007041533079185,
+          3.2957298272330147
+        ],
+        "lead_time_quantiles_s": [
+          50.00000000000004,
+          97.44999999999999,
+          128.92
+        ],
+        "sensitivity": 0.9523809523809523,
+        "sensitivity_interval": [
+          0.8670815992518494,
+          0.9900700488492667
+        ],
+        "target_capsize_trajectories": 20,
+        "target_normal_trajectories": 1820,
+        "threshold": 0.003623793460428721
+      }
+    },
+    {
+      "chronos": {
+        "finetune": {
+          "decorrelation_time_s": 350.0,
+          "earns_10_percent_improvement": true,
+          "false_episodes_per_hour": 3.946854239937474,
+          "false_episodes_per_hour_interval": [
+            3.217913800756081,
+            4.790063593321425
+          ],
+          "lead_time_quantiles_s": [
+            129.98999999999998,
+            280.1,
+            359.49
+          ],
+          "relative_fpr_reduction_vs_cnn": 0.27857142857142847,
+          "sensitivity": 0.9411764705882353,
+          "sensitivity_interval": [
+            0.8032267906644245,
+            0.9927950825609503
+          ],
+          "threshold": 0.01570166423916817
+        },
+        "frozen": {
+          "decorrelation_time_s": 350.0,
+          "earns_10_percent_improvement": true,
+          "false_episodes_per_hour": 3.5951543571707685,
+          "false_episodes_per_hour_interval": [
+            2.9008851196980068,
+            4.404094544813099
+          ],
+          "lead_time_quantiles_s": [
+            81.68000000000002,
+            200.0,
+            356.80000000000007
+          ],
+          "relative_fpr_reduction_vs_cnn": 0.34285714285714275,
+          "sensitivity": 0.9705882352941176,
+          "sensitivity_interval": [
+            0.8467323304396823,
+            0.9992556357653097
+          ],
+          "threshold": 0.6828833460807803
+        }
+      },
+      "from_scratch_cnn": {
+        "decorrelation_time_s": 360.0,
+        "false_episodes_per_hour": 5.4708870652598645,
+        "false_episodes_per_hour_interval": [
+          4.6075919753777885,
+          6.4469157321543715
+        ],
+        "lead_time_quantiles_s": [
+          71.34000000000006,
+          110.0,
+          179.76000000000005
+        ],
+        "sensitivity": 0.9705882352941176,
+        "sensitivity_interval": [
+          0.8467323304396823,
+          0.9992556357653097
+        ],
+        "threshold": -0.05454370230436303
+      },
+      "graybox_full_d2": {
+        "false_episodes_per_hour": 6.317207440006024,
+        "false_episodes_per_hour_interval": [
+          6.118898857708385,
+          6.520218483846469
+        ],
+        "lead_time_quantiles_s": [
+          294.24000000000007,
+          359.20000000000005,
+          360.30000000000007
+        ],
+        "sensitivity": 0.9018987341772152,
+        "sensitivity_interval": [
+          0.8636471721460189,
+          0.9323676840501495
+        ],
+        "threshold": -0.12750461697578402
+      },
+      "held_out_family": "parametric",
+      "rotation_qualifies": true,
+      "twenty_capsize_cnn": {
+        "decorrelation_time_s": 360.0,
+        "false_episodes_per_hour": 3.3997655334114874,
+        "false_episodes_per_hour_interval": [
+          2.7255159413130987,
+          4.188920918679743
+        ],
+        "lead_time_quantiles_s": [
+          29.600000000000023,
+          59.10000000000002,
+          79.70000000000005
+        ],
+        "sensitivity": 0.9117647058823529,
+        "sensitivity_interval": [
+          0.7632247257130624,
+          0.9814204965591596
+        ],
+        "target_capsize_trajectories": 20,
+        "target_normal_trajectories": 1828,
+        "threshold": 2.2334947824478166
+      }
+    },
+    {
+      "chronos": {
+        "finetune": {
+          "decorrelation_time_s": 350.0,
+          "earns_10_percent_improvement": false,
+          "false_episodes_per_hour": 8.434669262626429,
+          "false_episodes_per_hour_interval": [
+            7.3508386594914015,
+            9.630208554993969
+          ],
+          "lead_time_quantiles_s": [
+            187.82000000000002,
+            295.0,
+            359.84000000000003
+          ],
+          "relative_fpr_reduction_vs_cnn": -1.1734693877551021,
+          "sensitivity": 0.9210526315789473,
+          "sensitivity_interval": [
+            0.7862267088193818,
+            0.9834135241354705
+          ],
+          "threshold": 0.013478562235832214
+        },
+        "frozen": {
+          "decorrelation_time_s": 350.0,
+          "earns_10_percent_improvement": false,
+          "false_episodes_per_hour": 4.910323889979704,
+          "false_episodes_per_hour_interval": [
+            4.088678126245785,
+            5.846772011422857
+          ],
+          "lead_time_quantiles_s": [
+            151.10000000000005,
+            198.0,
+            293.08000000000004
+          ],
+          "relative_fpr_reduction_vs_cnn": -0.26530612244897944,
+          "sensitivity": 0.9210526315789473,
+          "sensitivity_interval": [
+            0.7862267088193818,
+            0.9834135241354705
+          ],
+          "threshold": -0.20268276929855344
+        }
+      },
+      "from_scratch_cnn": {
+        "decorrelation_time_s": 360.0,
+        "false_episodes_per_hour": 3.880739848532347,
+        "false_episodes_per_hour_interval": [
+          3.1536340943483547,
+          4.723739554093513
+        ],
+        "lead_time_quantiles_s": [
+          190.12000000000003,
+          268.20000000000005,
+          310.26000000000005
+        ],
+        "sensitivity": 0.9210526315789473,
+        "sensitivity_interval": [
+          0.7862267088193818,
+          0.9834135241354705
+        ],
+        "threshold": -0.28403441458940504
+      },
+      "graybox_full_d2": {
+        "false_episodes_per_hour": 8.069698408695865,
+        "false_episodes_per_hour_interval": [
+          7.845363354021162,
+          8.298708266398169
+        ],
+        "lead_time_quantiles_s": [
+          249.72000000000006,
+          341.70000000000005,
+          359.98
+        ],
+        "sensitivity": 0.900990099009901,
+        "sensitivity_interval": [
+          0.8616790508880778,
+          0.9321968511374342
+        ],
+        "threshold": -0.8585059940814972
+      },
+      "held_out_family": "biased",
+      "rotation_qualifies": false,
+      "twenty_capsize_cnn": {
+        "decorrelation_time_s": 360.0,
+        "false_episodes_per_hour": 3.9599386209513745,
+        "false_episodes_per_hour_interval": [
+          3.225130998495334,
+          4.810550522499872
+        ],
+        "lead_time_quantiles_s": [
+          196.22000000000006,
+          277.1,
+          316.26000000000005
+        ],
+        "sensitivity": 0.9210526315789473,
+        "sensitivity_interval": [
+          0.7862267088193818,
+          0.9834135241354705
+        ],
+        "target_capsize_trajectories": 20,
+        "target_normal_trajectories": 1728,
+        "threshold": -0.4846872091293335
+      }
+    }
+  ],
+  "survives_kill": true
+}
