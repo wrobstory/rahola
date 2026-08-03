@@ -1,0 +1,3821 @@
+{
+  "curves": {
+    "classical_ews": [
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          295.6,
+          358.80000000000007,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9939862542955327,
+        "sensitivity_interval": [
+          0.9876488622531949,
+          0.9975788455561364
+        ],
+        "threshold": -0.9999999999999998
+      },
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          299.24000000000007,
+          358.80000000000007,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9922680412371134,
+        "sensitivity_interval": [
+          0.9853732797381879,
+          0.9964585379875139
+        ],
+        "threshold": -0.8181818181818181
+      },
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          291.18,
+          358.80000000000007,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9922680412371134,
+        "sensitivity_interval": [
+          0.9853732797381879,
+          0.9964585379875139
+        ],
+        "threshold": -0.7575757575757575
+      },
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          282.38000000000005,
+          358.70000000000005,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9922680412371134,
+        "sensitivity_interval": [
+          0.9853732797381879,
+          0.9964585379875139
+        ],
+        "threshold": -0.6969696969696969
+      },
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          282.04,
+          358.70000000000005,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9905498281786942,
+        "sensitivity_interval": [
+          0.9831540735218142,
+          0.9952733370063697
+        ],
+        "threshold": -0.6363636363636362
+      },
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          279.08000000000004,
+          358.70000000000005,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9905498281786942,
+        "sensitivity_interval": [
+          0.9831540735218142,
+          0.9952733370063697
+        ],
+        "threshold": -0.5757575757575757
+      },
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          278.64000000000004,
+          358.70000000000005,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9905498281786942,
+        "sensitivity_interval": [
+          0.9831540735218142,
+          0.9952733370063697
+        ],
+        "threshold": -0.5151515151515151
+      },
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          278.94000000000005,
+          358.70000000000005,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9896907216494846,
+        "sensitivity_interval": [
+          0.9820610755810676,
+          0.9946620184573263
+        ],
+        "threshold": -0.4848484848484848
+      },
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          268.78000000000003,
+          358.6,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9896907216494846,
+        "sensitivity_interval": [
+          0.9820610755810676,
+          0.9946620184573263
+        ],
+        "threshold": -0.4242424242424242
+      },
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          268.69000000000005,
+          358.6,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9879725085910653,
+        "sensitivity_interval": [
+          0.9799021802329303,
+          0.993409287324974
+        ],
+        "threshold": -0.3636363636363636
+      },
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          265.18,
+          358.6,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9862542955326461,
+        "sensitivity_interval": [
+          0.9777735940018926,
+          0.9921232784579999
+        ],
+        "threshold": -0.303030303030303
+      },
+      {
+        "false_episodes_per_hour": 9.392109650327281,
+        "false_episodes_per_hour_interval": [
+          9.252282571553849,
+          9.533477730579497
+        ],
+        "lead_time_quantiles_s": [
+          263.22,
+          358.6,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9853951890034365,
+        "sensitivity_interval": [
+          0.9767189757390252,
+          0.9914697531369655
+        ],
+        "threshold": -0.2727272727272727
+      },
+      {
+        "false_episodes_per_hour": 9.392109650327281,
+        "false_episodes_per_hour_interval": [
+          9.252282571553849,
+          9.533477730579497
+        ],
+        "lead_time_quantiles_s": [
+          258.7900000000001,
+          358.5,
+          360.20000000000005
+        ],
+        "sensitivity": 0.979381443298969,
+        "sensitivity_interval": [
+          0.9694757765326173,
+          0.9867457145308458
+        ],
+        "threshold": -0.2121212121212121
+      },
+      {
+        "false_episodes_per_hour": 9.389868096711451,
+        "false_episodes_per_hour_interval": [
+          9.250057322832786,
+          9.531219892880914
+        ],
+        "lead_time_quantiles_s": [
+          256.58,
+          358.5,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9776632302405498,
+        "sensitivity_interval": [
+          0.9674418245896336,
+          0.985358226881024
+        ],
+        "threshold": -0.1515151515151515
+      },
+      {
+        "false_episodes_per_hour": 9.389868096711451,
+        "false_episodes_per_hour_interval": [
+          9.250057322832786,
+          9.531219892880914
+        ],
+        "lead_time_quantiles_s": [
+          249.24000000000007,
+          358.4,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9750859106529209,
+        "sensitivity_interval": [
+          0.9644140724668978,
+          0.9832526042125911
+        ],
+        "threshold": -0.0909090909090909
+      },
+      {
+        "false_episodes_per_hour": 9.387066154691665,
+        "false_episodes_per_hour_interval": [
+          9.247275764895702,
+          9.5283975927936
+        ],
+        "lead_time_quantiles_s": [
+          247.08,
+          358.4,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9725085910652921,
+        "sensitivity_interval": [
+          0.9614105783809259,
+          0.9811215671631114
+        ],
+        "threshold": -0.0606060606060606
+      },
+      {
+        "false_episodes_per_hour": 9.385384989479792,
+        "false_episodes_per_hour_interval": [
+          9.24560683171499,
+          9.526704211159952
+        ],
+        "lead_time_quantiles_s": [
+          242.27000000000004,
+          358.4,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9639175257731959,
+        "sensitivity_interval": [
+          0.9515378426852885,
+          0.9738735474556782
+        ],
+        "threshold": 0.0
+      },
+      {
+        "false_episodes_per_hour": 9.374177221400643,
+        "false_episodes_per_hour_interval": [
+          9.23448064084654,
+          9.515414969934545
+        ],
+        "lead_time_quantiles_s": [
+          239.21000000000004,
+          358.30000000000007,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9553264604810997,
+        "sensitivity_interval": [
+          0.941826580305033,
+          0.9664586503499054
+        ],
+        "threshold": 0.0606060606060606
+      },
+      {
+        "false_episodes_per_hour": 9.362409064917536,
+        "false_episodes_per_hour_interval": [
+          9.222798197289396,
+          9.503561209798132
+        ],
+        "lead_time_quantiles_s": [
+          230.56000000000006,
+          358.20000000000005,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9484536082474226,
+        "sensitivity_interval": [
+          0.9341444741137332,
+          0.9604374853534
+        ],
+        "threshold": 0.1212121212121212
+      },
+      {
+        "false_episodes_per_hour": 9.333268867911746,
+        "false_episodes_per_hour_interval": [
+          9.193870493157336,
+          9.474208790520509
+        ],
+        "lead_time_quantiles_s": [
+          228.21,
+          358.1,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9398625429553265,
+        "sensitivity_interval": [
+          0.9246275366690798,
+          0.9528233973230356
+        ],
+        "threshold": 0.1818181818181818
+      },
+      {
+        "false_episodes_per_hour": 9.291239737614937,
+        "false_episodes_per_hour_interval": [
+          9.152148476372938,
+          9.431872937057898
+        ],
+        "lead_time_quantiles_s": [
+          199.75,
+          358.0,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9243986254295533,
+        "sensitivity_interval": [
+          0.9076845264586979,
+          0.9389270332491573
+        ],
+        "threshold": 0.2424242424242424
+      },
+      {
+        "false_episodes_per_hour": 9.257616433377487,
+        "false_episodes_per_hour_interval": [
+          9.118771404548664,
+          9.398003712732026
+        ],
+        "lead_time_quantiles_s": [
+          199.78,
+          358.0,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9166666666666666,
+        "sensitivity_interval": [
+          0.899285646550577,
+          0.9319050742280927
+        ],
+        "threshold": 0.2727272727272727
+      },
+      {
+        "false_episodes_per_hour": 9.163471181512632,
+        "false_episodes_per_hour_interval": [
+          9.025318187596476,
+          9.303167300692257
+        ],
+        "lead_time_quantiles_s": [
+          198.95999999999998,
+          357.9,
+          360.20000000000005
+        ],
+        "sensitivity": 0.8960481099656358,
+        "sensitivity_interval": [
+          0.8770734680333572,
+          0.9129926113877035
+        ],
+        "threshold": 0.3333333333333333
+      },
+      {
+        "false_episodes_per_hour": 9.097905738249608,
+        "false_episodes_per_hour_interval": [
+          8.960236969955567,
+          9.237118241201648
+        ],
+        "lead_time_quantiles_s": [
+          198.68000000000004,
+          357.9,
+          360.20000000000005
+        ],
+        "sensitivity": 0.8805841924398625,
+        "sensitivity_interval": [
+          0.8605581797811732,
+          0.8986628389104826
+        ],
+        "threshold": 0.3636363636363636
+      },
+      {
+        "false_episodes_per_hour": 8.89952824324866,
+        "false_episodes_per_hour_interval": [
+          8.763336152243985,
+          9.03726591376516
+        ],
+        "lead_time_quantiles_s": [
+          190.20000000000005,
+          357.70000000000005,
+          360.1
+        ],
+        "sensitivity": 0.8513745704467354,
+        "sensitivity_interval": [
+          0.8296243885260622,
+          0.8713314343536875
+        ],
+        "threshold": 0.4242424242424242
+      },
+      {
+        "false_episodes_per_hour": 8.753827258219717,
+        "false_episodes_per_hour_interval": [
+          8.618731073546613,
+          8.890470378420913
+        ],
+        "lead_time_quantiles_s": [
+          190.20000000000005,
+          357.6,
+          360.1
+        ],
+        "sensitivity": 0.834192439862543,
+        "sensitivity_interval": [
+          0.8115595316617585,
+          0.8551216864711642
+        ],
+        "threshold": 0.4545454545454545
+      },
+      {
+        "false_episodes_per_hour": 8.371081978316763,
+        "false_episodes_per_hour_interval": [
+          8.238912300633636,
+          8.504802158168951
+        ],
+        "lead_time_quantiles_s": [
+          174.68,
+          357.20000000000005,
+          360.1
+        ],
+        "sensitivity": 0.8015463917525774,
+        "sensitivity_interval": [
+          0.7774549976857836,
+          0.8241031814875224
+        ],
+        "threshold": 0.5151515151515151
+      },
+      {
+        "false_episodes_per_hour": 8.134598071846709,
+        "false_episodes_per_hour_interval": [
+          8.004272611727442,
+          8.266476241330981
+        ],
+        "lead_time_quantiles_s": [
+          159.02000000000004,
+          356.80000000000007,
+          360.1
+        ],
+        "sensitivity": 0.7860824742268041,
+        "sensitivity_interval": [
+          0.7613871279962046,
+          0.8093228600599653
+        ],
+        "threshold": 0.5454545454545454
+      },
+      {
+        "false_episodes_per_hour": 7.861688919119417,
+        "false_episodes_per_hour_interval": [
+          7.7335277973377945,
+          7.991405301068131
+        ],
+        "lead_time_quantiles_s": [
+          150.14999999999998,
+          356.6,
+          360.1
+        ],
+        "sensitivity": 0.7525773195876289,
+        "sensitivity_interval": [
+          0.7267388740607983,
+          0.7771326810248315
+        ],
+        "threshold": 0.5757575757575757
+      },
+      {
+        "false_episodes_per_hour": 7.18866244596649,
+        "false_episodes_per_hour_interval": [
+          7.066016630108361,
+          7.312869831456528
+        ],
+        "lead_time_quantiles_s": [
+          118.05000000000001,
+          344.0,
+          360.1
+        ],
+        "sensitivity": 0.6924398625429553,
+        "sensitivity_interval": [
+          0.6650371703938278,
+          0.7188663647963895
+        ],
+        "threshold": 0.6363636363636362
+      },
+      {
+        "false_episodes_per_hour": 6.765008812574639,
+        "false_episodes_per_hour_interval": [
+          6.645976702062674,
+          6.885606480426626
+        ],
+        "lead_time_quantiles_s": [
+          111.29000000000003,
+          338.0,
+          360.07
+        ],
+        "sensitivity": 0.6563573883161512,
+        "sensitivity_interval": [
+          0.6282760625229685,
+          0.683646023156719
+        ],
+        "threshold": 0.6666666666666666
+      },
+      {
+        "false_episodes_per_hour": 6.283635173575168,
+        "false_episodes_per_hour_interval": [
+          6.168857700137963,
+          6.399982753491706
+        ],
+        "lead_time_quantiles_s": [
+          99.78000000000003,
+          320.25000000000006,
+          360.0
+        ],
+        "sensitivity": 0.6168384879725086,
+        "sensitivity_interval": [
+          0.5882135500597091,
+          0.6448713602457976
+        ],
+        "threshold": 0.6969696969696969
+      },
+      {
+        "false_episodes_per_hour": 5.719884439193947,
+        "false_episodes_per_hour_interval": [
+          5.610314398204239,
+          5.831029943929206
+        ],
+        "lead_time_quantiles_s": [
+          90.21000000000005,
+          300.15000000000003,
+          360.1
+        ],
+        "sensitivity": 0.5824742268041238,
+        "sensitivity_interval": [
+          0.5535355042758205,
+          0.610995137017851
+        ],
+        "threshold": 0.7272727272727272
+      },
+      {
+        "false_episodes_per_hour": 5.098413699205108,
+        "false_episodes_per_hour_interval": [
+          4.994906838963736,
+          5.2035019758007435
+        ],
+        "lead_time_quantiles_s": [
+          80.12000000000003,
+          280.20000000000005,
+          360.0
+        ],
+        "sensitivity": 0.5300687285223368,
+        "sensitivity_interval": [
+          0.5009220379168147,
+          0.5590631268539427
+        ],
+        "threshold": 0.7575757575757575
+      },
+      {
+        "false_episodes_per_hour": 4.430430721687798,
+        "false_episodes_per_hour_interval": [
+          4.33388841923128,
+          4.528560911775415
+        ],
+        "lead_time_quantiles_s": [
+          68.97999999999999,
+          260.0,
+          359.80000000000007
+        ],
+        "sensitivity": 0.4888316151202749,
+        "sensitivity_interval": [
+          0.459744628632578,
+          0.517975165619696
+        ],
+        "threshold": 0.7878787878787877
+      },
+      {
+        "false_episodes_per_hour": 2.994715630748747,
+        "false_episodes_per_hour_interval": [
+          2.915278796010801,
+          3.0757546983540127
+        ],
+        "lead_time_quantiles_s": [
+          51.44,
+          199.89999999999998,
+          359.48
+        ],
+        "sensitivity": 0.38917525773195877,
+        "sensitivity_interval": [
+          0.3610465341661596,
+          0.4178655411763903
+        ],
+        "threshold": 0.8484848484848484
+      },
+      {
+        "false_episodes_per_hour": 2.3076794474968825,
+        "false_episodes_per_hour_interval": [
+          2.2379463264798187,
+          2.379022071873356
+        ],
+        "lead_time_quantiles_s": [
+          48.74000000000005,
+          189.10000000000002,
+          358.9
+        ],
+        "sensitivity": 0.3333333333333333,
+        "sensitivity_interval": [
+          0.306272605301756,
+          0.3612391442764222
+        ],
+        "threshold": 0.8787878787878787
+      },
+      {
+        "false_episodes_per_hour": 1.6755613278328505,
+        "false_episodes_per_hour_interval": [
+          1.6161686689891444,
+          1.7365707012066005
+        ],
+        "lead_time_quantiles_s": [
+          38.200000000000045,
+          149.80000000000007,
+          349.02000000000004
+        ],
+        "sensitivity": 0.28780068728522334,
+        "sensitivity_interval": [
+          0.261925796030708,
+          0.3147524312218975
+        ],
+        "threshold": 0.909090909090909
+      },
+      {
+        "false_episodes_per_hour": 1.1415111788613768,
+        "false_episodes_per_hour_interval": [
+          1.0925464314638045,
+          1.192099598568605
+        ],
+        "lead_time_quantiles_s": [
+          30.74000000000001,
+          110.30000000000007,
+          301.58000000000015
+        ],
+        "sensitivity": 0.23969072164948454,
+        "sensitivity_interval": [
+          0.21541992513771205,
+          0.2652841951725119
+        ],
+        "threshold": 0.9393939393939392
+      },
+      {
+        "false_episodes_per_hour": 0.6808719108083322,
+        "false_episodes_per_hour_interval": [
+          0.6431540882426887,
+          0.7202211485241373
+        ],
+        "lead_time_quantiles_s": [
+          30.0,
+          79.80000000000001,
+          199.47
+        ],
+        "sensitivity": 0.17353951890034364,
+        "sensitivity_interval": [
+          0.1522002511132614,
+          0.1965422738831086
+        ],
+        "threshold": 0.9696969696969696
+      },
+      {
+        "false_episodes_per_hour": 0.2532955585887787,
+        "false_episodes_per_hour_interval": [
+          0.23048688313800406,
+          0.2777494989183491
+        ],
+        "lead_time_quantiles_s": [
+          29.000000000000046,
+          59.30000000000007,
+          149.20000000000005
+        ],
+        "sensitivity": 0.08333333333333333,
+        "sensitivity_interval": [
+          0.06809492577190733,
+          0.10071435344942302
+        ],
+        "threshold": 0.9999999999999998
+      }
+    ],
+    "cnn": [
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          295.6,
+          358.80000000000007,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9939862542955327,
+        "sensitivity_interval": [
+          0.9876488622531949,
+          0.9975788455561364
+        ],
+        "threshold": -221.02255249023438
+      },
+      {
+        "false_episodes_per_hour": 9.389868096711451,
+        "false_episodes_per_hour_interval": [
+          9.250057322832786,
+          9.531219892880914
+        ],
+        "lead_time_quantiles_s": [
+          279.44000000000005,
+          358.0,
+          360.16
+        ],
+        "sensitivity": 0.9922680412371134,
+        "sensitivity_interval": [
+          0.9853732797381879,
+          0.9964585379875139
+        ],
+        "threshold": -1.3368524849414825
+      },
+      {
+        "false_episodes_per_hour": 9.385384989479792,
+        "false_episodes_per_hour_interval": [
+          9.24560683171499,
+          9.526704211159952
+        ],
+        "lead_time_quantiles_s": [
+          278.88000000000005,
+          357.70000000000005,
+          360.1
+        ],
+        "sensitivity": 0.9905498281786942,
+        "sensitivity_interval": [
+          0.9831540735218142,
+          0.9952733370063697
+        ],
+        "threshold": -1.2130400359630584
+      },
+      {
+        "false_episodes_per_hour": 9.369133725765025,
+        "false_episodes_per_hour_interval": [
+          9.229473872184455,
+          9.510334794155904
+        ],
+        "lead_time_quantiles_s": [
+          278.22,
+          357.4,
+          360.1
+        ],
+        "sensitivity": 0.9879725085910653,
+        "sensitivity_interval": [
+          0.9799021802329303,
+          0.993409287324974
+        ],
+        "threshold": -1.1296596676111221
+      },
+      {
+        "false_episodes_per_hour": 9.338872751951321,
+        "false_episodes_per_hour_interval": [
+          9.199433485322338,
+          9.479853514393364
+        ],
+        "lead_time_quantiles_s": [
+          276.46000000000004,
+          357.0,
+          360.1
+        ],
+        "sensitivity": 0.9853951890034365,
+        "sensitivity_interval": [
+          0.9767189757390252,
+          0.9914697531369655
+        ],
+        "threshold": -1.0660582780838013
+      },
+      {
+        "false_episodes_per_hour": 9.298524786866384,
+        "false_episodes_per_hour_interval": [
+          9.159380238838098,
+          9.439211205430787
+        ],
+        "lead_time_quantiles_s": [
+          278.40999999999997,
+          356.4,
+          360.0
+        ],
+        "sensitivity": 0.9810996563573883,
+        "sensitivity_interval": [
+          0.97152382272229,
+          0.9881182981547817
+        ],
+        "threshold": -1.0120877176523209
+      },
+      {
+        "false_episodes_per_hour": 9.242485946470635,
+        "false_episodes_per_hour_interval": [
+          9.103751880041981,
+          9.382762403985186
+        ],
+        "lead_time_quantiles_s": [
+          279.4,
+          351.3,
+          360.0
+        ],
+        "sensitivity": 0.9725085910652921,
+        "sensitivity_interval": [
+          0.9614105783809259,
+          0.9811215671631114
+        ],
+        "threshold": -0.9651528179645537
+      },
+      {
+        "false_episodes_per_hour": 9.15282380183744,
+        "false_episodes_per_hour_interval": [
+          9.014749315233859,
+          9.292441512654628
+        ],
+        "lead_time_quantiles_s": [
+          279.35,
+          350.1,
+          359.9
+        ],
+        "sensitivity": 0.9673539518900344,
+        "sensitivity_interval": [
+          0.9554642965247357,
+          0.9767962358812096
+        ],
+        "threshold": -0.9225761204957962
+      },
+      {
+        "false_episodes_per_hour": 9.045789616681562,
+        "false_episodes_per_hour_interval": [
+          8.908507091903946,
+          9.184616360628448
+        ],
+        "lead_time_quantiles_s": [
+          278.9,
+          349.6,
+          359.80000000000007
+        ],
+        "sensitivity": 0.9630584192439863,
+        "sensitivity_interval": [
+          0.9505603422405261,
+          0.9731386243382623
+        ],
+        "threshold": -0.8822647809982299
+      },
+      {
+        "false_episodes_per_hour": 8.916339895367386,
+        "false_episodes_per_hour_interval": [
+          8.780021977827113,
+          9.054203236013661
+        ],
+        "lead_time_quantiles_s": [
+          278.5,
+          348.95,
+          359.80000000000007
+        ],
+        "sensitivity": 0.9587628865979382,
+        "sensitivity_interval": [
+          0.9456949391574111,
+          0.9694412246070018
+        ],
+        "threshold": -0.8458109676837922
+      },
+      {
+        "false_episodes_per_hour": 8.780725901609676,
+        "false_episodes_per_hour_interval": [
+          8.645426660197352,
+          8.917571828140403
+        ],
+        "lead_time_quantiles_s": [
+          278.41999999999996,
+          348.30000000000007,
+          359.80000000000007
+        ],
+        "sensitivity": 0.9561855670103093,
+        "sensitivity_interval": [
+          0.9427918244788808,
+          0.9672061896190022
+        ],
+        "threshold": -0.8103523105382919
+      },
+      {
+        "false_episodes_per_hour": 8.603082777555157,
+        "false_episodes_per_hour_interval": [
+          8.469130823223201,
+          8.73858307134051
+        ],
+        "lead_time_quantiles_s": [
+          278.9,
+          347.70000000000005,
+          359.6
+        ],
+        "sensitivity": 0.9501718213058419,
+        "sensitivity_interval": [
+          0.936058744755689,
+          0.9619491832183898
+        ],
+        "threshold": -0.7763952061533927
+      },
+      {
+        "false_episodes_per_hour": 8.390135184051317,
+        "false_episodes_per_hour_interval": [
+          8.257818143670375,
+          8.524002548890989
+        ],
+        "lead_time_quantiles_s": [
+          279.92,
+          346.20000000000005,
+          359.5
+        ],
+        "sensitivity": 0.9424398625429553,
+        "sensitivity_interval": [
+          0.9274737065884523,
+          0.9551167192201131
+        ],
+        "threshold": -0.7420197069644927
+      },
+      {
+        "false_episodes_per_hour": 8.160375938428752,
+        "false_episodes_per_hour_interval": [
+          8.029848066239179,
+          8.292456279250791
+        ],
+        "lead_time_quantiles_s": [
+          282.1,
+          340.4,
+          359.5
+        ],
+        "sensitivity": 0.9312714776632303,
+        "sensitivity_interval": [
+          0.9151885724883629,
+          0.9451298201442967
+        ],
+        "threshold": -0.7078299850225449
+      },
+      {
+        "false_episodes_per_hour": 7.909882321859761,
+        "false_episodes_per_hour_interval": [
+          7.7813361083246475,
+          8.039983344815491
+        ],
+        "lead_time_quantiles_s": [
+          280.20000000000005,
+          339.5,
+          359.30000000000007
+        ],
+        "sensitivity": 0.9269759450171822,
+        "sensitivity_interval": [
+          0.9104940433175026,
+          0.9412576499603322
+        ],
+        "threshold": -0.6735236912965774
+      },
+      {
+        "false_episodes_per_hour": 7.616799186590001,
+        "false_episodes_per_hour_interval": [
+          7.490614634873345,
+          7.744541290972544
+        ],
+        "lead_time_quantiles_s": [
+          280.4700000000001,
+          338.80000000000007,
+          359.20000000000005
+        ],
+        "sensitivity": 0.9209621993127147,
+        "sensitivity_interval": [
+          0.9039463877891988,
+          0.9358115418337651
+        ],
+        "threshold": -0.6400398761034012
+      },
+      {
+        "false_episodes_per_hour": 7.315870613664837,
+        "false_episodes_per_hour_interval": [
+          7.192161924864831,
+          7.441139677300897
+        ],
+        "lead_time_quantiles_s": [
+          280.30000000000007,
+          336.95000000000005,
+          359.0
+        ],
+        "sensitivity": 0.9192439862542955,
+        "sensitivity_interval": [
+          0.9020805466442309,
+          0.934250521082558
+        ],
+        "threshold": -0.6064321398735046
+      },
+      {
+        "false_episodes_per_hour": 7.008217379892183,
+        "false_episodes_per_hour_interval": [
+          6.887096537122548,
+          7.130901489092984
+        ],
+        "lead_time_quantiles_s": [
+          280.22,
+          330.30000000000007,
+          358.6
+        ],
+        "sensitivity": 0.9166666666666666,
+        "sensitivity_interval": [
+          0.899285646550577,
+          0.9319050742280927
+        ],
+        "threshold": -0.5720681488513947
+      },
+      {
+        "false_episodes_per_hour": 6.654612296995016,
+        "false_episodes_per_hour_interval": [
+          6.53654141425418,
+          6.774249778541469
+        ],
+        "lead_time_quantiles_s": [
+          279.5,
+          329.70000000000005,
+          358.1
+        ],
+        "sensitivity": 0.9115120274914089,
+        "sensitivity_interval": [
+          0.8937090547202869,
+          0.9272007945391703
+        ],
+        "threshold": -0.5359692692756652
+      },
+      {
+        "false_episodes_per_hour": 6.28755789240287,
+        "false_episodes_per_hour_interval": [
+          6.172745065363517,
+          6.403940788763437
+        ],
+        "lead_time_quantiles_s": [
+          279.5,
+          328.30000000000007,
+          357.5
+        ],
+        "sensitivity": 0.904639175257732,
+        "sensitivity_interval": [
+          0.8862990145439021,
+          0.9209026843800228
+        ],
+        "threshold": -0.4982992686331272
+      },
+      {
+        "false_episodes_per_hour": 5.891923679208893,
+        "false_episodes_per_hour_interval": [
+          5.780736960685689,
+          6.004684222802562
+        ],
+        "lead_time_quantiles_s": [
+          279.59000000000003,
+          320.5,
+          356.61
+        ],
+        "sensitivity": 0.8934707903780069,
+        "sensitivity_interval": [
+          0.8743131945870044,
+          0.9106121185772932
+        ],
+        "threshold": -0.4590626209974289
+      },
+      {
+        "false_episodes_per_hour": 5.465468103797254,
+        "false_episodes_per_hour_interval": [
+          5.35833632904343,
+          5.574177772490347
+        ],
+        "lead_time_quantiles_s": [
+          278.86,
+          319.6,
+          350.34000000000003
+        ],
+        "sensitivity": 0.8908934707903781,
+        "sensitivity_interval": [
+          0.8715561380681113,
+          0.90822837557979
+        ],
+        "threshold": -0.4169132627546787
+      },
+      {
+        "false_episodes_per_hour": 5.026123595094593,
+        "false_episodes_per_hour_interval": [
+          4.9233465529093445,
+          5.1304827498884045
+        ],
+        "lead_time_quantiles_s": [
+          276.46,
+          318.70000000000005,
+          350.0
+        ],
+        "sensitivity": 0.8865979381443299,
+        "sensitivity_interval": [
+          0.8669679258677526,
+          0.9042485197465746
+        ],
+        "threshold": -0.3728554964065552
+      },
+      {
+        "false_episodes_per_hour": 4.583416755968188,
+        "false_episodes_per_hour_interval": [
+          4.485233622022477,
+          4.683186287395793
+        ],
+        "lead_time_quantiles_s": [
+          270.48,
+          310.4,
+          349.62
+        ],
+        "sensitivity": 0.884020618556701,
+        "sensitivity_interval": [
+          0.864218978123384,
+          0.9018565881362838
+        ],
+        "threshold": -0.32486774623393994
+      },
+      {
+        "false_episodes_per_hour": 4.114371661855782,
+        "false_episodes_per_hour_interval": [
+          4.021314967606446,
+          4.209019340397545
+        ],
+        "lead_time_quantiles_s": [
+          268.93,
+          309.4,
+          348.57
+        ],
+        "sensitivity": 0.8797250859106529,
+        "sensitivity_interval": [
+          0.8596437576652625,
+          0.8978636170267906
+        ],
+        "threshold": -0.27266360521316524
+      },
+      {
+        "false_episodes_per_hour": 3.6727855995372916,
+        "false_episodes_per_hour_interval": [
+          3.584839707595213,
+          3.7623268514131283
+        ],
+        "lead_time_quantiles_s": [
+          266.19000000000005,
+          306.55,
+          346.90999999999997
+        ],
+        "sensitivity": 0.8762886597938144,
+        "sensitivity_interval": [
+          0.8559890941603515,
+          0.8946636775639283
+        ],
+        "threshold": -0.21650299802422523
+      },
+      {
+        "false_episodes_per_hour": 3.1902911837299053,
+        "false_episodes_per_hour_interval": [
+          3.108306601017813,
+          3.27387599326786
+        ],
+        "lead_time_quantiles_s": [
+          259.6,
+          299.70000000000005,
+          339.4
+        ],
+        "sensitivity": 0.872852233676976,
+        "sensitivity_interval": [
+          0.8523391421953506,
+          0.8914589855703561
+        ],
+        "threshold": -0.1481736324727536
+      },
+      {
+        "false_episodes_per_hour": 2.6977097766512848,
+        "false_episodes_per_hour_interval": [
+          2.6223110142805006,
+          2.7747138657812225
+        ],
+        "lead_time_quantiles_s": [
+          257.16,
+          296.15000000000003,
+          330.37
+        ],
+        "sensitivity": 0.8711340206185567,
+        "sensitivity_interval": [
+          0.8505158819947554,
+          0.8898549092632078
+        ],
+        "threshold": -0.06728778891265356
+      },
+      {
+        "false_episodes_per_hour": 2.2040075927647496,
+        "false_episodes_per_hour_interval": [
+          2.1358612078631483,
+          2.2737646192183836
+        ],
+        "lead_time_quantiles_s": [
+          247.33000000000004,
+          286.4,
+          328.0
+        ],
+        "sensitivity": 0.8711340206185567,
+        "sensitivity_interval": [
+          0.8505158819947554,
+          0.8898549092632078
+        ],
+        "threshold": 0.044225876778364336
+      },
+      {
+        "false_episodes_per_hour": 1.717590458129661,
+        "false_episodes_per_hour_interval": [
+          1.6574543405280806,
+          1.7793427860178563
+        ],
+        "lead_time_quantiles_s": [
+          230.89999999999998,
+          270.30000000000007,
+          310.0
+        ],
+        "sensitivity": 0.8685567010309279,
+        "sensitivity_interval": [
+          0.8477830820464523,
+          0.8874466871682383
+        ],
+        "threshold": 0.20199256241321575
+      },
+      {
+        "false_episodes_per_hour": 1.3679080940601966,
+        "false_episodes_per_hour_interval": [
+          1.3142732125014045,
+          1.4231635474909716
+        ],
+        "lead_time_quantiles_s": [
+          199.20000000000005,
+          258.4,
+          297.18000000000006
+        ],
+        "sensitivity": 0.8651202749140894,
+        "sensitivity_interval": [
+          0.8441431545381989,
+          0.8842318878830551
+        ],
+        "threshold": 0.41535039246082306
+      },
+      {
+        "false_episodes_per_hour": 1.1835403091581873,
+        "false_episodes_per_hour_interval": [
+          1.1336754059083065,
+          1.235028286668206
+        ],
+        "lead_time_quantiles_s": [
+          190.20000000000005,
+          238.39999999999998,
+          270.36
+        ],
+        "sensitivity": 0.8634020618556701,
+        "sensitivity_interval": [
+          0.8423247823619855,
+          0.8826228841040087
+        ],
+        "threshold": 0.6890890136361117
+      },
+      {
+        "false_episodes_per_hour": 1.12077680791495,
+        "false_episodes_per_hour_interval": [
+          1.0722623003832035,
+          1.170915287252203
+        ],
+        "lead_time_quantiles_s": [
+          169.21000000000004,
+          199.10000000000002,
+          249.39999999999998
+        ],
+        "sensitivity": 0.8608247422680413,
+        "sensitivity_interval": [
+          0.8395991665296202,
+          0.8802074210236944
+        ],
+        "threshold": 0.9778231024742129
+      },
+      {
+        "false_episodes_per_hour": 1.098361271756651,
+        "false_episodes_per_hour_interval": [
+          1.0503382647212156,
+          1.1480085779027256
+        ],
+        "lead_time_quantiles_s": [
+          145.80000000000007,
+          190.20000000000005,
+          229.60000000000002
+        ],
+        "sensitivity": 0.8513745704467354,
+        "sensitivity_interval": [
+          0.8296243885260622,
+          0.8713314343536875
+        ],
+        "threshold": 1.2239628791809083
+      },
+      {
+        "false_episodes_per_hour": 1.064177579115245,
+        "false_episodes_per_hour_interval": [
+          1.016913959176839,
+          1.1130660047807124
+        ],
+        "lead_time_quantiles_s": [
+          116.67000000000004,
+          170.20000000000005,
+          199.73000000000005
+        ],
+        "sensitivity": 0.8316151202749141,
+        "sensitivity_interval": [
+          0.8088571315905451,
+          0.8526828494758891
+        ],
+        "threshold": 1.431319671869278
+      },
+      {
+        "false_episodes_per_hour": 0.9918874750047308,
+        "false_episodes_per_hour_interval": [
+          0.9462713978208777,
+          1.0391294621985596
+        ],
+        "lead_time_quantiles_s": [
+          90.47000000000001,
+          150.35000000000002,
+          198.80000000000007
+        ],
+        "sensitivity": 0.7903780068728522,
+        "sensitivity_interval": [
+          0.7658452797280192,
+          0.8134336734201539
+        ],
+        "threshold": 1.612415373325348
+      },
+      {
+        "false_episodes_per_hour": 0.8686020261340863,
+        "false_episodes_per_hour_interval": [
+          0.825942080221036,
+          0.9128898905415569
+        ],
+        "lead_time_quantiles_s": [
+          69.89999999999998,
+          137.5,
+          190.20000000000005
+        ],
+        "sensitivity": 0.7053264604810997,
+        "sensitivity_interval": [
+          0.6782112155256084,
+          0.7313998822905055
+        ],
+        "threshold": 1.7747545599937444
+      },
+      {
+        "false_episodes_per_hour": 0.7032874469666311,
+        "false_episodes_per_hour_interval": [
+          0.6649461949435583,
+          0.7432596595358568
+        ],
+        "lead_time_quantiles_s": [
+          56.39999999999998,
+          120.39999999999998,
+          189.74000000000007
+        ],
+        "sensitivity": 0.5558419243986255,
+        "sensitivity_interval": [
+          0.526757393166513,
+          0.5846436028996581
+        ],
+        "threshold": 1.9437959671020504
+      },
+      {
+        "false_episodes_per_hour": 0.46624315209261924,
+        "false_episodes_per_hour_interval": [
+          0.4351147896699423,
+          0.4990081333407942
+        ],
+        "lead_time_quantiles_s": [
+          62.760000000000005,
+          139.80000000000007,
+          180.36
+        ],
+        "sensitivity": 0.313573883161512,
+        "sensitivity_interval": [
+          0.2869909579131967,
+          0.34110238880551125
+        ],
+        "threshold": 2.2084654331207276
+      },
+      {
+        "false_episodes_per_hour": 0.30429090334890896,
+        "false_episodes_per_hour_interval": [
+          0.2792413454529138,
+          0.330983028852777
+        ],
+        "lead_time_quantiles_s": [
+          74.70000000000006,
+          110.5,
+          157.56
+        ],
+        "sensitivity": 0.17783505154639176,
+        "sensitivity_interval": [
+          0.15627487691572212,
+          0.20103643381916253
+        ],
+        "threshold": 2.9482620298862496
+      },
+      {
+        "false_episodes_per_hour": 0.0,
+        "false_episodes_per_hour_interval": [
+          0.0,
+          0.0020671993085896647
+        ],
+        "lead_time_quantiles_s": [
+          NaN,
+          NaN,
+          NaN
+        ],
+        "sensitivity": 0.0,
+        "sensitivity_interval": [
+          0.0,
+          0.0031641239996322377
+        ],
+        "threshold": 5.456936359405518
+      }
+    ],
+    "danger_margin": [
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          295.6,
+          358.80000000000007,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9939862542955327,
+        "sensitivity_interval": [
+          0.9876488622531949,
+          0.9975788455561364
+        ],
+        "threshold": -1.9277822598039434
+      },
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          294.95,
+          358.80000000000007,
+          360.20000000000005
+        ],
+        "sensitivity": 0.993127147766323,
+        "sensitivity_interval": [
+          0.9865028712799424,
+          0.997028257662137
+        ],
+        "threshold": -1.370280309965463
+      },
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          298.9100000000001,
+          358.80000000000007,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9896907216494846,
+        "sensitivity_interval": [
+          0.9820610755810676,
+          0.9946620184573263
+        ],
+        "threshold": -1.2788109410305921
+      },
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          299.6,
+          358.80000000000007,
+          360.20000000000005
+        ],
+        "sensitivity": 0.988831615120275,
+        "sensitivity_interval": [
+          0.9809774418710757,
+          0.994040276925541
+        ],
+        "threshold": -1.2202037763361568
+      },
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          296.34000000000003,
+          358.6,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9871134020618557,
+        "sensitivity_interval": [
+          0.9788344636269586,
+          0.9927700180545163
+        ],
+        "threshold": -1.188732143162313
+      },
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          279.68000000000006,
+          358.20000000000005,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9853951890034365,
+        "sensitivity_interval": [
+          0.9767189757390252,
+          0.9914697531369655
+        ],
+        "threshold": -1.1757768666103097
+      },
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          267.94,
+          357.70000000000005,
+          360.14000000000004
+        ],
+        "sensitivity": 0.9853951890034365,
+        "sensitivity_interval": [
+          0.9767189757390252,
+          0.9914697531369655
+        ],
+        "threshold": -1.1712090008992
+      },
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          258.56,
+          354.70000000000005,
+          360.0
+        ],
+        "sensitivity": 0.9853951890034365,
+        "sensitivity_interval": [
+          0.9767189757390252,
+          0.9914697531369655
+        ],
+        "threshold": -1.1705719816540914
+      },
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          199.02000000000007,
+          348.20000000000005,
+          359.9
+        ],
+        "sensitivity": 0.9853951890034365,
+        "sensitivity_interval": [
+          0.9767189757390252,
+          0.9914697531369655
+        ],
+        "threshold": -1.1701832546178765
+      },
+      {
+        "false_episodes_per_hour": 9.388186931499579,
+        "false_episodes_per_hour_interval": [
+          9.248388387675272,
+          9.529526513223841
+        ],
+        "lead_time_quantiles_s": [
+          118.92999999999998,
+          339.20000000000005,
+          359.80000000000007
+        ],
+        "sensitivity": 0.9828178694158075,
+        "sensitivity_interval": [
+          0.973587823016126,
+          0.989473928134437
+        ],
+        "threshold": -1.1698284991325574
+      },
+      {
+        "false_episodes_per_hour": 9.360727899705664,
+        "false_episodes_per_hour_interval": [
+          9.221129281541781,
+          9.50186781073282
+        ],
+        "lead_time_quantiles_s": [
+          40.5,
+          336.80000000000007,
+          359.80000000000007
+        ],
+        "sensitivity": 0.9785223367697594,
+        "sensitivity_interval": [
+          0.9684571406232398,
+          0.9860537220365437
+        ],
+        "threshold": -1.1694434249743684
+      },
+      {
+        "false_episodes_per_hour": 9.293481291230766,
+        "false_episodes_per_hour_interval": [
+          9.154373631647568,
+          9.434130868194806
+        ],
+        "lead_time_quantiles_s": [
+          30.200000000000045,
+          335.6,
+          359.80000000000007
+        ],
+        "sensitivity": 0.9699312714776632,
+        "sensitivity_interval": [
+          0.9584281623744386,
+          0.9789685422438468
+        ],
+        "threshold": -1.1689201829803657
+      },
+      {
+        "false_episodes_per_hour": 9.128166712063312,
+        "false_episodes_per_hour_interval": [
+          8.990274221548185,
+          9.267602655956487
+        ],
+        "lead_time_quantiles_s": [
+          29.399999999999977,
+          335.6,
+          359.80000000000007
+        ],
+        "sensitivity": 0.9527491408934707,
+        "sensitivity_interval": [
+          0.9389377733643828,
+          0.964208927302575
+        ],
+        "threshold": -1.1677958365916021
+      },
+      {
+        "false_episodes_per_hour": 8.791933669688826,
+        "false_episodes_per_hour_interval": [
+          8.65654992019512,
+          8.92886399997284
+        ],
+        "lead_time_quantiles_s": [
+          29.060000000000013,
+          338.4,
+          359.84000000000003
+        ],
+        "sensitivity": 0.8823024054982818,
+        "sensitivity_interval": [
+          0.862387951138269,
+          0.9002603471251405
+        ],
+        "threshold": -1.165147490575539
+      },
+      {
+        "false_episodes_per_hour": 8.366038482681144,
+        "false_episodes_per_hour_interval": [
+          8.233907842898688,
+          8.49971967167655
+        ],
+        "lead_time_quantiles_s": [
+          49.80000000000001,
+          339.80000000000007,
+          359.9
+        ],
+        "sensitivity": 0.8084192439862543,
+        "sensitivity_interval": [
+          0.7846132919963174,
+          0.8306551145477461
+        ],
+        "threshold": -1.1608275476969168
+      },
+      {
+        "false_episodes_per_hour": 8.049979422849129,
+        "false_episodes_per_hour_interval": [
+          7.920320827979036,
+          8.181191517559546
+        ],
+        "lead_time_quantiles_s": [
+          148.10000000000005,
+          339.05,
+          359.9
+        ],
+        "sensitivity": 0.7302405498281787,
+        "sensitivity_interval": [
+          0.7037530667521734,
+          0.7555591334688321
+        ],
+        "threshold": -1.1553497923893135
+      },
+      {
+        "false_episodes_per_hour": 7.829746780093841,
+        "false_episodes_per_hour_interval": [
+          7.701841589108124,
+          7.959207530069727
+        ],
+        "lead_time_quantiles_s": [
+          70.67000000000004,
+          329.6,
+          359.9
+        ],
+        "sensitivity": 0.6786941580756014,
+        "sensitivity_interval": [
+          0.6510114974149923,
+          0.7054705768141953
+        ],
+        "threshold": -1.1487556674826032
+      },
+      {
+        "false_episodes_per_hour": 7.622403070629575,
+        "false_episodes_per_hour_interval": [
+          7.496172912426778,
+          7.750190728998358
+        ],
+        "lead_time_quantiles_s": [
+          30.200000000000045,
+          317.9,
+          359.9
+        ],
+        "sensitivity": 0.5592783505154639,
+        "sensitivity_interval": [
+          0.5302079430358149,
+          0.5880484943118672
+        ],
+        "threshold": -1.1409115240914207
+      },
+      {
+        "false_episodes_per_hour": 7.35285624832603,
+        "false_episodes_per_hour_interval": [
+          7.228840377448962,
+          7.4784321468615245
+        ],
+        "lead_time_quantiles_s": [
+          27.800000000000068,
+          330.25,
+          360.0
+        ],
+        "sensitivity": 0.45017182130584193,
+        "sensitivity_interval": [
+          0.42131827579066217,
+          0.47927775225612396
+        ],
+        "threshold": -1.1311916005490161
+      },
+      {
+        "false_episodes_per_hour": 7.0894736984660165,
+        "false_episodes_per_hour_interval": [
+          6.967663595584464,
+          7.212846303397186
+        ],
+        "lead_time_quantiles_s": [
+          28.150000000000034,
+          355.1,
+          360.1
+        ],
+        "sensitivity": 0.38316151202749144,
+        "sensitivity_interval": [
+          0.35512863975420245,
+          0.4117864499402909
+        ],
+        "threshold": -1.118481980578683
+      },
+      {
+        "false_episodes_per_hour": 6.843463189128685,
+        "false_episodes_per_hour_interval": [
+          6.723753009792731,
+          6.9647381862897095
+        ],
+        "lead_time_quantiles_s": [
+          44.30000000000001,
+          356.9,
+          360.1
+        ],
+        "sensitivity": 0.34106529209621994,
+        "sensitivity_interval": [
+          0.3138322877584742,
+          0.3691040829392561
+        ],
+        "threshold": -1.1000099439455222
+      },
+      {
+        "false_episodes_per_hour": 6.652931131783144,
+        "false_episodes_per_hour_interval": [
+          6.534874951982659,
+          6.772553926257058
+        ],
+        "lead_time_quantiles_s": [
+          93.74000000000004,
+          357.45,
+          360.13000000000005
+        ],
+        "sensitivity": 0.3161512027491409,
+        "sensitivity_interval": [
+          0.28950283398598853,
+          0.3437320370658279
+        ],
+        "threshold": -1.074836752343872
+      },
+      {
+        "false_episodes_per_hour": 6.484254222191944,
+        "false_episodes_per_hour_interval": [
+          6.367683351217187,
+          6.602393301175467
+        ],
+        "lead_time_quantiles_s": [
+          94.73000000000003,
+          357.5,
+          360.17
+        ],
+        "sensitivity": 0.3127147766323024,
+        "sensitivity_interval": [
+          0.2861538775856877,
+          0.3402256281495394
+        ],
+        "threshold": -1.0443981390338721
+      },
+      {
+        "false_episodes_per_hour": 6.303809156117637,
+        "false_episodes_per_hour_interval": [
+          6.188849987886124,
+          6.420338239745786
+        ],
+        "lead_time_quantiles_s": [
+          85.94000000000004,
+          357.70000000000005,
+          360.20000000000005
+        ],
+        "sensitivity": 0.30326460481099654,
+        "sensitivity_interval": [
+          0.27695305985887625,
+          0.33057421091607186
+        ],
+        "threshold": -1.0104293457327636
+      },
+      {
+        "false_episodes_per_hour": 6.032020780198262,
+        "false_episodes_per_hour_interval": [
+          5.91953578169013,
+          6.14607827190472
+        ],
+        "lead_time_quantiles_s": [
+          104.13000000000001,
+          358.05,
+          360.20000000000005
+        ],
+        "sensitivity": 0.29037800687285226,
+        "sensitivity_interval": [
+          0.2644278192334426,
+          0.31739190895282754
+        ],
+        "threshold": -0.9745113587897792
+      },
+      {
+        "false_episodes_per_hour": 5.477796648684318,
+        "false_episodes_per_hour_interval": [
+          5.370545366099543,
+          5.5866257072446945
+        ],
+        "lead_time_quantiles_s": [
+          109.4,
+          358.30000000000007,
+          360.20000000000005
+        ],
+        "sensitivity": 0.27920962199312716,
+        "sensitivity_interval": [
+          0.2535931817387769,
+          0.3059467288176287
+        ],
+        "threshold": -0.9380992454217189
+      },
+      {
+        "false_episodes_per_hour": 4.675320454217214,
+        "false_episodes_per_hour_interval": [
+          4.576165273940548,
+          4.776061139267801
+        ],
+        "lead_time_quantiles_s": [
+          123.4,
+          358.45,
+          360.20000000000005
+        ],
+        "sensitivity": 0.2646048109965636,
+        "sensitivity_interval": [
+          0.23945484095970793,
+          0.2909500072381603
+        ],
+        "threshold": -0.8993337971549239
+      },
+      {
+        "false_episodes_per_hour": 3.773655512249637,
+        "false_episodes_per_hour_interval": [
+          3.6845153685312937,
+          3.8643900106234113
+        ],
+        "lead_time_quantiles_s": [
+          134.90000000000006,
+          358.6,
+          360.20000000000005
+        ],
+        "sensitivity": 0.2508591065292096,
+        "sensitivity_interval": [
+          0.2261807188573041,
+          0.2768029933176139
+        ],
+        "threshold": -0.860032770677873
+      },
+      {
+        "false_episodes_per_hour": 2.9381164019490416,
+        "false_episodes_per_hour_interval": [
+          2.859432700990703,
+          3.0184029206358445
+        ],
+        "lead_time_quantiles_s": [
+          154.38,
+          358.70000000000005,
+          360.20000000000005
+        ],
+        "sensitivity": 0.23625429553264604,
+        "sensitivity_interval": [
+          0.21211349028977683,
+          0.2617353871636478
+        ],
+        "threshold": -0.8173350702029246
+      },
+      {
+        "false_episodes_per_hour": 2.318887215576032,
+        "false_episodes_per_hour_interval": [
+          2.248984750565438,
+          2.3903990616987447
+        ],
+        "lead_time_quantiles_s": [
+          329.73,
+          358.70000000000005,
+          360.20000000000005
+        ],
+        "sensitivity": 0.22508591065292097,
+        "sensitivity_interval": [
+          0.20138302326500446,
+          0.2501863726922274
+        ],
+        "threshold": -0.773505013342818
+      },
+      {
+        "false_episodes_per_hour": 1.7915617274520477,
+        "false_episodes_per_hour_interval": [
+          1.730139195313547,
+          1.8545995930227854
+        ],
+        "lead_time_quantiles_s": [
+          330.0,
+          358.6,
+          360.20000000000005
+        ],
+        "sensitivity": 0.21477663230240548,
+        "sensitivity_interval": [
+          0.1914997661281183,
+          0.2395040408297847
+        ],
+        "threshold": -0.7282568750082501
+      },
+      {
+        "false_episodes_per_hour": 1.3191543029158963,
+        "false_episodes_per_hour_interval": [
+          1.266489989736108,
+          1.373439832684388
+        ],
+        "lead_time_quantiles_s": [
+          326.8,
+          357.55,
+          360.20000000000005
+        ],
+        "sensitivity": 0.211340206185567,
+        "sensitivity_interval": [
+          0.18821018566123626,
+          0.235938445204162
+        ],
+        "threshold": -0.6819594572456216
+      },
+      {
+        "false_episodes_per_hour": 0.9414525186485581,
+        "false_episodes_per_hour_interval": [
+          0.8970220309150009,
+          0.9875097169051461
+        ],
+        "lead_time_quantiles_s": [
+          310.03000000000003,
+          347.75000000000006,
+          359.9
+        ],
+        "sensitivity": 0.20790378006872853,
+        "sensitivity_interval": [
+          0.1849230957258078,
+          0.23237036987617993
+        ],
+        "threshold": -0.63555987126901
+      },
+      {
+        "false_episodes_per_hour": 0.6954420093112266,
+        "false_episodes_per_hour_interval": [
+          0.6573178052598188,
+          0.7351973316412802
+        ],
+        "lead_time_quantiles_s": [
+          270.2300000000001,
+          328.05,
+          358.63
+        ],
+        "sensitivity": 0.20618556701030927,
+        "sensitivity_interval": [
+          0.18328049884185926,
+          0.23058538833246253
+        ],
+        "threshold": -0.5903690555279532
+      },
+      {
+        "false_episodes_per_hour": 0.5626299575733049,
+        "false_episodes_per_hour_interval": [
+          0.5283865976169101,
+          0.5985073696146577
+        ],
+        "lead_time_quantiles_s": [
+          199.7,
+          284.20000000000005,
+          347.4200000000001
+        ],
+        "sensitivity": 0.2036082474226804,
+        "sensitivity_interval": [
+          0.1808178050747701,
+          0.22790671988155944
+        ],
+        "threshold": -0.5481644972531188
+      },
+      {
+        "false_episodes_per_hour": 0.48585674623113084,
+        "false_episodes_per_hour_interval": [
+          0.45407004199024864,
+          0.5192795066906013
+        ],
+        "lead_time_quantiles_s": [
+          150.30000000000007,
+          199.20000000000005,
+          300.34000000000003
+        ],
+        "sensitivity": 0.2036082474226804,
+        "sensitivity_interval": [
+          0.1808178050747701,
+          0.22790671988155944
+        ],
+        "threshold": -0.5075030052702918
+      },
+      {
+        "false_episodes_per_hour": 0.45167305358972487,
+        "false_episodes_per_hour_interval": [
+          0.4210427937437137,
+          0.4839403662118826
+        ],
+        "lead_time_quantiles_s": [
+          108.39999999999998,
+          149.10000000000002,
+          229.94000000000005
+        ],
+        "sensitivity": 0.2036082474226804,
+        "sensitivity_interval": [
+          0.1808178050747701,
+          0.22790671988155944
+        ],
+        "threshold": -0.4679936227613642
+      },
+      {
+        "false_episodes_per_hour": 0.43654256668287306,
+        "false_episodes_per_hour_interval": [
+          0.4064381802522954,
+          0.46828447232341086
+        ],
+        "lead_time_quantiles_s": [
+          69.52000000000001,
+          98.5,
+          137.88
+        ],
+        "sensitivity": 0.2036082474226804,
+        "sensitivity_interval": [
+          0.1808178050747701,
+          0.22790671988155944
+        ],
+        "threshold": -0.4260872146217702
+      },
+      {
+        "false_episodes_per_hour": 0.4292575174314259,
+        "false_episodes_per_hour_interval": [
+          0.399409591302332,
+          0.4607431934965812
+        ],
+        "lead_time_quantiles_s": [
+          39.10000000000002,
+          59.39999999999998,
+          87.94000000000003
+        ],
+        "sensitivity": 0.20189003436426117,
+        "sensitivity_interval": [
+          0.17917681905404828,
+          0.22612013479675389
+        ],
+        "threshold": -0.37726984145654463
+      },
+      {
+        "false_episodes_per_hour": 0.3435180916259322,
+        "false_episodes_per_hour_interval": [
+          0.31687058474267754,
+          0.37180644007379804
+        ],
+        "lead_time_quantiles_s": [
+          20.5,
+          29.899999999999977,
+          40.5
+        ],
+        "sensitivity": 0.11597938144329897,
+        "sensitivity_interval": [
+          0.09814341186371627,
+          0.13578102187661603
+        ],
+        "threshold": -0.30525007376462926
+      },
+      {
+        "false_episodes_per_hour": 0.0,
+        "false_episodes_per_hour_interval": [
+          0.0,
+          0.0020671993085896647
+        ],
+        "lead_time_quantiles_s": [
+          NaN,
+          NaN,
+          NaN
+        ],
+        "sensitivity": 0.0,
+        "sensitivity_interval": [
+          0.0,
+          0.0031641239996322377
+        ],
+        "threshold": 0.3944378460493835
+      }
+    ],
+    "galeazzi_glrt": [
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          295.6,
+          358.80000000000007,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9939862542955327,
+        "sensitivity_interval": [
+          0.9876488622531949,
+          0.9975788455561364
+        ],
+        "threshold": 1.2221335055073723e-12
+      },
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          296.90000000000003,
+          358.70000000000005,
+          360.20000000000005
+        ],
+        "sensitivity": 0.993127147766323,
+        "sensitivity_interval": [
+          0.9865028712799424,
+          0.997028257662137
+        ],
+        "threshold": 0.0015239118341623837
+      },
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          290.59999999999997,
+          358.5,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9922680412371134,
+        "sensitivity_interval": [
+          0.9853732797381879,
+          0.9964585379875139
+        ],
+        "threshold": 0.006001326404834374
+      },
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          290.09999999999997,
+          358.20000000000005,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9922680412371134,
+        "sensitivity_interval": [
+          0.9853732797381879,
+          0.9964585379875139
+        ],
+        "threshold": 0.01358049296577131
+      },
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          289.08,
+          357.9,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9905498281786942,
+        "sensitivity_interval": [
+          0.9831540735218142,
+          0.9952733370063697
+        ],
+        "threshold": 0.02421108594854289
+      },
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          286.9,
+          357.5,
+          360.1
+        ],
+        "sensitivity": 0.988831615120275,
+        "sensitivity_interval": [
+          0.9809774418710757,
+          0.994040276925541
+        ],
+        "threshold": 0.03795889057475055
+      },
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          272.6,
+          356.80000000000007,
+          360.1
+        ],
+        "sensitivity": 0.988831615120275,
+        "sensitivity_interval": [
+          0.9809774418710757,
+          0.994040276925541
+        ],
+        "threshold": 0.054564973140451306
+      },
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          267.48,
+          355.5,
+          360.0
+        ],
+        "sensitivity": 0.9871134020618557,
+        "sensitivity_interval": [
+          0.9788344636269586,
+          0.9927700180545163
+        ],
+        "threshold": 0.07471103076978293
+      },
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          265.16,
+          350.20000000000005,
+          360.0
+        ],
+        "sensitivity": 0.9871134020618557,
+        "sensitivity_interval": [
+          0.9788344636269586,
+          0.9927700180545163
+        ],
+        "threshold": 0.09792905729940315
+      },
+      {
+        "false_episodes_per_hour": 9.389868096711451,
+        "false_episodes_per_hour_interval": [
+          9.250057322832786,
+          9.531219892880914
+        ],
+        "lead_time_quantiles_s": [
+          262.18000000000006,
+          349.1,
+          359.9
+        ],
+        "sensitivity": 0.9853951890034365,
+        "sensitivity_interval": [
+          0.9767189757390252,
+          0.9914697531369655
+        ],
+        "threshold": 0.1247070438651095
+      },
+      {
+        "false_episodes_per_hour": 9.388186931499579,
+        "false_episodes_per_hour_interval": [
+          9.248388387675272,
+          9.529526513223841
+        ],
+        "lead_time_quantiles_s": [
+          256.77000000000004,
+          346.4,
+          359.80000000000007
+        ],
+        "sensitivity": 0.9828178694158075,
+        "sensitivity_interval": [
+          0.973587823016126,
+          0.989473928134437
+        ],
+        "threshold": 0.15466722827193102
+      },
+      {
+        "false_episodes_per_hour": 9.378099940228346,
+        "false_episodes_per_hour_interval": [
+          9.238374801646378,
+          9.519366210367005
+        ],
+        "lead_time_quantiles_s": [
+          249.4000000000001,
+          340.25000000000006,
+          359.80000000000007
+        ],
+        "sensitivity": 0.9810996563573883,
+        "sensitivity_interval": [
+          0.97152382272229,
+          0.9881182981547817
+        ],
+        "threshold": 0.1899646488350758
+      },
+      {
+        "false_episodes_per_hour": 9.36352984172545,
+        "false_episodes_per_hour_interval": [
+          9.223910808449435,
+          9.504690141846826
+        ],
+        "lead_time_quantiles_s": [
+          245.40000000000003,
+          339.30000000000007,
+          359.70000000000005
+        ],
+        "sensitivity": 0.9802405498281787,
+        "sensitivity_interval": [
+          0.9704979307507693,
+          0.9874339869914108
+        ],
+        "threshold": 0.22805567238841473
+      },
+      {
+        "false_episodes_per_hour": 9.334389644719662,
+        "false_episodes_per_hour_interval": [
+          9.194983090527398,
+          9.47533773635802
+        ],
+        "lead_time_quantiles_s": [
+          239.74000000000007,
+          338.30000000000007,
+          359.6
+        ],
+        "sensitivity": 0.9785223367697594,
+        "sensitivity_interval": [
+          0.9684571406232398,
+          0.9860537220365437
+        ],
+        "threshold": 0.2691453439606981
+      },
+      {
+        "false_episodes_per_hour": 9.283394299959532,
+        "false_episodes_per_hour_interval": [
+          9.144360449773949,
+          9.423970161218108
+        ],
+        "lead_time_quantiles_s": [
+          230.20000000000005,
+          330.20000000000005,
+          359.5
+        ],
+        "sensitivity": 0.9716494845360825,
+        "sensitivity_interval": [
+          0.9604142339938181,
+          0.980406189042973
+        ],
+        "threshold": 0.3158260907566199
+      },
+      {
+        "false_episodes_per_hour": 9.204939923405485,
+        "false_episodes_per_hour_interval": [
+          9.06648163316623,
+          9.344940953565322
+        ],
+        "lead_time_quantiles_s": [
+          227.20000000000005,
+          329.85,
+          359.4
+        ],
+        "sensitivity": 0.9656357388316151,
+        "sensitivity_interval": [
+          0.9534976637050667,
+          0.9753384146557428
+        ],
+        "threshold": 0.366673977584723
+      },
+      {
+        "false_episodes_per_hour": 9.105751175905013,
+        "false_episodes_per_hour_interval": [
+          8.968024367003538,
+          9.2450216465367
+        ],
+        "lead_time_quantiles_s": [
+          199.40999999999997,
+          328.65000000000003,
+          359.30000000000007
+        ],
+        "sensitivity": 0.9639175257731959,
+        "sensitivity_interval": [
+          0.9515378426852885,
+          0.9738735474556782
+        ],
+        "threshold": 0.4225139224380797
+      },
+      {
+        "false_episodes_per_hour": 8.992552718305602,
+        "false_episodes_per_hour_interval": [
+          8.855665985811122,
+          9.130984165012379
+        ],
+        "lead_time_quantiles_s": [
+          195.54000000000002,
+          320.5,
+          359.20000000000005
+        ],
+        "sensitivity": 0.9561855670103093,
+        "sensitivity_interval": [
+          0.9427918244788808,
+          0.9672061896190022
+        ],
+        "threshold": 0.4820996767986271
+      },
+      {
+        "false_episodes_per_hour": 8.796977165324444,
+        "false_episodes_per_hour_interval": [
+          8.661555406127466,
+          8.933945458365756
+        ],
+        "lead_time_quantiles_s": [
+          186.75,
+          319.4,
+          359.1
+        ],
+        "sensitivity": 0.9415807560137457,
+        "sensitivity_interval": [
+          0.926524181592127,
+          0.9543530961304955
+        ],
+        "threshold": 0.5481891756185672
+      },
+      {
+        "false_episodes_per_hour": 8.570019861721667,
+        "false_episodes_per_hour_interval": [
+          8.436320311487538,
+          8.70526805946935
+        ],
+        "lead_time_quantiles_s": [
+          178.62000000000003,
+          318.20000000000005,
+          358.80000000000007
+        ],
+        "sensitivity": 0.9252577319587629,
+        "sensitivity_interval": [
+          0.9086204543248737,
+          0.9397044921111183
+        ],
+        "threshold": 0.620748759865252
+      },
+      {
+        "false_episodes_per_hour": 8.304956146649781,
+        "false_episodes_per_hour_interval": [
+          8.173299305514616,
+          8.438164106850476
+        ],
+        "lead_time_quantiles_s": [
+          177.64000000000007,
+          310.05,
+          358.6
+        ],
+        "sensitivity": 0.9020618556701031,
+        "sensitivity_interval": [
+          0.8835272198375812,
+          0.9185338396123074
+        ],
+        "threshold": 0.7021545362182984
+      },
+      {
+        "false_episodes_per_hour": 8.000104854896914,
+        "false_episodes_per_hour_interval": [
+          7.87084107174082,
+          8.13092260398128
+        ],
+        "lead_time_quantiles_s": [
+          162.14000000000007,
+          307.70000000000005,
+          358.30000000000007
+        ],
+        "sensitivity": 0.8754295532646048,
+        "sensitivity_interval": [
+          0.8550761709782705,
+          0.8938629434907484
+        ],
+        "threshold": 0.7917014236191495
+      },
+      {
+        "false_episodes_per_hour": 7.631369285092895,
+        "false_episodes_per_hour_interval": [
+          7.505066193687318,
+          7.759229792668472
+        ],
+        "lead_time_quantiles_s": [
+          150.18,
+          299.5,
+          357.9
+        ],
+        "sensitivity": 0.8445017182130584,
+        "sensitivity_interval": [
+          0.8223879141938647,
+          0.8648581356721777
+        ],
+        "threshold": 0.8922892456468952
+      },
+      {
+        "false_episodes_per_hour": 7.277203813791771,
+        "false_episodes_per_hour_interval": [
+          7.153817154310352,
+          7.402151211166751
+        ],
+        "lead_time_quantiles_s": [
+          149.31,
+          297.80000000000007,
+          357.53000000000003
+        ],
+        "sensitivity": 0.8144329896907216,
+        "sensitivity_interval": [
+          0.7908858650284891,
+          0.8363789450628368
+        ],
+        "threshold": 1.0023429629915137
+      },
+      {
+        "false_episodes_per_hour": 6.924159119298562,
+        "false_episodes_per_hour_interval": [
+          6.8037557798958295,
+          7.046126516396364
+        ],
+        "lead_time_quantiles_s": [
+          131.62000000000003,
+          289.4,
+          355.4800000000001
+        ],
+        "sensitivity": 0.7689003436426117,
+        "sensitivity_interval": [
+          0.7435919652258893,
+          0.7928420062701382
+        ],
+        "threshold": 1.121524304741887
+      },
+      {
+        "false_episodes_per_hour": 6.527404129296669,
+        "false_episodes_per_hour_interval": [
+          6.410451371046209,
+          6.645924687717118
+        ],
+        "lead_time_quantiles_s": [
+          119.54000000000006,
+          279.80000000000007,
+          350.16
+        ],
+        "sensitivity": 0.7173539518900344,
+        "sensitivity_interval": [
+          0.6905296048812957,
+          0.7430751616234976
+        ],
+        "threshold": 1.2588056726531063
+      },
+      {
+        "false_episodes_per_hour": 6.075170687302987,
+        "false_episodes_per_hour_interval": [
+          5.962289019403151,
+          6.189624438623711
+        ],
+        "lead_time_quantiles_s": [
+          102.17000000000007,
+          271.5,
+          349.20000000000005
+        ],
+        "sensitivity": 0.6632302405498282,
+        "sensitivity_interval": [
+          0.6352643271377185,
+          0.6903685379657616
+        ],
+        "threshold": 1.4133002825342387
+      },
+      {
+        "false_episodes_per_hour": 5.646473558275519,
+        "false_episodes_per_hour_interval": [
+          5.537601131054481,
+          5.756922149592894
+        ],
+        "lead_time_quantiles_s": [
+          88.28000000000002,
+          260.40000000000003,
+          347.11
+        ],
+        "sensitivity": 0.5927835051546392,
+        "sensitivity_interval": [
+          0.5639238564532264,
+          0.6211730810047149
+        ],
+        "threshold": 1.5866453853088487
+      },
+      {
+        "false_episodes_per_hour": 5.232906916154902,
+        "false_episodes_per_hour_interval": [
+          5.128056486684529,
+          5.339337468916943
+        ],
+        "lead_time_quantiles_s": [
+          70.01,
+          252.15000000000003,
+          339.24000000000007
+        ],
+        "sensitivity": 0.5257731958762887,
+        "sensitivity_interval": [
+          0.4966236119595859,
+          0.5547922447604363
+        ],
+        "threshold": 1.7864430132766325
+      },
+      {
+        "false_episodes_per_hour": 4.82718571168969,
+        "false_episodes_per_hour_interval": [
+          4.726445813783222,
+          4.9295096430130805
+        ],
+        "lead_time_quantiles_s": [
+          53.71000000000005,
+          245.70000000000005,
+          329.4
+        ],
+        "sensitivity": 0.4381443298969072,
+        "sensitivity_interval": [
+          0.40939874475481297,
+          0.4672032374861344
+        ],
+        "threshold": 2.016866164959545
+      },
+      {
+        "false_episodes_per_hour": 4.397367805854307,
+        "false_episodes_per_hour_interval": [
+          4.3011839621801125,
+          4.495139859917834
+        ],
+        "lead_time_quantiles_s": [
+          35.52000000000005,
+          230.30000000000007,
+          328.74
+        ],
+        "sensitivity": 0.3599656357388316,
+        "sensitivity_interval": [
+          0.332345136429663,
+          0.38829592209030667
+        ],
+        "threshold": 2.2840552442485365
+      },
+      {
+        "false_episodes_per_hour": 4.033115343281948,
+        "false_episodes_per_hour_interval": [
+          3.9409769881578147,
+          4.12684548321257
+        ],
+        "lead_time_quantiles_s": [
+          28.740000000000055,
+          197.39999999999998,
+          310.22
+        ],
+        "sensitivity": 0.2963917525773196,
+        "sensitivity_interval": [
+          0.27026982122676624,
+          0.32354675252139353
+        ],
+        "threshold": 2.599066679956528
+      },
+      {
+        "false_episodes_per_hour": 3.6705440459214618,
+        "false_episodes_per_hour_interval": [
+          3.5826248837961647,
+          3.7600585903626693
+        ],
+        "lead_time_quantiles_s": [
+          20.5,
+          169.8,
+          300.5
+        ],
+        "sensitivity": 0.23539518900343642,
+        "sensitivity_interval": [
+          0.2112872256997213,
+          0.26084784229721797
+        ],
+        "threshold": 2.97707292260099
+      },
+      {
+        "false_episodes_per_hour": 3.3869875135189793,
+        "false_episodes_per_hour_interval": [
+          3.3025202564151064,
+          3.4730530006399416
+        ],
+        "lead_time_quantiles_s": [
+          20.399999999999977,
+          136.8,
+          290.38
+        ],
+        "sensitivity": 0.17525773195876287,
+        "sensitivity_interval": [
+          0.15382952417631304,
+          0.1983405118769885
+        ],
+        "threshold": 3.443980504833698
+      },
+      {
+        "false_episodes_per_hour": 3.118001079619391,
+        "false_episodes_per_hour_interval": [
+          3.0369486215856023,
+          3.200654503401657
+        ],
+        "lead_time_quantiles_s": [
+          20.300000000000068,
+          70.10000000000002,
+          270.22
+        ],
+        "sensitivity": 0.12800687285223367,
+        "sensitivity_interval": [
+          0.10934291047119486,
+          0.14857262883956804
+        ],
+        "threshold": 4.041672631169656
+      },
+      {
+        "false_episodes_per_hour": 2.899449602075976,
+        "false_episodes_per_hour_interval": [
+          2.821284700584034,
+          2.9792177220612395
+        ],
+        "lead_time_quantiles_s": [
+          20.200000000000045,
+          38.0,
+          250.20000000000005
+        ],
+        "sensitivity": 0.09192439862542956,
+        "sensitivity_interval": [
+          0.07594474103899494,
+          0.10999944243654969
+        ],
+        "threshold": 4.820364947131847
+      },
+      {
+        "false_episodes_per_hour": 2.69434744622754,
+        "false_episodes_per_hour_interval": [
+          2.6189956673246444,
+          2.7713045872920006
+        ],
+        "lead_time_quantiles_s": [
+          20.100000000000023,
+          28.5,
+          246.7400000000001
+        ],
+        "sensitivity": 0.06013745704467354,
+        "sensitivity_interval": [
+          0.04717660267696441,
+          0.07537246333092015
+        ],
+        "threshold": 5.888600217729392
+      },
+      {
+        "false_episodes_per_hour": 2.432646061579399,
+        "false_episodes_per_hour_interval": [
+          2.361047831059707,
+          2.505852440544463
+        ],
+        "lead_time_quantiles_s": [
+          20.100000000000023,
+          28.600000000000023,
+          187.88
+        ],
+        "sensitivity": 0.037800687285223365,
+        "sensitivity_interval": [
+          0.027597884083621262,
+          0.050415621932542315
+        ],
+        "threshold": 7.498459378851777
+      },
+      {
+        "false_episodes_per_hour": 2.0022677673400584,
+        "false_episodes_per_hour_interval": [
+          1.9373219811133147,
+          2.0688264532430574
+        ],
+        "lead_time_quantiles_s": [
+          20.250000000000057,
+          39.00000000000006,
+          182.2
+        ],
+        "sensitivity": 0.022336769759450172,
+        "sensitivity_interval": [
+          0.01464177311897593,
+          0.03255817541036638
+        ],
+        "threshold": 10.010057797327685
+      },
+      {
+        "false_episodes_per_hour": 1.1964292424492093,
+        "false_episodes_per_hour_interval": [
+          1.1462915362879684,
+          1.248189841765451
+        ],
+        "lead_time_quantiles_s": [
+          26.700000000000045,
+          43.80000000000007,
+          178.89999999999998
+        ],
+        "sensitivity": 0.009450171821305841,
+        "sensitivity_interval": [
+          0.0047266629936303295,
+          0.01684592647818585
+        ],
+        "threshold": 14.546899936970968
+      },
+      {
+        "false_episodes_per_hour": 0.0,
+        "false_episodes_per_hour_interval": [
+          0.0,
+          0.0020671993085896647
+        ],
+        "lead_time_quantiles_s": [
+          NaN,
+          NaN,
+          NaN
+        ],
+        "sensitivity": 0.0,
+        "sensitivity_interval": [
+          0.0,
+          0.0031641239996322377
+        ],
+        "threshold": 131.8049708001863
+      }
+    ],
+    "neighbor_2009": [
+      {
+        "false_episodes_per_hour": 9.391549261923325,
+        "false_episodes_per_hour_interval": [
+          9.25172625917604,
+          9.532913271352417
+        ],
+        "lead_time_quantiles_s": [
+          295.6,
+          358.80000000000007,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9939862542955327,
+        "sensitivity_interval": [
+          0.9876488622531949,
+          0.9975788455561364
+        ],
+        "threshold": -472.0
+      },
+      {
+        "false_episodes_per_hour": 9.37922071703626,
+        "false_episodes_per_hour_interval": [
+          9.239487420205766,
+          9.520495135017017
+        ],
+        "lead_time_quantiles_s": [
+          295.6,
+          358.80000000000007,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9939862542955327,
+        "sensitivity_interval": [
+          0.9876488622531949,
+          0.9975788455561364
+        ],
+        "threshold": -228.92499999999973
+      },
+      {
+        "false_episodes_per_hour": 9.345597412798812,
+        "false_episodes_per_hour_interval": [
+          9.206109093447965,
+          9.486627165514786
+        ],
+        "lead_time_quantiles_s": [
+          295.6,
+          358.80000000000007,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9939862542955327,
+        "sensitivity_interval": [
+          0.9876488622531949,
+          0.9975788455561364
+        ],
+        "threshold": -125.0
+      },
+      {
+        "false_episodes_per_hour": 9.33046692589196,
+        "false_episodes_per_hour_interval": [
+          9.191089002058161,
+          9.4713864236012
+        ],
+        "lead_time_quantiles_s": [
+          295.3,
+          358.80000000000007,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9914089347079038,
+        "sensitivity_interval": [
+          0.9842576432703565,
+          0.9958727838240813
+        ],
+        "threshold": -90.0
+      },
+      {
+        "false_episodes_per_hour": 9.319819546216767,
+        "false_episodes_per_hour_interval": [
+          9.180519366210174,
+          9.460661398981514
+        ],
+        "lead_time_quantiles_s": [
+          291.46000000000004,
+          358.80000000000007,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9785223367697594,
+        "sensitivity_interval": [
+          0.9684571406232398,
+          0.9860537220365437
+        ],
+        "threshold": -71.0
+      },
+      {
+        "false_episodes_per_hour": 9.322621488236555,
+        "false_episodes_per_hour_interval": [
+          9.18330084466971,
+          9.463483778539397
+        ],
+        "lead_time_quantiles_s": [
+          289.17,
+          358.80000000000007,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9570446735395189,
+        "sensitivity_interval": [
+          0.9437582759540322,
+          0.9679524892287138
+        ],
+        "threshold": -58.0
+      },
+      {
+        "false_episodes_per_hour": 9.334950033123619,
+        "false_episodes_per_hour_interval": [
+          9.195539389411831,
+          9.475902209077326
+        ],
+        "lead_time_quantiles_s": [
+          276.01000000000005,
+          358.80000000000007,
+          360.20000000000005
+        ],
+        "sensitivity": 0.9209621993127147,
+        "sensitivity_interval": [
+          0.9039463877891988,
+          0.9358115418337651
+        ],
+        "threshold": -50.0
+      },
+      {
+        "false_episodes_per_hour": 9.337191586739449,
+        "false_episodes_per_hour_interval": [
+          9.197764586277971,
+          9.478160098626285
+        ],
+        "lead_time_quantiles_s": [
+          269.1,
+          358.80000000000007,
+          360.20000000000005
+        ],
+        "sensitivity": 0.915807560137457,
+        "sensitivity_interval": [
+          0.8983550140516586,
+          0.9311222440400337
+        ],
+        "threshold": -49.0
+      },
+      {
+        "false_episodes_per_hour": 9.362409064917536,
+        "false_episodes_per_hour_interval": [
+          9.222798197289396,
+          9.503561209798132
+        ],
+        "lead_time_quantiles_s": [
+          243.53000000000006,
+          358.70000000000005,
+          360.20000000000005
+        ],
+        "sensitivity": 0.845360824742268,
+        "sensitivity_interval": [
+          0.8232916831982952,
+          0.8656680936158946
+        ],
+        "threshold": -41.0
+      },
+      {
+        "false_episodes_per_hour": 9.38146227065209,
+        "false_episodes_per_hour_interval": [
+          9.241712658907934,
+          9.522752982733577
+        ],
+        "lead_time_quantiles_s": [
+          194.87,
+          358.5,
+          360.20000000000005
+        ],
+        "sensitivity": 0.7835051546391752,
+        "sensitivity_interval": [
+          0.7587140776837336,
+          0.8068545233885518
+        ],
+        "threshold": -36.0
+      },
+      {
+        "false_episodes_per_hour": 9.384264212671876,
+        "false_episodes_per_hour_interval": [
+          9.24449421025366,
+          9.525575289411684
+        ],
+        "lead_time_quantiles_s": [
+          161.44000000000003,
+          358.1,
+          360.1
+        ],
+        "sensitivity": 0.7018900343642611,
+        "sensitivity_interval": [
+          0.6746957229970361,
+          0.7280600305955329
+        ],
+        "threshold": -31.0
+      },
+      {
+        "false_episodes_per_hour": 9.360167511301706,
+        "false_episodes_per_hour_interval": [
+          9.220572976557213,
+          9.501303344113108
+        ],
+        "lead_time_quantiles_s": [
+          114.98000000000003,
+          356.65000000000003,
+          360.1
+        ],
+        "sensitivity": 0.654639175257732,
+        "sensitivity_interval": [
+          0.6265299863125646,
+          0.6819644027510726
+        ],
+        "threshold": -28.0
+      },
+      {
+        "false_episodes_per_hour": 9.332148091103832,
+        "false_episodes_per_hour_interval": [
+          9.192757896318788,
+          9.473079844151572
+        ],
+        "lead_time_quantiles_s": [
+          74.16000000000004,
+          350.0,
+          360.1
+        ],
+        "sensitivity": 0.6245704467353952,
+        "sensitivity_interval": [
+          0.5960361536133155,
+          0.6524734441811508
+        ],
+        "threshold": -26.0
+      },
+      {
+        "false_episodes_per_hour": 9.280592357939744,
+        "false_episodes_per_hour_interval": [
+          9.141579018063897,
+          9.421147734914792
+        ],
+        "lead_time_quantiles_s": [
+          40.91000000000001,
+          336.9,
+          359.9
+        ],
+        "sensitivity": 0.5945017182130584,
+        "sensitivity_interval": [
+          0.5656564924212548,
+          0.6228681598929628
+        ],
+        "threshold": -24.0
+      },
+      {
+        "false_episodes_per_hour": 9.207741865425273,
+        "false_episodes_per_hour_interval": [
+          9.069262973896532,
+          9.347763470840254
+        ],
+        "lead_time_quantiles_s": [
+          35.30000000000005,
+          322.9,
+          359.80000000000007
+        ],
+        "sensitivity": 0.5644329896907216,
+        "sensitivity_interval": [
+          0.5353863611100769,
+          0.5931532365645262
+        ],
+        "threshold": -22.0
+      },
+      {
+        "false_episodes_per_hour": 9.154504967049313,
+        "false_episodes_per_hour_interval": [
+          9.016418081274324,
+          9.294135061413867
+        ],
+        "lead_time_quantiles_s": [
+          29.939999999999987,
+          310.1,
+          359.70000000000005
+        ],
+        "sensitivity": 0.552405498281787,
+        "sensitivity_interval": [
+          0.5233082225018488,
+          0.5812373314926819
+        ],
+        "threshold": -21.0
+      },
+      {
+        "false_episodes_per_hour": 9.098466126653564,
+        "false_episodes_per_hour_interval": [
+          8.960793211705543,
+          9.237682771050425
+        ],
+        "lead_time_quantiles_s": [
+          29.350000000000023,
+          300.0,
+          359.6
+        ],
+        "sensitivity": 0.5378006872852233,
+        "sensitivity_interval": [
+          0.5086645661747464,
+          0.5667453513850177
+        ],
+        "threshold": -20.0
+      },
+      {
+        "false_episodes_per_hour": 9.028977964562838,
+        "false_episodes_per_hour_interval": [
+          8.891820290663619,
+          9.167680013948393
+        ],
+        "lead_time_quantiles_s": [
+          28.399999999999977,
+          289.0,
+          359.33000000000004
+        ],
+        "sensitivity": 0.5223367697594502,
+        "sensitivity_interval": [
+          0.4931864003494317,
+          0.551374009525184
+        ],
+        "threshold": -19.0
+      },
+      {
+        "false_episodes_per_hour": 8.97069757055126,
+        "false_episodes_per_hour_interval": [
+          8.833973687261347,
+          9.108966371314825
+        ],
+        "lead_time_quantiles_s": [
+          28.100000000000023,
+          263.0,
+          358.7300000000001
+        ],
+        "sensitivity": 0.5137457044673539,
+        "sensitivity_interval": [
+          0.48459930927950756,
+          0.5428224822390014
+        ],
+        "threshold": -18.0
+      },
+      {
+        "false_episodes_per_hour": 8.883837367937852,
+        "false_episodes_per_hour_interval": [
+          8.747762830717512,
+          9.021457630659457
+        ],
+        "lead_time_quantiles_s": [
+          28.05000000000001,
+          249.85000000000005,
+          358.4
+        ],
+        "sensitivity": 0.4948453608247423,
+        "sensitivity_interval": [
+          0.4657375176032658,
+          0.5239793104151973
+        ],
+        "threshold": -17.0
+      },
+      {
+        "false_episodes_per_hour": 8.805382991383805,
+        "false_episodes_per_hour_interval": [
+          8.669897908760703,
+          8.942414529610561
+        ],
+        "lead_time_quantiles_s": [
+          27.700000000000045,
+          238.80000000000007,
+          351.84000000000003
+        ],
+        "sensitivity": 0.4836769759450172,
+        "sensitivity_interval": [
+          0.4546111693680568,
+          0.5128254534488926
+        ],
+        "threshold": -16.0
+      },
+      {
+        "false_episodes_per_hour": 8.730290945253504,
+        "false_episodes_per_hour_interval": [
+          8.595372711036445,
+          8.866756334132832
+        ],
+        "lead_time_quantiles_s": [
+          27.560000000000013,
+          221.8,
+          348.64000000000004
+        ],
+        "sensitivity": 0.4699312714776632,
+        "sensitivity_interval": [
+          0.44093687314605734,
+          0.49907796208318533
+        ],
+        "threshold": -15.0
+      },
+      {
+        "false_episodes_per_hour": 8.622696371693669,
+        "false_episodes_per_hour_interval": [
+          8.488594932585341,
+          8.758345967531211
+        ],
+        "lead_time_quantiles_s": [
+          27.399999999999977,
+          188.80000000000007,
+          340.46
+        ],
+        "sensitivity": 0.45962199312714774,
+        "sensitivity_interval": [
+          0.43069544250918357,
+          0.48875305623209925
+        ],
+        "threshold": -14.0
+      },
+      {
+        "false_episodes_per_hour": 8.479797328684512,
+        "false_episodes_per_hour_interval": [
+          8.346789217334383,
+          8.614354928442937
+        ],
+        "lead_time_quantiles_s": [
+          27.399999999999977,
+          169.80000000000007,
+          338.64000000000004
+        ],
+        "sensitivity": 0.4493127147766323,
+        "sensitivity_interval": [
+          0.4204663207211493,
+          0.47841584660035713
+        ],
+        "threshold": -13.0
+      },
+      {
+        "false_episodes_per_hour": 8.269651677200459,
+        "false_episodes_per_hour_interval": [
+          8.138269535832233,
+          8.402585267082559
+        ],
+        "lead_time_quantiles_s": [
+          27.30000000000001,
+          146.90000000000003,
+          330.30000000000007
+        ],
+        "sensitivity": 0.43470790378006874,
+        "sensitivity_interval": [
+          0.40599627651050924,
+          0.4637502659570782
+        ],
+        "threshold": -12.0
+      },
+      {
+        "false_episodes_per_hour": 7.952471840560529,
+        "false_episodes_per_hour_interval": [
+          7.823586356067397,
+          8.082911736248146
+        ],
+        "lead_time_quantiles_s": [
+          27.100000000000023,
+          139.10000000000002,
+          329.80000000000007
+        ],
+        "sensitivity": 0.4175257731958763,
+        "sensitivity_interval": [
+          0.389004862982149,
+          0.4464644957241794
+        ],
+        "threshold": -11.0
+      },
+      {
+        "false_episodes_per_hour": 7.520412381109315,
+        "false_episodes_per_hour_interval": [
+          7.395015078470081,
+          7.647368139717995
+        ],
+        "lead_time_quantiles_s": [
+          26.869999999999983,
+          109.55000000000001,
+          320.20000000000005
+        ],
+        "sensitivity": 0.40378006872852235,
+        "sensitivity_interval": [
+          0.375437118826563,
+          0.43261051435758563
+        ],
+        "threshold": -10.0
+      },
+      {
+        "false_episodes_per_hour": 6.95554086992018,
+        "false_episodes_per_hour_interval": [
+          6.834869125156645,
+          7.077776376910139
+        ],
+        "lead_time_quantiles_s": [
+          26.63000000000002,
+          90.30000000000007,
+          309.70000000000005
+        ],
+        "sensitivity": 0.38831615120274915,
+        "sensitivity_interval": [
+          0.36020084586719076,
+          0.41699737405135634
+        ],
+        "threshold": -9.0
+      },
+      {
+        "false_episodes_per_hour": 6.290920222826615,
+        "false_episodes_per_hour_interval": [
+          6.1760771019533,
+          6.407333381172548
+        ],
+        "lead_time_quantiles_s": [
+          26.560000000000013,
+          78.60000000000002,
+          289.1
+        ],
+        "sensitivity": 0.36855670103092786,
+        "sensitivity_interval": [
+          0.3407754835424994,
+          0.397004093829323
+        ],
+        "threshold": -8.0
+      },
+      {
+        "false_episodes_per_hour": 5.547284810775046,
+        "false_episodes_per_hour_interval": [
+          5.4393625572102575,
+          5.656784175822041
+        ],
+        "lead_time_quantiles_s": [
+          26.560000000000013,
+          60.39999999999998,
+          270.32000000000005
+        ],
+        "sensitivity": 0.35137457044673537,
+        "sensitivity_interval": [
+          0.323924361150908,
+          0.3795781932262295
+        ],
+        "threshold": -7.0
+      },
+      {
+        "false_episodes_per_hour": 4.792441630644326,
+        "false_episodes_per_hour_interval": [
+          4.692061972830149,
+          4.894405658094569
+        ],
+        "lead_time_quantiles_s": [
+          26.230000000000054,
+          50.05000000000001,
+          253.51
+        ],
+        "sensitivity": 0.3384879725085911,
+        "sensitivity_interval": [
+          0.3113114928111388,
+          0.3664833358613499
+        ],
+        "threshold": -6.0
+      },
+      {
+        "false_episodes_per_hour": 4.1519176849209325,
+        "false_episodes_per_hour_interval": [
+          4.058439825581211,
+          4.24698615930018
+        ],
+        "lead_time_quantiles_s": [
+          25.90999999999998,
+          40.35000000000002,
+          199.49
+        ],
+        "sensitivity": 0.31958762886597936,
+        "sensitivity_interval": [
+          0.29285347527489364,
+          0.34723676471013626
+        ],
+        "threshold": -5.0
+      },
+      {
+        "false_episodes_per_hour": 3.5808819012882656,
+        "false_episodes_per_hour_interval": [
+          3.4940389163697585,
+          3.6693211653977764
+        ],
+        "lead_time_quantiles_s": [
+          25.82000000000005,
+          39.200000000000045,
+          160.06000000000003
+        ],
+        "sensitivity": 0.30326460481099654,
+        "sensitivity_interval": [
+          0.27695305985887625,
+          0.33057421091607186
+        ],
+        "threshold": -4.0
+      },
+      {
+        "false_episodes_per_hour": 3.1028705927125393,
+        "false_episodes_per_hour_interval": [
+          3.022014629682449,
+          3.1853276765190506
+        ],
+        "lead_time_quantiles_s": [
+          25.710000000000047,
+          38.55000000000001,
+          138.61000000000035
+        ],
+        "sensitivity": 0.29381443298969073,
+        "sensitivity_interval": [
+          0.2677654334033632,
+          0.3209096334147874
+        ],
+        "threshold": -3.0
+      },
+      {
+        "false_episodes_per_hour": 2.7184441475977112,
+        "false_episodes_per_hour_interval": [
+          2.6427563131959126,
+          2.795737090646112
+        ],
+        "lead_time_quantiles_s": [
+          26.160000000000036,
+          30.300000000000068,
+          94.51999999999992
+        ],
+        "sensitivity": 0.27405498281786944,
+        "sensitivity_interval": [
+          0.24859922171926502,
+          0.30065771421418075
+        ],
+        "threshold": -2.0
+      },
+      {
+        "false_episodes_per_hour": 2.3738052791638644,
+        "false_episodes_per_hour_interval": [
+          2.3030789961989155,
+          2.4461403463523808
+        ],
+        "lead_time_quantiles_s": [
+          23.660000000000043,
+          30.0,
+          68.92000000000006
+        ],
+        "sensitivity": 0.2551546391752577,
+        "sensitivity_interval": [
+          0.23032539001124763,
+          0.2812274159691895
+        ],
+        "threshold": -1.0
+      },
+      {
+        "false_episodes_per_hour": 1.8593687243309023,
+        "false_episodes_per_hour_interval": [
+          1.7967904586078083,
+          1.923561530608516
+        ],
+        "lead_time_quantiles_s": [
+          20.399999999999977,
+          29.600000000000023,
+          50.22000000000006
+        ],
+        "sensitivity": 0.21649484536082475,
+        "sensitivity_interval": [
+          0.19314547661144818,
+          0.2412859223162664
+        ],
+        "threshold": -0.0
+      }
+    ]
+  },
+  "decorrelation_time_s": {
+    "classical_ews": 360.0,
+    "cnn": 360.0,
+    "danger_margin": 360.0,
+    "galeazzi_glrt": 360.0,
+    "neighbor_2009": 360.0
+  },
+  "experiment": "D1",
+  "figure": "results/d1_operating_curves.png",
+  "headline_at_90_percent_sensitivity": {
+    "classical_ews": {
+      "false_episodes_per_hour": 9.257616433377487,
+      "false_episodes_per_hour_interval": [
+        9.118771404548664,
+        9.398003712732026
+      ],
+      "lead_time_quantiles_s": [
+        199.78,
+        358.0,
+        360.20000000000005
+      ],
+      "sensitivity": 0.9166666666666666,
+      "sensitivity_interval": [
+        0.899285646550577,
+        0.9319050742280927
+      ],
+      "threshold": 0.2727272727272727
+    },
+    "cnn": {
+      "false_episodes_per_hour": 6.28755789240287,
+      "false_episodes_per_hour_interval": [
+        6.172745065363517,
+        6.403940788763437
+      ],
+      "lead_time_quantiles_s": [
+        279.5,
+        328.30000000000007,
+        357.5
+      ],
+      "sensitivity": 0.904639175257732,
+      "sensitivity_interval": [
+        0.8862990145439021,
+        0.9209026843800228
+      ],
+      "threshold": -0.4982992686331272
+    },
+    "danger_margin": {
+      "false_episodes_per_hour": 9.128166712063312,
+      "false_episodes_per_hour_interval": [
+        8.990274221548185,
+        9.267602655956487
+      ],
+      "lead_time_quantiles_s": [
+        29.399999999999977,
+        335.6,
+        359.80000000000007
+      ],
+      "sensitivity": 0.9527491408934707,
+      "sensitivity_interval": [
+        0.9389377733643828,
+        0.964208927302575
+      ],
+      "threshold": -1.1677958365916021
+    },
+    "galeazzi_glrt": {
+      "false_episodes_per_hour": 8.304956146649781,
+      "false_episodes_per_hour_interval": [
+        8.173299305514616,
+        8.438164106850476
+      ],
+      "lead_time_quantiles_s": [
+        177.64000000000007,
+        310.05,
+        358.6
+      ],
+      "sensitivity": 0.9020618556701031,
+      "sensitivity_interval": [
+        0.8835272198375812,
+        0.9185338396123074
+      ],
+      "threshold": 0.7021545362182984
+    },
+    "neighbor_2009": {
+      "false_episodes_per_hour": 9.319819546216767,
+      "false_episodes_per_hour_interval": [
+        9.180519366210174,
+        9.460661398981514
+      ],
+      "lead_time_quantiles_s": [
+        291.46000000000004,
+        358.80000000000007,
+        360.20000000000005
+      ],
+      "sensitivity": 0.9785223367697594,
+      "sensitivity_interval": [
+        0.9684571406232398,
+        0.9860537220365437
+      ],
+      "threshold": -71.0
+    }
+  },
+  "selected": {
+    "cnn_grid_index": 1,
+    "cnn_parameter_count": 4021,
+    "ews_fraction": 0.5,
+    "ews_statistic": "ac1",
+    "neighbor_radius": 0.35
+  },
+  "selection": [
+    {
+      "auc": 0.5216865058825942,
+      "fraction": 0.2,
+      "method": "classical_ews",
+      "statistic": "variance"
+    },
+    {
+      "auc": 0.5124031672461884,
+      "fraction": 0.35,
+      "method": "classical_ews",
+      "statistic": "variance"
+    },
+    {
+      "auc": 0.5189819686786381,
+      "fraction": 0.5,
+      "method": "classical_ews",
+      "statistic": "variance"
+    },
+    {
+      "auc": 0.5427923670578537,
+      "fraction": 0.2,
+      "method": "classical_ews",
+      "statistic": "ac1"
+    },
+    {
+      "auc": 0.5425694412310634,
+      "fraction": 0.35,
+      "method": "classical_ews",
+      "statistic": "ac1"
+    },
+    {
+      "auc": 0.5507412216657309,
+      "fraction": 0.5,
+      "method": "classical_ews",
+      "statistic": "ac1"
+    },
+    {
+      "auc": 0.5169084931370926,
+      "method": "neighbor_2009",
+      "radius": 0.2
+    },
+    {
+      "auc": 0.5174478144264882,
+      "method": "neighbor_2009",
+      "radius": 0.35
+    },
+    {
+      "auc": 0.5143496910463304,
+      "method": "neighbor_2009",
+      "radius": 0.5
+    },
+    {
+      "auc": 0.7852429125269705,
+      "config": {
+        "channels": [
+          12,
+          24
+        ],
+        "family_head_weight": 0.0,
+        "kernel_size": 9
+      },
+      "grid_index": 0,
+      "method": "cnn",
+      "parameters": 2969
+    },
+    {
+      "auc": 0.794623775622308,
+      "config": {
+        "channels": [
+          16,
+          32
+        ],
+        "family_head_weight": 0.1,
+        "kernel_size": 7
+      },
+      "grid_index": 1,
+      "method": "cnn",
+      "parameters": 4021
+    }
+  ]
+}

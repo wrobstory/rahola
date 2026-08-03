@@ -27,24 +27,38 @@ hex digits of the top-level manifest's SHA-256.
 
 | Campaign | Role | Trajectories | Duration | Capsize fraction | Manifest SHA |
 |---|---|---:|---:|---:|---|
-| `softening_stationary` | stationary training | 4,000 | 600 s | 8.650% | `bc0dadbb6685` |
-| `parametric_stationary` | stationary training | 4,000 | 600 s | 8.450% | `ab3291f10d92` |
-| `biased_stationary` | stationary training | 4,000 | 600 s | 13.300% | `4fafc6ef37dc` |
-| `softening_ramp` | Prototype #2 ramp | 2,000 | 600 s | 47.700% | `f9d21770b828` |
-| `parametric_ramp` | Prototype #2 ramp | 2,000 | 600 s | 28.150% | `c742dd3c10b5` |
-| `biased_ramp` | Prototype #2 ramp | 2,000 | 600 s | 24.200% | `e6e1c1df5480` |
-| `softening_step` | sea-state transition | 6,000 | 600 s | 38.417% | `5e8a75387e43` |
-| `softening_evaluation` | rare-event evaluation | 6,000 | 600 s | 2.000% | `2696d9359662` |
-| `parametric_evaluation` | rare-event evaluation | 6,000 | 600 s | 0.950% | `2037e75e35a1` |
-| `biased_evaluation` | rare-event evaluation | 6,000 | 600 s | 1.867% | `4178b2ed6fd7` |
+| `softening_stationary` | stationary training | 4,000 | 600 s | 8.650% | `bfc73be2c9ec` |
+| `parametric_stationary` | stationary training | 4,000 | 600 s | 8.450% | `cbe939395daf` |
+| `biased_stationary` | stationary training | 4,000 | 600 s | 13.300% | `6540e85019db` |
+| `softening_ramp` | Prototype #2 ramp | 3,500 | 600 s | 47.943% | `da75672f2c89` |
+| `parametric_ramp` | Prototype #2 ramp | 3,500 | 600 s | 28.200% | `5ac54c72ee14` |
+| `biased_ramp` | Prototype #2 ramp | 3,500 | 600 s | 24.200% | `55820347af4e` |
+| `softening_step` | sea-state transition | 6,000 | 600 s | 38.417% | `7402eb0a3547` |
+| `softening_evaluation` | rare-event evaluation | 6,000 | 600 s | 2.000% | `b02bd4debcbe` |
+| `parametric_evaluation` | rare-event evaluation | 6,000 | 600 s | 0.950% | `b0d022af64fa` |
+| `biased_evaluation` | rare-event evaluation | 6,000 | 600 s | 1.867% | `c416ddc02233` |
+| `softening_bandwidth_gamma_1` | D3 bandwidth sweep | 2,400 | 600 s | 41.708% | `f973c5814438` |
+| `softening_bandwidth_gamma_3_3` | D3 bandwidth sweep | 2,400 | 600 s | 37.958% | `9e36a8b217e0` |
+| `softening_bandwidth_gamma_7` | D3 bandwidth sweep | 2,400 | 600 s | 40.958% | `76ce921118cc` |
+| `softening_bandwidth_gamma_15` | D3 bandwidth sweep | 2,400 | 600 s | 42.417% | `f48de367e516` |
+| `softening_bandwidth_gamma_30` | D3 bandwidth sweep | 2,400 | 600 s | 43.208% | `29aeb7d5b6db` |
 
-Total: 42,000 trajectories, 1.170 GiB. The equivalent final full generation took 58.846 seconds,
-versus the limits of 20 GB and one hour.
+Total: 58,500 trajectories and 1.629 GiB of file content (1.644 GiB allocated on disk). The final
+full generation took 94.480 seconds. Prototype #2 added 16,500 trajectories and 0.459 GiB, versus
+its limits of 30 minutes and 15 GiB additional.
 
 Split-specific counts and rates remain in each manifest. Stationary campaigns contain
 2,000 train / 1,000 calibration / 1,000 test trajectories. Evaluation campaigns contain
 1,000 calibration / 5,000 test trajectories. The step campaign contains 2,000 train / 1,000
-calibration / 3,000 test trajectories. Ramps contain 2,000 train trajectories.
+calibration / 3,000 test trajectories. Ramps contain 2,000 train / 500 calibration / 1,000 test
+trajectories. Each bandwidth campaign contains 1,000 train / 400 calibration / 1,000 test.
+
+The bandwidth sweep changes JONSWAP peak enhancement while retaining one softening-family ramp.
+Values γ=15 and 30 are controlled narrow-band stress cases, not oceanographically typical seas.
+Terminal stiffness was tuned on train-block pilots, before calibration/test scoring, to keep total
+capsize fraction inside 20–60%: ramp ends were −0.047, −0.048, −0.050, −0.052, and −0.054 for γ=1,
+3.3, 7, 15, and 30. The resulting test fractions were 40.5%, 38.6%, 38.8%, 40.6%, and 44.6%. This
+fixed-outcome-band rule prevents severity from becoming the bandwidth axis.
 
 ## Seed allocation
 
@@ -53,10 +67,12 @@ calibration / 3,000 test trajectories. Ramps contain 2,000 train trajectories.
 | train | `[0, 100000)` | Campaign pilots, model fitting, fixed model grid |
 | calibration | `[100000, 200000)` | CQR scores and ACI γ selection |
 | test | `[200000, 300000)` | Final experiment scoring |
-| reserve | `[300000, 400000)` | **Untouched; reserved for Prototype #2** |
+| reserve | `[300000, 400000)` | One guarded Prototype #2 final evaluation only |
 
 Campaign offsets in YAML allocate disjoint subranges within each block. Public split utilities take
-a block name and reject `reserve`; they do not accept arbitrary seed vectors.
+a block name and reject `reserve`; they do not accept arbitrary seed vectors. Only the guarded
+`rahola-lab final-eval` path can construct reserve seeds. It refuses a dirty tree and refuses any
+second invocation once access has begun.
 
 ## Exact regeneration
 
@@ -68,5 +84,5 @@ uv run rahola-lab generate --all --out data/reference --chunk-size 256
 ```
 
 The generator writes deterministic Parquet shards, chunk manifests and the top-level manifests used
-above. On this machine the final per-campaign timings sum to 58.846 seconds; filesystem and first-run
+above. On this machine the final per-campaign timings sum to 94.480 seconds; filesystem and first-run
 JAX compilation differences may change wall time without changing content.

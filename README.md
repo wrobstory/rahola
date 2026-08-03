@@ -4,7 +4,9 @@ Rahola is a falsification-first synthetic 1-DOF ship-roll dynamics library. It
 generates seeded nonlinear roll trajectories for softening, parametric, and
 biased-restoring archetypes. Phase 0 contains the shared data engine and its
 analytic validation suite; it deliberately contains no alarm or machine-learning
-model. Every physics component is paired with a test intended to disprove it.
+model. The separate `rahola-lab` workspace package contains the conformal-alarm
+and motion-history early-warning prototypes. Every physics component and every
+causal data path is paired with a test intended to disprove it.
 
 > This research software is not a vessel-operational safety system.
 
@@ -17,6 +19,7 @@ uv sync --all-extras
 uv run pytest
 uv run rahola validate
 uv run rahola generate --config configs/family1_stationary.yaml --out data/demo
+uv run python examples/d1_detectors.py
 ```
 
 The public API is:

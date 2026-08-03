@@ -1,0 +1,116 @@
+{
+  "experiment": "D5",
+  "methods": {
+    "classical_ews": {
+      "false_episodes_per_hour": 9.265548648563072,
+      "false_episodes_per_hour_interval": [
+        8.85094125050252,
+        9.694163465760884
+      ],
+      "lead_time_quantiles_s": [
+        46.87000000000003,
+        142.3,
+        256.65000000000003
+      ],
+      "maximum_sensitivity": 0.8710503842869343,
+      "sensitivity": 0.8710503842869343,
+      "sensitivity_interval": [
+        0.8504930278202152,
+        0.8897224155606539
+      ],
+      "target_attainable": false,
+      "target_sensitivity": 0.9,
+      "threshold": -0.9999999999999998,
+      "within_regime_auc": 0.5001589467634143
+    },
+    "cnn": {
+      "false_episodes_per_hour": 9.265548648563072,
+      "false_episodes_per_hour_interval": [
+        8.85094125050252,
+        9.694163465760884
+      ],
+      "lead_time_quantiles_s": [
+        46.87000000000003,
+        142.3,
+        256.6
+      ],
+      "maximum_sensitivity": 0.8710503842869343,
+      "sensitivity": 0.8710503842869343,
+      "sensitivity_interval": [
+        0.8504930278202152,
+        0.8897224155606539
+      ],
+      "target_attainable": false,
+      "target_sensitivity": 0.9,
+      "threshold": -1.9135518074035645,
+      "within_regime_auc": 0.4627358756523554
+    },
+    "danger_margin": {
+      "false_episodes_per_hour": 9.265548648563072,
+      "false_episodes_per_hour_interval": [
+        8.85094125050252,
+        9.694163465760884
+      ],
+      "lead_time_quantiles_s": [
+        46.87000000000003,
+        142.3,
+        256.65000000000003
+      ],
+      "maximum_sensitivity": 0.8710503842869343,
+      "sensitivity": 0.8710503842869343,
+      "sensitivity_interval": [
+        0.8504930278202152,
+        0.8897224155606539
+      ],
+      "target_attainable": false,
+      "target_sensitivity": 0.9,
+      "threshold": -2.027241638920752,
+      "within_regime_auc": 0.498733341220109
+    },
+    "galeazzi_glrt": {
+      "false_episodes_per_hour": 9.265548648563072,
+      "false_episodes_per_hour_interval": [
+        8.85094125050252,
+        9.694163465760884
+      ],
+      "lead_time_quantiles_s": [
+        46.87000000000003,
+        142.3,
+        256.65000000000003
+      ],
+      "maximum_sensitivity": 0.8710503842869343,
+      "sensitivity": 0.8710503842869343,
+      "sensitivity_interval": [
+        0.8504930278202152,
+        0.8897224155606539
+      ],
+      "target_attainable": false,
+      "target_sensitivity": 0.9,
+      "threshold": 1.526726123302069e-08,
+      "within_regime_auc": 0.5289260859764134
+    },
+    "neighbor_2009": {
+      "false_episodes_per_hour": 9.265548648563072,
+      "false_episodes_per_hour_interval": [
+        8.85094125050252,
+        9.694163465760884
+      ],
+      "lead_time_quantiles_s": [
+        46.87000000000003,
+        142.3,
+        256.65000000000003
+      ],
+      "maximum_sensitivity": 0.8710503842869343,
+      "sensitivity": 0.8710503842869343,
+      "sensitivity_interval": [
+        0.8504930278202152,
+        0.8897224155606539
+      ],
+      "target_attainable": false,
+      "target_sensitivity": 0.9,
+      "threshold": -53.0,
+      "within_regime_auc": 0.5176598935386053
+    }
+  },
+  "regime": "softening_step times >=300 s"
+}
