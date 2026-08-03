@@ -1,4 +1,4 @@
-"""One-time, guarded scoring on the previously inaccessible reserve block."""
+"""One-time, guarded scoring on the current inaccessible reserve block."""
 
 from __future__ import annotations
 
@@ -36,16 +36,16 @@ class FinalEvaluationError(RuntimeError):
 
 
 def _git_output(*args: str) -> str:
-    return subprocess.run(
-        ["git", *args], check=True, capture_output=True, text=True
-    ).stdout.strip()
+    return subprocess.run(["git", *args], check=True, capture_output=True, text=True).stdout.strip()
 
 
-def _reserve_seeds(count: int, offset: int) -> np.ndarray:
-    """Materialize a frozen reserve slice; no development path imports this helper."""
+def _reserve_seeds(block: SeedBlock, count: int, offset: int) -> np.ndarray:
+    """Materialize reserve-2; the spent Prototype #2 reserve is permanently refused."""
+    if block != SeedBlock.RESERVE2:
+        raise FinalEvaluationError("only the unspent reserve2 block may be materialized")
     if count < 1 or offset < 0 or offset + count > SEED_BLOCK_SIZE:
         raise ValueError("reserve slice must fit inside its frozen block")
-    start = SEED_BLOCK_START[SeedBlock.RESERVE] + offset
+    start = SEED_BLOCK_START[block] + offset
     return np.arange(start, start + count, dtype=np.uint64)
 
 
@@ -81,9 +81,12 @@ def run_final_evaluation(
     config_root: Path,
     reserve_root: Path,
     chunk_size: int = 256,
+    reserve_block: SeedBlock = SeedBlock.RESERVE2,
 ) -> dict[str, object]:
     """Score the frozen suite exactly once and permanently attest the access."""
-    attestation_path = output_root / "final_reserve_attestation.json"
+    if reserve_block != SeedBlock.RESERVE2:
+        raise FinalEvaluationError("the spent Prototype #2 reserve may never be re-run")
+    attestation_path = output_root / "final_reserve2_attestation.json"
     if attestation_path.exists() or reserve_root.exists():
         raise FinalEvaluationError("reserve access was already started; refusing a repeat")
     if _git_output("status", "--porcelain"):
@@ -95,8 +98,9 @@ def run_final_evaluation(
         "git_commit": commit,
         "started_at_utc": timestamp,
         "status": "started",
-        "statement": "No reserve seed was accessed before this invocation.",
-        "repeat_policy": "This reserve run will not be repeated after any outcome.",
+        "seed_block": str(reserve_block),
+        "statement": "No reserve-2 seed was accessed before this invocation.",
+        "repeat_policy": "This reserve-2 run will not be repeated after any outcome.",
     }
     attestation_path.write_text(
         json.dumps(attestation, indent=2, sort_keys=True) + "\n", encoding="utf-8"
@@ -124,7 +128,7 @@ def run_final_evaluation(
                 test_split = next(
                     split for split in definition.splits if split.block == SeedBlock.TEST
                 )
-                seeds = _reserve_seeds(test_split.count, test_split.offset)
+                seeds = _reserve_seeds(reserve_block, test_split.count, test_split.offset)
                 campaign_root = reserve_root / name
                 chunk_records = []
                 capsized = 0
@@ -173,13 +177,13 @@ def run_final_evaluation(
             )
             methods[name] = _metrics_payload(metrics, threshold)
         payload: dict[str, object] = {
-            "experiment": "Final reserve evaluation",
+            "experiment": "Final reserve-2 evaluation",
             "git_commit": commit,
-            "reserve_seed_block": [300_000, 400_000],
+            "reserve_seed_block": [400_000, 500_000],
             "campaigns": campaigns,
             "methods": methods,
         }
-        result_path = write_result(output_root, "final_reserve", payload)
+        result_path = write_result(output_root, "final_reserve2", payload)
         attestation.update(
             {
                 "status": "complete",

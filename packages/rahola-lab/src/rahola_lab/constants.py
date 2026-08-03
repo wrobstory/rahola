@@ -50,6 +50,14 @@ D3_SURVIVAL_VERDICT = (
     "If skill survives at gamma=1.0 materially above the B1 floor, motion history contains "
     "precursor information beyond critical slowing down."
 )
+
+# Prototype #3 ceiling protocol, frozen before any oracle test scoring.
+CEILING_AUC_GAP = 0.03
+ORACLE_ROLLOUTS = 200
+PF_PARTICLES = 2_000
+CEILING_WINDOWS_PER_CAMPAIGN = 2_000
+CEILING_BOOTSTRAP_REPLICATES = 2_000
+CEILING_BOOTSTRAP_SEED = 31_415
 # Wave-group stratification treats twice the elevation-envelope amplitude as
 # instantaneous wave height. A critical run must exceed 0.75 Hs for 1.5 Tp.
 WAVE_GROUP_HEIGHT_HS_FRACTION = 0.75
@@ -64,6 +72,7 @@ class SeedBlock(StrEnum):
     CALIBRATION = "calibration"
     TEST = "test"
     RESERVE = "reserve"
+    RESERVE2 = "reserve2"
 
 
 SEED_BLOCK_START = {
@@ -72,4 +81,6 @@ SEED_BLOCK_START = {
     SeedBlock.TEST: 200_000,
     # Frozen for Prototype #2 final evaluation; this task must never materialize it.
     SeedBlock.RESERVE: 300_000,
+    # Prototype #3 final holdout and standing holdout for future automated search.
+    SeedBlock.RESERVE2: 400_000,
 }

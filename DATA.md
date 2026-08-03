@@ -68,17 +68,26 @@ fixed-outcome-band rule prevents severity from becoming the bandwidth axis.
 | calibration | `[100000, 200000)` | CQR scores and ACI γ selection |
 | test | `[200000, 300000)` | Final experiment scoring |
 | reserve | `[300000, 400000)` | One guarded Prototype #2 final evaluation only |
+| reserve2 | `[400000, 500000)` | Prototype #3 final holdout and standing automated-search holdout |
 
 Campaign offsets in YAML allocate disjoint subranges within each block. Public split utilities take
-a block name and reject `reserve`; they do not accept arbitrary seed vectors. Only the guarded
-`rahola-lab final-eval` path can construct reserve seeds. It refuses a dirty tree and refuses any
-second invocation once access has begun.
+a block name and reject both reserves; they do not accept arbitrary seed vectors. The guarded
+`rahola-lab final-eval` path can construct reserve-2 seeds only. It permanently refuses the spent
+Prototype #2 reserve, requires a clean tree, and refuses any second reserve-2 invocation once access
+has begun.
 
 The one-time access completed on commit `843b24a25437c5386208bc66ee0b79776ad207dc`. It materialized
 18,000 trajectories (514 MiB allocated): 5,000 evaluation plus 1,000 ramp trajectories per family.
 Reserve capsize fractions were 2.38%/48.9% for softening evaluation/ramp, 1.08%/30.7% for
 parametric, and 1.90%/24.5% for biased. The timestamped attestation and headline result are checked
 in under `results/`; public reserve guards remain in force.
+
+Prototype #3 adds no campaigns. Its oracle restarts independent 200-second futures from arbitrary
+per-trajectory roll, roll-rate, current stiffness, and linear stiffness drift while preserving the
+absolute phase of deterministic parametric modulation. Fresh rollout seeds are unique and outside
+all campaign seed ranges. Restarted stationary-ensemble variance must match the corresponding
+full-run segment within the predeclared 15%, with capsize fraction within five percentage points.
+Reserve-2 remains unmaterialized unless a conditional Part B model survives its kill criteria.
 
 ## Exact regeneration
 

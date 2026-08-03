@@ -16,6 +16,7 @@ dependencies = [
   "pyyaml>=6.0",
   "rahola",
   "scipy>=1.14",
+  "xgboost>=3.0",
 ]
 
 [project.scripts]
@@ -26,4 +27,3 @@ packages = ["src/rahola_lab"]
 
 [tool.uv.sources]
 rahola = { workspace = true }
-

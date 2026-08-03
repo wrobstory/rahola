@@ -23,11 +23,11 @@ def _parser() -> argparse.ArgumentParser:
     generate.add_argument("--out", type=Path, default=Path("data/reference"))
     generate.add_argument("--chunk-size", type=int, default=256)
     final_eval = subparsers.add_parser(
-        "final-eval", help="run the guarded one-time reserve evaluation"
+        "final-eval", help="run the guarded one-time reserve-2 evaluation"
     )
     final_eval.add_argument("--data-root", type=Path, default=Path("data/reference"))
     final_eval.add_argument("--out", type=Path, default=Path("results"))
-    final_eval.add_argument("--reserve-root", type=Path, default=Path("data/final-reserve"))
+    final_eval.add_argument("--reserve-root", type=Path, default=Path("data/final-reserve2"))
     final_eval.add_argument("--chunk-size", type=int, default=256)
     return parser
 

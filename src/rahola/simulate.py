@@ -11,7 +11,14 @@ import jax
 import numpy as np
 
 from rahola import __version__
-from rahola.config import Family, ParametricMode, ProtocolKind, SeaState, SimulationConfig
+from rahola.config import (
+    Family,
+    ParametricMode,
+    ProtocolConfig,
+    ProtocolKind,
+    SeaState,
+    SimulationConfig,
+)
 from rahola.dataset import SimulationDataset
 from rahola.dynamics import integrate_rk4_batch
 from rahola.spectrum import synthesize_jonswap
@@ -76,8 +83,27 @@ def _git_commit() -> str:
         return "uncommitted"
 
 
-def simulate_batch(config: SimulationConfig, seeds: Iterable[int]) -> SimulationDataset:
-    """Simulate seeded trajectories with FFT forcing and a vmapped JAX RK4 kernel."""
+def _trajectory_values(value: float | np.ndarray, size: int, *, name: str) -> np.ndarray:
+    values = np.asarray(value, dtype=np.float64)
+    if values.ndim == 0:
+        if not np.isfinite(values):
+            raise ValueError(f"{name} must be finite scalar or one value per seed")
+        return np.full(size, float(values), dtype=np.float64)
+    if values.shape != (size,) or not np.all(np.isfinite(values)):
+        raise ValueError(f"{name} must be finite scalar or one value per seed")
+    return values
+
+
+def _simulate_batch(
+    config: SimulationConfig,
+    seeds: Iterable[int],
+    *,
+    initial_angle_rad: float | np.ndarray | None = None,
+    initial_rate_rad_s: float | np.ndarray | None = None,
+    stiffness_multiplier: float | np.ndarray | None = None,
+    stiffness_rate_per_s: float | np.ndarray | None = None,
+    time_offset_s: float | np.ndarray | None = None,
+) -> SimulationDataset:
     seed_array = np.asarray(list(seeds), dtype=np.uint64)
     if seed_array.ndim != 1 or seed_array.size == 0:
         raise ValueError("seeds must be a non-empty one-dimensional iterable")
@@ -88,9 +114,14 @@ def simulate_batch(config: SimulationConfig, seeds: Iterable[int]) -> Simulation
     n_steps = math.ceil(config.duration_s / dt_s)
     n_half_steps = 2 * n_steps
     time_half_s = np.arange(n_half_steps + 1, dtype=np.float64) * (0.5 * dt_s)
+    time_offsets = _trajectory_values(
+        0.0 if time_offset_s is None else time_offset_s,
+        seed_array.size,
+        name="time_offset_s",
+    )
     forcing_rows: list[np.ndarray] = []
     modulation_rows: list[np.ndarray] = []
-    for seed_value in seed_array:
+    for trajectory_index, seed_value in enumerate(seed_array):
         slope, _ = _forcing_for_seed(config, int(seed_value), n_half_steps, channel=0)
         forcing = config.forcing.effective_wave_slope * slope / config.escape_angle_rad
         if config.protocol.kind == ProtocolKind.RAMPED:
@@ -105,7 +136,7 @@ def simulate_batch(config: SimulationConfig, seeds: Iterable[int]) -> Simulation
 
         if config.family == Family.PARAMETRIC:
             if config.parametric.mode == ParametricMode.DETERMINISTIC:
-                tau = config.omega_n_rad_s * time_half_s
+                tau = config.omega_n_rad_s * (time_half_s + time_offsets[trajectory_index])
                 modulation = config.parametric.h0 * np.cos(config.parametric.excitation_ratio * tau)
             else:
                 _, independent_eta = _forcing_for_seed(
@@ -119,25 +150,49 @@ def simulate_batch(config: SimulationConfig, seeds: Iterable[int]) -> Simulation
 
     forcing_half = np.stack(forcing_rows)
     modulation_half = np.stack(modulation_rows)
-    if (
-        config.protocol.kind == ProtocolKind.RAMPED
-        and config.protocol.ramp_parameter == "stiffness"
-    ):
-        stiffness_1d = np.linspace(
-            float(config.protocol.ramp_start),
-            float(config.protocol.ramp_end),
-            n_half_steps + 1,
+    restarted = stiffness_multiplier is not None or stiffness_rate_per_s is not None
+    if restarted:
+        starts = _trajectory_values(
+            1.0 if stiffness_multiplier is None else stiffness_multiplier,
+            seed_array.size,
+            name="stiffness_multiplier",
         )
+        rates = _trajectory_values(
+            0.0 if stiffness_rate_per_s is None else stiffness_rate_per_s,
+            seed_array.size,
+            name="stiffness_rate_per_s",
+        )
+        stiffness_half = starts[:, None] + rates[:, None] * time_half_s[None, :]
     else:
-        stiffness_1d = np.ones(n_half_steps + 1, dtype=np.float64)
-    stiffness_half = np.broadcast_to(stiffness_1d, forcing_half.shape).copy()
+        if (
+            config.protocol.kind == ProtocolKind.RAMPED
+            and config.protocol.ramp_parameter == "stiffness"
+        ):
+            stiffness_1d = np.linspace(
+                float(config.protocol.ramp_start),
+                float(config.protocol.ramp_end),
+                n_half_steps + 1,
+            )
+        else:
+            stiffness_1d = np.ones(n_half_steps + 1, dtype=np.float64)
+        stiffness_half = np.broadcast_to(stiffness_1d, forcing_half.shape).copy()
 
-    initial_x = config.initial_angle_rad / config.escape_angle_rad
-    initial_velocity = config.initial_rate_rad_s / (config.escape_angle_rad * config.omega_n_rad_s)
-    initial_state = np.broadcast_to(
-        np.array([initial_x, initial_velocity], dtype=np.float64),
-        (seed_array.size, 2),
-    ).copy()
+    initial_angles = _trajectory_values(
+        config.initial_angle_rad if initial_angle_rad is None else initial_angle_rad,
+        seed_array.size,
+        name="initial_angle_rad",
+    )
+    initial_rates = _trajectory_values(
+        config.initial_rate_rad_s if initial_rate_rad_s is None else initial_rate_rad_s,
+        seed_array.size,
+        name="initial_rate_rad_s",
+    )
+    initial_state = np.column_stack(
+        (
+            initial_angles / config.escape_angle_rad,
+            initial_rates / (config.escape_angle_rad * config.omega_n_rad_s),
+        )
+    )
     states, cap_steps = integrate_rk4_batch(
         jax.device_put(forcing_half),
         jax.device_put(modulation_half),
@@ -183,6 +238,16 @@ def simulate_batch(config: SimulationConfig, seeds: Iterable[int]) -> Simulation
             "config_hash": config.config_hash,
             "package_version": __version__,
             "git_commit": commit,
+            "restart": None
+            if not restarted
+            else {
+                "initial_angle_rad": float(initial_angles[index]),
+                "initial_rate_rad_s": float(initial_rates[index]),
+                "stiffness_multiplier": float(stiffness_half[index, 0]),
+                "stiffness_rate_per_s": float(
+                    (stiffness_half[index, -1] - stiffness_half[index, 0]) / config.duration_s
+                ),
+            },
         }
         for index, seed in enumerate(seed_array)
     )
@@ -195,6 +260,48 @@ def simulate_batch(config: SimulationConfig, seeds: Iterable[int]) -> Simulation
         t_capsize_s=t_capsize,
         metadata=metadata,
         config=config.to_dict(),
+    )
+
+
+def simulate_batch(config: SimulationConfig, seeds: Iterable[int]) -> SimulationDataset:
+    """Simulate seeded trajectories with FFT forcing and a vmapped JAX RK4 kernel."""
+    return _simulate_batch(config, seeds)
+
+
+def simulate_restarted_batch(
+    config: SimulationConfig,
+    seeds: Iterable[int],
+    *,
+    duration_s: float,
+    initial_angle_rad: float | np.ndarray,
+    initial_rate_rad_s: float | np.ndarray,
+    stiffness_multiplier: float | np.ndarray = 1.0,
+    stiffness_rate_per_s: float | np.ndarray = 0.0,
+    time_offset_s: float | np.ndarray = 0.0,
+) -> SimulationDataset:
+    """Restart independent futures from arbitrary state and stiffness drift.
+
+    ``seeds`` define fresh forcing realizations. The initial state, current
+    stiffness multiplier, and continuing linear stiffness rate may vary by
+    trajectory, which keeps heterogeneous restart ensembles batchable.
+    """
+    if duration_s <= 0.0:
+        raise ValueError("restart duration must be positive")
+    restart_config = replace(
+        config,
+        duration_s=duration_s,
+        protocol=ProtocolConfig(kind=ProtocolKind.STATIONARY),
+        initial_angle_rad=0.0,
+        initial_rate_rad_s=0.0,
+    )
+    return _simulate_batch(
+        restart_config,
+        seeds,
+        initial_angle_rad=initial_angle_rad,
+        initial_rate_rad_s=initial_rate_rad_s,
+        stiffness_multiplier=stiffness_multiplier,
+        stiffness_rate_per_s=stiffness_rate_per_s,
+        time_offset_s=time_offset_s,
     )
 
 

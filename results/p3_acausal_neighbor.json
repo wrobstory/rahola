@@ -1,0 +1,10 @@
+{
+  "calibration_split": "first 64 trajectories select; next 64 report, per campaign",
+  "experiment": "Acausal neighbor appendix",
+  "heldout_auc": 0.35198023457448835,
+  "heldout_windows": 3066,
+  "normalization": "whole finite trajectory mean and standard deviation",
+  "selected_radius": 0.2,
+  "selection_windows": 3052,
+  "warning": "Deliberately acausal; not an operational detector result."
+}

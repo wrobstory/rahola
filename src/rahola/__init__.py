@@ -11,7 +11,7 @@ from rahola.config import (
     SimulationConfig,
 )
 from rahola.dataset import SimulationDataset
-from rahola.simulate import simulate_batch
+from rahola.simulate import simulate_batch, simulate_restarted_batch
 
 __all__ = [
     "Family",
@@ -22,4 +22,5 @@ __all__ = [
     "SimulationConfig",
     "SimulationDataset",
     "simulate_batch",
+    "simulate_restarted_batch",
 ]

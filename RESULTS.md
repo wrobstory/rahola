@@ -167,6 +167,12 @@ end; γ=15 and 30 are deliberately non-oceanographic narrow-band controls.
 | 15.0 | 92.36% [89.34, 94.75] | 5.521 [5.072, 5.997] | 0.764 | 5.951 [5.486, 6.445] | 0.365 |
 | 30.0 | 92.15% [89.25, 94.47] | 5.140 [4.708, 5.601] | 0.763 | 5.551 [5.102, 6.029] | 0.371 |
 
+The D3 episode operating points for all four non-CNN baselines are degenerate always-on points:
+sensitivity is 1.0 and FPR/h is identical across them at every γ, so their AUC columns carry the
+actual D3 story. The failure modes are distinct. Kendall-τ trend saturates because everything trends
+on a ramp; the danger margin's static restoring fit goes stale as stiffness erodes; and causal
+normalization rescales growing amplitude away, erasing the neighbor detector's novelty signal.
+
 The applied predeclared verdict is: **“If skill survives at gamma=1.0 materially above the B1
 floor, motion history contains precursor information beyond critical slowing down.”** At γ=1 the
 CNN's AUC exceeds B1 by 0.452 and its matched FPR is 11.9% lower. Both the per-γ and pooled
@@ -231,6 +237,14 @@ The completed, no-prior-access statement is in `results/final_reserve_attestatio
 now refuses a second invocation.
 
 ## What the thesis rematch showed
+
+### Deliberately acausal normalization appendix
+
+On a disjoint held-out half of the calibration trajectories, thesis-style whole-record
+normalization gives the neighbor detector **AUC 0.352** (3,066 windows; radius selected on the other
+half). This diagnostic is deliberately acausal and is not an operational result. Here, restoring
+the future-dependent normalization does not recover warning skill; it reverses the intended novelty
+ranking, so strict causal hygiene is not what made the detector uncompetitive.
 
 The 2009 neighbor-loss idea is sensitive but indiscriminate here. Its nearest ≥90% D1 point catches
 97.85% of capsizes, yet costs 9.320 false episodes/h—the highest of all five methods, versus 6.288

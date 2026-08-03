@@ -8,7 +8,7 @@ changes the simulator's behavior.
 
 - `rahola_lab.campaigns`: typed YAML definitions, named seed-block generation, deterministic
   chunked Parquet manifests, and verified split loading.
-- `rahola_lab.evaluation`: protected train/calibration/test/reserve ranges, debounced/refractory
+- `rahola_lab.evaluation`: protected train/calibration/test/reserve/reserve-2 ranges, debounced/refractory
   alarm episodes, exposure-aware event metrics, exact count intervals, lead times, and curves.
 - `rahola_lab.forecast`: causal 120-second history extraction for future maximum absolute roll;
   envelope, linear-quantile, compact JAX LSTM, and split-time danger-margin tiers.
@@ -16,8 +16,9 @@ changes the simulator's behavior.
   unprojected ACI update, deterministic DtACI, recent-score recalibration, and alarm normalization.
 - `rahola_lab.detectors`: causal detector-window extraction, classical EWS, roll-power GLRT,
   neighbor loss, and a native-JAX temporal CNN.
-- `rahola_lab.experiments`: bounded-memory E1–E4, E3b, and D1–D5 runners plus the guarded one-time
-  final-reserve path used by root example scripts.
+- `rahola_lab.inference`: the fixed 2,000-particle causal stiffness/drift filter used by C2.
+- `rahola_lab.experiments`: bounded-memory E1–E4, E3b, D1–D5, and Prototype #3 ceiling runners plus
+  the guarded one-time final-reserve-2 path used by root example scripts.
 
 The forecast target raises any horizon containing capsize to at least the relevant asymmetric escape
 angle and drops record-end-truncated horizons. All history features stop at the forecast timestamp.
@@ -109,11 +110,21 @@ hand-computed crossing and episode merge both have unit tests. D4 reconstructs t
 only in the evaluator and defines a group as `2×|Hilbert(elevation)| ≥ 0.75 Hs` for at least 1.5 Tp.
 No detector receives elevation, spectrum, or sea-state input.
 
-Public seed utilities still raise `ReserveBlockError` for the reserve. Only `rahola-lab final-eval`
-can construct its seeds. That command requires a clean committed tree, writes an access-started
-attestation before constructing the first seed, materializes the six D1-mirroring campaigns, scores
-the frozen D1 model and thresholds, and refuses every later invocation—even after failure.
+Public seed utilities raise `ReserveBlockError` for both reserves. `rahola-lab final-eval` can
+construct reserve-2 only; the spent reserve is refused even internally. The command requires a
+clean committed tree, writes an access-started attestation before constructing the first seed,
+materializes the six D1-mirroring campaigns, and refuses every later invocation—even after failure.
 The single run completed against commit `843b24a`; its attestation now makes the refusal permanent.
+
+Prototype #3's reproducible development commands are:
+
+```bash
+uv run python examples/p3_acausal_neighbor.py
+uv run python examples/p3_ceiling.py --pilot-windows 8
+uv run python examples/p3_ceiling.py
+```
+
+The pilot does not write a result and exists only to project the frozen full-run compute budget.
 
 Deliberately deferred work is narrow: wrapping the CNN in the existing conformal layer and building
 a sea-state-conditional alarm policy. Neither is needed to answer the Prototype #2 falsification

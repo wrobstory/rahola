@@ -103,3 +103,31 @@ def extract_detector_windows(
         raw_angle_rad=np.asarray(raw_angle, dtype=np.float64),
         raw_rate_rad_s=np.asarray(raw_rate, dtype=np.float64),
     )
+
+
+def acausal_whole_record_features(
+    dataset: SimulationDataset, windows: DetectorWindowDataset
+) -> NDArray[np.float32]:
+    """Rebuild selected windows using deliberately acausal record normalization.
+
+    Each trajectory's mean and scale use every finite sample in that record,
+    including samples after the scored window. This helper exists only for the
+    Prototype #3 diagnostic appendix and must never feed an operational result.
+    """
+    length = windows.features.shape[1]
+    output = np.empty_like(windows.features)
+    for trajectory in np.unique(windows.trajectory_indices):
+        selected = np.flatnonzero(windows.trajectory_indices == trajectory)
+        channels = np.column_stack(
+            (dataset.angle_rad[trajectory], dataset.rate_rad_s[trajectory])
+        ).astype(np.float64)
+        normalized = np.empty_like(channels)
+        for channel in range(2):
+            finite = np.isfinite(channels[:, channel])
+            mean = float(np.mean(channels[finite, channel]))
+            scale = float(np.std(channels[finite, channel], ddof=1))
+            normalized[:, channel] = (channels[:, channel] - mean) / max(scale, 1e-12)
+        for row in selected:
+            end = int(np.searchsorted(dataset.time_s, windows.end_times_s[row]))
+            output[row] = normalized[end - length + 1 : end + 1]
+    return output
