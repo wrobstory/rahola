@@ -1,14 +1,78 @@
 {
   "aci_fpr_per_hour": 5.5987670238859115,
-  "aci_post_coverage": 0.8396176788638473,
-  "aci_pre_coverage": 0.8591453703703703,
+  "aci_fpr_per_hour_interval": [
+    5.354644443198662,
+    5.85100375953855
+  ],
   "aci_recovery_time_s": null,
+  "aci_trailing_curve_mean_after_step": 0.8396176788638473,
+  "aci_trailing_curve_mean_before_step": 0.8591453703703703,
   "alpha": 0.1,
+  "coverage_regions": {
+    "aci_horizon_complete": {
+      "coverage": 0.9417692307692308,
+      "coverage_interval": [
+        0.9393991718355286,
+        0.9440732435279743
+      ],
+      "covered": 36729,
+      "windows": 39000
+    },
+    "aci_post_transition": {
+      "coverage": 0.8697481023062419,
+      "coverage_interval": [
+        0.8670744325725128,
+        0.872387139606894
+      ],
+      "covered": 53967,
+      "windows": 62049
+    },
+    "aci_transition_straddling": {
+      "coverage": 0.4068,
+      "coverage_interval": [
+        0.39892409334900597,
+        0.4147120717122261
+      ],
+      "covered": 6102,
+      "windows": 15000
+    },
+    "fixed_horizon_complete": {
+      "coverage": 0.8937179487179487,
+      "coverage_interval": [
+        0.890616996796418,
+        0.8967601405013511
+      ],
+      "covered": 34855,
+      "windows": 39000
+    },
+    "fixed_post_transition": {
+      "coverage": 0.0074296120807748715,
+      "coverage_interval": [
+        0.0067689866343545345,
+        0.008136911199735343
+      ],
+      "covered": 461,
+      "windows": 62049
+    },
+    "fixed_transition_straddling": {
+      "coverage": 0.1768,
+      "coverage_interval": [
+        0.17072463425945011,
+        0.18300098012371196
+      ],
+      "covered": 2652,
+      "windows": 15000
+    }
+  },
   "experiment": "E3",
   "figure": "results/e3_transition.png",
   "fixed_fpr_per_hour": 0.0,
-  "fixed_post_coverage": 0.017388563018478735,
-  "fixed_pre_coverage": 0.8033228395061728,
+  "fixed_fpr_per_hour_interval": [
+    0.0,
+    0.010618431050045556
+  ],
+  "fixed_trailing_curve_mean_after_step": 0.017388563018478735,
+  "fixed_trailing_curve_mean_before_step": 0.8033228395061728,
   "gamma_calibration": [
     {
       "exploding": false,

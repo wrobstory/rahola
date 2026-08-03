@@ -12,28 +12,164 @@
     0.5
   ],
   "at_90_percent_sensitivity": {
+    "danger_margin": {
+      "control": -1.75,
+      "control_name": "threshold_rad_s",
+      "fpr_per_hour": 7.444220765096547,
+      "fpr_per_hour_interval": [
+        7.325975863086097,
+        7.563861717086324
+      ],
+      "median_lead_time_s": 278.8,
+      "reached_90_percent_sensitivity": true,
+      "sensitivity": 0.9615384615384616,
+      "sensitivity_interval": [
+        0.9256246371577646,
+        0.9832512247236902
+      ]
+    },
     "envelope": {
-      "alpha": 0.01,
+      "control": 0.01,
+      "control_name": "alpha",
       "fpr_per_hour": 6.395888111121358,
+      "fpr_per_hour_interval": [
+        6.286139486951681,
+        6.507042595579239
+      ],
       "median_lead_time_s": 192.40000000000003,
       "reached_90_percent_sensitivity": true,
-      "sensitivity": 0.9182692307692307
+      "sensitivity": 0.9182692307692307,
+      "sensitivity_interval": [
+        0.8723655788317306,
+        0.9516683467060496
+      ]
     },
     "linear": {
-      "alpha": 0.005,
+      "control": 0.005,
+      "control_name": "alpha",
       "fpr_per_hour": 6.45942342348349,
+      "fpr_per_hour_interval": [
+        6.349139639391632,
+        6.571112471086413
+      ],
       "median_lead_time_s": 199.5,
       "reached_90_percent_sensitivity": true,
-      "sensitivity": 0.9278846153846154
+      "sensitivity": 0.9278846153846154,
+      "sensitivity_interval": [
+        0.8838457040684672,
+        0.959078057867101
+      ]
     },
     "lstm": {
-      "alpha": 0.02,
+      "control": 0.02,
+      "control_name": "alpha",
       "fpr_per_hour": 6.096868744210686,
+      "fpr_per_hour_interval": [
+        5.989677473496825,
+        6.205468688382307
+      ],
       "median_lead_time_s": 199.5,
       "reached_90_percent_sensitivity": true,
-      "sensitivity": 0.9278846153846154
+      "sensitivity": 0.9278846153846154,
+      "sensitivity_interval": [
+        0.8838457040684672,
+        0.959078057867101
+      ]
     }
   },
+  "danger_score_thresholds_rad_s": [
+    -1.75,
+    -1.725,
+    -1.7,
+    -1.675,
+    -1.65,
+    -1.625,
+    -1.6,
+    -1.575,
+    -1.55,
+    -1.525,
+    -1.5,
+    -1.475,
+    -1.45,
+    -1.425,
+    -1.4,
+    -1.375,
+    -1.35,
+    -1.325,
+    -1.3,
+    -1.275,
+    -1.25,
+    -1.225,
+    -1.2,
+    -1.1749999999999998,
+    -1.15,
+    -1.125,
+    -1.1,
+    -1.075,
+    -1.0499999999999998,
+    -1.025,
+    -1.0,
+    -0.975,
+    -0.95,
+    -0.9249999999999999,
+    -0.8999999999999999,
+    -0.875,
+    -0.85,
+    -0.825,
+    -0.7999999999999999,
+    -0.7749999999999999,
+    -0.75,
+    -0.7249999999999999,
+    -0.7,
+    -0.675,
+    -0.6499999999999999,
+    -0.625,
+    -0.5999999999999999,
+    -0.575,
+    -0.5499999999999998,
+    -0.5249999999999999,
+    -0.5,
+    -0.47499999999999987,
+    -0.44999999999999996,
+    -0.4249999999999998,
+    -0.3999999999999999,
+    -0.375,
+    -0.34999999999999987,
+    -0.32499999999999996,
+    -0.2999999999999998,
+    -0.2749999999999999,
+    -0.25,
+    -0.22499999999999987,
+    -0.19999999999999996,
+    -0.17499999999999982,
+    -0.1499999999999999,
+    -0.125,
+    -0.09999999999999987,
+    -0.07499999999999996,
+    -0.04999999999999982,
+    -0.02499999999999991,
+    0.0,
+    0.025000000000000133,
+    0.050000000000000044,
+    0.07500000000000018,
+    0.10000000000000009,
+    0.125,
+    0.15000000000000013,
+    0.17500000000000004,
+    0.20000000000000018,
+    0.2250000000000001,
+    0.25,
+    0.2749999999999999,
+    0.30000000000000027,
+    0.3250000000000002,
+    0.3500000000000001,
+    0.375,
+    0.3999999999999999,
+    0.42500000000000027,
+    0.4500000000000002,
+    0.4750000000000001,
+    0.5
+  ],
   "episode_config": {
     "debounce_windows": 3,
     "refractory_windows": 3
@@ -47,330 +183,2299 @@
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 7.444220765096547,
+      "false_positives_per_hour_interval": [
+        7.325975863086097,
+        7.563861717086324
+      ],
       "lead_time_median_s": 278.8,
       "lead_time_q10_s": 68.88000000000002,
       "lead_time_q90_s": 447.3500000000001,
       "model": "envelope",
-      "sensitivity": 0.9615384615384616
+      "sensitivity": 0.9615384615384616,
+      "sensitivity_interval": [
+        0.9256246371577646,
+        0.9832512247236902
+      ]
     },
     {
       "alpha": 0.002,
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 7.503217840861384,
+      "false_positives_per_hour_interval": [
+        7.384514424322782,
+        7.623316757324398
+      ],
       "lead_time_median_s": 232.25000000000003,
       "lead_time_q10_s": 53.7,
       "lead_time_q90_s": 436.0,
       "model": "envelope",
-      "sensitivity": 0.9423076923076923
+      "sensitivity": 0.9423076923076923,
+      "sensitivity_interval": [
+        0.9013923003943644,
+        0.9698375477660758
+      ]
     },
     {
       "alpha": 0.005,
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 6.476063624340239,
+      "false_positives_per_hour_interval": [
+        6.365640141823216,
+        6.58789221412257
+      ],
       "lead_time_median_s": 211.20000000000005,
       "lead_time_q10_s": 40.46,
       "lead_time_q90_s": 433.58000000000004,
       "model": "envelope",
-      "sensitivity": 0.9278846153846154
+      "sensitivity": 0.9278846153846154,
+      "sensitivity_interval": [
+        0.8838457040684672,
+        0.959078057867101
+      ]
     },
     {
       "alpha": 0.01,
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 6.395888111121358,
+      "false_positives_per_hour_interval": [
+        6.286139486951681,
+        6.507042595579239
+      ],
       "lead_time_median_s": 192.40000000000003,
       "lead_time_q10_s": 38.5,
       "lead_time_q90_s": 433.9,
       "model": "envelope",
-      "sensitivity": 0.9182692307692307
+      "sensitivity": 0.9182692307692307,
+      "sensitivity_interval": [
+        0.8723655788317306,
+        0.9516683467060496
+      ]
     },
     {
       "alpha": 0.02,
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 6.797774174237388,
+      "false_positives_per_hour_interval": [
+        6.684686476196168,
+        6.912263962903705
+      ],
       "lead_time_median_s": 161.0,
       "lead_time_q10_s": 34.780000000000015,
       "lead_time_q90_s": 409.2400000000001,
       "model": "envelope",
-      "sensitivity": 0.8846153846153846
+      "sensitivity": 0.8846153846153846,
+      "sensitivity_interval": [
+        0.8331947677507834,
+        0.924655251436212
+      ]
     },
     {
       "alpha": 0.05,
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 7.511285817034354,
+      "false_positives_per_hour_interval": [
+        7.392519848190755,
+        7.631447210595967
+      ],
       "lead_time_median_s": 134.30000000000007,
       "lead_time_q10_s": 34.640000000000036,
       "lead_time_q90_s": 399.6200000000002,
       "model": "envelope",
-      "sensitivity": 0.7644230769230769
+      "sensitivity": 0.7644230769230769,
+      "sensitivity_interval": [
+        0.7007972080457783,
+        0.820347800814333
+      ]
     },
     {
       "alpha": 0.1,
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 7.5712913898208125,
+      "false_positives_per_hour_interval": [
+        7.452061315309692,
+        7.691916329812739
+      ],
       "lead_time_median_s": 115.80000000000001,
       "lead_time_q10_s": 33.300000000000026,
       "lead_time_q90_s": 382.4000000000001,
       "model": "envelope",
-      "sensitivity": 0.6682692307692307
+      "sensitivity": 0.6682692307692307,
+      "sensitivity_interval": [
+        0.5998199246060236,
+        0.7318417613430463
+      ]
     },
     {
       "alpha": 0.2,
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 7.00955854877783,
+      "false_positives_per_hour_interval": [
+        6.894753494394619,
+        7.125763711897455
+      ],
       "lead_time_median_s": 111.30000000000001,
       "lead_time_q10_s": 30.760000000000012,
       "lead_time_q90_s": 323.14000000000004,
       "model": "envelope",
-      "sensitivity": 0.5240384615384616
+      "sensitivity": 0.5240384615384616,
+      "sensitivity_interval": [
+        0.45384239890416844,
+        0.593539640132158
+      ]
     },
     {
       "alpha": 0.35,
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 6.307140373218696,
+      "false_positives_per_hour_interval": [
+        6.198144020171366,
+        6.417543420696555
+      ],
       "lead_time_median_s": 89.5,
       "lead_time_q10_s": 30.600000000000012,
       "lead_time_q90_s": 210.54000000000016,
       "model": "envelope",
-      "sensitivity": 0.4182692307692308
+      "sensitivity": 0.4182692307692308,
+      "sensitivity_interval": [
+        0.350427873959618,
+        0.48847444998048334
+      ]
     },
     {
       "alpha": 0.5,
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 5.369742391621833,
+      "false_positives_per_hour_interval": [
+        5.269061096188888,
+        5.471839237605571
+      ],
       "lead_time_median_s": 75.30000000000001,
       "lead_time_q10_s": 29.400000000000063,
       "lead_time_q90_s": 165.99,
       "model": "envelope",
-      "sensitivity": 0.34615384615384615
+      "sensitivity": 0.34615384615384615,
+      "sensitivity_interval": [
+        0.28171248789360026,
+        0.4150518995790565
+      ]
     },
     {
       "alpha": 0.001,
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 7.481535154896529,
+      "false_positives_per_hour_interval": [
+        7.3630000267102655,
+        7.601465985141942
+      ],
       "lead_time_median_s": 278.8,
       "lead_time_q10_s": 68.88000000000002,
       "lead_time_q90_s": 447.3500000000001,
       "model": "linear",
-      "sensitivity": 0.9615384615384616
+      "sensitivity": 0.9615384615384616,
+      "sensitivity_interval": [
+        0.9256246371577646,
+        0.9832512247236902
+      ]
     },
     {
       "alpha": 0.002,
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 7.52590902384786,
+      "false_positives_per_hour_interval": [
+        7.407029770778076,
+        7.646183565333097
+      ],
       "lead_time_median_s": 278.8,
       "lead_time_q10_s": 68.88000000000002,
       "lead_time_q90_s": 447.3500000000001,
       "model": "linear",
-      "sensitivity": 0.9615384615384616
+      "sensitivity": 0.9615384615384616,
+      "sensitivity_interval": [
+        0.9256246371577646,
+        0.9832512247236902
+      ]
     },
     {
       "alpha": 0.005,
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 6.45942342348349,
+      "false_positives_per_hour_interval": [
+        6.349139639391632,
+        6.571112471086413
+      ],
       "lead_time_median_s": 199.5,
       "lead_time_q10_s": 39.68000000000001,
       "lead_time_q90_s": 437.26000000000005,
       "model": "linear",
-      "sensitivity": 0.9278846153846154
+      "sensitivity": 0.9278846153846154,
+      "sensitivity_interval": [
+        0.8838457040684672,
+        0.959078057867101
+      ]
     },
     {
       "alpha": 0.01,
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 5.653634303208189,
+      "false_positives_per_hour_interval": [
+        5.550359095858992,
+        5.758322369300516
+      ],
       "lead_time_median_s": 250.5,
       "lead_time_q10_s": 41.50000000000003,
       "lead_time_q90_s": 441.44,
       "model": "linear",
-      "sensitivity": 0.8413461538461539
+      "sensitivity": 0.8413461538461539,
+      "sensitivity_interval": [
+        0.7844686817847936,
+        0.8882034263994808
+      ]
     },
     {
       "alpha": 0.02,
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 5.589090493824434,
+      "false_positives_per_hour_interval": [
+        5.486398885439773,
+        5.693195572123207
+      ],
       "lead_time_median_s": 256.85,
       "lead_time_q10_s": 41.93000000000003,
       "lead_time_q90_s": 441.32000000000005,
       "model": "linear",
-      "sensitivity": 0.8173076923076923
+      "sensitivity": 0.8173076923076923,
+      "sensitivity_interval": [
+        0.7579761167801067,
+        0.8673532909063565
+      ]
     },
     {
       "alpha": 0.05,
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 6.5844770541645135,
+      "false_positives_per_hour_interval": [
+        6.473148048758926,
+        6.697210149396354
+      ],
       "lead_time_median_s": 160.3,
       "lead_time_q10_s": 42.52000000000002,
       "lead_time_q90_s": 416.62000000000006,
       "model": "linear",
-      "sensitivity": 0.6105769230769231
+      "sensitivity": 0.6105769230769231,
+      "sensitivity_interval": [
+        0.540713023697301,
+        0.6772410547569754
+      ]
     },
     {
       "alpha": 0.1,
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 2.500568365109651,
+      "false_positives_per_hour_interval": [
+        2.431709256473368,
+        2.5708712292334788
+      ],
       "lead_time_median_s": 256.40000000000003,
       "lead_time_q10_s": 58.260000000000005,
       "lead_time_q90_s": 443.6,
       "model": "linear",
-      "sensitivity": 0.3605769230769231
+      "sensitivity": 0.3605769230769231,
+      "sensitivity_interval": [
+        0.29533185172090975,
+        0.42985921411618633
+      ]
     },
     {
       "alpha": 0.2,
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 2.4809026731880386,
+      "false_positives_per_hour_interval": [
+        2.4123146857052022,
+        2.5509346219602693
+      ],
       "lead_time_median_s": 256.40000000000003,
       "lead_time_q10_s": 58.260000000000005,
       "lead_time_q90_s": 443.6,
       "model": "linear",
-      "sensitivity": 0.3605769230769231
+      "sensitivity": 0.3605769230769231,
+      "sensitivity_interval": [
+        0.29533185172090975,
+        0.42985921411618633
+      ]
     },
     {
       "alpha": 0.35,
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 2.4783814306339855,
+      "false_positives_per_hour_interval": [
+        2.409828281677252,
+        2.548378567288814
+      ],
       "lead_time_median_s": 256.85,
       "lead_time_q10_s": 64.11000000000001,
       "lead_time_q90_s": 443.79999999999995,
       "model": "linear",
-      "sensitivity": 0.3557692307692308
+      "sensitivity": 0.3557692307692308,
+      "sensitivity_interval": [
+        0.29078494561113893,
+        0.4249304987454864
+      ]
     },
     {
       "alpha": 0.5,
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 4.206441077181832,
+      "false_positives_per_hour_interval": [
+        4.117224139803168,
+        4.297084718557524
+      ],
       "lead_time_median_s": 172.3,
       "lead_time_q10_s": 63.000000000000014,
       "lead_time_q90_s": 432.64000000000004,
       "model": "linear",
-      "sensitivity": 0.3269230769230769
+      "sensitivity": 0.3269230769230769,
+      "sensitivity_interval": [
+        0.26365497665316123,
+        0.3952081294545016
+      ]
     },
     {
       "alpha": 0.001,
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 7.739710392431545,
+      "false_positives_per_hour_interval": [
+        7.619188157218669,
+        7.861625924512664
+      ],
       "lead_time_median_s": 224.30000000000007,
       "lead_time_q10_s": 58.44000000000001,
       "lead_time_q90_s": 435.58000000000004,
       "model": "lstm",
-      "sensitivity": 0.9471153846153846
+      "sensitivity": 0.9471153846153846,
+      "sensitivity_interval": [
+        0.9073465863960155,
+        0.9733078671423382
+      ]
     },
     {
       "alpha": 0.002,
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 7.445229262118168,
+      "false_positives_per_hour_interval": [
+        7.326976505911831,
+        7.564878058899566
+      ],
       "lead_time_median_s": 218.00000000000006,
       "lead_time_q10_s": 53.14999999999999,
       "lead_time_q90_s": 436.0,
       "model": "lstm",
-      "sensitivity": 0.9423076923076923
+      "sensitivity": 0.9423076923076923,
+      "sensitivity_interval": [
+        0.9013923003943644,
+        0.9698375477660758
+      ]
     },
     {
       "alpha": 0.005,
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 7.038300713894032,
+      "false_positives_per_hour_interval": [
+        6.923264735343279,
+        7.154736532438306
+      ],
       "lead_time_median_s": 200.15,
       "lead_time_q10_s": 46.250000000000014,
       "lead_time_q90_s": 436.0,
       "model": "lstm",
-      "sensitivity": 0.9423076923076923
+      "sensitivity": 0.9423076923076923,
+      "sensitivity_interval": [
+        0.9013923003943644,
+        0.9698375477660758
+      ]
     },
     {
       "alpha": 0.01,
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 6.525479978399676,
+      "false_positives_per_hour_interval": [
+        6.414642754462247,
+        6.637721845727395
+      ],
       "lead_time_median_s": 205.60000000000002,
       "lead_time_q10_s": 43.510000000000005,
       "lead_time_q90_s": 436.8400000000001,
       "model": "lstm",
-      "sensitivity": 0.9326923076923077
+      "sensitivity": 0.9326923076923077,
+      "sensitivity_interval": [
+        0.8896470367961107,
+        0.9627165490152538
+      ]
     },
     {
       "alpha": 0.02,
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 6.096868744210686,
+      "false_positives_per_hour_interval": [
+        5.989677473496825,
+        6.205468688382307
+      ],
       "lead_time_median_s": 199.5,
       "lead_time_q10_s": 40.46,
       "lead_time_q90_s": 437.26000000000005,
       "model": "lstm",
-      "sensitivity": 0.9278846153846154
+      "sensitivity": 0.9278846153846154,
+      "sensitivity_interval": [
+        0.8838457040684672,
+        0.959078057867101
+      ]
     },
     {
       "alpha": 0.05,
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 3.948770088157628,
+      "false_positives_per_hour_interval": [
+        3.8623092415532208,
+        4.036660145352788
+      ],
       "lead_time_median_s": 129.5,
       "lead_time_q10_s": 31.940000000000012,
       "lead_time_q90_s": 433.18,
       "model": "lstm",
-      "sensitivity": 0.5048076923076923
+      "sensitivity": 0.5048076923076923,
+      "sensitivity_interval": [
+        0.43481505636758755,
+        0.5746613580279423
+      ]
     },
     {
       "alpha": 0.1,
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 2.7300014375284634,
+      "false_positives_per_hour_interval": [
+        2.6580565343263323,
+        2.8033877176605038
+      ],
       "lead_time_median_s": 189.3,
       "lead_time_q10_s": 29.69999999999999,
       "lead_time_q90_s": 438.1,
       "model": "lstm",
-      "sensitivity": 0.4375
+      "sensitivity": 0.4375,
+      "sensitivity_interval": [
+        0.36900391014332923,
+        0.5078033081912491
+      ]
     },
     {
       "alpha": 0.2,
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 2.631672977920401,
+      "false_positives_per_hour_interval": [
+        2.561033625208791,
+        2.703754722118675
+      ],
       "lead_time_median_s": 199.5,
       "lead_time_q10_s": 35.32000000000002,
       "lead_time_q90_s": 440.68,
       "model": "lstm",
-      "sensitivity": 0.40865384615384615
+      "sensitivity": 0.40865384615384615,
+      "sensitivity_interval": [
+        0.34117860655553794,
+        0.4787714416751631
+      ]
     },
     {
       "alpha": 0.35,
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 2.5988968247177135,
+      "false_positives_per_hour_interval": [
+        2.5286981942038462,
+        2.670538186461659
+      ],
       "lead_time_median_s": 215.15,
       "lead_time_q10_s": 35.09000000000002,
       "lead_time_q90_s": 441.11,
       "model": "lstm",
-      "sensitivity": 0.40384615384615385
+      "sensitivity": 0.40384615384615385,
+      "sensitivity_interval": [
+        0.33656377487082373,
+        0.47391018540121793
+      ]
     },
     {
       "alpha": 0.5,
       "capsizes": 208,
       "exposure_hours": 1983.1491388888885,
       "false_positives_per_hour": 2.568137665558268,
+      "false_positives_per_hour_interval": [
+        2.498355232603301,
+        2.6393631493249052
+      ],
       "lead_time_median_s": 214.3,
       "lead_time_q10_s": 34.68000000000001,
       "lead_time_q90_s": 441.53999999999996,
       "model": "lstm",
-      "sensitivity": 0.39903846153846156
+      "sensitivity": 0.39903846153846156,
+      "sensitivity_interval": [
+        0.33195552717078386,
+        0.4690423812102882
+      ]
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.444220765096547,
+      "false_positives_per_hour_interval": [
+        7.325975863086097,
+        7.563861717086324
+      ],
+      "lead_time_median_s": 278.8,
+      "lead_time_q10_s": 68.88000000000002,
+      "lead_time_q90_s": 447.3500000000001,
+      "model": "danger_margin",
+      "sensitivity": 0.9615384615384616,
+      "sensitivity_interval": [
+        0.9256246371577646,
+        0.9832512247236902
+      ],
+      "threshold_rad_s": -1.75
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.444220765096547,
+      "false_positives_per_hour_interval": [
+        7.325975863086097,
+        7.563861717086324
+      ],
+      "lead_time_median_s": 278.8,
+      "lead_time_q10_s": 68.88000000000002,
+      "lead_time_q90_s": 447.3500000000001,
+      "model": "danger_margin",
+      "sensitivity": 0.9615384615384616,
+      "sensitivity_interval": [
+        0.9256246371577646,
+        0.9832512247236902
+      ],
+      "threshold_rad_s": -1.725
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.444220765096547,
+      "false_positives_per_hour_interval": [
+        7.325975863086097,
+        7.563861717086324
+      ],
+      "lead_time_median_s": 278.8,
+      "lead_time_q10_s": 68.88000000000002,
+      "lead_time_q90_s": 447.3500000000001,
+      "model": "danger_margin",
+      "sensitivity": 0.9615384615384616,
+      "sensitivity_interval": [
+        0.9256246371577646,
+        0.9832512247236902
+      ],
+      "threshold_rad_s": -1.7
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.444220765096547,
+      "false_positives_per_hour_interval": [
+        7.325975863086097,
+        7.563861717086324
+      ],
+      "lead_time_median_s": 278.8,
+      "lead_time_q10_s": 68.88000000000002,
+      "lead_time_q90_s": 447.3500000000001,
+      "model": "danger_margin",
+      "sensitivity": 0.9615384615384616,
+      "sensitivity_interval": [
+        0.9256246371577646,
+        0.9832512247236902
+      ],
+      "threshold_rad_s": -1.675
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.444220765096547,
+      "false_positives_per_hour_interval": [
+        7.325975863086097,
+        7.563861717086324
+      ],
+      "lead_time_median_s": 278.8,
+      "lead_time_q10_s": 68.88000000000002,
+      "lead_time_q90_s": 447.3500000000001,
+      "model": "danger_margin",
+      "sensitivity": 0.9615384615384616,
+      "sensitivity_interval": [
+        0.9256246371577646,
+        0.9832512247236902
+      ],
+      "threshold_rad_s": -1.65
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.444220765096547,
+      "false_positives_per_hour_interval": [
+        7.325975863086097,
+        7.563861717086324
+      ],
+      "lead_time_median_s": 278.8,
+      "lead_time_q10_s": 68.88000000000002,
+      "lead_time_q90_s": 447.3500000000001,
+      "model": "danger_margin",
+      "sensitivity": 0.9615384615384616,
+      "sensitivity_interval": [
+        0.9256246371577646,
+        0.9832512247236902
+      ],
+      "threshold_rad_s": -1.625
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.444220765096547,
+      "false_positives_per_hour_interval": [
+        7.325975863086097,
+        7.563861717086324
+      ],
+      "lead_time_median_s": 280.3,
+      "lead_time_q10_s": 71.50000000000003,
+      "lead_time_q90_s": 447.4000000000001,
+      "model": "danger_margin",
+      "sensitivity": 0.9567307692307693,
+      "sensitivity_interval": [
+        0.919453168254401,
+        0.9800264882531871
+      ],
+      "threshold_rad_s": -1.6
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.444220765096547,
+      "false_positives_per_hour_interval": [
+        7.325975863086097,
+        7.563861717086324
+      ],
+      "lead_time_median_s": 280.3,
+      "lead_time_q10_s": 71.50000000000003,
+      "lead_time_q90_s": 447.4000000000001,
+      "model": "danger_margin",
+      "sensitivity": 0.9567307692307693,
+      "sensitivity_interval": [
+        0.919453168254401,
+        0.9800264882531871
+      ],
+      "threshold_rad_s": -1.575
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.444725013607358,
+      "false_positives_per_hour_interval": [
+        7.326476184427654,
+        7.564369888064298
+      ],
+      "lead_time_median_s": 280.3,
+      "lead_time_q10_s": 71.50000000000003,
+      "lead_time_q90_s": 447.4000000000001,
+      "model": "danger_margin",
+      "sensitivity": 0.9567307692307693,
+      "sensitivity_interval": [
+        0.919453168254401,
+        0.9800264882531871
+      ],
+      "threshold_rad_s": -1.55
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.445229262118168,
+      "false_positives_per_hour_interval": [
+        7.326976505911831,
+        7.564878058899566
+      ],
+      "lead_time_median_s": 280.3,
+      "lead_time_q10_s": 71.50000000000003,
+      "lead_time_q90_s": 447.4000000000001,
+      "model": "danger_margin",
+      "sensitivity": 0.9567307692307693,
+      "sensitivity_interval": [
+        0.919453168254401,
+        0.9800264882531871
+      ],
+      "threshold_rad_s": -1.525
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.446237759139789,
+      "false_positives_per_hour_interval": [
+        7.327977149308104,
+        7.5658944001423905
+      ],
+      "lead_time_median_s": 278.8,
+      "lead_time_q10_s": 71.20000000000003,
+      "lead_time_q90_s": 445.27000000000004,
+      "model": "danger_margin",
+      "sensitivity": 0.9519230769230769,
+      "sensitivity_interval": [
+        0.9133640493484952,
+        0.9767076197456144
+      ],
+      "threshold_rad_s": -1.5
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.448254753183032,
+      "false_positives_per_hour_interval": [
+        7.329978437811571,
+        7.56792708091717
+      ],
+      "lead_time_median_s": 278.8,
+      "lead_time_q10_s": 71.20000000000003,
+      "lead_time_q90_s": 445.27000000000004,
+      "model": "danger_margin",
+      "sensitivity": 0.9519230769230769,
+      "sensitivity_interval": [
+        0.9133640493484952,
+        0.9767076197456144
+      ],
+      "threshold_rad_s": -1.475
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.452792989780327,
+      "false_positives_per_hour_interval": [
+        7.334481345281494,
+        7.572500604324041
+      ],
+      "lead_time_median_s": 278.8,
+      "lead_time_q10_s": 71.20000000000003,
+      "lead_time_q90_s": 445.27000000000004,
+      "model": "danger_margin",
+      "sensitivity": 0.9519230769230769,
+      "sensitivity_interval": [
+        0.9133640493484952,
+        0.9767076197456144
+      ],
+      "threshold_rad_s": -1.45
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.4598524689316745,
+      "false_positives_per_hour_interval": [
+        7.341485890937077,
+        7.579614951145941
+      ],
+      "lead_time_median_s": 278.8,
+      "lead_time_q10_s": 71.20000000000003,
+      "lead_time_q90_s": 445.27000000000004,
+      "model": "danger_margin",
+      "sensitivity": 0.9519230769230769,
+      "sensitivity_interval": [
+        0.9133640493484952,
+        0.9767076197456144
+      ],
+      "threshold_rad_s": -1.425
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.465399202550591,
+      "false_positives_per_hour_interval": [
+        7.346989482079907,
+        7.585204775522993
+      ],
+      "lead_time_median_s": 280.3,
+      "lead_time_q10_s": 70.90000000000003,
+      "lead_time_q90_s": 445.56,
+      "model": "danger_margin",
+      "sensitivity": 0.9471153846153846,
+      "sensitivity_interval": [
+        0.9073465863960155,
+        0.9733078671423382
+      ],
+      "threshold_rad_s": -1.4
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.483552148939772,
+      "false_positives_per_hour_interval": [
+        7.365001354994488,
+        7.6034986261399
+      ],
+      "lead_time_median_s": 278.8,
+      "lead_time_q10_s": 74.30000000000001,
+      "lead_time_q90_s": 445.85,
+      "model": "danger_margin",
+      "sensitivity": 0.9423076923076923,
+      "sensitivity_interval": [
+        0.9013923003943644,
+        0.9698375477660758
+      ],
+      "threshold_rad_s": -1.375
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.501200846818143,
+      "false_positives_per_hour_interval": [
+        7.38251307399408,
+        7.621284138368772
+      ],
+      "lead_time_median_s": 274.1,
+      "lead_time_q10_s": 76.62,
+      "lead_time_q90_s": 444.36,
+      "model": "danger_margin",
+      "sensitivity": 0.9375,
+      "sensitivity_interval": [
+        0.8954943318459435,
+        0.966304882718566
+      ],
+      "threshold_rad_s": -1.35
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.537506739596504,
+      "false_positives_per_hour_interval": [
+        7.4185377243860815,
+        7.657870935128616
+      ],
+      "lead_time_median_s": 274.05,
+      "lead_time_q10_s": 76.59,
+      "lead_time_q90_s": 441.68,
+      "model": "danger_margin",
+      "sensitivity": 0.9326923076923077,
+      "sensitivity_interval": [
+        0.8896470367961107,
+        0.9627165490152538
+      ],
+      "threshold_rad_s": -1.325
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.590957081742425,
+      "false_positives_per_hour_interval": [
+        7.471575335245916,
+        7.711733510482163
+      ],
+      "lead_time_median_s": 274.05,
+      "lead_time_q10_s": 76.59,
+      "lead_time_q90_s": 439.43000000000006,
+      "model": "danger_margin",
+      "sensitivity": 0.9326923076923077,
+      "sensitivity_interval": [
+        0.8896470367961107,
+        0.9627165490152538
+      ],
+      "threshold_rad_s": -1.3
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.655500891126179,
+      "false_positives_per_hour_interval": [
+        7.535622826847486,
+        7.776773036395869
+      ],
+      "lead_time_median_s": 270.4,
+      "lead_time_q10_s": 68.96000000000001,
+      "lead_time_q90_s": 439.36,
+      "model": "danger_margin",
+      "sensitivity": 0.9326923076923077,
+      "sensitivity_interval": [
+        0.8896470367961107,
+        0.9627165490152538
+      ],
+      "threshold_rad_s": -1.275
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.746265623072083,
+      "false_positives_per_hour_interval": [
+        7.625693401250848,
+        7.868231080737189
+      ],
+      "lead_time_median_s": 258.55000000000007,
+      "lead_time_q10_s": 52.370000000000005,
+      "lead_time_q90_s": 436.34,
+      "model": "danger_margin",
+      "sensitivity": 0.9326923076923077,
+      "sensitivity_interval": [
+        0.8896470367961107,
+        0.9627165490152538
+      ],
+      "threshold_rad_s": -1.25
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.870815005242295,
+      "false_positives_per_hour_interval": [
+        7.749297327547206,
+        7.99372475972327
+      ],
+      "lead_time_median_s": 254.90000000000003,
+      "lead_time_q10_s": 44.75,
+      "lead_time_q90_s": 436.34,
+      "model": "danger_margin",
+      "sensitivity": 0.9326923076923077,
+      "sensitivity_interval": [
+        0.8896470367961107,
+        0.9627165490152538
+      ],
+      "threshold_rad_s": -1.225
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 8.045284989982754,
+      "false_positives_per_hour_interval": [
+        7.9224563567337665,
+        8.1695040776515
+      ],
+      "lead_time_median_s": 252.10000000000002,
+      "lead_time_q10_s": 46.040000000000006,
+      "lead_time_q90_s": 430.84000000000015,
+      "model": "danger_margin",
+      "sensitivity": 0.9086538461538461,
+      "sensitivity_interval": [
+        0.8610284156005438,
+        0.9441050001656429
+      ],
+      "threshold_rad_s": -1.2
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 8.461794259912292,
+      "false_positives_per_hour_interval": [
+        8.335896770774271,
+        8.58907833591982
+      ],
+      "lead_time_median_s": 244.60000000000002,
+      "lead_time_q10_s": 43.7,
+      "lead_time_q90_s": 426.64000000000004,
+      "model": "danger_margin",
+      "sensitivity": 0.9038461538461539,
+      "sensitivity_interval": [
+        0.8554072374014133,
+        0.9402727322657696
+      ],
+      "threshold_rad_s": -1.1749999999999998
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.760888829885589,
+      "false_positives_per_hour_interval": [
+        7.640205181396229,
+        7.882965578095323
+      ],
+      "lead_time_median_s": 182.39999999999998,
+      "lead_time_q10_s": 33.680000000000014,
+      "lead_time_q90_s": 412.06,
+      "model": "danger_margin",
+      "sensitivity": 0.8413461538461539,
+      "sensitivity_interval": [
+        0.7844686817847936,
+        0.8882034263994808
+      ],
+      "threshold_rad_s": -1.15
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.30706517015607,
+      "false_positives_per_hour_interval": [
+        7.189893802573815,
+        7.42563386723082
+      ],
+      "lead_time_median_s": 180.95,
+      "lead_time_q10_s": 32.19000000000002,
+      "lead_time_q90_s": 413.96,
+      "model": "danger_margin",
+      "sensitivity": 0.8173076923076923,
+      "sensitivity_interval": [
+        0.7579761167801067,
+        0.8673532909063565
+      ],
+      "threshold_rad_s": -1.125
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.204702722461523,
+      "false_positives_per_hour_interval": [
+        7.0883396105892915,
+        7.322464119466761
+      ],
+      "lead_time_median_s": 157.85000000000002,
+      "lead_time_q10_s": 33.56000000000002,
+      "lead_time_q90_s": 408.88000000000005,
+      "model": "danger_margin",
+      "sensitivity": 0.7884615384615384,
+      "sensitivity_interval": [
+        0.7266175464663389,
+        0.841888108368347
+      ],
+      "threshold_rad_s": -1.1
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.2601700586506865,
+      "false_positives_per_hour_interval": [
+        7.143368218333363,
+        7.3783696661894105
+      ],
+      "lead_time_median_s": 145.8,
+      "lead_time_q10_s": 31.82000000000002,
+      "lead_time_q90_s": 384.62000000000006,
+      "model": "danger_margin",
+      "sensitivity": 0.7548076923076923,
+      "sensitivity_interval": [
+        0.6905407629262474,
+        0.8116584928798608
+      ],
+      "threshold_rad_s": -1.075
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.3690877369857715,
+      "false_positives_per_hour_interval": [
+        7.2514295851796895,
+        7.488142639548582
+      ],
+      "lead_time_median_s": 135.70000000000002,
+      "lead_time_q10_s": 31.760000000000034,
+      "lead_time_q90_s": 367.3700000000001,
+      "model": "danger_margin",
+      "sensitivity": 0.7403846153846154,
+      "sensitivity_interval": [
+        0.6752278390230984,
+        0.7985514444268828
+      ],
+      "threshold_rad_s": -1.0499999999999998
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.5445662187478515,
+      "false_positives_per_hour_interval": [
+        7.425542602002477,
+        7.664984950022223
+      ],
+      "lead_time_median_s": 122.30000000000001,
+      "lead_time_q10_s": 32.10000000000002,
+      "lead_time_q90_s": 357.80000000000007,
+      "model": "danger_margin",
+      "sensitivity": 0.6778846153846154,
+      "sensitivity_interval": [
+        0.6097712837226051,
+        0.7408407371984363
+      ],
+      "threshold_rad_s": -1.025
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.6923110324153505,
+      "false_positives_per_hour_interval": [
+        7.572150918241435,
+        7.813864884775456
+      ],
+      "lead_time_median_s": 115.35,
+      "lead_time_q10_s": 31.740000000000045,
+      "lead_time_q90_s": 304.62000000000006,
+      "model": "danger_margin",
+      "sensitivity": 0.6346153846153846,
+      "sensitivity_interval": [
+        0.5652190446614591,
+        0.7001142098781837
+      ],
+      "threshold_rad_s": -1.0
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.700883257099131,
+      "false_positives_per_hour_interval": [
+        7.580657564274459,
+        7.822502608288824
+      ],
+      "lead_time_median_s": 100.5,
+      "lead_time_q10_s": 31.18000000000003,
+      "lead_time_q90_s": 283.4600000000001,
+      "model": "danger_margin",
+      "sensitivity": 0.5625,
+      "sensitivity_interval": [
+        0.4921966918087509,
+        0.6309960898566708
+      ],
+      "threshold_rad_s": -0.975
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 7.469937439147887,
+      "false_positives_per_hour_interval": [
+        7.351492433073925,
+        7.589778255410122
+      ],
+      "lead_time_median_s": 95.20000000000005,
+      "lead_time_q10_s": 29.300000000000068,
+      "lead_time_q90_s": 269.9,
+      "model": "danger_margin",
+      "sensitivity": 0.4855769230769231,
+      "sensitivity_interval": [
+        0.41588706513244295,
+        0.5556836982620621
+      ],
+      "threshold_rad_s": -0.95
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 6.946023236415697,
+      "false_positives_per_hour_interval": [
+        6.831730446615886,
+        7.061716729204829
+      ],
+      "lead_time_median_s": 90.39999999999998,
+      "lead_time_q10_s": 25.319999999999993,
+      "lead_time_q90_s": 204.26000000000002,
+      "model": "danger_margin",
+      "sensitivity": 0.3605769230769231,
+      "sensitivity_interval": [
+        0.29533185172090975,
+        0.42985921411618633
+      ],
+      "threshold_rad_s": -0.9249999999999999
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 6.193684458286317,
+      "false_positives_per_hour_interval": [
+        6.085658039407064,
+        6.303118638935902
+      ],
+      "lead_time_median_s": 76.10000000000002,
+      "lead_time_q10_s": 24.410000000000004,
+      "lead_time_q90_s": 203.64,
+      "model": "danger_margin",
+      "sensitivity": 0.2980769230769231,
+      "sensitivity_interval": [
+        0.23679716476602009,
+        0.3652165333075769
+      ],
+      "threshold_rad_s": -0.8999999999999999
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 5.347051208635357,
+      "false_positives_per_hour_interval": [
+        5.246580323086169,
+        5.44893786030709
+      ],
+      "lead_time_median_s": 61.85000000000004,
+      "lead_time_q10_s": 24.100000000000016,
+      "lead_time_q90_s": 174.53000000000011,
+      "model": "danger_margin",
+      "sensitivity": 0.23076923076923078,
+      "sensitivity_interval": [
+        0.175322766949021,
+        0.2940596451323694
+      ],
+      "threshold_rad_s": -0.875
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 4.560927780281668,
+      "false_positives_per_hour_interval": [
+        4.468058966177643,
+        4.655219874537846
+      ],
+      "lead_time_median_s": 56.95,
+      "lead_time_q10_s": 21.52000000000004,
+      "lead_time_q90_s": 152.38000000000014,
+      "model": "danger_margin",
+      "sensitivity": 0.18269230769230768,
+      "sensitivity_interval": [
+        0.1326467090936435,
+        0.24202388321989332
+      ],
+      "threshold_rad_s": -0.85
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 3.8025380200225607,
+      "false_positives_per_hour_interval": [
+        3.717682931039678,
+        3.88882374990208
+      ],
+      "lead_time_median_s": 58.900000000000006,
+      "lead_time_q10_s": 22.940000000000033,
+      "lead_time_q90_s": 150.12,
+      "model": "danger_margin",
+      "sensitivity": 0.13942307692307693,
+      "sensitivity_interval": [
+        0.09540319794772124,
+        0.19406012731906613
+      ],
+      "threshold_rad_s": -0.825
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 3.146510707458,
+      "false_positives_per_hour_interval": [
+        3.06928663761273,
+        3.225171922935285
+      ],
+      "lead_time_median_s": 55.5,
+      "lead_time_q10_s": 22.88000000000003,
+      "lead_time_q90_s": 170.42000000000004,
+      "model": "danger_margin",
+      "sensitivity": 0.09134615384615384,
+      "sensitivity_interval": [
+        0.05589499983435708,
+        0.1389715843994562
+      ],
+      "threshold_rad_s": -0.7999999999999999
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 2.5711631566231317,
+      "false_positives_per_hour_interval": [
+        2.5013396734163775,
+        2.6424296591746725
+      ],
+      "lead_time_median_s": 46.55,
+      "lead_time_q10_s": 22.100000000000023,
+      "lead_time_q90_s": 126.80000000000001,
+      "model": "danger_margin",
+      "sensitivity": 0.07692307692307693,
+      "sensitivity_interval": [
+        0.04460597841451756,
+        0.12191364801589798
+      ],
+      "threshold_rad_s": -0.7749999999999999
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 2.065401900280123,
+      "false_positives_per_hour_interval": [
+        2.0028225632918515,
+        2.1294296363142506
+      ],
+      "lead_time_median_s": 43.89999999999998,
+      "lead_time_q10_s": 21.320000000000018,
+      "lead_time_q90_s": 126.24000000000004,
+      "model": "danger_margin",
+      "sensitivity": 0.0625,
+      "sensitivity_interval": [
+        0.03369511728143403,
+        0.10450566815405646
+      ],
+      "threshold_rad_s": -0.75
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 1.6322524294938374,
+      "false_positives_per_hour_interval": [
+        1.5766371553674223,
+        1.689320987519508
+      ],
+      "lead_time_median_s": 43.89999999999998,
+      "lead_time_q10_s": 23.400000000000034,
+      "lead_time_q90_s": 114.39999999999998,
+      "model": "danger_margin",
+      "sensitivity": 0.052884615384615384,
+      "sensitivity_interval": [
+        0.02669213285766179,
+        0.09265341360398449
+      ],
+      "threshold_rad_s": -0.7249999999999999
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 1.2707062472426538,
+      "false_positives_per_hour_interval": [
+        1.2216649607005572,
+        1.3212052469908788
+      ],
+      "lead_time_median_s": 39.20000000000002,
+      "lead_time_q10_s": 22.88000000000003,
+      "lead_time_q90_s": 125.38,
+      "model": "danger_margin",
+      "sensitivity": 0.04326923076923077,
+      "sensitivity_interval": [
+        0.019973511746812986,
+        0.08054683174559898
+      ],
+      "threshold_rad_s": -0.7
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.9575679220292855,
+      "false_positives_per_hour_interval": [
+        0.9150391388555025,
+        1.0015587443775484
+      ],
+      "lead_time_median_s": 91.80000000000001,
+      "lead_time_q10_s": 44.770000000000024,
+      "lead_time_q90_s": 152.83,
+      "model": "danger_margin",
+      "sensitivity": 0.019230769230769232,
+      "sensitivity_interval": [
+        0.005263989035993314,
+        0.04850383384707988
+      ],
+      "threshold_rad_s": -0.675
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.6857779747023847,
+      "false_positives_per_hour_interval": [
+        0.6498465848320248,
+        0.723175914281896
+      ],
+      "lead_time_median_s": 69.20000000000005,
+      "lead_time_q10_s": 41.280000000000015,
+      "lead_time_q90_s": 105.35999999999999,
+      "model": "danger_margin",
+      "sensitivity": 0.014423076923076924,
+      "sensitivity_interval": [
+        0.002984319103954882,
+        0.04156951288024881
+      ],
+      "threshold_rad_s": -0.6499999999999999
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.5007187712349028,
+      "false_positives_per_hour_interval": [
+        0.470077562548879,
+        0.5328304715545578
+      ],
+      "lead_time_median_s": 69.20000000000005,
+      "lead_time_q10_s": 41.280000000000015,
+      "lead_time_q90_s": 105.35999999999999,
+      "model": "danger_margin",
+      "sensitivity": 0.014423076923076924,
+      "sensitivity_interval": [
+        0.002984319103954882,
+        0.04156951288024881
+      ],
+      "threshold_rad_s": -0.625
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.3363337567106548,
+      "false_positives_per_hour_interval": [
+        0.3113020928784767,
+        0.36284082159623454
+      ],
+      "lead_time_median_s": 51.75000000000003,
+      "lead_time_q10_s": 37.79000000000001,
+      "lead_time_q90_s": 65.71000000000004,
+      "model": "danger_margin",
+      "sensitivity": 0.009615384615384616,
+      "sensitivity_interval": [
+        0.0011665962908166492,
+        0.03430056272039563
+      ],
+      "threshold_rad_s": -0.5999999999999999
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.21279287156206345,
+      "false_positives_per_hour_interval": [
+        0.19297791175029994,
+        0.23408921267825128
+      ],
+      "lead_time_median_s": 51.75000000000003,
+      "lead_time_q10_s": 37.79000000000001,
+      "lead_time_q90_s": 65.71000000000004,
+      "model": "danger_margin",
+      "sensitivity": 0.009615384615384616,
+      "sensitivity_interval": [
+        0.0011665962908166492,
+        0.03430056272039563
+      ],
+      "threshold_rad_s": -0.575
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.13211310983237115,
+      "false_positives_per_hour_interval": [
+        0.1166014659399079,
+        0.14911323457571085
+      ],
+      "lead_time_median_s": 51.75000000000003,
+      "lead_time_q10_s": 37.79000000000001,
+      "lead_time_q90_s": 65.71000000000004,
+      "model": "danger_margin",
+      "sensitivity": 0.009615384615384616,
+      "sensitivity_interval": [
+        0.0011665962908166492,
+        0.03430056272039563
+      ],
+      "threshold_rad_s": -0.5499999999999998
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0741245310891548,
+      "false_positives_per_hour_interval": [
+        0.06262749718259394,
+        0.08712057227598022
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": -0.5249999999999999
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.04790360852700481,
+      "false_positives_per_hour_interval": [
+        0.03875739880633542,
+        0.058558710674648885
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": -0.5
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.029750662137824038,
+      "false_positives_per_hour_interval": [
+        0.022647813950524072,
+        0.03837567382403965
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": -0.47499999999999987
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.01815294638918077,
+      "false_positives_per_hour_interval": [
+        0.012714197664583213,
+        0.02513105785513429
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": -0.44999999999999996
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.009076473194590385,
+      "false_positives_per_hour_interval": [
+        0.00537931985758453,
+        0.0143446236889138
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": -0.4249999999999998
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.005042485108105769,
+      "false_positives_per_hour_interval": [
+        0.002418075550165291,
+        0.009273248874008972
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": -0.3999999999999999
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0025212425540528847,
+      "false_positives_per_hour_interval": [
+        0.0008186421141552941,
+        0.005883708428981035
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": -0.375
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0010084970216211538,
+      "false_positives_per_hour_interval": [
+        0.00012213374030130704,
+        0.003643023130543305
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": -0.34999999999999987
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": -0.32499999999999996
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": -0.2999999999999998
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": -0.2749999999999999
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": -0.25
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": -0.22499999999999987
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": -0.19999999999999996
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": -0.17499999999999982
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": -0.1499999999999999
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": -0.125
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": -0.09999999999999987
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": -0.07499999999999996
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": -0.04999999999999982
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": -0.02499999999999991
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": 0.0
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": 0.025000000000000133
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": 0.050000000000000044
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": 0.07500000000000018
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": 0.10000000000000009
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": 0.125
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": 0.15000000000000013
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": 0.17500000000000004
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": 0.20000000000000018
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": 0.2250000000000001
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": 0.25
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": 0.2749999999999999
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": 0.30000000000000027
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": 0.3250000000000002
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": 0.3500000000000001
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": 0.375
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": 0.3999999999999999
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": 0.42500000000000027
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": 0.4500000000000002
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": 0.4750000000000001
+    },
+    {
+      "capsizes": 208,
+      "exposure_hours": 1983.1491388888885,
+      "false_positives_per_hour": 0.0,
+      "false_positives_per_hour_interval": [
+        0.0,
+        0.0018601066117034967
+      ],
+      "lead_time_median_s": NaN,
+      "lead_time_q10_s": NaN,
+      "lead_time_q90_s": NaN,
+      "model": "danger_margin",
+      "sensitivity": 0.0,
+      "sensitivity_interval": [
+        0.0,
+        0.017578657900630724
+      ],
+      "threshold_rad_s": 0.5
     }
   ]
 }

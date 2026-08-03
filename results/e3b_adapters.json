@@ -1,0 +1,218 @@
+{
+  "alpha": 0.1,
+  "dtaci": {
+    "exploded": true,
+    "false_positives_per_hour": 5.32242685201288,
+    "false_positives_per_hour_interval": [
+      5.08437604961426,
+      5.568607262849603
+    ],
+    "passed": false,
+    "post_transition": {
+      "coverage": 0.7527276829602411,
+      "coverage_interval": [
+        0.7493132632968813,
+        0.7561184517698571
+      ],
+      "covered": 46706,
+      "windows": 62049
+    },
+    "recovery_time_s": null
+  },
+  "dtaci_gamma_experts": [
+    0.001,
+    0.002,
+    0.004,
+    0.008,
+    0.016,
+    0.032,
+    0.064,
+    0.128
+  ],
+  "experiment": "E3b",
+  "figure": "results/e3b_adapters.png",
+  "fixed": {
+    "exploded": false,
+    "false_positives_per_hour": 0.0,
+    "false_positives_per_hour_interval": [
+      0.0,
+      0.010618431050045556
+    ],
+    "passed": false,
+    "post_transition": {
+      "coverage": 0.0074296120807748715,
+      "coverage_interval": [
+        0.0067689866343545345,
+        0.008136911199735343
+      ],
+      "covered": 461,
+      "windows": 62049
+    },
+    "recovery_time_s": null
+  },
+  "frozen_kill_thresholds": {
+    "absolute_fpr_per_hour": 2.0,
+    "relative_to_fixed": 4.0,
+    "rolling_coverage_tolerance_pp": 3.0
+  },
+  "selected_sliding": {
+    "gamma": 0.05,
+    "window_size": 100
+  },
+  "sliding_aci": {
+    "exploded": true,
+    "false_positives_per_hour": 5.40014752535217,
+    "false_positives_per_hour_interval": [
+      5.1603726410799355,
+      5.648047659089199
+    ],
+    "passed": false,
+    "post_transition": {
+      "coverage": 0.9196441522022918,
+      "coverage_interval": [
+        0.9174774674402999,
+        0.9217714935142132
+      ],
+      "covered": 57063,
+      "windows": 62049
+    },
+    "recovery_time_s": 50.0
+  },
+  "sliding_candidate_grid": [
+    {
+      "exploded": true,
+      "false_positives_per_hour": 5.445934828213491,
+      "gamma": 0.001,
+      "passed": false,
+      "post_transition_mean_absolute_coverage_delta_pp": 24.290783179802954,
+      "recovery_time_s": null,
+      "window_size": 25
+    },
+    {
+      "exploded": true,
+      "false_positives_per_hour": 5.445934828213491,
+      "gamma": 0.001,
+      "passed": false,
+      "post_transition_mean_absolute_coverage_delta_pp": 36.51321849665344,
+      "recovery_time_s": null,
+      "window_size": 50
+    },
+    {
+      "exploded": true,
+      "false_positives_per_hour": 5.428755223077171,
+      "gamma": 0.001,
+      "passed": false,
+      "post_transition_mean_absolute_coverage_delta_pp": 57.17193411228969,
+      "recovery_time_s": null,
+      "window_size": 100
+    },
+    {
+      "exploded": true,
+      "false_positives_per_hour": 5.445934828213491,
+      "gamma": 0.005,
+      "passed": false,
+      "post_transition_mean_absolute_coverage_delta_pp": 18.837672548793826,
+      "recovery_time_s": null,
+      "window_size": 25
+    },
+    {
+      "exploded": true,
+      "false_positives_per_hour": 5.463114433349811,
+      "gamma": 0.005,
+      "passed": false,
+      "post_transition_mean_absolute_coverage_delta_pp": 30.396077335871862,
+      "recovery_time_s": null,
+      "window_size": 50
+    },
+    {
+      "exploded": true,
+      "false_positives_per_hour": 5.428755223077171,
+      "gamma": 0.005,
+      "passed": false,
+      "post_transition_mean_absolute_coverage_delta_pp": 40.21351304217042,
+      "recovery_time_s": null,
+      "window_size": 100
+    },
+    {
+      "exploded": true,
+      "false_positives_per_hour": 5.445934828213491,
+      "gamma": 0.01,
+      "passed": false,
+      "post_transition_mean_absolute_coverage_delta_pp": 13.837740247963422,
+      "recovery_time_s": 150.0,
+      "window_size": 25
+    },
+    {
+      "exploded": true,
+      "false_positives_per_hour": 5.480294038486131,
+      "gamma": 0.01,
+      "passed": false,
+      "post_transition_mean_absolute_coverage_delta_pp": 21.080012412581187,
+      "recovery_time_s": 190.0,
+      "window_size": 50
+    },
+    {
+      "exploded": true,
+      "false_positives_per_hour": 5.428755223077171,
+      "gamma": 0.01,
+      "passed": false,
+      "post_transition_mean_absolute_coverage_delta_pp": 25.565861335376276,
+      "recovery_time_s": 190.0,
+      "window_size": 100
+    },
+    {
+      "exploded": true,
+      "false_positives_per_hour": 5.445934828213491,
+      "gamma": 0.02,
+      "passed": false,
+      "post_transition_mean_absolute_coverage_delta_pp": 9.537014657796679,
+      "recovery_time_s": 80.0,
+      "window_size": 25
+    },
+    {
+      "exploded": true,
+      "false_positives_per_hour": 5.445934828213491,
+      "gamma": 0.02,
+      "passed": false,
+      "post_transition_mean_absolute_coverage_delta_pp": 12.940269953004318,
+      "recovery_time_s": 90.0,
+      "window_size": 50
+    },
+    {
+      "exploded": true,
+      "false_positives_per_hour": 5.428755223077171,
+      "gamma": 0.02,
+      "passed": false,
+      "post_transition_mean_absolute_coverage_delta_pp": 14.296643998014751,
+      "recovery_time_s": 90.0,
+      "window_size": 100
+    },
+    {
+      "exploded": true,
+      "false_positives_per_hour": 5.514653248758772,
+      "gamma": 0.05,
+      "passed": false,
+      "post_transition_mean_absolute_coverage_delta_pp": 7.17581608950667,
+      "recovery_time_s": 220.0,
+      "window_size": 25
+    },
+    {
+      "exploded": true,
+      "false_positives_per_hour": 5.531832853895092,
+      "gamma": 0.05,
+      "passed": false,
+      "post_transition_mean_absolute_coverage_delta_pp": 7.271100382376787,
+      "recovery_time_s": 80.0,
+      "window_size": 50
+    },
+    {
+      "exploded": true,
+      "false_positives_per_hour": 5.583371669304052,
+      "gamma": 0.05,
+      "passed": false,
+      "post_transition_mean_absolute_coverage_delta_pp": 6.665795556858109,
+      "recovery_time_s": 50.0,
+      "window_size": 100
+    }
+  ]
+}

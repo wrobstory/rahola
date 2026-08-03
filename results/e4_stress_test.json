@@ -1,13 +1,41 @@
 {
   "aci_dense_post_coverage": 0.9676062466760141,
+  "aci_dense_post_coverage_interval": [
+    0.9661831056765813,
+    0.9689854314055979
+  ],
   "aci_gamma": 0.05,
   "alpha": 0.05,
+  "cqr_coverage_delta_interval_pp": [
+    -1.567715692928806,
+    0.165001464091441
+  ],
   "cqr_coverage_delta_pp": -0.6550755180892098,
   "experiment": "E4",
   "figure": "results/e4_stress_test.png",
+  "raw_coverage_gap_interval_pp": [
+    23.834955044924953,
+    27.251883577670366
+  ],
   "raw_coverage_gap_pp": 25.523357920618196,
   "raw_lstm_dense_post_coverage": 0.6805589131170526,
+  "raw_lstm_dense_post_coverage_interval": [
+    0.6768738020325551,
+    0.6842271310265471
+  ],
   "raw_lstm_snapshot_coverage": 0.694766420793818,
+  "raw_lstm_snapshot_coverage_interval": [
+    0.6774811642232963,
+    0.7116504495507504
+  ],
   "split_cqr_dense_post_coverage": 0.9364212154909829,
-  "split_cqr_snapshot_coverage": 0.9434492448191079
+  "split_cqr_dense_post_coverage_interval": [
+    0.9344727884909638,
+    0.938328702993292
+  ],
+  "split_cqr_snapshot_coverage": 0.9434492448191079,
+  "split_cqr_snapshot_coverage_interval": [
+    0.9343228430707119,
+    0.9516500146409144
+  ]
 }
