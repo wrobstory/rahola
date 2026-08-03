@@ -1,0 +1,11 @@
+{
+  "campaign_count": 6,
+  "completed_at_utc": "2026-08-03T05:09:20.029330+00:00",
+  "git_commit": "843b24a25437c5386208bc66ee0b79776ad207dc",
+  "repeat_policy": "This reserve run will not be repeated after any outcome.",
+  "result": "results/final_reserve.json",
+  "started_at_utc": "2026-08-03T05:07:08.708467+00:00",
+  "statement": "No reserve seed was accessed before this invocation.",
+  "status": "complete",
+  "trajectory_count": 18000
+}

@@ -113,6 +113,7 @@ Public seed utilities still raise `ReserveBlockError` for the reserve. Only `rah
 can construct its seeds. That command requires a clean committed tree, writes an access-started
 attestation before constructing the first seed, materializes the six D1-mirroring campaigns, scores
 the frozen D1 model and thresholds, and refuses every later invocation—even after failure.
+The single run completed against commit `843b24a`; its attestation now makes the refusal permanent.
 
 Deliberately deferred work is narrow: wrapping the CNN in the existing conformal layer and building
 a sea-state-conditional alarm policy. Neither is needed to answer the Prototype #2 falsification

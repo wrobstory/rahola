@@ -1,0 +1,411 @@
+{
+  "campaigns": [
+    {
+      "capsize_fraction": 0.0238,
+      "capsized": 119,
+      "chunks": 20,
+      "count": 5000,
+      "git_commit": "843b24a25437c5386208bc66ee0b79776ad207dc",
+      "name": "softening_evaluation",
+      "reserve_offset": 50000,
+      "simulation": {
+        "bias_moment": 0.0,
+        "damping_ratio": 0.05,
+        "duration_s": 600.0,
+        "escape_angle_rad": 0.6108652381980153,
+        "family": "softening",
+        "forcing": {
+          "deterministic_amplitudes": true,
+          "effective_wave_slope": 0.15,
+          "gravity_m_s2": 9.80665,
+          "min_components": 200,
+          "sea_state": {
+            "gamma": 3.3,
+            "hs_m": 4.0,
+            "tp_s": 4.0
+          }
+        },
+        "initial_angle_rad": 0.0,
+        "initial_rate_rad_s": 0.0,
+        "integration_steps_per_period": 40,
+        "linear_restoring": false,
+        "natural_period_s": 4.0,
+        "negative_escape_angle_rad": null,
+        "output_rate_hz": 2.0,
+        "parametric": {
+          "excitation_ratio": 2.0,
+          "h0": 0.0,
+          "mode": "deterministic",
+          "stochastic_std": 0.1
+        },
+        "protocol": {
+          "kind": "stationary",
+          "ramp_end": null,
+          "ramp_parameter": null,
+          "ramp_start": null,
+          "steps": []
+        },
+        "quadratic_damping": 0.02,
+        "quintic_coefficient": 0.0
+      }
+    },
+    {
+      "capsize_fraction": 0.489,
+      "capsized": 489,
+      "chunks": 4,
+      "count": 1000,
+      "git_commit": "843b24a25437c5386208bc66ee0b79776ad207dc",
+      "name": "softening_ramp",
+      "reserve_offset": 20000,
+      "simulation": {
+        "bias_moment": 0.0,
+        "damping_ratio": 0.05,
+        "duration_s": 600.0,
+        "escape_angle_rad": 0.6108652381980153,
+        "family": "softening",
+        "forcing": {
+          "deterministic_amplitudes": true,
+          "effective_wave_slope": 0.05,
+          "gravity_m_s2": 9.80665,
+          "min_components": 200,
+          "sea_state": {
+            "gamma": 3.3,
+            "hs_m": 2.0,
+            "tp_s": 4.0
+          }
+        },
+        "initial_angle_rad": 0.0,
+        "initial_rate_rad_s": 0.0,
+        "integration_steps_per_period": 40,
+        "linear_restoring": false,
+        "natural_period_s": 4.0,
+        "negative_escape_angle_rad": null,
+        "output_rate_hz": 2.0,
+        "parametric": {
+          "excitation_ratio": 2.0,
+          "h0": 0.0,
+          "mode": "deterministic",
+          "stochastic_std": 0.1
+        },
+        "protocol": {
+          "kind": "ramped",
+          "ramp_end": -0.05,
+          "ramp_parameter": "stiffness",
+          "ramp_start": 1.2,
+          "steps": []
+        },
+        "quadratic_damping": 0.02,
+        "quintic_coefficient": 0.0
+      }
+    },
+    {
+      "capsize_fraction": 0.0108,
+      "capsized": 54,
+      "chunks": 20,
+      "count": 5000,
+      "git_commit": "843b24a25437c5386208bc66ee0b79776ad207dc",
+      "name": "parametric_evaluation",
+      "reserve_offset": 60000,
+      "simulation": {
+        "bias_moment": 0.0,
+        "damping_ratio": 0.05,
+        "duration_s": 600.0,
+        "escape_angle_rad": 0.6108652381980153,
+        "family": "parametric",
+        "forcing": {
+          "deterministic_amplitudes": true,
+          "effective_wave_slope": 0.002,
+          "gravity_m_s2": 9.80665,
+          "min_components": 200,
+          "sea_state": {
+            "gamma": 3.3,
+            "hs_m": 1.0,
+            "tp_s": 2.0
+          }
+        },
+        "initial_angle_rad": 0.0,
+        "initial_rate_rad_s": 0.0,
+        "integration_steps_per_period": 40,
+        "linear_restoring": false,
+        "natural_period_s": 4.0,
+        "negative_escape_angle_rad": null,
+        "output_rate_hz": 2.0,
+        "parametric": {
+          "excitation_ratio": 2.0,
+          "h0": 0.0,
+          "mode": "stochastic",
+          "stochastic_std": 0.33
+        },
+        "protocol": {
+          "kind": "stationary",
+          "ramp_end": null,
+          "ramp_parameter": null,
+          "ramp_start": null,
+          "steps": []
+        },
+        "quadratic_damping": 0.02,
+        "quintic_coefficient": 0.0
+      }
+    },
+    {
+      "capsize_fraction": 0.307,
+      "capsized": 307,
+      "chunks": 4,
+      "count": 1000,
+      "git_commit": "843b24a25437c5386208bc66ee0b79776ad207dc",
+      "name": "parametric_ramp",
+      "reserve_offset": 25000,
+      "simulation": {
+        "bias_moment": 0.0,
+        "damping_ratio": 0.05,
+        "duration_s": 600.0,
+        "escape_angle_rad": 0.6108652381980153,
+        "family": "parametric",
+        "forcing": {
+          "deterministic_amplitudes": true,
+          "effective_wave_slope": 0.002,
+          "gravity_m_s2": 9.80665,
+          "min_components": 200,
+          "sea_state": {
+            "gamma": 3.3,
+            "hs_m": 1.0,
+            "tp_s": 2.0
+          }
+        },
+        "initial_angle_rad": 0.0,
+        "initial_rate_rad_s": 0.0,
+        "integration_steps_per_period": 40,
+        "linear_restoring": false,
+        "natural_period_s": 4.0,
+        "negative_escape_angle_rad": null,
+        "output_rate_hz": 2.0,
+        "parametric": {
+          "excitation_ratio": 2.0,
+          "h0": 0.0,
+          "mode": "stochastic",
+          "stochastic_std": 0.2
+        },
+        "protocol": {
+          "kind": "ramped",
+          "ramp_end": -0.065,
+          "ramp_parameter": "stiffness",
+          "ramp_start": 1.2,
+          "steps": []
+        },
+        "quadratic_damping": 0.02,
+        "quintic_coefficient": 0.0
+      }
+    },
+    {
+      "capsize_fraction": 0.019,
+      "capsized": 95,
+      "chunks": 20,
+      "count": 5000,
+      "git_commit": "843b24a25437c5386208bc66ee0b79776ad207dc",
+      "name": "biased_evaluation",
+      "reserve_offset": 70000,
+      "simulation": {
+        "bias_moment": -0.15,
+        "damping_ratio": 0.05,
+        "duration_s": 600.0,
+        "escape_angle_rad": 0.6108652381980153,
+        "family": "biased",
+        "forcing": {
+          "deterministic_amplitudes": true,
+          "effective_wave_slope": 0.134,
+          "gravity_m_s2": 9.80665,
+          "min_components": 200,
+          "sea_state": {
+            "gamma": 3.3,
+            "hs_m": 2.0,
+            "tp_s": 4.0
+          }
+        },
+        "initial_angle_rad": -0.09384459849427874,
+        "initial_rate_rad_s": 0.0,
+        "integration_steps_per_period": 40,
+        "linear_restoring": false,
+        "natural_period_s": 4.0,
+        "negative_escape_angle_rad": 0.4363323129985824,
+        "output_rate_hz": 2.0,
+        "parametric": {
+          "excitation_ratio": 2.0,
+          "h0": 0.0,
+          "mode": "deterministic",
+          "stochastic_std": 0.1
+        },
+        "protocol": {
+          "kind": "stationary",
+          "ramp_end": null,
+          "ramp_parameter": null,
+          "ramp_start": null,
+          "steps": []
+        },
+        "quadratic_damping": 0.02,
+        "quintic_coefficient": 0.0
+      }
+    },
+    {
+      "capsize_fraction": 0.245,
+      "capsized": 245,
+      "chunks": 4,
+      "count": 1000,
+      "git_commit": "843b24a25437c5386208bc66ee0b79776ad207dc",
+      "name": "biased_ramp",
+      "reserve_offset": 30000,
+      "simulation": {
+        "bias_moment": -0.25,
+        "damping_ratio": 0.05,
+        "duration_s": 600.0,
+        "escape_angle_rad": 0.6108652381980153,
+        "family": "biased",
+        "forcing": {
+          "deterministic_amplitudes": true,
+          "effective_wave_slope": 0.08,
+          "gravity_m_s2": 9.80665,
+          "min_components": 200,
+          "sea_state": {
+            "gamma": 3.3,
+            "hs_m": 2.0,
+            "tp_s": 4.0
+          }
+        },
+        "initial_angle_rad": -0.13366305061168876,
+        "initial_rate_rad_s": 0.0,
+        "integration_steps_per_period": 40,
+        "linear_restoring": false,
+        "natural_period_s": 4.0,
+        "negative_escape_angle_rad": 0.4363323129985824,
+        "output_rate_hz": 2.0,
+        "parametric": {
+          "excitation_ratio": 2.0,
+          "h0": 0.0,
+          "mode": "deterministic",
+          "stochastic_std": 0.1
+        },
+        "protocol": {
+          "kind": "ramped",
+          "ramp_end": 0.645,
+          "ramp_parameter": "stiffness",
+          "ramp_start": 1.2,
+          "steps": []
+        },
+        "quadratic_damping": 0.02,
+        "quintic_coefficient": 0.0
+      }
+    }
+  ],
+  "experiment": "Final reserve evaluation",
+  "git_commit": "843b24a25437c5386208bc66ee0b79776ad207dc",
+  "methods": {
+    "classical_ews": {
+      "capsize_count": 1213,
+      "exposure_hours": 1781.4694166666677,
+      "false_episode_count": 16446,
+      "false_episodes_per_hour": 9.231704931972585,
+      "false_episodes_per_hour_interval": [
+        9.092933649506652,
+        9.372021302542375
+      ],
+      "lead_time_quantiles_s": [
+        197.32000000000005,
+        357.9,
+        360.1
+      ],
+      "sensitivity": 0.9167353668590272,
+      "sensitivity_interval": [
+        0.8997453825623533,
+        0.9316702284909949
+      ],
+      "threshold": 0.2727272727272727
+    },
+    "cnn": {
+      "capsize_count": 1213,
+      "exposure_hours": 1781.4694166666677,
+      "false_episode_count": 11185,
+      "false_episodes_per_hour": 6.2785248488455165,
+      "false_episodes_per_hour_interval": [
+        6.163697204981154,
+        6.394925295266486
+      ],
+      "lead_time_quantiles_s": [
+        277.7800000000001,
+        328.6,
+        358.4
+      ],
+      "sensitivity": 0.8977741137675186,
+      "sensitivity_interval": [
+        0.8793379204955435,
+        0.9142543712130785
+      ],
+      "threshold": -0.4982992686331272
+    },
+    "danger_margin": {
+      "capsize_count": 1213,
+      "exposure_hours": 1781.4694166666677,
+      "false_episode_count": 16216,
+      "false_episodes_per_hour": 9.102598028509512,
+      "false_episodes_per_hour_interval": [
+        8.964779001163194,
+        9.241963345951563
+      ],
+      "lead_time_quantiles_s": [
+        29.300000000000068,
+        329.4,
+        359.80000000000007
+      ],
+      "sensitivity": 0.9472382522671063,
+      "sensitivity_interval": [
+        0.9331207027496294,
+        0.9591332561208991
+      ],
+      "threshold": -1.1677958365916021
+    },
+    "galeazzi_glrt": {
+      "capsize_count": 1213,
+      "exposure_hours": 1781.4694166666677,
+      "false_episode_count": 14777,
+      "false_episodes_per_hour": 8.294837880320983,
+      "false_episodes_per_hour_interval": [
+        8.16314930384605,
+        8.428080283116035
+      ],
+      "lead_time_quantiles_s": [
+        171.3,
+        309.30000000000007,
+        358.45
+      ],
+      "sensitivity": 0.8953009068425392,
+      "sensitivity_interval": [
+        0.8766904241238154,
+        0.9119682313425279
+      ],
+      "threshold": 0.7021545362182984
+    },
+    "neighbor_2009": {
+      "capsize_count": 1213,
+      "exposure_hours": 1781.4694166666677,
+      "false_episode_count": 16578,
+      "false_episodes_per_hour": 9.305801067873132,
+      "false_episodes_per_hour_interval": [
+        9.16648652356224,
+        9.446660010737357
+      ],
+      "lead_time_quantiles_s": [
+        273.34,
+        358.80000000000007,
+        360.30000000000007
+      ],
+      "sensitivity": 0.9835119538334708,
+      "sensitivity_interval": [
+        0.9746499417115225,
+        0.9899003369100833
+      ],
+      "threshold": -71.0
+    }
+  },
+  "reserve_seed_block": [
+    300000,
+    400000
+  ]
+}

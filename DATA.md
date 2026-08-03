@@ -74,6 +74,12 @@ a block name and reject `reserve`; they do not accept arbitrary seed vectors. On
 `rahola-lab final-eval` path can construct reserve seeds. It refuses a dirty tree and refuses any
 second invocation once access has begun.
 
+The one-time access completed on commit `843b24a25437c5386208bc66ee0b79776ad207dc`. It materialized
+18,000 trajectories (514 MiB allocated): 5,000 evaluation plus 1,000 ramp trajectories per family.
+Reserve capsize fractions were 2.38%/48.9% for softening evaluation/ramp, 1.08%/30.7% for
+parametric, and 1.90%/24.5% for biased. The timestamped attestation and headline result are checked
+in under `results/`; public reserve guards remain in force.
+
 ## Exact regeneration
 
 From the repository root:

@@ -211,9 +211,24 @@ fallback, not a meaningful tie; the near-chance AUCs are the substantive D5 resu
 
 ## Final reserve evaluation
 
-The reserve has not yet been accessed in this frozen-development record. The guarded final command
-will replace this paragraph with the single reserve headline table and commit attestation; it will
-not be rerun after any outcome.
+The guarded command accessed the reserve exactly once on frozen commit
+`843b24a25437c5386208bc66ee0b79776ad207dc`, from 2026-08-03 05:07:08 to 05:09:20 UTC. It scored
+18,000 trajectories (the same 5,000-evaluation/1,000-ramp mix per family as D1), yielding 1,213
+observable capsizes and 1,781.47 exposure hours. Thresholds, model weights, and decorrelation times
+were unchanged from D1.
+
+| Detector | Reserve sensitivity | Reserve false episodes / h | Lead q10 / median / q90 |
+|---|---:|---:|---:|
+| Temporal CNN | 89.78% [87.93, 91.43] | **6.279 [6.164, 6.395]** | 277.8 / 328.6 / 358.4 s |
+| Classical EWS | 91.67% [89.97, 93.17] | 9.232 [9.093, 9.372] | 197.3 / 357.9 / 360.1 s |
+| Galeazzi roll-power GLRT | 89.53% [87.67, 91.20] | 8.295 [8.163, 8.428] | 171.3 / 309.3 / 358.5 s |
+| Split-time danger margin | 94.72% [93.31, 95.91] | 9.103 [8.965, 9.242] | 29.3 / 329.4 / 359.8 s |
+| Story (2009) neighbor loss | 98.35% [97.46, 98.99] | 9.306 [9.166, 9.447] | 273.3 / 358.8 / 360.3 s |
+
+The CNN's FPR replicated D1 to within 0.01 episode/h, while sensitivity fell 0.69 points and just
+missed 90%. This does not trigger model iteration: the final protocol prohibits retuning and reruns.
+The completed, no-prior-access statement is in `results/final_reserve_attestation.json`; the command
+now refuses a second invocation.
 
 ## What the thesis rematch showed
 
