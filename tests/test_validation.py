@@ -11,6 +11,7 @@ from rahola.spectrum import jonswap_spectrum
 from rahola.validation import (
     damped_mathieu_threshold,
     find_harmonic_capsize_boundary,
+    harmonic_capsize_fraction,
     linear_transfer_function,
     mathieu_growth_rate,
     melnikov_heteroclinic_threshold,
@@ -68,6 +69,15 @@ def test_melnikov_closed_form_matches_orbit_quadrature() -> None:
         analytic = melnikov_heteroclinic_threshold(0.02, frequency)
         numerical = numerical_melnikov_threshold(0.02, frequency)
         assert numerical == pytest.approx(analytic, rel=1e-5)
+
+
+@pytest.mark.slow
+def test_no_capsize_below_melnikov_necessary_condition() -> None:
+    for damping in (0.015, 0.04):
+        for frequency in (0.7, 1.0, 1.3):
+            melnikov = melnikov_heteroclinic_threshold(damping, frequency)
+            fraction = harmonic_capsize_fraction(0.95 * melnikov, frequency, damping)
+            assert fraction == 0.0
 
 
 @pytest.mark.slow

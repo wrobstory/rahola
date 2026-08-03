@@ -140,8 +140,14 @@ def find_harmonic_capsize_boundary(
     relative_tolerance: float = 0.04,
 ) -> float:
     """Bisection estimate of the forcing at a target phase-ensemble capsize fraction."""
-    lower = melnikov_heteroclinic_threshold(damping_ratio, frequency_ratio)
-    upper = max(0.1, 3.0 * lower)
+    melnikov = melnikov_heteroclinic_threshold(damping_ratio, frequency_ratio)
+    lower = 0.5 * melnikov
+    if (
+        harmonic_capsize_fraction(lower, frequency_ratio, damping_ratio, phases=phases)
+        >= target_fraction
+    ):
+        raise RuntimeError("lower bracket already meets the target capsize fraction")
+    upper = max(0.1, 3.0 * melnikov)
     while (
         harmonic_capsize_fraction(upper, frequency_ratio, damping_ratio, phases=phases)
         < target_fraction
