@@ -9,6 +9,7 @@ description = "Reference campaigns and conformal alarm experiments for Rahola"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+  "chronos-forecasting>=2.0,<3",
   "jax>=0.4.38",
   "matplotlib>=3.9",
   "numpy>=2.1",

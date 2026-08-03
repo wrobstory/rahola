@@ -1,5 +1,6 @@
 """Motion-only danger detectors for Prototype #2."""
 
+from rahola_lab.detectors.chronos_probe import ChronosClassifier
 from rahola_lab.detectors.cnn import JaxTemporalCNN
 from rahola_lab.detectors.data import (
     DetectorWindowDataset,
@@ -14,6 +15,7 @@ from rahola_lab.detectors.neighbor import neighbor_count_scores
 
 __all__ = [
     "ENGINEERED_FEATURE_NAMES",
+    "ChronosClassifier",
     "DetectorWindowDataset",
     "GrayBoxDetector",
     "JaxTemporalCNN",
