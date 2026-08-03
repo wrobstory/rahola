@@ -6,6 +6,12 @@ resolution-markers = [
     "python_full_version < '3.13'",
 ]
 
+[manifest]
+members = [
+    "rahola",
+    "rahola-lab",
+]
+
 [[package]]
 name = "colorama"
 version = "0.4.6"
@@ -754,6 +760,31 @@ requires-dist = [
     { name = "scipy", specifier = ">=1.14" },
 ]
 provides-extras = ["examples", "dev"]
+
+[[package]]
+name = "rahola-lab"
+version = "0.1.0"
+source = { editable = "packages/rahola-lab" }
+dependencies = [
+    { name = "jax" },
+    { name = "matplotlib" },
+    { name = "numpy" },
+    { name = "pyarrow" },
+    { name = "pyyaml" },
+    { name = "rahola" },
+    { name = "scipy" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "jax", specifier = ">=0.4.38" },
+    { name = "matplotlib", specifier = ">=3.9" },
+    { name = "numpy", specifier = ">=2.1" },
+    { name = "pyarrow", specifier = ">=18" },
+    { name = "pyyaml", specifier = ">=6.0" },
+    { name = "rahola", editable = "." },
+    { name = "scipy", specifier = ">=1.14" },
+]
 
 [[package]]
 name = "ruff"

@@ -1,0 +1,24 @@
+name: parametric_stationary
+role: stationary_training
+rationale: stochastic stiffness RMS 0.36 produced 11.1% capsize in the 512-seed pilot.
+splits:
+  train: {count: 2000, offset: 5000}
+  calibration: {count: 1000, offset: 5000}
+  test: {count: 1000, offset: 5000}
+simulation:
+  family: parametric
+  duration_s: 600.0
+  natural_period_s: 4.0
+  escape_angle_rad: 0.6108652381980153
+  damping_ratio: 0.05
+  quadratic_damping: 0.02
+  output_rate_hz: 2.0
+  forcing:
+    sea_state: {hs_m: 1.0, tp_s: 2.0, gamma: 3.3}
+    effective_wave_slope: 0.002
+    min_components: 200
+  parametric:
+    mode: stochastic
+    stochastic_std: 0.36
+  protocol: {kind: stationary}
+

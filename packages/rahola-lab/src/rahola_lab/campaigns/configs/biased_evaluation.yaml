@@ -1,0 +1,22 @@
+name: biased_evaluation
+role: rare_event_evaluation
+rationale: bias -0.25 and r=0.12 produced 1.76% capsize in the pilot.
+splits:
+  calibration: {count: 1000, offset: 70000}
+  test: {count: 5000, offset: 70000}
+simulation:
+  family: biased
+  duration_s: 600.0
+  natural_period_s: 4.0
+  escape_angle_rad: 0.6108652381980153
+  negative_escape_angle_rad: 0.4363323129985824
+  damping_ratio: 0.05
+  quadratic_damping: 0.02
+  bias_moment: -0.25
+  output_rate_hz: 2.0
+  forcing:
+    sea_state: {hs_m: 2.0, tp_s: 4.0, gamma: 3.3}
+    effective_wave_slope: 0.12
+    min_components: 200
+  protocol: {kind: stationary}
+
