@@ -1,0 +1,241 @@
+{
+  "d1": {
+    "cnn": {
+      "false_episodes_per_hour": 6.28755789240287,
+      "false_episodes_per_hour_interval": [
+        6.172745065363517,
+        6.403940788763437
+      ],
+      "lead_time_quantiles_s": [
+        279.5,
+        328.30000000000007,
+        357.5
+      ],
+      "sensitivity": 0.904639175257732,
+      "sensitivity_interval": [
+        0.8862990145439021,
+        0.9209026843800228
+      ],
+      "threshold": -0.4982992686331272
+    },
+    "decorrelation_time_s": 360.0,
+    "graybox": {
+      "false_episodes_per_hour": 6.231519052007123,
+      "false_episodes_per_hour_interval": [
+        6.1172123848844695,
+        6.347396319426866
+      ],
+      "lead_time_quantiles_s": [
+        276.84000000000003,
+        339.9,
+        360.0
+      ],
+      "sensitivity": 0.904639175257732,
+      "sensitivity_interval": [
+        0.8862990145439021,
+        0.9209026843800228
+      ],
+      "threshold": -0.7621721163392066
+    },
+    "parity_limit_fpr_per_hour": 6.51875361580279
+  },
+  "d2_rotations": [
+    {
+      "cnn": {
+        "false_episodes_per_hour": 9.032684054143287,
+        "false_episodes_per_hour_interval": [
+          8.79537621492436,
+          9.274646444538929
+        ],
+        "lead_time_quantiles_s": [
+          93.64000000000004,
+          268.4,
+          358.6
+        ],
+        "sensitivity": 0.9302752293577982,
+        "sensitivity_interval": [
+          0.9055507286838542,
+          0.9501894716678673
+        ],
+        "threshold": -0.6774507761001587
+      },
+      "decorrelation_time_s": 360.0,
+      "earns_15_percent_improvement": false,
+      "graybox": {
+        "false_episodes_per_hour": 9.106860630922366,
+        "false_episodes_per_hour_interval": [
+          8.868598815597645,
+          9.34977487869344
+        ],
+        "lead_time_quantiles_s": [
+          76.66000000000001,
+          160.90000000000003,
+          259.52000000000004
+        ],
+        "sensitivity": 0.9596330275229358,
+        "sensitivity_interval": [
+          0.9395196720337629,
+          0.9745322795725
+        ],
+        "threshold": -0.6232861191034317
+      },
+      "held_out_family": "softening",
+      "relative_fpr_reduction": -0.008212019410227756,
+      "selection": [
+        {
+          "auxiliary_weight": 0.25,
+          "calibration_auc": 0.7157495127314102,
+          "parameter_count": 4329
+        },
+        {
+          "auxiliary_weight": 1.0,
+          "calibration_auc": 0.6913522025953153,
+          "parameter_count": 4329
+        }
+      ]
+    },
+    {
+      "cnn": {
+        "false_episodes_per_hour": 6.603591976655291,
+        "false_episodes_per_hour_interval": [
+          6.400883464562157,
+          6.810994610826493
+        ],
+        "lead_time_quantiles_s": [
+          357.6,
+          359.5,
+          360.30000000000007
+        ],
+        "sensitivity": 0.9050632911392406,
+        "sensitivity_interval": [
+          0.867249046377464,
+          0.9350271655467961
+        ],
+        "threshold": 0.24545645713806152
+      },
+      "decorrelation_time_s": 360.0,
+      "earns_15_percent_improvement": false,
+      "graybox": {
+        "false_episodes_per_hour": 6.317207440006024,
+        "false_episodes_per_hour_interval": [
+          6.118898857708385,
+          6.520218483846469
+        ],
+        "lead_time_quantiles_s": [
+          294.24000000000007,
+          359.20000000000005,
+          360.30000000000007
+        ],
+        "sensitivity": 0.9018987341772152,
+        "sensitivity_interval": [
+          0.8636471721460189,
+          0.9323676840501495
+        ],
+        "threshold": -0.12750461697578402
+      },
+      "held_out_family": "parametric",
+      "relative_fpr_reduction": 0.04336799391326407,
+      "selection": [
+        {
+          "auxiliary_weight": 0.25,
+          "calibration_auc": 0.8149793991511197,
+          "parameter_count": 4329
+        },
+        {
+          "auxiliary_weight": 1.0,
+          "calibration_auc": 0.8133093801637014,
+          "parameter_count": 4329
+        }
+      ]
+    },
+    {
+      "cnn": {
+        "false_episodes_per_hour": 8.70248393563427,
+        "false_episodes_per_hour_interval": [
+          8.46966484928991,
+          8.939959736367856
+        ],
+        "lead_time_quantiles_s": [
+          226.78000000000006,
+          356.9,
+          360.1
+        ],
+        "sensitivity": 0.9141914191419142,
+        "sensitivity_interval": [
+          0.8767989065818352,
+          0.9431813456130648
+        ],
+        "threshold": -0.6681857258081436
+      },
+      "decorrelation_time_s": 360.0,
+      "earns_15_percent_improvement": false,
+      "graybox": {
+        "false_episodes_per_hour": 8.069698408695865,
+        "false_episodes_per_hour_interval": [
+          7.845363354021162,
+          8.298708266398169
+        ],
+        "lead_time_quantiles_s": [
+          249.72000000000006,
+          341.70000000000005,
+          359.98
+        ],
+        "sensitivity": 0.900990099009901,
+        "sensitivity_interval": [
+          0.8616790508880778,
+          0.9321968511374342
+        ],
+        "threshold": -0.8585059940814972
+      },
+      "held_out_family": "biased",
+      "relative_fpr_reduction": 0.07271320827692906,
+      "selection": [
+        {
+          "auxiliary_weight": 0.25,
+          "calibration_auc": 0.779923315706186,
+          "parameter_count": 4329
+        },
+        {
+          "auxiliary_weight": 1.0,
+          "calibration_auc": 0.7516263022600239,
+          "parameter_count": 4329
+        }
+      ]
+    }
+  ],
+  "experiment": "B1 gray-box",
+  "kills": {
+    "stiffness_tracking": {
+      "fired": true,
+      "verbatim": "Kill: mean absolute stiffness error exceeds 10% over the final third of the ramp."
+    },
+    "transfer": {
+      "fired": true,
+      "rotations_earned": 0,
+      "verbatim": "Kill: fails to beat the from-scratch CNN's D2 FPR/h by >=15% in at least two of three rotations."
+    },
+    "within_distribution_parity": {
+      "fired": false,
+      "verbatim": "Kill: worse than the CNN by more than its CI width at matched sensitivity."
+    }
+  },
+  "parameter_count": 4329,
+  "selection": [
+    {
+      "auxiliary_weight": 0.25,
+      "calibration_auc": 0.7443696992132212,
+      "parameter_count": 4329
+    },
+    {
+      "auxiliary_weight": 1.0,
+      "calibration_auc": 0.7068619890863244,
+      "parameter_count": 4329
+    }
+  ],
+  "stiffness_tracking": {
+    "figure": "results/p3_b1_stiffness_tracking.png",
+    "final_third_mae": 0.2685120977079175,
+    "limit": 0.1
+  },
+  "survives_all_kills": false
+}
