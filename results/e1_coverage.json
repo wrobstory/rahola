@@ -1,0 +1,662 @@
+{
+  "alphas": [
+    0.02,
+    0.05,
+    0.1,
+    0.2
+  ],
+  "experiment": "E1",
+  "figure": "results/e1_coverage.png",
+  "max_absolute_coverage_delta_pp": 3.377960865087548,
+  "mean_absolute_coverage_delta_pp": 0.7494277292421049,
+  "rows": [
+    {
+      "alpha": 0.02,
+      "coverage_delta_pp": 1.382080329557156,
+      "exceedance_rate": 0.006179196704428424,
+      "family": "softening",
+      "horizon_s": 30.0,
+      "model": "envelope",
+      "n": 971
+    },
+    {
+      "alpha": 0.05,
+      "coverage_delta_pp": 1.6014418125643748,
+      "exceedance_rate": 0.03398558187435633,
+      "family": "softening",
+      "horizon_s": 30.0,
+      "model": "envelope",
+      "n": 971
+    },
+    {
+      "alpha": 0.1,
+      "coverage_delta_pp": -0.19567456230690228,
+      "exceedance_rate": 0.101956745623069,
+      "family": "softening",
+      "horizon_s": 30.0,
+      "model": "envelope",
+      "n": 971
+    },
+    {
+      "alpha": 0.2,
+      "coverage_delta_pp": -1.5242018537590107,
+      "exceedance_rate": 0.21524201853759012,
+      "family": "softening",
+      "horizon_s": 30.0,
+      "model": "envelope",
+      "n": 971
+    },
+    {
+      "alpha": 0.02,
+      "coverage_delta_pp": 0.043254376931001204,
+      "exceedance_rate": 0.01956745623069001,
+      "family": "softening",
+      "horizon_s": 30.0,
+      "model": "linear",
+      "n": 971
+    },
+    {
+      "alpha": 0.05,
+      "coverage_delta_pp": -1.1791967044284202,
+      "exceedance_rate": 0.061791967044284246,
+      "family": "softening",
+      "horizon_s": 30.0,
+      "model": "linear",
+      "n": 971
+    },
+    {
+      "alpha": 0.1,
+      "coverage_delta_pp": -0.6076210092687995,
+      "exceedance_rate": 0.10607621009268794,
+      "family": "softening",
+      "horizon_s": 30.0,
+      "model": "linear",
+      "n": 971
+    },
+    {
+      "alpha": 0.2,
+      "coverage_delta_pp": -0.18537590113285596,
+      "exceedance_rate": 0.20185375901132852,
+      "family": "softening",
+      "horizon_s": 30.0,
+      "model": "linear",
+      "n": 971
+    },
+    {
+      "alpha": 0.02,
+      "coverage_delta_pp": 0.3522142121524241,
+      "exceedance_rate": 0.016477857878475798,
+      "family": "softening",
+      "horizon_s": 30.0,
+      "model": "lstm",
+      "n": 971
+    },
+    {
+      "alpha": 0.05,
+      "coverage_delta_pp": 0.05664263645726031,
+      "exceedance_rate": 0.04943357363542739,
+      "family": "softening",
+      "horizon_s": 30.0,
+      "model": "lstm",
+      "n": 971
+    },
+    {
+      "alpha": 0.1,
+      "coverage_delta_pp": -0.6076210092687995,
+      "exceedance_rate": 0.10607621009268794,
+      "family": "softening",
+      "horizon_s": 30.0,
+      "model": "lstm",
+      "n": 971
+    },
+    {
+      "alpha": 0.2,
+      "coverage_delta_pp": 0.844490216271887,
+      "exceedance_rate": 0.19155509783728114,
+      "family": "softening",
+      "horizon_s": 30.0,
+      "model": "lstm",
+      "n": 971
+    },
+    {
+      "alpha": 0.02,
+      "coverage_delta_pp": 0.661174047373847,
+      "exceedance_rate": 0.013388259526261586,
+      "family": "softening",
+      "horizon_s": 60.0,
+      "model": "envelope",
+      "n": 971
+    },
+    {
+      "alpha": 0.05,
+      "coverage_delta_pp": 1.1894953656024776,
+      "exceedance_rate": 0.03810504634397528,
+      "family": "softening",
+      "horizon_s": 60.0,
+      "model": "envelope",
+      "n": 971
+    },
+    {
+      "alpha": 0.1,
+      "coverage_delta_pp": 1.967044284243047,
+      "exceedance_rate": 0.08032955715756952,
+      "family": "softening",
+      "horizon_s": 60.0,
+      "model": "envelope",
+      "n": 971
+    },
+    {
+      "alpha": 0.2,
+      "coverage_delta_pp": -0.5973223480947532,
+      "exceedance_rate": 0.2059732234809475,
+      "family": "softening",
+      "horizon_s": 60.0,
+      "model": "envelope",
+      "n": 971
+    },
+    {
+      "alpha": 0.02,
+      "coverage_delta_pp": -0.8836251287332675,
+      "exceedance_rate": 0.028836251287332648,
+      "family": "softening",
+      "horizon_s": 60.0,
+      "model": "linear",
+      "n": 971
+    },
+    {
+      "alpha": 0.05,
+      "coverage_delta_pp": -0.8702368692069973,
+      "exceedance_rate": 0.05870236869207003,
+      "family": "softening",
+      "horizon_s": 60.0,
+      "model": "linear",
+      "n": 971
+    },
+    {
+      "alpha": 0.1,
+      "coverage_delta_pp": -1.534500514933057,
+      "exceedance_rate": 0.11534500514933059,
+      "family": "softening",
+      "horizon_s": 60.0,
+      "model": "linear",
+      "n": 971
+    },
+    {
+      "alpha": 0.2,
+      "coverage_delta_pp": -3.377960865087548,
+      "exceedance_rate": 0.23377960865087538,
+      "family": "softening",
+      "horizon_s": 60.0,
+      "model": "linear",
+      "n": 971
+    },
+    {
+      "alpha": 0.02,
+      "coverage_delta_pp": -0.059732234809473095,
+      "exceedance_rate": 0.02059732234809475,
+      "family": "softening",
+      "horizon_s": 60.0,
+      "model": "lstm",
+      "n": 971
+    },
+    {
+      "alpha": 0.05,
+      "coverage_delta_pp": -0.1493305870236883,
+      "exceedance_rate": 0.05149330587023687,
+      "family": "softening",
+      "horizon_s": 60.0,
+      "model": "lstm",
+      "n": 971
+    },
+    {
+      "alpha": 0.1,
+      "coverage_delta_pp": -2.255406797116377,
+      "exceedance_rate": 0.12255406797116375,
+      "family": "softening",
+      "horizon_s": 60.0,
+      "model": "lstm",
+      "n": 971
+    },
+    {
+      "alpha": 0.2,
+      "coverage_delta_pp": -2.657054582904228,
+      "exceedance_rate": 0.22657054582904224,
+      "family": "softening",
+      "horizon_s": 60.0,
+      "model": "lstm",
+      "n": 971
+    },
+    {
+      "alpha": 0.02,
+      "coverage_delta_pp": -0.414486921529178,
+      "exceedance_rate": 0.02414486921529175,
+      "family": "parametric",
+      "horizon_s": 30.0,
+      "model": "envelope",
+      "n": 994
+    },
+    {
+      "alpha": 0.05,
+      "coverage_delta_pp": 0.5734406438631878,
+      "exceedance_rate": 0.04426559356136821,
+      "family": "parametric",
+      "horizon_s": 30.0,
+      "model": "envelope",
+      "n": 994
+    },
+    {
+      "alpha": 0.1,
+      "coverage_delta_pp": 0.14084507042253502,
+      "exceedance_rate": 0.09859154929577464,
+      "family": "parametric",
+      "horizon_s": 30.0,
+      "model": "envelope",
+      "n": 994
+    },
+    {
+      "alpha": 0.2,
+      "coverage_delta_pp": -0.623742454728371,
+      "exceedance_rate": 0.2062374245472837,
+      "family": "parametric",
+      "horizon_s": 30.0,
+      "model": "envelope",
+      "n": 994
+    },
+    {
+      "alpha": 0.02,
+      "coverage_delta_pp": -0.012072434607646176,
+      "exceedance_rate": 0.02012072434607646,
+      "family": "parametric",
+      "horizon_s": 30.0,
+      "model": "linear",
+      "n": 994
+    },
+    {
+      "alpha": 0.05,
+      "coverage_delta_pp": 0.4728370221327993,
+      "exceedance_rate": 0.04527162977867203,
+      "family": "parametric",
+      "horizon_s": 30.0,
+      "model": "linear",
+      "n": 994
+    },
+    {
+      "alpha": 0.1,
+      "coverage_delta_pp": 0.04024144869214652,
+      "exceedance_rate": 0.09959758551307847,
+      "family": "parametric",
+      "horizon_s": 30.0,
+      "model": "linear",
+      "n": 994
+    },
+    {
+      "alpha": 0.2,
+      "coverage_delta_pp": 0.6841046277666019,
+      "exceedance_rate": 0.193158953722334,
+      "family": "parametric",
+      "horizon_s": 30.0,
+      "model": "linear",
+      "n": 994
+    },
+    {
+      "alpha": 0.02,
+      "coverage_delta_pp": -0.012072434607646176,
+      "exceedance_rate": 0.02012072434607646,
+      "family": "parametric",
+      "horizon_s": 30.0,
+      "model": "lstm",
+      "n": 994
+    },
+    {
+      "alpha": 0.05,
+      "coverage_delta_pp": 0.2716297786720334,
+      "exceedance_rate": 0.047283702213279676,
+      "family": "parametric",
+      "horizon_s": 30.0,
+      "model": "lstm",
+      "n": 994
+    },
+    {
+      "alpha": 0.1,
+      "coverage_delta_pp": 0.7444668008048327,
+      "exceedance_rate": 0.0925553319919517,
+      "family": "parametric",
+      "horizon_s": 30.0,
+      "model": "lstm",
+      "n": 994
+    },
+    {
+      "alpha": 0.2,
+      "coverage_delta_pp": -1.0261569416499028,
+      "exceedance_rate": 0.21026156941649898,
+      "family": "parametric",
+      "horizon_s": 30.0,
+      "model": "lstm",
+      "n": 994
+    },
+    {
+      "alpha": 0.02,
+      "coverage_delta_pp": -0.012072434607646176,
+      "exceedance_rate": 0.02012072434607646,
+      "family": "parametric",
+      "horizon_s": 60.0,
+      "model": "envelope",
+      "n": 994
+    },
+    {
+      "alpha": 0.05,
+      "coverage_delta_pp": -0.3319919517102532,
+      "exceedance_rate": 0.05331991951710262,
+      "family": "parametric",
+      "horizon_s": 60.0,
+      "model": "envelope",
+      "n": 994
+    },
+    {
+      "alpha": 0.1,
+      "coverage_delta_pp": 0.14084507042253502,
+      "exceedance_rate": 0.09859154929577464,
+      "family": "parametric",
+      "horizon_s": 60.0,
+      "model": "envelope",
+      "n": 994
+    },
+    {
+      "alpha": 0.2,
+      "coverage_delta_pp": -0.8249496981891369,
+      "exceedance_rate": 0.20824949698189135,
+      "family": "parametric",
+      "horizon_s": 60.0,
+      "model": "envelope",
+      "n": 994
+    },
+    {
+      "alpha": 0.02,
+      "coverage_delta_pp": -0.11267605633802358,
+      "exceedance_rate": 0.02112676056338028,
+      "family": "parametric",
+      "horizon_s": 60.0,
+      "model": "linear",
+      "n": 994
+    },
+    {
+      "alpha": 0.05,
+      "coverage_delta_pp": 0.4728370221327993,
+      "exceedance_rate": 0.04527162977867203,
+      "family": "parametric",
+      "horizon_s": 60.0,
+      "model": "linear",
+      "n": 994
+    },
+    {
+      "alpha": 0.1,
+      "coverage_delta_pp": 1.046277665995976,
+      "exceedance_rate": 0.08953722334004025,
+      "family": "parametric",
+      "horizon_s": 60.0,
+      "model": "linear",
+      "n": 994
+    },
+    {
+      "alpha": 0.2,
+      "coverage_delta_pp": -0.32193158953722767,
+      "exceedance_rate": 0.20321931589537223,
+      "family": "parametric",
+      "horizon_s": 60.0,
+      "model": "linear",
+      "n": 994
+    },
+    {
+      "alpha": 0.02,
+      "coverage_delta_pp": 0.7927565392354174,
+      "exceedance_rate": 0.012072434607645875,
+      "family": "parametric",
+      "horizon_s": 60.0,
+      "model": "lstm",
+      "n": 994
+    },
+    {
+      "alpha": 0.05,
+      "coverage_delta_pp": 0.8752515090543311,
+      "exceedance_rate": 0.04124748490945674,
+      "family": "parametric",
+      "horizon_s": 60.0,
+      "model": "lstm",
+      "n": 994
+    },
+    {
+      "alpha": 0.1,
+      "coverage_delta_pp": 1.951710261569417,
+      "exceedance_rate": 0.08048289738430583,
+      "family": "parametric",
+      "horizon_s": 60.0,
+      "model": "lstm",
+      "n": 994
+    },
+    {
+      "alpha": 0.2,
+      "coverage_delta_pp": -0.42253521126760507,
+      "exceedance_rate": 0.20422535211267606,
+      "family": "parametric",
+      "horizon_s": 60.0,
+      "model": "lstm",
+      "n": 994
+    },
+    {
+      "alpha": 0.02,
+      "coverage_delta_pp": -0.29166666666666785,
+      "exceedance_rate": 0.022916666666666665,
+      "family": "biased",
+      "horizon_s": 30.0,
+      "model": "envelope",
+      "n": 960
+    },
+    {
+      "alpha": 0.05,
+      "coverage_delta_pp": 0.10416666666667185,
+      "exceedance_rate": 0.04895833333333333,
+      "family": "biased",
+      "horizon_s": 30.0,
+      "model": "envelope",
+      "n": 960
+    },
+    {
+      "alpha": 0.1,
+      "coverage_delta_pp": -0.10416666666667185,
+      "exceedance_rate": 0.10104166666666667,
+      "family": "biased",
+      "horizon_s": 30.0,
+      "model": "envelope",
+      "n": 960
+    },
+    {
+      "alpha": 0.2,
+      "coverage_delta_pp": -0.8333333333333415,
+      "exceedance_rate": 0.20833333333333334,
+      "family": "biased",
+      "horizon_s": 30.0,
+      "model": "envelope",
+      "n": 960
+    },
+    {
+      "alpha": 0.02,
+      "coverage_delta_pp": -0.5000000000000004,
+      "exceedance_rate": 0.025,
+      "family": "biased",
+      "horizon_s": 30.0,
+      "model": "linear",
+      "n": 960
+    },
+    {
+      "alpha": 0.05,
+      "coverage_delta_pp": 0.31250000000000444,
+      "exceedance_rate": 0.046875,
+      "family": "biased",
+      "horizon_s": 30.0,
+      "model": "linear",
+      "n": 960
+    },
+    {
+      "alpha": 0.1,
+      "coverage_delta_pp": 0.0,
+      "exceedance_rate": 0.1,
+      "family": "biased",
+      "horizon_s": 30.0,
+      "model": "linear",
+      "n": 960
+    },
+    {
+      "alpha": 0.2,
+      "coverage_delta_pp": 1.7708333333333326,
+      "exceedance_rate": 0.18229166666666666,
+      "family": "biased",
+      "horizon_s": 30.0,
+      "model": "linear",
+      "n": 960
+    },
+    {
+      "alpha": 0.02,
+      "coverage_delta_pp": -1.0208333333333264,
+      "exceedance_rate": 0.030208333333333334,
+      "family": "biased",
+      "horizon_s": 30.0,
+      "model": "lstm",
+      "n": 960
+    },
+    {
+      "alpha": 0.05,
+      "coverage_delta_pp": -0.10416666666666075,
+      "exceedance_rate": 0.051041666666666666,
+      "family": "biased",
+      "horizon_s": 30.0,
+      "model": "lstm",
+      "n": 960
+    },
+    {
+      "alpha": 0.1,
+      "coverage_delta_pp": 1.7708333333333326,
+      "exceedance_rate": 0.08229166666666667,
+      "family": "biased",
+      "horizon_s": 30.0,
+      "model": "lstm",
+      "n": 960
+    },
+    {
+      "alpha": 0.2,
+      "coverage_delta_pp": 1.5625,
+      "exceedance_rate": 0.184375,
+      "family": "biased",
+      "horizon_s": 30.0,
+      "model": "lstm",
+      "n": 960
+    },
+    {
+      "alpha": 0.02,
+      "coverage_delta_pp": -1.4375000000000027,
+      "exceedance_rate": 0.034375,
+      "family": "biased",
+      "horizon_s": 60.0,
+      "model": "envelope",
+      "n": 960
+    },
+    {
+      "alpha": 0.05,
+      "coverage_delta_pp": -0.9374999999999911,
+      "exceedance_rate": 0.059375,
+      "family": "biased",
+      "horizon_s": 60.0,
+      "model": "envelope",
+      "n": 960
+    },
+    {
+      "alpha": 0.1,
+      "coverage_delta_pp": 0.10416666666666075,
+      "exceedance_rate": 0.09895833333333333,
+      "family": "biased",
+      "horizon_s": 60.0,
+      "model": "envelope",
+      "n": 960
+    },
+    {
+      "alpha": 0.2,
+      "coverage_delta_pp": 1.4583333333333282,
+      "exceedance_rate": 0.18541666666666667,
+      "family": "biased",
+      "horizon_s": 60.0,
+      "model": "envelope",
+      "n": 960
+    },
+    {
+      "alpha": 0.02,
+      "coverage_delta_pp": -0.187499999999996,
+      "exceedance_rate": 0.021875,
+      "family": "biased",
+      "horizon_s": 60.0,
+      "model": "linear",
+      "n": 960
+    },
+    {
+      "alpha": 0.05,
+      "coverage_delta_pp": 0.31250000000000444,
+      "exceedance_rate": 0.046875,
+      "family": "biased",
+      "horizon_s": 60.0,
+      "model": "linear",
+      "n": 960
+    },
+    {
+      "alpha": 0.1,
+      "coverage_delta_pp": 0.7291666666666585,
+      "exceedance_rate": 0.09270833333333334,
+      "family": "biased",
+      "horizon_s": 60.0,
+      "model": "linear",
+      "n": 960
+    },
+    {
+      "alpha": 0.2,
+      "coverage_delta_pp": -0.7291666666666696,
+      "exceedance_rate": 0.20729166666666668,
+      "family": "biased",
+      "horizon_s": 60.0,
+      "model": "linear",
+      "n": 960
+    },
+    {
+      "alpha": 0.02,
+      "coverage_delta_pp": -0.6041666666666612,
+      "exceedance_rate": 0.026041666666666668,
+      "family": "biased",
+      "horizon_s": 60.0,
+      "model": "lstm",
+      "n": 960
+    },
+    {
+      "alpha": 0.05,
+      "coverage_delta_pp": -1.041666666666663,
+      "exceedance_rate": 0.06041666666666667,
+      "family": "biased",
+      "horizon_s": 60.0,
+      "model": "lstm",
+      "n": 960
+    },
+    {
+      "alpha": 0.1,
+      "coverage_delta_pp": -0.10416666666667185,
+      "exceedance_rate": 0.10104166666666667,
+      "family": "biased",
+      "horizon_s": 60.0,
+      "model": "lstm",
+      "n": 960
+    },
+    {
+      "alpha": 0.2,
+      "coverage_delta_pp": 0.8333333333333304,
+      "exceedance_rate": 0.19166666666666668,
+      "family": "biased",
+      "horizon_s": 60.0,
+      "model": "lstm",
+      "n": 960
+    }
+  ]
+}

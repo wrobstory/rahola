@@ -1,0 +1,13 @@
+{
+  "aci_dense_post_coverage": 0.9676062466760141,
+  "aci_gamma": 0.05,
+  "alpha": 0.05,
+  "cqr_coverage_delta_pp": -0.6550755180892098,
+  "experiment": "E4",
+  "figure": "results/e4_stress_test.png",
+  "raw_coverage_gap_pp": 25.523357920618196,
+  "raw_lstm_dense_post_coverage": 0.6805589131170526,
+  "raw_lstm_snapshot_coverage": 0.694766420793818,
+  "split_cqr_dense_post_coverage": 0.9364212154909829,
+  "split_cqr_snapshot_coverage": 0.9434492448191079
+}
