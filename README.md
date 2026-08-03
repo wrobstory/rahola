@@ -234,6 +234,9 @@ JAX owns the backend choice, so selecting a GPU does not change the model code.
   roll angle and rate remain continuous.
 - A ramp in `stiffness` is a nondimensional multiplier \(\kappa\); the reference
   time scale \(\omega_n\) is kept fixed during that trajectory.
+- `simulate_restarted_batch` starts independent futures from per-trajectory roll,
+  rate, stiffness, drift, and deterministic-parametric phase offsets; it is the
+  validated core extension used by the Prototype #3 oracle.
 - Stochastic parametric modulation uses an independently phased JONSWAP
   elevation record, RMS-normalized to `stochastic_std`.
 - Capsize time is the first RK4 endpoint beyond the threshold, without

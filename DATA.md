@@ -87,7 +87,10 @@ per-trajectory roll, roll-rate, current stiffness, and linear stiffness drift wh
 absolute phase of deterministic parametric modulation. Fresh rollout seeds are unique and outside
 all campaign seed ranges. Restarted stationary-ensemble variance must match the corresponding
 full-run segment within the predeclared 15%, with capsize fraction within five percentage points.
-Reserve-2 remains unmaterialized unless a conditional Part B model survives its kill criteria.
+Chronos B2 survived its predeclared kill, so reserve-2 is scheduled for one guarded materialization:
+128 trajectories from each of the six D1-mirroring campaigns (768 total), matching the CPU probe's
+frozen campaign limit. The CNN, physics floor, and both Chronos modes use the same holdout. This is
+an explicit reduction from Prototype #2's 18,000-trajectory final audit, not a new campaign.
 
 ## Exact regeneration
 

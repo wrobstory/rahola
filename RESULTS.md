@@ -285,6 +285,107 @@ alarm policy under a common operating-cost harness.
   set denominator. Hyperparameters and thresholds came only from train/calibration blocks, but the
   literal test-touched-once process rule is not claimed. The untouched reserve is the one-time audit.
 
+# Prototype #3 results — ceilings and architectures
+
+## What the ceiling said
+
+The frozen ceiling used 16,000 test windows: 2,000 per campaign from the three stationary
+evaluation campaigns, three ramps, and softening γ=1/3.3, stratified by label and protocol-time
+quartile. Every method below scored the identical windows and labels. Confidence intervals are a
+2,000-replicate trajectory-block bootstrap.
+
+| Method | Pooled AUC [95% CI] |
+|---|---:|
+| C1 exact-state rollout oracle | **0.7234 [0.7073, 0.7399]** |
+| C2 motion-only particle filter | 0.5649 [0.5426, 0.5886] |
+| Frozen D1 CNN | 0.6032 [0.5771, 0.6317] |
+| B0 XGBoost engineered features | 0.6476 [0.6278, 0.6685] |
+
+The gate verdict, applied verbatim, is: **“CNN AUC < C1 AUC - 0.03: proceed to Part B and report
+where the deficit lives.”** C1−CNN is 0.1202. The decomposition is unusual: C1−C2 is 0.1585, while
+C2−CNN is −0.0384, so the specified bootstrap PF is worse than the CNN and state estimation—not
+sequence-model capacity—dominates the measured shortfall. B0 also beats the CNN by 0.0444, showing
+that the architecture is not the only route to the available motion signal.
+
+C1 knows exact roll/rate, true current stiffness, deterministic remaining ramp, family, and
+sea-state specification, but never the realized future forcing; every one of its 200 futures uses a
+fresh independent seed. C2 is a known-family, Rao–Blackwellized bootstrap filter: exact observed
+roll/rate are pinned while 2,000 particles infer stiffness and linear drift under a robust
+encounter-innovation likelihood. The optional family-marginalized PF was not run. These are
+judgment calls, not claims that C2 is Bayes-optimal.
+
+The oracle is poorly calibrated against the single realized encounter per window (Brier 0.304,
+10-bin ECE 0.303), despite useful ranking. Calibration mass is concentrated near probabilities 0
+and 1; this makes the rollout fraction a ceiling score, not a deployable probability without a
+separate recalibration argument. The complete C1+C2 program took 1,889.8 seconds (31.5 minutes),
+well below the two-hour budget; no frozen coverage was reduced.
+
+## B1 — amortized physical filter
+
+The selected 4,329-parameter gray-box uses a temporal encoder, Gaussian physical-latent head, and
+split-time-inspired outward-rate margin hazard. Auxiliary weight 0.25 beat 1.0 on calibration.
+
+| Test | Gray-box FPR/h | CNN FPR/h | Relative change |
+|---|---:|---:|---:|
+| D1 pooled | 6.232 [6.117, 6.347] | 6.288 [6.173, 6.404] | 0.9% lower |
+| D2 held-out softening | 9.107 [8.869, 9.350] | 9.033 [8.795, 9.275] | 0.8% worse |
+| D2 held-out parametric | 6.317 [6.119, 6.520] | 6.604 [6.401, 6.811] | 4.3% lower |
+| D2 held-out biased | 8.070 [7.845, 8.299] | 8.702 [8.470, 8.940] | 7.3% lower |
+
+The within-distribution parity kill did not fire. Two required kills did:
+
+- **“Kill: fails to beat the from-scratch CNN's D2 FPR/h by >=15% in at least two of three
+  rotations.”** B1 earned 0/3.
+- **“Kill: mean absolute stiffness error exceeds 10% over the final third of the ramp.”** Measured
+  MAE was 0.269.
+
+![B1 inferred and true ramp stiffness](results/p3_b1_stiffness_tracking.png)
+
+## B2 — Chronos transfer probe
+
+The probe pins `amazon/chronos-t5-tiny` revision
+`29d808298f1a62493e7b9a5e08529d0d930fa189` (8.39M parameters, Apache-2.0) and tries exactly two
+modes: frozen encoder embeddings with a linear head, and a one-epoch full-encoder fine-tune with a
+head. CPU cost forced an explicit 128-trajectory-per-campaign subset; all B2 test comparators use
+those same trajectories. Fine-tuning is capped at 1,024 balanced windows.
+
+| Held-out family | CNN FPR/h | Chronos frozen FPR/h | Chronos fine-tuned FPR/h | Twenty-capsize CNN FPR/h |
+|---|---:|---:|---:|---:|
+| softening | 2.632 | 2.475 (5.97% lower) | 7.543 | 2.593 |
+| parametric | 5.471 | **3.595 (34.29% lower)** | **3.947 (27.86% lower)** | 3.400 |
+| biased | 3.881 | 4.910 | 8.435 | 3.960 |
+
+The B2 kill did **not** fire: **“Kill for the probe: no rotation shows >=10% FPR/h improvement
+over the from-scratch CNN.”** One rotation, parametric, qualifies; softening and biased do not.
+This is narrow evidence for pretrained invariance, not broad family transfer. The Twenty-Capsize
+protocol used all normal trajectories from the target stationary training campaign plus exactly 20
+target capsize trajectories; it also helps only the parametric rotation materially.
+
+D5 remains the negative control: frozen-embedding AUC is 0.376 and fine-tuned AUC is 0.491, both
+below the 0.58 leakage-audit trigger. Because B2 survives its kill, the guarded final evaluator will
+materialize reserve-2 once on 128 trajectories from each of the six D1-mirroring campaigns (768
+total) and score both Chronos modes, the CNN, and the physics floor on the same holdout.
+
+## Prototype #3 implementation judgments and deviations
+
+- The restart API accepts per-trajectory roll, rate, current stiffness, stiffness drift, and
+  deterministic-parametric phase offset. Independent restart variance differs from a corresponding
+  full-run segment by 3.1%, inside the predeclared 15%; capsize fraction differs by zero points.
+- C2 pins essentially noise-free synthetic roll/rate observations and filters only stiffness and
+  drift. It assimilates every two seconds so band-limited forcing innovations are not treated as
+  independent samples. No family-marginalized variant was run.
+- B0 is XGBoost 3.3.0 with a fixed 200-tree, depth-3 configuration. Its features are variance, AC1,
+  two Kendall trends, envelope summaries, period, danger margin, neighbor count, GLRT, and endpoint
+  magnitudes.
+- B1's “posterior” is a diagonal Gaussian latent head; its analytic hazard uses the posterior mean.
+  This is an amortized approximation, not the 2,000-particle C2 posterior or an MC physics rollout.
+- B2 uses univariate Chronos passes for roll and roll-rate, concatenating their encoder summaries.
+  The CPU subsample is a declared deviation from full D2 coverage. B1 values shown beside B2 in the
+  JSON use full D2 and are therefore contextual, not exact paired-subset comparisons.
+- Development test scoring was rerun twice for B1 adapter defects: empty pre-window trajectories
+  and non-finite sentinel thresholds. Neither run produced a valid result; the final output uses the
+  unchanged harness rule that filters sentinel scores before calibration quantiles.
+
 ## Relation to prior work
 
 Our documented search found no conformal-prediction application to motion-based ship-stability or
@@ -312,6 +413,10 @@ uv run python examples/d2_family_generalization.py
 uv run python examples/d3_bandwidth.py
 uv run python examples/d4_wave_groups.py
 uv run python examples/d5_within_regime.py
+uv run python examples/p3_acausal_neighbor.py
+uv run python examples/p3_ceiling.py
+uv run python examples/p3_b1_graybox.py
+uv run python examples/p3_b2_chronos.py
 ```
 
 `uv run rahola-lab final-eval` is deliberately absent from the reproducible command list: it is a

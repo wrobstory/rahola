@@ -37,3 +37,17 @@ def test_final_evaluation_refuses_dirty_tree_before_attestation(
         )
 
     assert not (tmp_path / "results" / "final_reserve2_attestation.json").exists()
+
+
+def test_final_evaluation_requires_frozen_survivor_before_attestation(
+    tmp_path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(final_eval, "_git_output", lambda *args: "")
+    with pytest.raises(final_eval.FinalEvaluationError, match="survivor"):
+        final_eval.run_final_evaluation(
+            data_root=tmp_path / "data",
+            output_root=tmp_path / "results",
+            config_root=tmp_path / "configs",
+            reserve_root=tmp_path / "reserve",
+        )
+    assert not (tmp_path / "results" / "final_reserve2_attestation.json").exists()

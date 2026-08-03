@@ -15,7 +15,7 @@ changes the simulator's behavior.
 - `rahola_lab.conformal`: auditable NumPy implementations of one-sided split CQR and the exact
   unprojected ACI update, deterministic DtACI, recent-score recalibration, and alarm normalization.
 - `rahola_lab.detectors`: causal detector-window extraction, classical EWS, roll-power GLRT,
-  neighbor loss, and a native-JAX temporal CNN.
+  neighbor loss, native-JAX CNN/gray-box models, XGBoost features, and the pinned Chronos probe.
 - `rahola_lab.inference`: the fixed 2,000-particle causal stiffness/drift filter used by C2.
 - `rahola_lab.experiments`: bounded-memory E1–E4, E3b, D1–D5, and Prototype #3 ceiling runners plus
   the guarded one-time final-reserve-2 path used by root example scripts.
@@ -122,6 +122,8 @@ Prototype #3's reproducible development commands are:
 uv run python examples/p3_acausal_neighbor.py
 uv run python examples/p3_ceiling.py --pilot-windows 8
 uv run python examples/p3_ceiling.py
+uv run python examples/p3_b1_graybox.py
+uv run python examples/p3_b2_chronos.py
 ```
 
 The pilot does not write a result and exists only to project the frozen full-run compute budget.

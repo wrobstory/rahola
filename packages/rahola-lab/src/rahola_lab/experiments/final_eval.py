@@ -14,12 +14,26 @@ from rahola.simulate import simulate_batch
 from rahola.storage import write_dataset
 from rahola_lab.campaigns import load_campaign_definition, load_campaign_split
 from rahola_lab.constants import (
+    B2_TRAJECTORIES_PER_CAMPAIGN,
     EWS_HORIZON_PERIODS,
     SEED_BLOCK_SIZE,
     SEED_BLOCK_START,
     SeedBlock,
 )
+from rahola_lab.detectors import ChronosClassifier
 from rahola_lab.evaluation import AlarmMetrics, EpisodeConfig, evaluate_alarms
+from rahola_lab.experiments.b2_chronos import (
+    _evaluate_scores as evaluate_foundation_scores,
+)
+from rahola_lab.experiments.b2_chronos import (
+    _score_foundation as score_foundation,
+)
+from rahola_lab.experiments.b2_chronos import (
+    _training_data as foundation_training_data,
+)
+from rahola_lab.experiments.b2_chronos import (
+    _training_windows as foundation_training_windows,
+)
 from rahola_lab.experiments.common import FAMILIES, write_result
 from rahola_lab.experiments.detector_common import (
     DETECTOR_NAMES,
@@ -91,6 +105,11 @@ def run_final_evaluation(
         raise FinalEvaluationError("reserve access was already started; refusing a repeat")
     if _git_output("status", "--porcelain"):
         raise FinalEvaluationError("final-eval requires a clean committed working tree")
+    b2_path = output_root / "p3_b2_chronos.json"
+    if not b2_path.exists() or not json.loads(b2_path.read_text(encoding="utf-8")).get(
+        "survives_kill", False
+    ):
+        raise FinalEvaluationError("reserve-2 requires a frozen Part B survivor")
     commit = _git_output("rev-parse", "HEAD")
     timestamp = datetime.now(UTC).isoformat()
     output_root.mkdir(parents=True, exist_ok=True)
@@ -119,7 +138,29 @@ def run_final_evaluation(
         del training_data
         gc.collect()
 
+        foundation_training = foundation_training_windows(
+            foundation_training_data(data_root, list(FAMILIES))
+        )
+        foundation_models = {
+            mode: ChronosClassifier(mode=mode, seed=72_001).fit(
+                foundation_training.features, foundation_training.labels
+            )
+            for mode in ("frozen", "finetune")
+        }
+        foundation_calibration = [
+            load_campaign_split(
+                campaign_dir(data_root, f"{family}_{role}"),
+                SeedBlock.CALIBRATION,
+                limit=B2_TRAJECTORIES_PER_CAMPAIGN,
+            )
+            for family in FAMILIES
+            for role in ("stationary", "ramp")
+        ]
+        del foundation_training
+        gc.collect()
+
         score_parts = []
+        reserve_datasets = []
         campaigns = []
         for family in FAMILIES:
             for role in ("evaluation", "ramp"):
@@ -128,13 +169,15 @@ def run_final_evaluation(
                 test_split = next(
                     split for split in definition.splits if split.block == SeedBlock.TEST
                 )
-                seeds = _reserve_seeds(reserve_block, test_split.count, test_split.offset)
+                reserve_count = min(B2_TRAJECTORIES_PER_CAMPAIGN, test_split.count)
+                seeds = _reserve_seeds(reserve_block, reserve_count, test_split.offset)
                 campaign_root = reserve_root / name
                 chunk_records = []
                 capsized = 0
                 for chunk_number, start in enumerate(range(0, len(seeds), chunk_size)):
                     chunk_seeds = seeds[start : start + chunk_size]
                     dataset = simulate_batch(definition.simulation, chunk_seeds)
+                    reserve_datasets.append(dataset)
                     capsized += int(np.sum(dataset.capsized))
                     score_parts.append(score_dataset(dataset, suite))
                     chunk_path = campaign_root / f"chunk-{chunk_number:05d}"
@@ -151,9 +194,9 @@ def run_final_evaluation(
                     "name": name,
                     "git_commit": commit,
                     "reserve_offset": test_split.offset,
-                    "count": test_split.count,
+                    "count": reserve_count,
                     "capsized": capsized,
-                    "capsize_fraction": capsized / test_split.count,
+                    "capsize_fraction": capsized / reserve_count,
                     "simulation": definition.simulation.to_dict(),
                     "chunks": chunk_records,
                 }
@@ -176,10 +219,26 @@ def run_final_evaluation(
                 decorrelation_time_s=float(d1["decorrelation_time_s"][name]),
             )
             methods[name] = _metrics_payload(metrics, threshold)
+        for mode, model in foundation_models.items():
+            calibration_scores = [
+                item
+                for dataset in foundation_calibration
+                for item in score_foundation(dataset, model, max_windows_per_trajectory=8)
+            ]
+            reserve_scores = [
+                item for dataset in reserve_datasets for item in score_foundation(dataset, model)
+            ]
+            methods[f"chronos_{mode}"] = evaluate_foundation_scores(
+                calibration_scores, reserve_scores
+            )
         payload: dict[str, object] = {
             "experiment": "Final reserve-2 evaluation",
             "git_commit": commit,
             "reserve_seed_block": [400_000, 500_000],
+            "reserve_protocol": (
+                "128 trajectories per D1-mirroring campaign, matching the frozen B2 CPU probe; "
+                "all methods use the same 768 trajectories."
+            ),
             "campaigns": campaigns,
             "methods": methods,
         }
