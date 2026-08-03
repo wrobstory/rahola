@@ -29,6 +29,7 @@ def extract_forecast_dataset(
     horizons_s: tuple[float, ...],
     stride_s: float = 10.0,
     max_samples_per_trajectory: int | None = None,
+    first_history_end_s: float | None = None,
 ) -> ForecastDataset:
     """Extract histories and future maximum-|roll| targets without future leakage.
 
@@ -52,11 +53,16 @@ def extract_forecast_dataset(
     end_times: list[float] = []
     trajectory_indices: list[int] = []
     last_horizon = max(horizon_samples)
+    first_end_index = history_samples - 1
+    if first_history_end_s is not None:
+        if first_history_end_s < history_s - sample_dt:
+            raise ValueError("first history end cannot precede a complete history")
+        first_end_index = max(first_end_index, round(first_history_end_s / sample_dt))
     for trajectory_index in range(dataset.batch_size):
         accepted = 0
         cap_time = dataset.t_capsize_s[trajectory_index]
         for end_index in range(
-            history_samples - 1,
+            first_end_index,
             len(dataset.time_s) - last_horizon,
             stride_samples,
         ):

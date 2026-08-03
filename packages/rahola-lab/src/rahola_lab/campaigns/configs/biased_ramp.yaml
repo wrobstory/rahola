@@ -1,6 +1,6 @@
 name: biased_ramp
 role: prototype2_ramp
-rationale: terminal stiffness 0.645 produced 26.6% capsize in the pilot.
+rationale: equilibrium start and terminal stiffness 0.645 target 20-60% terminal capsizes.
 splits:
   train: {count: 2000, offset: 30000}
 simulation:
@@ -12,6 +12,7 @@ simulation:
   damping_ratio: 0.05
   quadratic_damping: 0.02
   bias_moment: -0.25
+  initial_angle_rad: -0.13366305061168876
   output_rate_hz: 2.0
   forcing:
     sea_state: {hs_m: 2.0, tp_s: 4.0, gamma: 3.3}
@@ -22,4 +23,3 @@ simulation:
     ramp_parameter: stiffness
     ramp_start: 1.2
     ramp_end: 0.645
-

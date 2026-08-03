@@ -17,6 +17,13 @@ EWS_HORIZON_PERIODS = 50.0
 # Five periods remove ambiguous near-misses from the negative class.
 EXCLUSION_BUFFER_PERIODS = 5.0
 
+# ACI is operationally unacceptable only if it exceeds both this absolute rate...
+ACI_EXPLOSION_FPR_PER_HOUR = 2.0
+# ...and four times the corresponding fixed-CQR episode rate.
+ACI_EXPLOSION_FACTOR = 4.0
+# Small predeclared grid spans slow adaptation through deliberately aggressive updates.
+ACI_GAMMA_GRID = (0.001, 0.005, 0.01, 0.02, 0.05)
+
 # Disjoint 100k-wide ranges prevent phase reuse across statistical roles.
 SEED_BLOCK_SIZE = 100_000
 

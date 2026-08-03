@@ -1,6 +1,6 @@
 name: parametric_evaluation
 role: rare_event_evaluation
-rationale: stochastic stiffness RMS 0.32 produced 0.78% capsize in the pilot.
+rationale: stochastic stiffness RMS 0.33 produced 0.88% capsize in a 2048-seed pilot.
 splits:
   calibration: {count: 1000, offset: 60000}
   test: {count: 5000, offset: 60000}
@@ -18,6 +18,5 @@ simulation:
     min_components: 200
   parametric:
     mode: stochastic
-    stochastic_std: 0.32
+    stochastic_std: 0.33
   protocol: {kind: stationary}
-

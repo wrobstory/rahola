@@ -1,6 +1,6 @@
 name: biased_evaluation
 role: rare_event_evaluation
-rationale: bias -0.25 and r=0.12 produced 1.76% capsize in the pilot.
+rationale: equilibrium start, bias -0.15, and r=0.134 interpolate a 0.9-1.5% pilot bracket.
 splits:
   calibration: {count: 1000, offset: 70000}
   test: {count: 5000, offset: 70000}
@@ -12,11 +12,11 @@ simulation:
   negative_escape_angle_rad: 0.4363323129985824
   damping_ratio: 0.05
   quadratic_damping: 0.02
-  bias_moment: -0.25
+  bias_moment: -0.15
+  initial_angle_rad: -0.09384459849427874
   output_rate_hz: 2.0
   forcing:
     sea_state: {hs_m: 2.0, tp_s: 4.0, gamma: 3.3}
-    effective_wave_slope: 0.12
+    effective_wave_slope: 0.134
     min_components: 200
   protocol: {kind: stationary}
-

@@ -16,6 +16,7 @@ class TrajectoryScores:
     scores: NDArray[np.float64]
     record_end_s: float
     t_capsize_s: float | None = None
+    record_start_s: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -39,7 +40,12 @@ class OperatingPoint:
 def _associated_episode(
     episodes: tuple[AlarmEpisode, ...], t_capsize_s: float, horizon_s: float
 ) -> AlarmEpisode | None:
-    eligible = [episode for episode in episodes if 0.0 < t_capsize_s - episode.start_s <= horizon_s]
+    horizon_start = t_capsize_s - horizon_s
+    eligible = [
+        episode
+        for episode in episodes
+        if episode.start_s < t_capsize_s and episode.end_s >= horizon_start
+    ]
     return min(eligible, key=lambda episode: episode.start_s) if eligible else None
 
 
@@ -51,11 +57,15 @@ def evaluate_alarms(
 ) -> AlarmMetrics:
     """Compute episode metrics using pre-event exposure.
 
-    Exposure is the sum of each trajectory's observable non-capsized duration:
-    ``min(record_end_s, t_capsize_s)`` for capsized runs and ``record_end_s``
-    otherwise. An episode is false unless its start precedes a capsize by no more
-    than ``horizon_s``. Sensitivity is the fraction of capsize events with such
-    an episode. Lead time uses the first sustained eligible alarm.
+    Exposure is the sum of each trajectory's scorable non-capsized duration:
+    ``min(record_end_s, t_capsize_s) - record_start_s`` for capsizes after the
+    observation start and ``record_end_s - record_start_s`` otherwise. Events
+    before observation starts are outside the risk set. An episode is false
+    unless it overlaps the open pre-capsize
+    horizon ``[t_capsize-horizon_s, t_capsize)``; a sustained alarm does not
+    become false merely because it opened earlier. Sensitivity is the fraction
+    of capsize events with such an episode. Lead time uses its first sustained
+    alarm time and may therefore exceed the nominal horizon.
     """
     if horizon_s <= 0 or not trajectories:
         raise ValueError("a positive horizon and at least one trajectory are required")
@@ -66,19 +76,22 @@ def evaluate_alarms(
     lead_times: list[float] = []
     for trajectory in trajectories:
         capsize = trajectory.t_capsize_s
-        exposure_s += (
-            min(trajectory.record_end_s, capsize)
-            if capsize is not None
-            else trajectory.record_end_s
+        observable_capsize = (
+            capsize if capsize is not None and capsize > trajectory.record_start_s else None
         )
+        if capsize is not None and capsize <= trajectory.record_start_s:
+            event_end = trajectory.record_start_s
+        else:
+            event_end = min(trajectory.record_end_s, observable_capsize or trajectory.record_end_s)
+        exposure_s += max(0.0, event_end - trajectory.record_start_s)
         episodes = alarm_episodes(trajectory.times_s, trajectory.scores, episode_config)
         associated: AlarmEpisode | None = None
-        if capsize is not None:
+        if observable_capsize is not None:
             capsize_count += 1
-            associated = _associated_episode(episodes, capsize, horizon_s)
+            associated = _associated_episode(episodes, observable_capsize, horizon_s)
             if associated is not None:
                 detected += 1
-                lead_times.append(capsize - associated.start_s)
+                lead_times.append(observable_capsize - associated.start_s)
         false_episodes += sum(episode is not associated for episode in episodes)
     exposure_hours = exposure_s / 3600.0
     return AlarmMetrics(

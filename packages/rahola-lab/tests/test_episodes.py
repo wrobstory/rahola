@@ -45,6 +45,43 @@ def test_episode_metrics_known_answer() -> None:
     assert metrics.false_positives_per_hour == pytest.approx(22.5)
 
 
+def test_sustained_episode_overlapping_horizon_is_a_detection() -> None:
+    trajectory = TrajectoryScores(
+        times_s=np.arange(10, dtype=np.float64) * 10,
+        scores=np.ones(10, dtype=np.float64),
+        record_end_s=100.0,
+        t_capsize_s=90.0,
+    )
+    metrics = evaluate_alarms(
+        [trajectory],
+        EpisodeConfig(threshold=0.5, debounce_windows=2, refractory_windows=2),
+        horizon_s=30.0,
+    )
+    assert metrics.sensitivity == 1.0
+    assert metrics.false_episode_count == 0
+    assert metrics.lead_times_s.tolist() == [90.0]
+
+
+def test_exposure_and_events_begin_at_first_scorable_time() -> None:
+    early = TrajectoryScores(
+        times_s=np.array([120.0]),
+        scores=np.array([0.0]),
+        record_start_s=120.0,
+        record_end_s=600.0,
+        t_capsize_s=50.0,
+    )
+    at_risk = TrajectoryScores(
+        times_s=np.array([120.0]),
+        scores=np.array([0.0]),
+        record_start_s=120.0,
+        record_end_s=600.0,
+        t_capsize_s=300.0,
+    )
+    metrics = evaluate_alarms([early, at_risk], EpisodeConfig(threshold=0.5), horizon_s=60.0)
+    assert metrics.capsize_count == 1
+    assert metrics.exposure_hours == pytest.approx(180.0 / 3600.0)
+
+
 def test_operating_curve_sweeps_thresholds() -> None:
     trajectory = TrajectoryScores(
         times_s=np.arange(5, dtype=np.float64),

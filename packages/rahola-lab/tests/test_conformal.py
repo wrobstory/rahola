@@ -8,6 +8,7 @@ from rahola_lab.conformal import (
     SplitCQRUpper,
     adaptive_conformal_bounds,
     conformal_quantile,
+    normalized_alarm_scores,
 )
 from scipy.stats import binomtest
 
@@ -16,6 +17,11 @@ def test_inflated_quantile_uses_finite_sample_rank() -> None:
     scores = np.arange(1.0, 10.0)
     assert conformal_quantile(scores, 0.2) == 8.0
     assert math.isinf(conformal_quantile(scores, 0.05))
+
+
+def test_alarm_score_crosses_one_at_frozen_escape_fraction() -> None:
+    scores = normalized_alarm_scores(np.array([0.29, 0.30, 0.31]), 0.5)
+    np.testing.assert_allclose(scores, [29 / 30, 1.0, 31 / 30])
 
 
 @pytest.mark.parametrize("alpha", [0.1, 0.2])
