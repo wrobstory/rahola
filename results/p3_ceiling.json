@@ -1,0 +1,165 @@
+{
+  "elapsed_s": 1889.834846999991,
+  "experiment": "Prototype #3 ceiling",
+  "gaps": {
+    "C1_minus_C2": 0.1585119509422377,
+    "C1_minus_CNN": 0.12015303957890289,
+    "C2_minus_CNN": -0.0383589113633348
+  },
+  "gate_closed": false,
+  "gate_threshold_auc": 0.03,
+  "gate_verdict": "CNN AUC < C1 AUC - 0.03: proceed to Part B and report where the deficit lives.",
+  "methods": {
+    "B0_XGBoost": {
+      "auc": 0.6475970241678128,
+      "bootstrap_replicates": 2000,
+      "bootstrap_unit": "trajectory",
+      "interval": [
+        0.6277532318114383,
+        0.6684572256877767
+      ]
+    },
+    "C1_oracle": {
+      "auc": 0.7233927567210124,
+      "bootstrap_replicates": 2000,
+      "bootstrap_unit": "trajectory",
+      "interval": [
+        0.7072669845438269,
+        0.7398986477597415
+      ]
+    },
+    "C2_filtered": {
+      "auc": 0.5648808057787748,
+      "bootstrap_replicates": 2000,
+      "bootstrap_unit": "trajectory",
+      "interval": [
+        0.5426178905841651,
+        0.5885935136698043
+      ]
+    },
+    "CNN": {
+      "auc": 0.6032397171421096,
+      "bootstrap_replicates": 2000,
+      "bootstrap_unit": "trajectory",
+      "interval": [
+        0.5770741537824774,
+        0.6317022189063168
+      ]
+    }
+  },
+  "oracle_calibration": {
+    "bins": [
+      {
+        "count": 9693,
+        "observed": 0.18920870731455688,
+        "predicted": 0.0038837305271845657
+      },
+      {
+        "count": 99,
+        "observed": 0.5151515151515151,
+        "predicted": 0.16232323232323229
+      },
+      {
+        "count": 105,
+        "observed": 0.6,
+        "predicted": 0.24100000000000002
+      },
+      {
+        "count": 115,
+        "observed": 0.5478260869565217,
+        "predicted": 0.34373913043478266
+      },
+      {
+        "count": 56,
+        "observed": 0.6785714285714286,
+        "predicted": 0.4384821428571429
+      },
+      {
+        "count": 3,
+        "observed": 0.6666666666666666,
+        "predicted": 0.5099999999999999
+      },
+      {
+        "count": 1,
+        "observed": 1.0,
+        "predicted": 0.64
+      },
+      {
+        "count": 1,
+        "observed": 1.0,
+        "predicted": 0.75
+      },
+      {
+        "count": 4,
+        "observed": 1.0,
+        "predicted": 0.8474999999999999
+      },
+      {
+        "count": 5923,
+        "observed": 0.5026169171028195,
+        "predicted": 0.9979815971635996
+      }
+    ],
+    "brier": 0.30415500625,
+    "ece_10_bin": 0.30260187499999996
+  },
+  "oracle_fairness": "C1 knows exact roll state, current stiffness, deterministic remaining ramp, family, and sea-state specification, but never the realized future forcing. Every rollout uses a fresh independent forcing seed.",
+  "particle_count": 2000,
+  "pf_judgment": "Rao-Blackwellized bootstrap PF: observed roll/rate are pinned; 2,000 particles infer current stiffness and linear drift under a robust encounter-innovation likelihood. Family is known; no family-marginalized variant was run.",
+  "rollouts_per_window": 200,
+  "sampling": {
+    "campaigns": [
+      {
+        "campaign": "softening_evaluation",
+        "elapsed_s": 191.4088359999878,
+        "positive_fraction": 0.3275,
+        "windows": 2000
+      },
+      {
+        "campaign": "parametric_evaluation",
+        "elapsed_s": 318.78020604199264,
+        "positive_fraction": 0.2625,
+        "windows": 2000
+      },
+      {
+        "campaign": "biased_evaluation",
+        "elapsed_s": 193.25747016698006,
+        "positive_fraction": 0.348,
+        "windows": 2000
+      },
+      {
+        "campaign": "softening_ramp",
+        "elapsed_s": 193.6448956669774,
+        "positive_fraction": 0.343,
+        "windows": 2000
+      },
+      {
+        "campaign": "parametric_ramp",
+        "elapsed_s": 325.4392057080113,
+        "positive_fraction": 0.299,
+        "windows": 2000
+      },
+      {
+        "campaign": "biased_ramp",
+        "elapsed_s": 194.3985069580085,
+        "positive_fraction": 0.2935,
+        "windows": 2000
+      },
+      {
+        "campaign": "softening_bandwidth_gamma_1",
+        "elapsed_s": 202.7828652910248,
+        "positive_fraction": 0.3305,
+        "windows": 2000
+      },
+      {
+        "campaign": "softening_bandwidth_gamma_3_3",
+        "elapsed_s": 194.97785604101955,
+        "positive_fraction": 0.313,
+        "windows": 2000
+      }
+    ],
+    "requested_windows_per_campaign": 2000,
+    "strata": "label x quartile of protocol time",
+    "total_windows": 16000
+  }
+}
