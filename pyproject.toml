@@ -1,0 +1,45 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "rahola"
+version = "0.1.0"
+description = "Falsification-first synthetic ship-roll dynamics library"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [{ name = "Rahola contributors" }]
+dependencies = [
+  "jax>=0.4.38",
+  "numpy>=2.1",
+  "pyarrow>=18",
+  "pyyaml>=6.0",
+  "scipy>=1.14",
+]
+
+[project.optional-dependencies]
+examples = ["matplotlib>=3.9"]
+dev = ["pytest>=8.3", "pytest-cov>=6", "ruff>=0.9"]
+
+[project.scripts]
+rahola = "rahola.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/rahola"]
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+markers = [
+  "slow: full numerical physics validation",
+  "performance: throughput benchmark not run by default",
+]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
