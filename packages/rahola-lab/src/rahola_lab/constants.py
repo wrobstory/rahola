@@ -30,6 +30,31 @@ SLIDING_RECALIBRATION_WINDOWS = (25, 50, 100)
 # Fitted-config bound brackets always-on through selective physics alarms.
 DANGER_SCORE_THRESHOLDS_RAD_S = tuple(-1.75 + 0.025 * index for index in range(91))
 
+# Prototype #2 detector grids are frozen before any development-test scoring.
+EWS_SUBWINDOW_FRACTIONS = (0.20, 0.35, 0.50)
+NEIGHBOR_RADIUS_GRID = (0.20, 0.35, 0.50)
+CNN_GRID = (
+    {"channels": (12, 24), "kernel_size": 9, "family_head_weight": 0.0},
+    {"channels": (16, 32), "kernel_size": 7, "family_head_weight": 0.10},
+)
+DETECTOR_MATCHED_SENSITIVITY = 0.90
+# "Materially above B1" means at least 10% lower FPR/h at matched sensitivity.
+D2_MATERIAL_FPR_REDUCTION = 0.10
+D3_MATERIAL_AUC_MARGIN = 0.02
+D3_BROADBAND_VERDICT = (
+    "If all motion-only detectors' skill collapses toward the broadband end, the "
+    "encounter-driven objection to precursor-based warning is quantitatively confirmed for "
+    "this system class."
+)
+D3_SURVIVAL_VERDICT = (
+    "If skill survives at gamma=1.0 materially above the B1 floor, motion history contains "
+    "precursor information beyond critical slowing down."
+)
+# Wave-group stratification treats twice the elevation-envelope amplitude as
+# instantaneous wave height. A critical run must exceed 0.75 Hs for 1.5 Tp.
+WAVE_GROUP_HEIGHT_HS_FRACTION = 0.75
+WAVE_GROUP_MIN_PERIODS = 1.5
+
 # Disjoint 100k-wide ranges prevent phase reuse across statistical roles.
 SEED_BLOCK_SIZE = 100_000
 

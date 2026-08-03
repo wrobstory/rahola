@@ -38,38 +38,42 @@ class CausalTransformer:
         source = np.asarray(values, dtype=np.float64)
         if source.ndim != 1:
             raise ValueError("CausalTransformer accepts one trajectory at a time")
-        result = np.zeros_like(source)
-        sum_y = 0.0
-        sum_y2 = 0.0
-        sum_t = 0.0
-        sum_t2 = 0.0
-        sum_ty = 0.0
-        for index, value in enumerate(source):
-            count = index
-            if not np.isfinite(value):
-                result[index:] = np.nan
-                break
-            if count < 2:
-                residual = 0.0
-                scale = 1.0
-            else:
-                mean = sum_y / count
-                if self.detrend:
-                    denominator = count * sum_t2 - sum_t**2
-                    slope = (count * sum_ty - sum_t * sum_y) / max(denominator, self.epsilon)
-                    intercept = (sum_y - slope * sum_t) / count
-                    prediction = intercept + slope * index
-                else:
-                    prediction = mean
-                variance = max((sum_y2 - count * mean**2) / (count - 1), 0.0)
-                scale = max(np.sqrt(variance), self.epsilon)
-                residual = value - prediction
-            result[index] = residual / scale
-            sum_y += value
-            sum_y2 += value * value
-            sum_t += index
-            sum_t2 += index * index
-            sum_ty += index * value
+        result = np.full_like(source, np.nan)
+        finite = np.flatnonzero(~np.isfinite(source))
+        stop = int(finite[0]) if len(finite) else len(source)
+        if stop == 0:
+            return result
+
+        current = source[:stop]
+        index = np.arange(stop, dtype=np.float64)
+        count = index
+
+        def prior_sum(terms: FloatArray) -> FloatArray:
+            return np.concatenate((np.zeros(1, dtype=np.float64), np.cumsum(terms[:-1])))
+
+        sum_y = prior_sum(current)
+        sum_y2 = prior_sum(current * current)
+        sum_t = prior_sum(index)
+        sum_t2 = prior_sum(index * index)
+        sum_ty = prior_sum(index * current)
+        safe_count = np.maximum(count, 1.0)
+        mean = sum_y / safe_count
+        if self.detrend:
+            denominator = count * sum_t2 - sum_t**2
+            slope = (count * sum_ty - sum_t * sum_y) / np.maximum(
+                denominator, self.epsilon
+            )
+            prediction = (sum_y - slope * sum_t) / safe_count + slope * index
+        else:
+            prediction = mean
+        variance = np.maximum(
+            (sum_y2 - count * mean**2) / np.maximum(count - 1.0, 1.0),
+            0.0,
+        )
+        scale = np.maximum(np.sqrt(variance), self.epsilon)
+        transformed = (current - prediction) / scale
+        transformed[count < 2] = 0.0
+        result[:stop] = transformed
         return result
 
 

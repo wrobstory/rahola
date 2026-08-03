@@ -8,6 +8,7 @@ import numpy as np
 from numpy.typing import NDArray
 from scipy.stats import beta
 
+from rahola_lab.evaluation.declustering import decluster_episodes
 from rahola_lab.evaluation.episodes import AlarmEpisode, EpisodeConfig, alarm_episodes
 
 
@@ -84,6 +85,7 @@ def evaluate_alarms(
     episode_config: EpisodeConfig,
     *,
     horizon_s: float,
+    decorrelation_time_s: float = 0.0,
 ) -> AlarmMetrics:
     """Compute episode metrics using pre-event exposure.
 
@@ -102,9 +104,9 @@ def evaluate_alarms(
     trials are observable capsize events. For false episodes, each scorable
     window is an alarm-opening opportunity and the probability interval is
     rescaled by observed opportunities per exposure hour. Debounce/refractory
-    decluster alarms, but residual serial dependence means this interval is a
-    binomial-opportunity convention, not a proof of independent trials; full
-    decorrelation-time declustering is deferred to Prototype #2.
+    logic is followed by merging episodes separated by no more than the supplied
+    decorrelation time. Residual serial dependence means the interval remains a
+    binomial-opportunity convention, not a proof of independent trials.
     """
     if horizon_s <= 0 or not trajectories:
         raise ValueError("a positive horizon and at least one trajectory are required")
@@ -130,7 +132,10 @@ def evaluate_alarms(
                 & (trajectory.times_s <= event_end)
             )
         )
-        episodes = alarm_episodes(trajectory.times_s, trajectory.scores, episode_config)
+        episodes = decluster_episodes(
+            alarm_episodes(trajectory.times_s, trajectory.scores, episode_config),
+            decorrelation_time_s,
+        )
         associated: tuple[AlarmEpisode, ...] = ()
         if observable_capsize is not None:
             capsize_count += 1
@@ -167,6 +172,7 @@ def operating_curve(
     thresholds: NDArray[np.floating],
     *,
     horizon_s: float,
+    decorrelation_time_s: float = 0.0,
 ) -> tuple[OperatingPoint, ...]:
     """Sweep score thresholds and retain sensitivity, FPR/h, and lead quantiles."""
     points: list[OperatingPoint] = []
@@ -175,6 +181,7 @@ def operating_curve(
             trajectories,
             replace(episode_config, threshold=float(threshold)),
             horizon_s=horizon_s,
+            decorrelation_time_s=decorrelation_time_s,
         )
         quantiles = (
             tuple(float(value) for value in np.quantile(metrics.lead_times_s, [0.1, 0.5, 0.9]))

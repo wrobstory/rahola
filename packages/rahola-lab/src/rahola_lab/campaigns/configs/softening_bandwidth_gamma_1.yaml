@@ -1,0 +1,20 @@
+name: softening_bandwidth_gamma_1
+role: prototype2_bandwidth
+rationale: gamma=1.0 and terminal stiffness -0.047 target a common 40% terminal capsize rate.
+splits:
+  train: {count: 1000, offset: 60000}
+  calibration: {count: 400, offset: 60000}
+  test: {count: 1000, offset: 60000}
+simulation:
+  family: softening
+  duration_s: 600.0
+  natural_period_s: 4.0
+  escape_angle_rad: 0.6108652381980153
+  damping_ratio: 0.05
+  quadratic_damping: 0.02
+  output_rate_hz: 2.0
+  forcing:
+    sea_state: {hs_m: 2.0, tp_s: 4.0, gamma: 1.0}
+    effective_wave_slope: 0.05
+    min_components: 200
+  protocol: {kind: ramped, ramp_parameter: stiffness, ramp_start: 1.2, ramp_end: -0.047}

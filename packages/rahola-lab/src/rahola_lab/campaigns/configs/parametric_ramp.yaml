@@ -3,6 +3,8 @@ role: prototype2_ramp
 rationale: crossing zero stiffness to -0.065 produced 27.4% capsize in 2,048 pilot runs.
 splits:
   train: {count: 2000, offset: 25000}
+  calibration: {count: 500, offset: 25000}
+  test: {count: 1000, offset: 25000}
 simulation:
   family: parametric
   duration_s: 600.0
@@ -23,4 +25,3 @@ simulation:
     ramp_parameter: stiffness
     ramp_start: 1.2
     ramp_end: -0.065
-

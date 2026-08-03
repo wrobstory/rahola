@@ -3,6 +3,8 @@ role: prototype2_ramp
 rationale: equilibrium start and terminal stiffness 0.645 target 20-60% terminal capsizes.
 splits:
   train: {count: 2000, offset: 30000}
+  calibration: {count: 500, offset: 30000}
+  test: {count: 1000, offset: 30000}
 simulation:
   family: biased
   duration_s: 600.0

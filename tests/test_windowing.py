@@ -55,3 +55,48 @@ def test_future_only_leakage_probe_has_teeth() -> None:
     leaky_auc = binary_auc(labels, leaky_scores)
     assert causal_auc == pytest.approx(0.5, abs=0.08)
     assert min(leaky_auc, 1.0 - leaky_auc) < 0.05
+
+
+def test_vectorized_causal_transformer_is_bitwise_equivalent_to_reference() -> None:
+    def reference(values: np.ndarray, *, detrend: bool, epsilon: float = 1e-12) -> np.ndarray:
+        result = np.zeros_like(values)
+        sum_y = sum_y2 = sum_t = sum_t2 = sum_ty = 0.0
+        for index, value in enumerate(values):
+            count = index
+            if not np.isfinite(value):
+                result[index:] = np.nan
+                break
+            if count < 2:
+                residual, scale = 0.0, 1.0
+            else:
+                mean = sum_y / count
+                if detrend:
+                    denominator = count * sum_t2 - sum_t**2
+                    slope = (count * sum_ty - sum_t * sum_y) / max(denominator, epsilon)
+                    intercept = (sum_y - slope * sum_t) / count
+                    prediction = intercept + slope * index
+                else:
+                    prediction = mean
+                variance = max((sum_y2 - count * mean**2) / (count - 1), 0.0)
+                scale = max(np.sqrt(variance), epsilon)
+                residual = value - prediction
+            result[index] = residual / scale
+            sum_y += value
+            sum_y2 += value * value
+            sum_t += index
+            sum_t2 += index * index
+            sum_ty += index * value
+        return result
+
+    rng = np.random.default_rng(812)
+    corpus = [
+        np.zeros(32),
+        np.arange(32, dtype=np.float64),
+        rng.normal(size=257),
+        np.concatenate((rng.normal(size=81), [np.nan], np.full(12, np.nan))),
+    ]
+    for detrend in (False, True):
+        for values in corpus:
+            expected = reference(values, detrend=detrend)
+            actual = CausalTransformer(detrend=detrend).transform(values)
+            assert np.array_equal(actual, expected, equal_nan=True)

@@ -6,6 +6,7 @@ import argparse
 from pathlib import Path
 
 from rahola_lab.campaigns import generate_campaign, load_campaign_definition
+from rahola_lab.experiments.final_eval import run_final_evaluation
 
 
 def campaign_config_dir() -> Path:
@@ -21,11 +22,27 @@ def _parser() -> argparse.ArgumentParser:
     selection.add_argument("--all", action="store_true")
     generate.add_argument("--out", type=Path, default=Path("data/reference"))
     generate.add_argument("--chunk-size", type=int, default=256)
+    final_eval = subparsers.add_parser(
+        "final-eval", help="run the guarded one-time reserve evaluation"
+    )
+    final_eval.add_argument("--data-root", type=Path, default=Path("data/reference"))
+    final_eval.add_argument("--out", type=Path, default=Path("results"))
+    final_eval.add_argument("--reserve-root", type=Path, default=Path("data/final-reserve"))
+    final_eval.add_argument("--chunk-size", type=int, default=256)
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
+    if args.command == "final-eval":
+        run_final_evaluation(
+            data_root=args.data_root,
+            output_root=args.out,
+            config_root=campaign_config_dir(),
+            reserve_root=args.reserve_root,
+            chunk_size=args.chunk_size,
+        )
+        return 0
     paths = sorted(campaign_config_dir().glob("*.yaml")) if args.all else [args.config]
     total_seconds = 0.0
     total_bytes = 0
