@@ -192,6 +192,9 @@ class GrayBoxDetector:
             raise RuntimeError("fit must be called before prediction")
         values = np.asarray(features, dtype=np.float32)
         state_values = np.asarray(states, dtype=np.float32)
+        if not len(values):
+            latent_count = len(self.latent_mean_)
+            return np.empty(0, dtype=np.float64), np.empty((0, latent_count), dtype=np.float64)
         scores = []
         latents = []
         for start in range(0, len(values), batch_size):

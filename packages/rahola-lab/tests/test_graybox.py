@@ -15,3 +15,5 @@ def test_graybox_fits_physical_posterior_and_hazard_heads() -> None:
     assert model.parameter_count() < 100_000
     assert model.predict_scores(features, states).shape == (32,)
     assert model.predict_latents(features, states).shape == (32, 7)
+    assert model.predict_scores(features[:0], states[:0]).shape == (0,)
+    assert model.predict_latents(features[:0], states[:0]).shape == (0, 7)

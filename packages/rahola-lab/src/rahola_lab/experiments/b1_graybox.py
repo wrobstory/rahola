@@ -149,10 +149,15 @@ def _score_dataset(dataset: SimulationDataset, model: GrayBoxDetector) -> list[T
         for trajectory in range(chunk.batch_size):
             selected = extracted.windows.trajectory_indices == trajectory
             capsize = float(chunk.t_capsize_s[trajectory])
+            times = extracted.windows.end_times_s[selected]
+            trajectory_scores = scores[selected]
+            if not len(times):
+                times = np.array([60.0 * period], dtype=np.float64)
+                trajectory_scores = np.array([-np.inf], dtype=np.float64)
             output.append(
                 TrajectoryScores(
-                    times_s=extracted.windows.end_times_s[selected],
-                    scores=scores[selected],
+                    times_s=times,
+                    scores=trajectory_scores,
                     record_end_s=float(chunk.time_s[-1]),
                     t_capsize_s=capsize if np.isfinite(capsize) else None,
                     record_start_s=60.0 * period,
