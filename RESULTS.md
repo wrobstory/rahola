@@ -362,9 +362,27 @@ protocol used all normal trajectories from the target stationary training campai
 target capsize trajectories; it also helps only the parametric rotation materially.
 
 D5 remains the negative control: frozen-embedding AUC is 0.376 and fine-tuned AUC is 0.491, both
-below the 0.58 leakage-audit trigger. Because B2 survives its kill, the guarded final evaluator will
-materialize reserve-2 once on 128 trajectories from each of the six D1-mirroring campaigns (768
-total) and score both Chronos modes, the CNN, and the physics floor on the same holdout.
+below the 0.58 leakage-audit trigger.
+
+## Final reserve-2 evaluation
+
+B2's survivor triggered the guarded run exactly once on commit
+`5d4c6be78ba87e1a042f99825909c37d38bbd702`, from 2026-08-03 15:41:53 to 15:48:14 UTC. The
+holdout contains 128 trajectories from each of the six D1-mirroring campaigns: 768 trajectories,
+129 observable capsizes, and 76.25 exposure hours. Every method below uses that same holdout.
+
+| Detector | Sensitivity [95% CI] | False episodes/h [95% CI] | Lead q10 / median / q90 |
+|---|---:|---:|---:|
+| Chronos frozen embedding | 93.80% [88.15, 97.28] | **3.292 [2.899, 3.723]** | 45.6 / 129.5 / 357.8 s |
+| Chronos fine-tuned | 91.47% [85.25, 95.67] | 7.134 [6.553, 7.753] | 178.6 / 299.3 / 359.7 s |
+| Frozen D1 CNN | 97.67% [93.35, 99.52] | 6.649 [6.088, 7.248] | 280.1 / 330.1 / 357.8 s |
+| Split-time physics floor | 97.67% [93.35, 99.52] | 7.882 [7.270, 8.530] | 29.4 / 339.9 / 359.9 s |
+
+The frozen Chronos embedding head replicates as the operational winner: 50.5% lower FPR/h than the
+CNN, with sensitivity 3.9 points lower. Fine-tuning does not replicate the parametric-rotation
+advantage and is worse than the CNN on pooled reserve-2. The completed attestation is
+`results/final_reserve2_attestation.json`; both the result directory and attestation now make any
+repeat impossible.
 
 ## Prototype #3 implementation judgments and deviations
 
@@ -420,7 +438,7 @@ uv run python examples/p3_b2_chronos.py
 ```
 
 `uv run rahola-lab final-eval` is deliberately absent from the reproducible command list: it is a
-one-time protocol, and the completed attestation permanently prevents a repeat.
+one-time protocol, and the completed reserve-2 attestation permanently prevents a repeat.
 
 ## Frozen judgment calls and deviations
 
@@ -441,8 +459,9 @@ one-time protocol, and the completed attestation permanently prevents a repeat.
   the held-out calibration half and carries no exchangeable finite-sample claim.
 - CQR calibration retains one independent snapshot per calibration trajectory. Dense windows are
   operational units, not independent conformal units. Per-time E3 curves also condition on survival.
-- Pure JAX remains the only neural runtime. E2 reports the operational 60-second horizon; E1 covers
-  both frozen horizons.
+- Pure JAX is the only neural runtime through Prototype #2. Prototype #3 adds PyTorch solely for the
+  pinned Chronos B2 experiment. E2 reports the operational 60-second horizon; E1 covers both frozen
+  horizons.
 - Provisional earlier work accessed original test splits more than once while correcting the risk-set
   and initialization defects. No test labels selected model hyperparameters, but the literal
   test-touched-once process rule remains unmet and fresh-offset replication was not performed.
@@ -473,3 +492,5 @@ one-time protocol, and the completed attestation permanently prevents a repeat.
   *Ocean Engineering* 109 (2015), 355–371.
 - Alba et al., [Enhancing Maritime Safety](https://www.mdpi.com/1424-8220/25/5/1365),
   *Sensors* 25 (2025), AIS collision boundaries with conformal prediction regions.
+- Ansari et al., [Chronos: Learning the Language of Time Series](https://openreview.net/forum?id=gerNCVqqtR),
+  *Transactions on Machine Learning Research* (2024), frozen time-series foundation model.

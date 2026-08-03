@@ -114,7 +114,8 @@ Public seed utilities raise `ReserveBlockError` for both reserves. `rahola-lab f
 construct reserve-2 only; the spent reserve is refused even internally. The command requires a
 clean committed tree, writes an access-started attestation before constructing the first seed,
 materializes the six D1-mirroring campaigns, and refuses every later invocation—even after failure.
-The single run completed against commit `843b24a`; its attestation now makes the refusal permanent.
+Prototype #2's spent-reserve run completed against `843b24a`; reserve-2 completed once against
+`5d4c6be` with 768 trajectories. Their attestations make both refusals permanent.
 
 Prototype #3's reproducible development commands are:
 
