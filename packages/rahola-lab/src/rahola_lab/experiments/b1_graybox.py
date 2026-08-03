@@ -173,6 +173,9 @@ def _evaluate(
 ):
     calibration = [item for dataset in calibration_data for item in _score_dataset(dataset, model)]
     values = np.concatenate([item.scores for item in calibration if len(item.scores)])
+    values = values[np.isfinite(values)]
+    if not len(values):
+        raise ValueError("gray-box produced no finite calibration scores")
     thresholds = np.unique(np.quantile(values, np.linspace(0.0, 1.0, 41)))
     estimates = []
     for trajectory in calibration:
