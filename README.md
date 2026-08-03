@@ -211,12 +211,12 @@ one-trajectory warm-up:
 
 ```text
 uv run python examples/benchmark.py --trajectories 256 --duration-s 3600
-trajectories=256 elapsed_s=1.274 simulated_hours_per_wall_minute=12058.5
+trajectories=256 elapsed_s=1.191 simulated_hours_per_wall_minute=12899.9
 ```
 
 This is an end-to-end measurement including the 256 independently seeded FFT
 records and array materialization. It exceeds the 500 simulated-hours/minute
-guideline by 24x. It is not an extrapolation to 10,000 trajectories; memory and
+guideline by 25x. It is not an extrapolation to 10,000 trajectories; memory and
 thermal behavior at that campaign size should be measured on the execution host.
 JAX owns the backend choice, so selecting a GPU does not change the model code.
 
