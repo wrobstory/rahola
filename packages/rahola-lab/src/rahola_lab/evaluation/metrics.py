@@ -219,21 +219,36 @@ def bootstrap_alarm_metrics(
     seed: int = 20_260_804,
 ) -> AlarmBootstrapIntervals:
     """Resample trajectories and recompute complete episode metrics."""
-
-    def statistic(sample: list[TrajectoryScores]) -> NDArray[np.float64]:
+    contributions = []
+    for trajectory in trajectories:
         metrics = evaluate_alarms(
-            sample,
+            [trajectory],
             episode_config,
             horizon_s=horizon_s,
             decorrelation_time_s=decorrelation_time_s,
         )
-        sensitivity = metrics.sensitivity if metrics.capsize_count else float("nan")
+        contributions.append(
+            np.asarray(
+                [
+                    metrics.detected_capsize_count,
+                    metrics.capsize_count,
+                    metrics.false_episode_count,
+                    metrics.exposure_hours,
+                ],
+                dtype=np.float64,
+            )
+        )
+
+    def statistic(sample: list[NDArray[np.float64]]) -> NDArray[np.float64]:
+        totals = np.sum(sample, axis=0)
+        sensitivity = totals[0] / totals[1] if totals[1] else float("nan")
+        false_rate = totals[2] / totals[3] if totals[3] else 0.0
         return np.asarray(
-            [sensitivity, metrics.false_positives_per_hour], dtype=np.float64
+            [sensitivity, false_rate], dtype=np.float64
         )
 
     estimate = trajectory_block_bootstrap(
-        trajectories,
+        contributions,
         statistic,
         strata=campaign_strata,
         replicates=replicates,
