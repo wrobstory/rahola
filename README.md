@@ -230,9 +230,9 @@ bound is not treated as a sufficient capsize condition.
 | Causal normalization | `test_future_only_leakage_probe_has_teeth` | causal AUC within 0.08 of 0.5; leaky control near perfect |
 | Parquet and manifest writer | `test_same_inputs_produce_byte_identical_dataset` | every emitted byte equal |
 
-No acceptance test is skipped by `uv run pytest` or by `rahola validate`. Slow tests carry a
-marker only so that a developer may exclude them while iterating; the acceptance commands include
-them.
+No acceptance test is skipped by `uv run pytest` or by `rahola validate` when either command runs
+from the repository root. Slow tests carry a marker only so that a developer may exclude them
+while iterating; the acceptance commands include them.
 
 ## 4. The synthetic data program
 
@@ -348,12 +348,16 @@ modification.
 
 ## Appendix A. Installation and operation
 
-Python 3.12 or newer and [`uv`](https://docs.astral.sh/uv/) are required.
+Python 3.12 or newer and [`uv`](https://docs.astral.sh/uv/) are required. From a source checkout,
+install the workspace and run its development validation suite:
 
 ```sh
 uv sync --all-packages --all-extras
 uv run rahola validate
 ```
+
+`rahola validate` invokes `pytest` in the current source checkout. It is a developer command, not
+a self-test embedded in the installed package.
 
 A minimal batch of 128 independently forced trajectories:
 

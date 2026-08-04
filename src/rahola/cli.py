@@ -20,7 +20,14 @@ def _parser() -> argparse.ArgumentParser:
     generate.add_argument("--out", required=True, type=Path)
     generate.add_argument("--seed-start", type=int, default=0)
     generate.add_argument("--count", type=int, default=100)
-    validate = subparsers.add_parser("validate", help="run every physics validation")
+    validate = subparsers.add_parser(
+        "validate",
+        help="run source-checkout development tests",
+        description=(
+            "Run the repository's pytest suite from a Rahola source checkout. "
+            "This command is a development convenience, not a packaged self-test."
+        ),
+    )
     validate.add_argument("--fast", action="store_true", help="exclude slow validations")
     return parser
 
