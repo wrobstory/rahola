@@ -1,0 +1,472 @@
+{
+  "_artifact_sha256": "c55a64e1157af9ab60c3623ddcbebb0d44d745b5c246106ff9289ae4bc368ec2",
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "schema_version": 1,
+    "source_sha256": "655380fb9f273f86b233046a88e79715adb13a4d9fae22d26f72e6905e1415e1",
+    "upstream_artifacts": {}
+  },
+  "alphas": [
+    0.02,
+    0.05,
+    0.1,
+    0.2
+  ],
+  "experiment": "E1",
+  "figure": "results/e1_coverage_v02.png",
+  "max_absolute_coverage_delta_pp": 2.5553319919517037,
+  "mean_absolute_coverage_delta_pp": 0.888592792307108,
+  "rows": [
+    {
+      "alpha": 0.02,
+      "coverage": 0.9794026776519053,
+      "coverage_delta_interval_pp": [
+        -1.1632336873092397,
+        0.7374331028974446
+      ],
+      "coverage_delta_pp": -0.059732234809473095,
+      "coverage_exact_trajectory_interval": [
+        0.9683676631269076,
+        0.9873743310289744
+      ],
+      "exceedance_rate": 0.02059732234809475,
+      "family": "softening",
+      "horizon_s": 30.0,
+      "model": "lstm",
+      "n": 971
+    },
+    {
+      "alpha": 0.05,
+      "coverage": 0.9495365602471679,
+      "coverage_delta_interval_pp": [
+        -1.6169492925859785,
+        1.2437031511619567
+      ],
+      "coverage_delta_pp": -0.04634397528320289,
+      "coverage_exact_trajectory_interval": [
+        0.9338305070741402,
+        0.9624370315116195
+      ],
+      "exceedance_rate": 0.05046343975283213,
+      "family": "softening",
+      "horizon_s": 30.0,
+      "model": "lstm",
+      "n": 971
+    },
+    {
+      "alpha": 0.1,
+      "coverage": 0.8959835221421215,
+      "coverage_delta_interval_pp": [
+        -2.494901471374378,
+        1.4476386575927647
+      ],
+      "coverage_delta_pp": -0.4016477857878509,
+      "coverage_exact_trajectory_interval": [
+        0.8750509852862562,
+        0.9144763865759277
+      ],
+      "exceedance_rate": 0.10401647785787847,
+      "family": "softening",
+      "horizon_s": 30.0,
+      "model": "lstm",
+      "n": 971
+    },
+    {
+      "alpha": 0.2,
+      "coverage": 0.800205973223481,
+      "coverage_delta_interval_pp": [
+        -2.6352624466127073,
+        2.492957420664277
+      ],
+      "coverage_delta_pp": 0.02059732234809264,
+      "coverage_exact_trajectory_interval": [
+        0.773647375533873,
+        0.8249295742066428
+      ],
+      "exceedance_rate": 0.19979402677651906,
+      "family": "softening",
+      "horizon_s": 30.0,
+      "model": "lstm",
+      "n": 971
+    },
+    {
+      "alpha": 0.02,
+      "coverage": 0.9783728115345005,
+      "coverage_delta_interval_pp": [
+        -1.2870237002471252,
+        0.6563776346551253
+      ],
+      "coverage_delta_pp": -0.1627188465499474,
+      "coverage_exact_trajectory_interval": [
+        0.9671297629975287,
+        0.9865637763465512
+      ],
+      "exceedance_rate": 0.021627188465499485,
+      "family": "softening",
+      "horizon_s": 60.0,
+      "model": "lstm",
+      "n": 971
+    },
+    {
+      "alpha": 0.05,
+      "coverage": 0.9474768280123584,
+      "coverage_delta_interval_pp": [
+        -1.8483161281206972,
+        1.0646441977700483
+      ],
+      "coverage_delta_pp": -0.2523171987641515,
+      "coverage_exact_trajectory_interval": [
+        0.931516838718793,
+        0.9606464419777004
+      ],
+      "exceedance_rate": 0.05252317198764161,
+      "family": "softening",
+      "horizon_s": 60.0,
+      "model": "lstm",
+      "n": 971
+    },
+    {
+      "alpha": 0.1,
+      "coverage": 0.8805355303810505,
+      "coverage_delta_interval_pp": [
+        -4.154118543429963,
+        0.02723255811868386
+      ],
+      "coverage_delta_pp": -1.9464469618949543,
+      "coverage_exact_trajectory_interval": [
+        0.8584588145657004,
+        0.9002723255811869
+      ],
+      "exceedance_rate": 0.11946446961894953,
+      "family": "softening",
+      "horizon_s": 60.0,
+      "model": "lstm",
+      "n": 971
+    },
+    {
+      "alpha": 0.2,
+      "coverage": 0.7775489186405767,
+      "coverage_delta_interval_pp": [
+        -4.994598274972861,
+        0.3349002154151348
+      ],
+      "coverage_delta_pp": -2.245108135942331,
+      "coverage_exact_trajectory_interval": [
+        0.7500540172502714,
+        0.8033490021541514
+      ],
+      "exceedance_rate": 0.22245108135942326,
+      "family": "softening",
+      "horizon_s": 60.0,
+      "model": "lstm",
+      "n": 971
+    },
+    {
+      "alpha": 0.02,
+      "coverage": 0.9808853118712274,
+      "coverage_delta_interval_pp": [
+        -0.9689581762095001,
+        0.8453453925638899
+      ],
+      "coverage_delta_pp": 0.08853118712274233,
+      "coverage_exact_trajectory_interval": [
+        0.970310418237905,
+        0.9884534539256389
+      ],
+      "exceedance_rate": 0.019114688128772636,
+      "family": "parametric",
+      "horizon_s": 30.0,
+      "model": "lstm",
+      "n": 994
+    },
+    {
+      "alpha": 0.05,
+      "coverage": 0.9466800804828974,
+      "coverage_delta_interval_pp": [
+        -1.916671560951344,
+        0.9808067435361334
+      ],
+      "coverage_delta_pp": -0.3319919517102532,
+      "coverage_exact_trajectory_interval": [
+        0.9308332843904865,
+        0.9598080674353613
+      ],
+      "exceedance_rate": 0.05331991951710262,
+      "family": "parametric",
+      "horizon_s": 30.0,
+      "model": "lstm",
+      "n": 994
+    },
+    {
+      "alpha": 0.1,
+      "coverage": 0.8993963782696177,
+      "coverage_delta_interval_pp": [
+        -2.100573732598998,
+        1.7394404158247223
+      ],
+      "coverage_delta_pp": -0.06036217303823088,
+      "coverage_exact_trajectory_interval": [
+        0.87899426267401,
+        0.9173944041582472
+      ],
+      "exceedance_rate": 0.1006036217303823,
+      "family": "parametric",
+      "horizon_s": 30.0,
+      "model": "lstm",
+      "n": 994
+    },
+    {
+      "alpha": 0.2,
+      "coverage": 0.778672032193159,
+      "coverage_delta_interval_pp": [
+        -4.844443283897448,
+        0.4126545682849425
+      ],
+      "coverage_delta_pp": -2.1327967806841097,
+      "coverage_exact_trajectory_interval": [
+        0.7515555671610256,
+        0.8041265456828495
+      ],
+      "exceedance_rate": 0.22132796780684105,
+      "family": "parametric",
+      "horizon_s": 30.0,
+      "model": "lstm",
+      "n": 994
+    },
+    {
+      "alpha": 0.02,
+      "coverage": 0.9889336016096579,
+      "coverage_delta_interval_pp": [
+        0.028560075980588184,
+        1.4463109076319092
+      ],
+      "coverage_delta_pp": 0.8933601609657948,
+      "coverage_exact_trajectory_interval": [
+        0.9802856007598059,
+        0.9944631090763191
+      ],
+      "exceedance_rate": 0.011066398390342052,
+      "family": "parametric",
+      "horizon_s": 60.0,
+      "model": "lstm",
+      "n": 994
+    },
+    {
+      "alpha": 0.05,
+      "coverage": 0.9668008048289738,
+      "coverage_delta_interval_pp": [
+        0.369003803538126,
+        2.703920003909066
+      ],
+      "coverage_delta_pp": 1.6800804828973837,
+      "coverage_exact_trajectory_interval": [
+        0.9536900380353812,
+        0.9770392000390906
+      ],
+      "exceedance_rate": 0.03319919517102616,
+      "family": "parametric",
+      "horizon_s": 60.0,
+      "model": "lstm",
+      "n": 994
+    },
+    {
+      "alpha": 0.1,
+      "coverage": 0.9255533199195171,
+      "coverage_delta_interval_pp": [
+        0.7438323994232277,
+        4.109437647554792
+      ],
+      "coverage_delta_pp": 2.5553319919517037,
+      "coverage_exact_trajectory_interval": [
+        0.9074383239942323,
+        0.941094376475548
+      ],
+      "exceedance_rate": 0.0744466800804829,
+      "family": "parametric",
+      "horizon_s": 60.0,
+      "model": "lstm",
+      "n": 994
+    },
+    {
+      "alpha": 0.2,
+      "coverage": 0.7796780684104627,
+      "coverage_delta_interval_pp": [
+        -4.739945606222129,
+        0.5087574467224409
+      ],
+      "coverage_delta_pp": -2.0321931589537323,
+      "coverage_exact_trajectory_interval": [
+        0.7526005439377788,
+        0.8050875744672245
+      ],
+      "exceedance_rate": 0.22032193158953722,
+      "family": "parametric",
+      "horizon_s": 60.0,
+      "model": "lstm",
+      "n": 994
+    },
+    {
+      "alpha": 0.02,
+      "coverage": 0.9697916666666667,
+      "coverage_delta_interval_pp": [
+        -2.3097585950459854,
+        -0.03223788721125054
+      ],
+      "coverage_delta_pp": -1.0208333333333264,
+      "coverage_exact_trajectory_interval": [
+        0.9569024140495401,
+        0.9796776211278875
+      ],
+      "exceedance_rate": 0.030208333333333334,
+      "family": "biased",
+      "horizon_s": 30.0,
+      "model": "lstm",
+      "n": 960
+    },
+    {
+      "alpha": 0.05,
+      "coverage": 0.9458333333333333,
+      "coverage_delta_interval_pp": [
+        -2.0428816856889354,
+        0.9284642366049645
+      ],
+      "coverage_delta_pp": -0.4166666666666652,
+      "coverage_exact_trajectory_interval": [
+        0.9295711831431106,
+        0.9592846423660496
+      ],
+      "exceedance_rate": 0.05416666666666667,
+      "family": "biased",
+      "horizon_s": 30.0,
+      "model": "lstm",
+      "n": 960
+    },
+    {
+      "alpha": 0.1,
+      "coverage": 0.9145833333333333,
+      "coverage_delta_interval_pp": [
+        -0.4916355799315042,
+        3.1491106023552984
+      ],
+      "coverage_delta_pp": 1.4583333333333282,
+      "coverage_exact_trajectory_interval": [
+        0.895083644200685,
+        0.931491106023553
+      ],
+      "exceedance_rate": 0.08541666666666667,
+      "family": "biased",
+      "horizon_s": 30.0,
+      "model": "lstm",
+      "n": 960
+    },
+    {
+      "alpha": 0.2,
+      "coverage": 0.81875,
+      "coverage_delta_interval_pp": [
+        -0.7104653548238415,
+        4.263178795865208
+      ],
+      "coverage_delta_pp": 1.8749999999999933,
+      "coverage_exact_trajectory_interval": [
+        0.7928953464517616,
+        0.8426317879586521
+      ],
+      "exceedance_rate": 0.18125,
+      "family": "biased",
+      "horizon_s": 30.0,
+      "model": "lstm",
+      "n": 960
+    },
+    {
+      "alpha": 0.02,
+      "coverage": 0.9760416666666667,
+      "coverage_delta_interval_pp": [
+        -1.5733368327078612,
+        0.4753254334975754
+      ],
+      "coverage_delta_pp": -0.3958333333333286,
+      "coverage_exact_trajectory_interval": [
+        0.9642666316729214,
+        0.9847532543349757
+      ],
+      "exceedance_rate": 0.023958333333333335,
+      "family": "biased",
+      "horizon_s": 60.0,
+      "model": "lstm",
+      "n": 960
+    },
+    {
+      "alpha": 0.05,
+      "coverage": 0.9479166666666666,
+      "coverage_delta_interval_pp": [
+        -1.8091994602368322,
+        1.1099041936747378
+      ],
+      "coverage_delta_pp": -0.2083333333333326,
+      "coverage_exact_trajectory_interval": [
+        0.9319080053976316,
+        0.9610990419367473
+      ],
+      "exceedance_rate": 0.052083333333333336,
+      "family": "biased",
+      "horizon_s": 60.0,
+      "model": "lstm",
+      "n": 960
+    },
+    {
+      "alpha": 0.1,
+      "coverage": 0.8979166666666667,
+      "coverage_delta_interval_pp": [
+        -2.2992882869285247,
+        1.6345425010106607
+      ],
+      "coverage_delta_pp": -0.2083333333333326,
+      "coverage_exact_trajectory_interval": [
+        0.8770071171307148,
+        0.9163454250101066
+      ],
+      "exceedance_rate": 0.10208333333333333,
+      "family": "biased",
+      "horizon_s": 60.0,
+      "model": "lstm",
+      "n": 960
+    },
+    {
+      "alpha": 0.2,
+      "coverage": 0.8083333333333333,
+      "coverage_delta_interval_pp": [
+        -1.8017464475663103,
+        3.2776830319239725
+      ],
+      "coverage_delta_pp": 0.8333333333333304,
+      "coverage_exact_trajectory_interval": [
+        0.7819825355243369,
+        0.8327768303192398
+      ],
+      "exceedance_rate": 0.19166666666666668,
+      "family": "biased",
+      "horizon_s": 60.0,
+      "model": "lstm",
+      "n": 960
+    }
+  ],
+  "selective_regeneration": "LSTM rows only; envelope and linear v0.1 rows stand",
+  "worst_cell": {
+    "alpha": 0.1,
+    "coverage": 0.9255533199195171,
+    "coverage_delta_interval_pp": [
+      0.7438323994232277,
+      4.109437647554792
+    ],
+    "coverage_delta_pp": 2.5553319919517037,
+    "coverage_exact_trajectory_interval": [
+      0.9074383239942323,
+      0.941094376475548
+    ],
+    "exceedance_rate": 0.0744466800804829,
+    "family": "parametric",
+    "horizon_s": 60.0,
+    "model": "lstm",
+    "n": 994
+  }
+}

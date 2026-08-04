@@ -1,0 +1,132 @@
+{
+  "_artifact_sha256": "9822d929717a57217cf1a22841329d9fdfb17b1f6a36cda5b85178c8ae4eca82",
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "schema_version": 1,
+    "source_sha256": "655380fb9f273f86b233046a88e79715adb13a4d9fae22d26f72e6905e1415e1",
+    "upstream_artifacts": {}
+  },
+  "aci_fpr_per_hour": 6.091871666268609,
+  "aci_fpr_per_hour_trajectory_bootstrap_interval": [
+    5.943263082760994,
+    6.2381846947987585
+  ],
+  "aci_recovery_time_s": null,
+  "aci_trailing_curve_mean_after_step": 0.7751330003244079,
+  "aci_trailing_curve_mean_before_step": 0.8167938271604938,
+  "alpha": 0.1,
+  "coverage_regions": {
+    "aci_horizon_complete": {
+      "coverage": 0.8892820512820513,
+      "coverage_window_binomial_interval": [
+        0.8861260162675236,
+        0.8923799938840685
+      ],
+      "covered": 34682,
+      "windows": 39000
+    },
+    "aci_post_transition": {
+      "coverage": 0.8251704298215926,
+      "coverage_window_binomial_interval": [
+        0.82215863967279,
+        0.8281517768044532
+      ],
+      "covered": 51201,
+      "windows": 62049
+    },
+    "aci_transition_straddling": {
+      "coverage": 0.3156,
+      "coverage_window_binomial_interval": [
+        0.3081655283875028,
+        0.3231060483663083
+      ],
+      "covered": 4734,
+      "windows": 15000
+    },
+    "fixed_horizon_complete": {
+      "coverage": 0.8950769230769231,
+      "coverage_window_binomial_interval": [
+        0.8919931758144197,
+        0.8981017055345841
+      ],
+      "covered": 34908,
+      "windows": 39000
+    },
+    "fixed_post_transition": {
+      "coverage": 0.008106496478589503,
+      "coverage_window_binomial_interval": [
+        0.007415966769837365,
+        0.00884360539564619
+      ],
+      "covered": 503,
+      "windows": 62049
+    },
+    "fixed_transition_straddling": {
+      "coverage": 0.17613333333333334,
+      "coverage_window_binomial_interval": [
+        0.1700671503951595,
+        0.1823253910969807
+      ],
+      "covered": 2642,
+      "windows": 15000
+    }
+  },
+  "experiment": "E3",
+  "feedback_delay_steps": 6,
+  "figure": "results/e3_transition_v02.png",
+  "fixed_fpr_per_hour": 0.0,
+  "fixed_fpr_per_hour_trajectory_bootstrap_interval": [
+    0.0,
+    0.0
+  ],
+  "fixed_trailing_curve_mean_after_step": 0.017893551068185073,
+  "fixed_trailing_curve_mean_before_step": 0.8045006172839506,
+  "gamma_calibration": [
+    {
+      "exploding": false,
+      "false_positives_per_hour": 0.0,
+      "gamma": 0.001,
+      "post_transition_mean_absolute_coverage_delta_pp": 88.15790677328631,
+      "recovery_time_s": null
+    },
+    {
+      "exploding": true,
+      "false_positives_per_hour": 3.544732662784542,
+      "gamma": 0.005,
+      "post_transition_mean_absolute_coverage_delta_pp": 83.61961265405544,
+      "recovery_time_s": null
+    },
+    {
+      "exploding": true,
+      "false_positives_per_hour": 6.022233986236104,
+      "gamma": 0.01,
+      "post_transition_mean_absolute_coverage_delta_pp": 51.97122241183701,
+      "recovery_time_s": null
+    },
+    {
+      "exploding": true,
+      "false_positives_per_hour": 6.231868713605082,
+      "gamma": 0.02,
+      "post_transition_mean_absolute_coverage_delta_pp": 34.77439566006842,
+      "recovery_time_s": null
+    },
+    {
+      "exploding": true,
+      "false_positives_per_hour": 6.384330333509793,
+      "gamma": 0.05,
+      "post_transition_mean_absolute_coverage_delta_pp": 22.2747196236447,
+      "recovery_time_s": null
+    }
+  ],
+  "interval_conditioning": "conditional on the calibration-frozen alarm policy",
+  "kill_criterion": {
+    "absolute_fpr_per_hour": 2.0,
+    "coverage_within_3pp_after_recovery": false,
+    "exploded": true,
+    "passed": false,
+    "relative_to_fixed": 4.0
+  },
+  "selected_gamma": 0.05,
+  "trajectory_bootstrap_replicates": 1000,
+  "trajectory_bootstrap_seed": 20260804
+}
