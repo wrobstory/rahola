@@ -1,0 +1,23 @@
+{
+  "_manifest_sha256": "7d391a4c601fd5fe234ee00942f971352a156703da8cf404da3c2fa8286fa084",
+  "artifacts": {
+    "d1_operating_curves_v02.json": {"artifact_sha256": "586414882985d4fe00d31b9d801be3c615c73c617b82118e2baa6da5ea7eeaf5", "upstream_artifacts": {}},
+    "d2_family_generalization_v02.json": {"artifact_sha256": "05916acb694b29a1b669defdb30e09f63aef115f90824758e82c4b857243968f", "upstream_artifacts": {}},
+    "d3_bandwidth_skill_v02.json": {"artifact_sha256": "9aea28b65e41f50168c678b29a9007b466c911fa51be88e4481138b24a0badf2", "upstream_artifacts": {"d1_operating_curves_v02.json": "586414882985d4fe00d31b9d801be3c615c73c617b82118e2baa6da5ea7eeaf5"}},
+    "d4_wave_groups_v02.json": {"artifact_sha256": "678f926ec92d28b66ea5b6eb5388bba270903732d6022f1df38b62b802625b98", "upstream_artifacts": {"d1_operating_curves_v02.json": "586414882985d4fe00d31b9d801be3c615c73c617b82118e2baa6da5ea7eeaf5"}},
+    "d5_within_regime_v02.json": {"artifact_sha256": "711c28094dfaf733ffcd531161c0cb0d8f00d7d141b89634d3a81acb44783d4e", "upstream_artifacts": {"d1_operating_curves_v02.json": "586414882985d4fe00d31b9d801be3c615c73c617b82118e2baa6da5ea7eeaf5"}},
+    "e1_coverage_v02.json": {"artifact_sha256": "c55a64e1157af9ab60c3623ddcbebb0d44d745b5c246106ff9289ae4bc368ec2", "upstream_artifacts": {}},
+    "e2_operating_curve_v02.json": {"artifact_sha256": "d1a354d71bd407d9f84d31848426c54bf391ff24a8ca0359dc8269e3bd2fab77", "upstream_artifacts": {}},
+    "e3_transition_v02.json": {"artifact_sha256": "9822d929717a57217cf1a22841329d9fdfb17b1f6a36cda5b85178c8ae4eca82", "upstream_artifacts": {}},
+    "e4_stress_test_v02.json": {"artifact_sha256": "7d8237b006790e447d32df7cd233391f5024d117d07165929698a625ce0478da", "upstream_artifacts": {}},
+    "forcing_invariance_final_v02.json": {"artifact_sha256": "33874b5c1c28522e0e94aa1d6967801bb4ced3339d6142cb03e9e3aba315aa33", "upstream_artifacts": {}},
+    "forcing_invariance_v02.json": {"artifact_sha256": "bea7c4f5eeb1f2ea1f6f843daf871cc305fe538995147126d0e869b9132b5850", "upstream_artifacts": {}},
+    "p3_b2_d5_audit_v02.json": {"artifact_sha256": "fe153e9ec5f9f98ec57d71c41701e217ff454595af93ab3ee7092e08d5ebf7fc", "upstream_artifacts": {}},
+    "p3_ceiling_v02.json": {"artifact_sha256": "17564b3b4afc1e161c91cfce5db2c1f397a2097698f5b06865459c22cd8b1cb2", "upstream_artifacts": {"d1_operating_curves_v02.json": "586414882985d4fe00d31b9d801be3c615c73c617b82118e2baa6da5ea7eeaf5"}}
+  },
+  "reference_anchors_sha256": {
+    "reference_checksums.json": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "reference_checksums_v02.json": "96fdcc7a93cd4b0a760750320cf41c7f1ce15d52708b2bfc8791c3b3a9d10dfd"
+  },
+  "schema_version": 1
+}

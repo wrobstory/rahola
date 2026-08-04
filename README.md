@@ -15,16 +15,18 @@ model with three restoring-curve families was validated against analytic limits 
 generate a 58,500-trajectory reference record under JONSWAP forcing, followed by 13,200 versioned
 replacement trajectories after a numerical-resolution audit. Five warning methods were evaluated
 under a common protocol in which every operating threshold is selected on calibration data and
-evaluated once on test data: a small temporal convolutional network, classical variance and
-autocorrelation trend statistics, a generalized likelihood-ratio detector, a closed-form
-critical-roll-rate margin, and a phase-space neighbor-count score. Four findings are reported.
+evaluated at one frozen point per corrected test run: a small temporal convolutional network,
+classical variance and autocorrelation trend statistics, a generalized likelihood-ratio detector,
+a closed-form critical-roll-rate margin, and a phase-space neighbor-count score. Four findings are
+reported.
 (a) Ranking skill is present at every forcing bandwidth tested; the primary network's window AUC
 was 0.88 to 0.91. (b) Within an established severe regime, no motion-only method exceeded an
 orientation-independent AUC of 0.556. (c) Between 75 and 88 percent of nominally false alarm
-episodes coincided with genuine critical wave groups that the vessel survived. (d) No method
-retained a 90 percent sensitivity operating point across held-out restoring families. An audit
-conducted during the study found that the operating points first reported had been selected on
-test data; every numerical value in this report is the corrected value.
+episodes overlapped evaluator-defined high-envelope wave groups. (d) Neither CNN normalization
+mode retained 90 percent sensitivity across all held-out restoring families; trivial comparators
+did so only near the always-on alarm cost. An audit conducted during the study found that the
+operating points first reported had been selected on test data; every numerical value in this
+report is the corrected value.
 
 ## On the name
 
@@ -63,9 +65,9 @@ normalization. Because capsizes are rare, each of these errors is easily conceal
 aggregate score. The evaluation procedure of Section 5 treats these failure modes separately.
 
 Signal-based detection with a designed false-alarm probability has been demonstrated for the
-parametric-roll problem by Galeazzi, Blanke and Poulsen (2015). For the general stability-failure
+parametric-roll problem by Galeazzi et al. (2015). For the general stability-failure
 problem, the established machinery is offline and probabilistic; the split-time method of
-Belenky, Weems and Pipiras (2024) is the principal example, and its critical-roll-rate quantity is
+Belenky et al. (2024) is the principal example, and its critical-roll-rate quantity is
 adopted here as a real-time physics baseline. The present study addresses the intermediate
 question of onboard warning from motion measurement alone, under evaluation conditions severe
 enough to expose the failure modes listed above.
@@ -286,9 +288,10 @@ intervals condition on the calibration-selected policy frozen before test scorin
 
 ### 5.2 Threshold selection
 
-All operating controls and thresholds are selected on calibration data, frozen, and evaluated
-once on test data. Conformal calibration of forecast upper bounds follows Romano, Patterson and
-Candès (2019); the online adaptation experiments follow Gibbs and Candès (2021).
+All operating controls and thresholds are selected on calibration data, frozen, and evaluated at
+one point in each corrected test run. Conformal calibration of forecast upper bounds follows
+Romano, Patterson and Candès (2019); the online adaptation experiments follow Gibbs and Candès
+(2021).
 
 ### 5.3 Revision notice
 
@@ -298,7 +301,9 @@ threshold using the holdout labels. All development results were regenerated und
 protocol of Section 5.2, and the correction is enforced by the test suite rather than by
 convention. Both reserve blocks are now expended. Their result artifacts are retained unchanged
 as historical records and are so labeled; they do not constitute prospective validation of the
-corrected methods.
+corrected methods. The ordinary development-test splits had already been inspected during v0.1,
+so the corrected development results are retrospective reanalyses, not fresh prospective
+validation.
 
 ### 5.4 Information sets
 
@@ -343,9 +348,9 @@ filter.
 
 Taken as a whole, the results indicate that motion history carries usable information about the
 slowly varying stability state, and near-chance information about the timing of the terminal wave
-encounter once a severe regime is established. The false-alarm rates of all methods are dominated
-by genuine hazard exposure that the vessel survived, a property of the outcome-based metric as
-much as of the detectors.
+encounter once a severe regime is established. Most false episodes overlap a broad,
+evaluator-defined high-envelope wave-group proxy. Without a prevalence-matched null, that
+descriptive overlap does not establish encounter detection or causation.
 
 ## 7. Limitations
 
@@ -363,10 +368,11 @@ no operational or safety claim.
 
 Three conclusions are considered established within the scope of the model: motion history ranks
 capsize risk well above chance at every forcing bandwidth tested; after a complete post-step
-wash-in, no motion-only method examined here exceeds orientation-independent AUC 0.556; and the majority of false
-alarm episodes coincide with genuine critical wave-group encounters. One negative conclusion is
-equally definite: no method examined here produced an operating threshold that transfers across
-restoring families at the required sensitivity.
+wash-in, no motion-only method examined here exceeds orientation-independent AUC 0.556; and most
+false alarm episodes overlap the declared high-envelope wave-group proxy. One negative conclusion
+is equally definite: neither CNN normalization mode retains 90 percent sensitivity across all
+held-out families. The physics comparators reach that sensitivity only at roughly 20.8–21.7 false
+episodes per hour, close to always on.
 
 It is recommended that further work address the information deficit rather than the detector
 architecture. The natural instrument-side question, staged so that information sufficiency is
@@ -397,8 +403,11 @@ dataset = simulate_batch(SimulationConfig(), seeds=range(128))
 ```
 
 The result contains a common time grid, roll angle, roll rate, seed, capsize indicator, capsize
-time, configuration, and per-trajectory metadata. Samples after capsize are `NaN`. Regeneration
-of the reference campaigns and the principal experiments:
+time, configuration, and per-trajectory metadata. Samples after capsize are `NaN`.
+
+The following commands reproduce the historical v0.1 record only. They write unsuffixed v0.1 paths,
+so run them in a disposable checkout and output directory; do not run them against the frozen
+repository artifacts:
 
 ```sh
 uv run rahola-lab generate --all --out data/reference --chunk-size 256
@@ -407,11 +416,14 @@ uv run python examples/d1_detectors.py
 uv run python examples/p3_ceiling.py
 ```
 
-Generated trajectories stay outside version control; frozen campaign definitions, manifest
-anchors, numeric result files, and figures are tracked. Each development artifact records the
-source-tree and reference-data fingerprints used to produce it, and the loaders reject stale or
-mutated dependencies. Measured throughput on an Apple-silicon host (JAX 0.11.0, CPU backend,
-after a one-trajectory warm-up):
+The v0.2 selective-regeneration commands are documented in [`DATA.md`](DATA.md), and the exact
+supersession record is in [`RESULTS_v02.md`](RESULTS_v02.md). Generated trajectories stay outside
+version control; frozen campaign definitions, manifest anchors, numeric result files, and figures
+are tracked. Historical artifacts record source-tree and reference-data fingerprints. The tracked,
+self-digested v0.2 provenance manifest additionally binds both reference anchors, every v0.2
+artifact digest, and declared result dependencies. Loaders reject stale or mutated content.
+Measured throughput on an Apple-silicon host (JAX 0.11.0, CPU backend, after a one-trajectory
+warm-up):
 
 ```text
 uv run python examples/benchmark.py --trajectories 256 --duration-s 3600
@@ -423,6 +435,9 @@ and thermal behavior at full campaign size should be measured on the execution h
 
 ## References
 
+- Anastopoulos, P. A., and Spyrou, K. J. (2017). Ship dynamic stability assessment based on
+  realistic wave groups. *Ocean Engineering* 134.
+  [doi:10.1016/j.oceaneng.2016.10.042](https://doi.org/10.1016/j.oceaneng.2016.10.042)
 - Belenky, V., Weems, K., Lin, W.-M., Pipiras, V., and Sapsis, T. (2024). Estimation of probability
   of capsizing with split-time method. *Ocean Engineering* 292, 116452.
   [doi:10.1016/j.oceaneng.2023.116452](https://doi.org/10.1016/j.oceaneng.2023.116452)
@@ -439,8 +454,9 @@ and thermal behavior at full campaign size should be measured on the execution h
 - Falzarano, J. M., Shaw, S. W., and Troesch, A. W. (1992). Application of global methods for
   analyzing dynamical systems to ship rolling motion and capsizing.
   [doi:10.1142/S0218127492000100](https://doi.org/10.1142/S0218127492000100)
-- Galeazzi, R., Blanke, M., and Poulsen, N. K. (2015). Parametric roll resonance monitoring using
-  signal-based detection. *Ocean Engineering* 109.
+- Galeazzi, R., Blanke, M., Falkenberg, T., Poulsen, N. K., Violaris, N., Storhaug, G., and Huss,
+  M. (2015). Parametric roll resonance monitoring using signal-based detection. *Ocean
+  Engineering* 109.
   [doi:10.1016/j.oceaneng.2015.08.037](https://www.sciencedirect.com/science/article/abs/pii/S0029801815004357)
 - Gibbs, I., and Candès, E. (2021). Adaptive conformal inference under distribution shift.
   [arXiv:2106.00170](https://arxiv.org/abs/2106.00170)
@@ -460,3 +476,5 @@ and thermal behavior at full campaign size should be measured on the execution h
 - Shinozuka, M., and Deodatis, G. (1991). Simulation of stochastic processes by spectral
   representation. *Applied Mechanics Reviews* 44(4).
   [doi:10.1115/1.3119501](https://doi.org/10.1115/1.3119501)
+- Story, W. R. (2009). *Predicting Ship Capsize Using Lyapunov Exponents*. Master's thesis,
+  Virginia Tech. [repository record](https://vtechworks.lib.vt.edu/items/7eee36dd-055b-4aec-b49d-b173c2232278)

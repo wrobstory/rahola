@@ -2,9 +2,9 @@
 
 This addendum records the v0.2 methodology freeze and selective regeneration. It does not alter
 the v0.1 audit in `RESULTS.md`; each final table below will identify the historical quantity it
-supersedes. All uncertainty intervals resample complete trajectories within campaigns and hold
-campaign weights fixed. They are conditional on the calibration-selected policy frozen before
-test scoring.
+supersedes. Unless noted for Prototype #3 below, uncertainty intervals resample complete
+trajectories within campaigns and hold campaign weights fixed. They are conditional on the
+calibration-selected policy frozen before test scoring.
 
 ## Preregistration record
 
@@ -30,8 +30,9 @@ system, whose state contains the full observed motion history.
 ## Forcing audit decision rule
 
 The v0.2 forcing grid uses a cutoff of 40 times the natural frequency: the Nyquist limit of the
-validated reference solver's half-step grid. The cutoff therefore preserves the reference sea
-definition but no longer changes when the integration step is refined. If the absolute
+validated reference solver's half-step grid. It preserves the reference cutoff while adopting a
+fixed interval grid; the paired audit below measures the resulting field change. The cutoff no
+longer changes when the integration step is refined. If the absolute
 capsize-prevalence shift exceeds one percentage point in any reference campaign, the affected
 campaign will be regenerated under an `_v02` name.
 
@@ -82,8 +83,9 @@ engineered features.
 The preregistered prediction is retained. The largest orientation-independent motion-only AUC was
 0.556 for the fixed-window CNN; cumulative-online CNN reached 0.538, classical EWS 0.513, the
 neighbor score 0.509, the one-sided roll-band statistic 0.502, and the two-sided danger margin
-0.500. The protocol-clock comparator reached 0.515. Each AUC interval resamples trajectories and
-keeps every window belonging to a sampled trajectory.
+0.500. The protocol-clock comparator reached 0.515. Raw AUC intervals resample trajectories and
+keep every window belonging to a sampled trajectory. Orientation-independent AUCs are point
+transforms of the raw estimates; no separate transformed intervals are claimed.
 
 The B2 audit did not trigger: frozen Chronos reached orientation-independent AUC 0.518 and the
 one-epoch fine-tuned mode 0.513. D5_v02 was run once. Neither result was used to reopen a model or
@@ -169,10 +171,12 @@ draws. The restart semantics are unchanged: both replace the realized correlated
 | XGBoost AUC | 0.762 cumulative-online | 0.723 [0.703, 0.744] fixed-window primary; 0.768 [0.750, 0.786] cumulative-online |
 | Protocol-clock quartile AUC | 0.656 | 0.656 [0.644, 0.671] |
 
-Intervals are 2,000-replicate trajectory bootstraps conditional on the stratified sampled windows
-and realized rollout draws. The clock comparator slightly exceeds both CNN modes. XGBoost receives
-configuration-assisted physics features, so neither its advantage nor C1's advantage identifies a
-motion-architecture ceiling.
+Intervals are 2,000-replicate global trajectory bootstraps conditional on the stratified sampled
+windows and realized rollout draws. Campaign mixture can vary across replicates; the interval
+estimates therefore do not implement the fixed-campaign-weight convention used elsewhere in v0.2.
+The point AUCs retain the declared stratified campaign weights. The clock comparator slightly
+exceeds both CNN modes. XGBoost receives configuration-assisted physics features, so neither its
+advantage nor C1's advantage identifies a motion-architecture ceiling.
 
 ## Information sets
 
@@ -189,8 +193,8 @@ motion-architecture ceiling.
 
 ## Judgment calls
 
-- The cutoff is $40\omega_n$, not the initially explored $4\omega_n$, because 40 reproduces the
-  validated reference grid while separating the physical field definition from solver resolution.
+- The cutoff is $40\omega_n$, not the initially explored $4\omega_n$, because 40 preserves the
+  validated reference cutoff while separating the physical field definition from solver resolution.
 - A prevalence change strictly greater than one percentage point triggers regeneration. The rule
   was applied campaign by campaign; only $`\gamma=7,15,30`$ crossed it.
 - Exact capsize-event intervals remain descriptive. Episode sensitivity, false-episode rates, and

@@ -138,13 +138,12 @@ begin entirely after the step, and the 50-period outcome horizon remains complet
 `packages/rahola-lab/src/rahola_lab/campaigns/reference_checksums_v02.json` anchors these manifests.
 The earlier ratio-4 cutoff stress data remain a local audit under
 `data/reference_v02_ratio4_sensitivity/`; they are not reference data and no result loader selects
-them. Regenerate only the declared v0.2 configurations:
+them. Regenerate the declared v0.2 campaigns into a fresh directory; these commands preserve the
+`_v02` names and refuse to overwrite the three audit-selected bandwidth campaigns:
 
 ```bash
-uv run rahola-lab generate --config packages/rahola-lab/src/rahola_lab/campaigns/configs/softening_bandwidth_gamma_7.yaml --out data/reference_v02
-uv run rahola-lab generate --config packages/rahola-lab/src/rahola_lab/campaigns/configs/softening_bandwidth_gamma_15.yaml --out data/reference_v02
-uv run rahola-lab generate --config packages/rahola-lab/src/rahola_lab/campaigns/configs/softening_bandwidth_gamma_30.yaml --out data/reference_v02
-uv run rahola-lab generate --config packages/rahola-lab/src/rahola_lab/campaigns/configs/softening_step_v02.yaml --out data/reference_v02
+uv run python -c 'from pathlib import Path; from rahola_lab.campaigns import generate_selected_v02; generate_selected_v02(Path("results/forcing_invariance_final_v02.json"), Path("packages/rahola-lab/src/rahola_lab/campaigns/configs"), Path("/tmp/rahola-reference-v02-reproduction"))'
+uv run python -c 'from pathlib import Path; from rahola_lab.campaigns import generate_campaign, versioned_definitions; configs=Path("packages/rahola-lab/src/rahola_lab/campaigns/configs"); generate_campaign(versioned_definitions(configs, ["softening_step"])[0], Path("/tmp/rahola-reference-v02-reproduction"))'
 ```
 
 No reserve or reserve-2 data were opened or regenerated for v0.2.

@@ -134,8 +134,10 @@ The audit corrected both scientific evaluation and implementation robustness:
   access claim and holds a cross-process result-graph lock from completed-result publication
   through recursive verification and atomic terminal attestation; the immutable historical
   attestations predate result-digest binding;
-- development artifacts carry source and reference-anchor provenance, bind their own serialized
-  content, record upstream artifact digests, and reject stale or mutated dependencies;
+- historical development artifacts carry source and reference-anchor provenance, bind their own
+  serialized content, record upstream artifact digests, and reject stale or mutated dependencies;
+  the tracked, self-digested v0.2 provenance manifest additionally binds both reference anchors,
+  all v0.2 artifact digests, and declared upstream results;
 - Chronos imports are lazy in both the detector package and CLI, preventing a duplicate OpenMP
   runtime merely from importing ordinary campaign tooling.
 
