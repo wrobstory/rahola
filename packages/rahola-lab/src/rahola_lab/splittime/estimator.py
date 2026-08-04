@@ -8,6 +8,7 @@ from typing import Literal
 
 import numpy as np
 from numpy.typing import NDArray
+from scipy.stats import chi2
 
 from rahola_lab.constants import (
     U1_DECORRELATION_SIGNIFICANCE,
@@ -127,17 +128,25 @@ def _bootstrap_rate(
     )
     conditional = np.exp(-theta_star * (1.0 - tail.threshold_w))
     if prior_from_start:
-        crossing_rate_star = rng.gamma(
-            shape=tail.crossing_count + 0.5,
-            scale=3_600.0 / exposure_s,
-            size=draws,
-        )
+        count_star = rng.poisson(tail.crossing_count, size=draws)
         exceedance_fraction = tail.critical_probability / tail.predictive_exceedance
-        return crossing_rate_star * exceedance_fraction * conditional
+        return count_star / exposure_s * exceedance_fraction * conditional * 3_600.0
     count_star = rng.poisson(tail.crossing_count, size=draws)
     exceedance_fraction = tail.exceedance_count / tail.crossing_count
     exceedance_star = rng.binomial(count_star, exceedance_fraction)
     return exceedance_star / exposure_s * conditional * 3_600.0
+
+
+def _poisson_rate_interval(
+    crossing_count: int,
+    exposure_s: float,
+    critical_probability: float,
+) -> tuple[float, float]:
+    """Return a 95% Garwood interval for the composed point rate."""
+    lower_count = 0.0 if crossing_count == 0 else 0.5 * chi2.ppf(0.025, 2 * crossing_count)
+    upper_count = 0.5 * chi2.ppf(0.975, 2 * (crossing_count + 1))
+    scale = critical_probability * 3_600.0 / exposure_s
+    return float(lower_count * scale), float(upper_count * scale)
 
 
 def estimate_rate_trajectory(
@@ -185,6 +194,7 @@ def estimate_rate_trajectory(
     emission_draws: list[NDArray[np.float64]] = []
     last_interval_time = -np.inf
     current_draws: NDArray[np.float64] | None = None
+    current_interval: tuple[float, float] | None = None
     minimum_raw_crossings = int(np.ceil(config.minimum_exceedances / (1.0 - config.tail_quantile)))
 
     for emission_time in emission_times:
@@ -255,8 +265,19 @@ def estimate_rate_trajectory(
                 rng=rng,
                 prior_from_start=config.emission_policy == "prior_from_start",
             )
+            current_interval = (
+                _poisson_rate_interval(
+                    tail.crossing_count,
+                    exposure_s,
+                    tail.critical_probability,
+                )
+                if config.emission_policy == "prior_from_start"
+                else tuple(float(value) for value in np.quantile(current_draws, [0.025, 0.975]))
+            )
             last_interval_time = emission_time
-        lower, upper = np.quantile(current_draws, [0.025, 0.975])
+        if current_interval is None:
+            raise RuntimeError("rate interval was not initialized")
+        lower, upper = current_interval
         positive = sum(event.side == 1 for event in retained)
         negative = len(retained) - positive
         emissions.append(

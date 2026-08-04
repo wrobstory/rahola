@@ -134,4 +134,4 @@ def test_prior_from_start_emits_and_intervals_a_zero_crossing_stream() -> None:
     assert all("prior_dominated" in emission.flags for emission in trajectory.emissions)
     assert trajectory.emissions[0].interval_upper_per_hour > 0.0
     assert trajectory.integrated_count == 0.0
-    assert np.all(trajectory.integrated_count_draws > 0.0)
+    assert np.all(trajectory.integrated_count_draws == 0.0)
