@@ -617,7 +617,9 @@ edges remain fixed on test data.
 9. The estimator emits every 10 seconds. Its 95% interval uses 512 vectorized parametric-bootstrap
    draws with seed 20,260,804. The bootstrap is recomputed every 60 seconds and carried forward to
    the intervening 10-second emissions. Window statistics use the existing 1,000-replicate,
-   campaign-stratified trajectory-block bootstrap with seed 20,260,804.
+   campaign-stratified trajectory-block bootstrap with seed 20,260,804. Predicted counts use a
+   causal left-rectangle integral: each emission applies until the next emission or exposure end;
+   exposure before the first valid emission contributes zero.
 
 The primary estimator is a known-configuration method: it observes dimensional roll and roll rate
 and uses the configured restoring model, but no wave, encounter, future-forcing, or reserve-block
