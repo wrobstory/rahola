@@ -120,6 +120,23 @@ B2_FINETUNE_MAX_WINDOWS = 1_024
 WAVE_GROUP_HEIGHT_HS_FRACTION = 0.75
 WAVE_GROUP_MIN_PERIODS = 1.5
 
+# Experiment U1 controls, frozen on 2026-08-04 before any U1 test-block read.
+# The primary intermediate level is each fitted side's GZ-maximum angle. The
+# adaptive 7--10 crossings/30 min level is reported once as a sensitivity only.
+U1_TAIL_QUANTILES = (0.50, 0.75)
+U1_PRIOR_STRENGTHS = (2.0, 5.0, 10.0)
+U1_TRAILING_WINDOWS_S: tuple[float | None, ...] = (None, 1_800.0, 900.0)
+U1_MIN_EXCEEDANCES = 3
+U1_DECORRELATION_SIGNIFICANCE = 0.05
+U1_EMISSION_CADENCE_S = 10.0
+U1_INTERVAL_CADENCE_S = 60.0
+U1_PARAMETRIC_BOOTSTRAP_DRAWS = 512
+U1_PARAMETRIC_BOOTSTRAP_SEED = 20_260_804
+U1_CAMPAIGN_CAPTURE_TARGET = 5
+U1_CAMPAIGN_COUNT = 6
+U1_D5_LEAKAGE_AUC = 0.58
+U1_RELIABILITY_BINS = 5
+
 # Disjoint 100k-wide ranges prevent phase reuse across statistical roles.
 SEED_BLOCK_SIZE = 100_000
 

@@ -572,3 +572,52 @@ one-time protocol, and the completed reserve-2 attestation makes a repeat proced
   *Sensors* 25 (2025), AIS collision boundaries with conformal prediction regions.
 - Ansari et al., [Chronos: Learning the Language of Time Series](https://openreview.net/forum?id=gerNCVqqtR),
   *Transactions on Machine Learning Research* (2024), frozen time-series foundation model.
+
+# Experiment U1 addendum — online split-time rate estimator
+
+## 2026-08-04 predeclarations
+
+These commitments were recorded before any U1 test-block read. Calibration selects one common
+configuration by maximizing the number of calibration campaigns whose 95% predicted-count
+interval captures the realized count, then minimizing reliability error, then following the
+listed grid order. Reliability error is the bin-count-weighted mean absolute difference between
+predicted and realized rates. Five calibration-quantile bins define the reliability edges; those
+edges remain fixed on test data.
+
+1. The primary intermediate threshold is the fitted, side-specific GZ-maximum angle. A
+   campaign-adaptive level targeting 7–10 declustered crossings per 30 minutes appears once as a
+   sensitivity analysis.
+2. Positive and negative crossings are pooled after normalization by
+   `u = outward roll rate / side-specific critical outward roll rate`. Per-side results appear once
+   as a diagnostic.
+3. Declustering follows Belenky et al. (2024), Section 4.3. The roll-autocorrelation envelope joins
+   the absolute local extrema and ends a cluster only when no subsequent crossing lies within one
+   decorrelation time of the preceding crossing. The largest `u` in each cluster is retained. The
+   envelope threshold is 0.05.
+4. Calibration sweeps tail quantile `q` over `{0.50, 0.75}`, Gamma-prior strength `a0` over
+   `{2, 5, 10}` pseudo-exceedances, and trailing history over `{full history, 1,800 s, 900 s}`.
+   Calibration freezes all controls before test scoring. On records shorter than a candidate
+   window, the available causal history is used; candidates that coincide because of record
+   length remain separate reported rows.
+5. U1a succeeds when 95% predicted-count intervals capture the realized count in at least five of
+   the six stationary and rare-event evaluation campaigns.
+6. U1c expects the estimated rate to rank vulnerability comparably to the danger margin and to
+   remain near chance on D5's geometry. Any D5 AUC above 0.58 triggers a leakage audit, not a
+   positive interpretation.
+7. The U1d kill fires unless the full decomposition beats both rolling variance and declustered
+   upcrossing rate alone on campaign-level CI captures and on the bin-count-weighted mean absolute
+   reliability error. If it fires, tuning stops and the negative result stands.
+8. With 600-second records and a 300-second step, no fully post-step trailing window of 30 minutes
+   exists; U1b reports transient tracking only and makes no established-regime claim. The existing
+   900-second `softening_step_v02` campaign will be reported separately for its fully post-step
+   segment.
+9. The estimator emits every 10 seconds. Its 95% interval uses 512 vectorized parametric-bootstrap
+   draws with seed 20,260,804. The bootstrap is recomputed every 60 seconds and carried forward to
+   the intervening 10-second emissions. Window statistics use the existing 1,000-replicate,
+   campaign-stratified trajectory-block bootstrap with seed 20,260,804.
+
+The primary estimator is a known-configuration method: it observes dimensional roll and roll rate
+and uses the configured restoring model, but no wave, encounter, future-forcing, or reserve-block
+information. The implementation follows the paper's ROM decomposition and exponential-tail
+argument. It does not implement the Motion Perturbation Method from Sections 3.2–3.5, because that
+method resimulates future waves and falls outside online operation.
