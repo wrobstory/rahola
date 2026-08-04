@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
 from itertools import pairwise
 
@@ -29,6 +30,8 @@ def detect_crossings(
     angle_rad: NDArray[np.floating],
     rate_rad_s: NDArray[np.floating],
     fit: DangerMarginFit,
+    *,
+    critical_rate_scales: Mapping[int, NDArray[np.floating]] | None = None,
 ) -> tuple[Crossing, ...]:
     """Detect both-side crossings using only each interval's endpoint samples.
 
@@ -55,6 +58,16 @@ def detect_crossings(
         1: fit.positive.critical_rate_at_threshold(),
         -1: fit.negative.critical_rate_at_threshold(),
     }
+    scales = {}
+    for side in (1, -1):
+        values = np.ones_like(time) if critical_rate_scales is None else np.asarray(
+            critical_rate_scales[side], dtype=np.float64
+        )
+        if values.shape != time.shape or not np.all(np.isfinite(values[:stop])):
+            raise ValueError("critical-rate scales must be finite vectors matching time")
+        if np.any(values[:stop] <= 0.0):
+            raise ValueError("critical-rate scales must be positive")
+        scales[side] = values
     crossings: list[Crossing] = []
     for index in range(stop - 1):
         a0 = float(angle[index])
@@ -73,7 +86,7 @@ def detect_crossings(
         crossing_time = float(time[index] + fraction * (time[index + 1] - time[index]))
         interpolated_rate = float(rate[index] + fraction * (rate[index + 1] - rate[index]))
         outward_rate = side * interpolated_rate
-        critical_rate = critical_by_side[side]
+        critical_rate = critical_by_side[side] * float(scales[side][index + 1])
         if not np.isfinite(critical_rate) or critical_rate <= 0.0:
             raise ValueError("critical crossing rates must be finite and positive")
         crossings.append(

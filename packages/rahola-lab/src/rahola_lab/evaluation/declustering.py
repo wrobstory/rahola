@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 from numpy.typing import NDArray
-from scipy.signal import find_peaks
+from scipy.signal import correlate, find_peaks
 
 from rahola_lab.evaluation.episodes import AlarmEpisode
 
@@ -53,7 +53,7 @@ def estimate_decorrelation_time(
     variance = float(centered @ centered / len(centered))
     if variance <= 0.0:
         return sample_interval_s
-    full = np.correlate(centered, centered, mode="full")[len(centered) - 1 :]
+    full = correlate(centered, centered, mode="full", method="fft")[len(centered) - 1 :]
     overlap = np.arange(len(centered), 0, -1, dtype=np.float64)
     autocorrelation = (full / overlap) / variance
     lag = decorrelation_lag_from_autocorrelation(

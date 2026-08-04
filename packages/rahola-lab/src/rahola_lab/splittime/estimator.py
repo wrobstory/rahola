@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
 
 import numpy as np
@@ -132,6 +133,7 @@ def estimate_rate_trajectory(
     *,
     prior: GammaRatePrior,
     config: SplitTimeConfig,
+    critical_rate_scales: Mapping[int, NDArray[np.floating]] | None = None,
 ) -> RateTrajectory:
     """Emit a causal rate path through the finite portion of one trajectory."""
     time = np.asarray(time_s, dtype=np.float64)
@@ -146,7 +148,13 @@ def estimate_rate_trajectory(
         return RateTrajectory((), 0.0, np.zeros(config.bootstrap_draws), ())
     finite_end_s = float(time[stop - 1])
     sample_interval_s = float(np.median(np.diff(time)))
-    all_crossings = detect_crossings(time, angle, rate, fit)
+    all_crossings = detect_crossings(
+        time,
+        angle,
+        rate,
+        fit,
+        critical_rate_scales=critical_rate_scales,
+    )
     emission_times = np.arange(
         float(time[0]) + config.emission_cadence_s,
         finite_end_s + 0.5 * config.emission_cadence_s,
@@ -157,6 +165,9 @@ def estimate_rate_trajectory(
     emission_draws: list[NDArray[np.float64]] = []
     last_interval_time = -np.inf
     current_draws: NDArray[np.float64] | None = None
+    minimum_raw_crossings = int(
+        np.ceil(config.minimum_exceedances / (1.0 - config.tail_quantile))
+    )
 
     for emission_time in emission_times:
         end = int(np.searchsorted(time[:stop], emission_time, side="right"))
@@ -167,12 +178,15 @@ def estimate_rate_trajectory(
             if config.trailing_window_s is None
             else max(float(time[0]), emission_time - config.trailing_window_s)
         )
+        observed = tuple(event for event in all_crossings if event.time_s <= emission_time)
+        if len(observed) < minimum_raw_crossings:
+            continue
 
         def retained_from(
             start_s: float,
             *,
             current_end: int = end,
-            current_emission_time: float = float(emission_time),
+            current_crossings: tuple[Crossing, ...] = observed,
         ) -> tuple[tuple[Crossing, ...], float]:
             start = int(np.searchsorted(time[:current_end], start_s, side="left"))
             history = angle[start:current_end]
@@ -182,21 +196,26 @@ def estimate_rate_trajectory(
                 significance_level=config.decorrelation_significance,
             )
             candidates = tuple(
-                event
-                for event in all_crossings
-                if start_s <= event.time_s <= current_emission_time
+                event for event in current_crossings if start_s <= event.time_s
             )
             return decluster_crossings(candidates, decorrelation), decorrelation
 
-        retained, decorrelation_time = retained_from(configured_start_s)
-        tail = _tail_for_crossings(retained, config, prior)
         flags: list[str] = []
         start_s = configured_start_s
+        window_crossing_count = sum(
+            configured_start_s <= event.time_s for event in observed
+        )
+        if window_crossing_count < minimum_raw_crossings and configured_start_s > float(time[0]):
+            start_s = float(time[0])
+            flags.append("full_history_tail_fallback")
+        retained, decorrelation_time = retained_from(start_s)
+        tail = _tail_for_crossings(retained, config, prior)
         if tail is None and configured_start_s > float(time[0]):
             start_s = float(time[0])
             retained, decorrelation_time = retained_from(start_s)
             tail = _tail_for_crossings(retained, config, prior)
-            flags.append("full_history_tail_fallback")
+            if "full_history_tail_fallback" not in flags:
+                flags.append("full_history_tail_fallback")
         if tail is None:
             continue
         if tail.threshold_clipped:
