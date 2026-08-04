@@ -6,7 +6,7 @@ import numpy as np
 import pytest
 from rahola_lab.constants import SeedBlock
 from rahola_lab.evaluation import ReserveBlockError, TrajectoryScores, seeds_for
-from rahola_lab.experiments import final_eval
+from rahola_lab.experiments import b2_chronos, final_eval
 from rahola_lab.experiments.b2_chronos import _evaluate_scores
 from rahola_lab.experiments.common import load_result, write_result
 from rahola_lab.experiments.detector_common import relative_fpr_reduction
@@ -107,7 +107,17 @@ def _trajectory(scores: list[float], *, capsize: float | None) -> TrajectoryScor
     )
 
 
-def test_chronos_threshold_is_invariant_to_test_outcomes() -> None:
+def test_chronos_threshold_is_invariant_to_test_outcomes(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    horizons = []
+    operating_curve = b2_chronos.operating_curve
+
+    def capture_horizon(*args, **kwargs):
+        horizons.append(kwargs["horizon_s"])
+        return operating_curve(*args, **kwargs)
+
+    monkeypatch.setattr(b2_chronos, "operating_curve", capture_horizon)
     calibration = [
         *[_trajectory([0.1, 0.7, 0.8], capsize=40.0) for _ in range(8)],
         *[_trajectory([0.1, 0.2, 0.3], capsize=None) for _ in range(8)],
@@ -120,10 +130,11 @@ def test_chronos_threshold_is_invariant_to_test_outcomes() -> None:
         _trajectory([0.2, 0.6, 0.9], capsize=None),
         _trajectory([0.2, 0.6, 0.9], capsize=None),
     ]
-    first = _evaluate_scores(calibration, test_a)
-    second = _evaluate_scores(calibration, test_b)
+    first = _evaluate_scores(calibration, test_a, period_s=5.0)
+    second = _evaluate_scores(calibration, test_b, period_s=5.0)
     assert first["threshold"] == second["threshold"]
     assert first["threshold"] == first["calibration_operating_point"]["threshold"]
+    assert horizons == [250.0, 250.0, 250.0, 250.0]
 
 
 def test_chronos_zero_fpr_baseline_cannot_earn_relative_improvement() -> None:

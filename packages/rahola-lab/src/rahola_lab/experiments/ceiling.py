@@ -72,6 +72,7 @@ def _take(windows: DetectorWindowDataset, indices: NDArray[np.integer]) -> Detec
 def _stratum_counts(
     windows: DetectorWindowDataset, duration_s: float
 ) -> dict[str, int]:
+    # The factor four creates quartiles; it is not the four-second natural period.
     time_bin = np.minimum((4.0 * windows.end_times_s / duration_s).astype(int), 3)
     groups = 4 * windows.labels.astype(int) + time_bin
     return {

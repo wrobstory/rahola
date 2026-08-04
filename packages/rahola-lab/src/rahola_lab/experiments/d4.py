@@ -34,6 +34,7 @@ from rahola_lab.experiments.common import FAMILIES, load_result, write_result
 from rahola_lab.experiments.detector_common import (
     DETECTOR_NAMES,
     campaign_dir,
+    common_natural_period_s,
     fit_frozen_suite,
     merge_scores,
     score_dataset,
@@ -211,7 +212,7 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
     groups_by_trajectory = [
         groups for dataset in evaluation_data for groups in _groups_for_dataset(dataset)
     ]
-    horizon_s = EWS_HORIZON_PERIODS * 4.0
+    horizon_s = EWS_HORIZON_PERIODS * common_natural_period_s(evaluation_data)
     preceded = np.asarray(
         [
             _precedes_capsize(groups, trajectory.t_capsize_s, horizon_s)

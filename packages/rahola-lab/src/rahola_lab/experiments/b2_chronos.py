@@ -33,6 +33,7 @@ from rahola_lab.experiments.common import FAMILIES, load_result, write_result
 from rahola_lab.experiments.d5 import TRANSITION_S
 from rahola_lab.experiments.detector_common import (
     campaign_dir,
+    common_natural_period_s,
     detector_risk_end_s,
     fit_detector_suite,
     fit_frozen_suite,
@@ -120,7 +121,9 @@ def _score_foundation(
     return output
 
 
-def _select_operating_policy(calibration: list[TrajectoryScores]) -> dict[str, object]:
+def _select_operating_policy(
+    calibration: list[TrajectoryScores], *, period_s: float
+) -> dict[str, object]:
     """Freeze a Chronos operating point using calibration trajectories only."""
     values = np.concatenate([item.scores for item in calibration])
     values = values[np.isfinite(values)]
@@ -140,7 +143,7 @@ def _select_operating_policy(calibration: list[TrajectoryScores]) -> dict[str, o
         calibration,
         EpisodeConfig(threshold=0.0, debounce_windows=3, refractory_windows=3),
         thresholds,
-        horizon_s=EWS_HORIZON_PERIODS * 4.0,
+        horizon_s=EWS_HORIZON_PERIODS * period_s,
         decorrelation_time_s=decorrelation_s,
     )
     calibration_point = matched_point(calibration_curve)
@@ -152,7 +155,7 @@ def _select_operating_policy(calibration: list[TrajectoryScores]) -> dict[str, o
 
 
 def _evaluate_at_policy(
-    test: list[TrajectoryScores], policy: dict[str, object]
+    test: list[TrajectoryScores], policy: dict[str, object], *, period_s: float
 ) -> dict[str, object]:
     """Evaluate a previously frozen Chronos policy on one outcome block."""
     threshold = float(policy["threshold"])
@@ -161,7 +164,7 @@ def _evaluate_at_policy(
         test,
         EpisodeConfig(threshold=0.0, debounce_windows=3, refractory_windows=3),
         np.asarray([threshold], dtype=np.float64),
-        horizon_s=EWS_HORIZON_PERIODS * 4.0,
+        horizon_s=EWS_HORIZON_PERIODS * period_s,
         decorrelation_time_s=decorrelation_s,
     )[0]
     return point_payload(test_point) | {
@@ -171,9 +174,11 @@ def _evaluate_at_policy(
 
 
 def _evaluate_scores(
-    calibration: list[TrajectoryScores], test: list[TrajectoryScores]
+    calibration: list[TrajectoryScores], test: list[TrajectoryScores], *, period_s: float
 ) -> dict[str, object]:
-    return _evaluate_at_policy(test, _select_operating_policy(calibration))
+    return _evaluate_at_policy(
+        test, _select_operating_policy(calibration, period_s=period_s), period_s=period_s
+    )
 
 
 def _foundation_rotation(
@@ -198,7 +203,8 @@ def _foundation_rotation(
         for item in _score_foundation(dataset, model)
     ]
     test = [item for dataset in test_data for item in _score_foundation(dataset, model)]
-    return _evaluate_scores(calibration, test) | {
+    period_s = common_natural_period_s(calibration_data + test_data)
+    return _evaluate_scores(calibration, test, period_s=period_s) | {
         "training_sample_counts": model.training_sample_counts_
     }
 
@@ -233,7 +239,8 @@ def _cnn_rotation(
         _limited(data_root, f"{held_out}_{role}", SeedBlock.TEST) for role in ("evaluation", "ramp")
     ]
     test_scores = [item for dataset in test_data for item in score_dataset(dataset, suite)["cnn"]]
-    return _evaluate_scores(calibration_scores, test_scores)
+    period_s = common_natural_period_s(calibration_data + test_data)
+    return _evaluate_scores(calibration_scores, test_scores, period_s=period_s)
 
 
 def _indexed(dataset: SimulationDataset, indices: np.ndarray) -> SimulationDataset:

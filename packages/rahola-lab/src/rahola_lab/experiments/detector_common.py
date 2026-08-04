@@ -38,6 +38,14 @@ from rahola_lab.forecast import fit_piecewise_linear_restoring
 DETECTOR_NAMES = ("cnn", "classical_ews", "galeazzi_glrt", "danger_margin", "neighbor_2009")
 
 
+def common_natural_period_s(datasets: list[SimulationDataset]) -> float:
+    """Return the shared configured natural period for an evaluation pool."""
+    periods = {float(dataset.config["natural_period_s"]) for dataset in datasets}
+    if len(periods) != 1:
+        raise ValueError("evaluation datasets must share one natural period")
+    return periods.pop()
+
+
 @dataclass
 class DetectorSuite:
     cnn: JaxTemporalCNN

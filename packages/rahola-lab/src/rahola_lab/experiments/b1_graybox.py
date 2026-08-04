@@ -33,6 +33,7 @@ from rahola_lab.evaluation import (
 from rahola_lab.experiments.common import FAMILIES, load_result, subset_dataset, write_result
 from rahola_lab.experiments.detector_common import (
     campaign_dir,
+    common_natural_period_s,
     detector_risk_end_s,
     matched_point,
     point_payload,
@@ -185,6 +186,9 @@ def _evaluate(
     test_data: list[SimulationDataset],
     model: GrayBoxDetector,
 ):
+    horizon_s = EWS_HORIZON_PERIODS * common_natural_period_s(
+        calibration_data + test_data
+    )
     calibration = [item for dataset in calibration_data for item in _score_dataset(dataset, model)]
     values = np.concatenate([item.scores for item in calibration if len(item.scores)])
     values = values[np.isfinite(values)]
@@ -206,7 +210,7 @@ def _evaluate(
         calibration,
         EpisodeConfig(threshold=0.0, debounce_windows=3, refractory_windows=3),
         thresholds,
-        horizon_s=EWS_HORIZON_PERIODS * 4.0,
+        horizon_s=horizon_s,
         decorrelation_time_s=decorrelation_s,
     )
     calibration_point = matched_point(calibration_curve)
@@ -215,7 +219,7 @@ def _evaluate(
         test,
         EpisodeConfig(threshold=0.0, debounce_windows=3, refractory_windows=3),
         np.asarray([calibration_point.threshold], dtype=np.float64),
-        horizon_s=EWS_HORIZON_PERIODS * 4.0,
+        horizon_s=horizon_s,
         decorrelation_time_s=decorrelation_s,
     )[0]
     return point_payload(test_point), point_payload(calibration_point), decorrelation_s
