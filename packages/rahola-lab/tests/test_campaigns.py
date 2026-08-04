@@ -94,12 +94,13 @@ def _rewrite_fixture_shard(
 
 def test_frozen_campaign_grid_and_duration_budget() -> None:
     definitions = [load_campaign_definition(path) for path in sorted(CONFIG_DIR.glob("*.yaml"))]
-    assert len(definitions) == 15
+    assert len(definitions) == 16
     roles = [definition.role for definition in definitions]
     assert roles.count("stationary_training") == 3
     assert roles.count("prototype2_ramp") == 3
     assert roles.count("prototype2_bandwidth") == 5
     assert roles.count("sea_state_transition") == 1
+    assert roles.count("sea_state_transition_v02") == 1
     assert roles.count("rare_event_evaluation") == 3
     for definition in definitions:
         required = (

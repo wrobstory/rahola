@@ -36,6 +36,22 @@ REPORTED_NORMALIZATION_MODES = {
     "xgboost": ("fixed_window_causal", "cumulative_online"),
 }
 
+# v0.2 forcing audit, frozen before the paired simulations.
+FORCING_PREVALENCE_TOLERANCE = 0.01
+FORCING_PAIRED_TRAJECTORIES_PER_CAMPAIGN = 512
+
+# v0.2 established-regime geometry, frozen before campaign generation.
+D5_V02_TRANSITION_S = 300.0
+D5_V02_DURATION_S = 900.0
+D5_V02_FIRST_ENDPOINT_S = 540.0
+D5_V02_LAST_ENDPOINT_S = 700.0
+D5_V02_AUC_LIMIT = 0.58
+D5_V02_PREREGISTERED_PREDICTION = (
+    "Prediction (preregistered): fully post-step within-regime discrimination will "
+    "remain near chance (AUC below 0.58) for every motion-only method, consistent with "
+    "the immediate-post-transition result it replaces."
+)
+
 # ACI is operationally unacceptable only if it exceeds both this absolute rate...
 ACI_EXPLOSION_FPR_PER_HOUR = 2.0
 # ...and four times the corresponding fixed-CQR episode rate.
