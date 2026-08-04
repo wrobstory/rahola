@@ -17,6 +17,11 @@ from rahola_lab.evaluation.splits import ReserveBlockError, assert_seed_membersh
 _REFERENCE_CHECKSUMS = json.loads(
     Path(__file__).with_name("reference_checksums.json").read_text(encoding="utf-8")
 )
+_REFERENCE_CHECKSUMS.update(
+    json.loads(
+        Path(__file__).with_name("reference_checksums_v02.json").read_text(encoding="utf-8")
+    )
+)
 
 
 def _read_verified_bytes(path: Path, expected: str, *, kind: str) -> bytes:
