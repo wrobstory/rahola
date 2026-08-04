@@ -17,7 +17,7 @@ simulation:
     sea_state: {hs_m: 2.0, tp_s: 4.0, gamma: 3.3}
     effective_wave_slope: 0.17
     min_components: 200
-    max_frequency_ratio: 4.0
+    max_frequency_ratio: 40.0
   protocol:
     kind: step
     steps:

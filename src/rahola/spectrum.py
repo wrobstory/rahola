@@ -70,7 +70,12 @@ def synthesize_jonswap(
             raise ValueError("max_frequency_rad_s must be positive and finite")
         interval_count = requested_n - 1
         minimum_period_multiplier = int(
-            np.ceil(2.0 * np.pi * min_components / (max_frequency_rad_s * duration_s))
+            np.ceil(
+                2.0
+                * np.pi
+                * (min_components + 1)
+                / (max_frequency_rad_s * duration_s)
+            )
         )
         fft_n = interval_count * max(1, minimum_period_multiplier)
     frequencies_hz = np.fft.rfftfreq(fft_n, d=dt_s)
@@ -78,7 +83,9 @@ def synthesize_jonswap(
     if max_frequency_rad_s is None:
         active = np.ones_like(omega, dtype=bool)
     else:
-        active = omega <= max_frequency_rad_s * (1.0 + 1e-12)
+        # The cutoff bin is open so a cutoff equal to the coarse-grid Nyquist
+        # omits that real-only FFT coefficient on every refined grid as well.
+        active = omega < max_frequency_rad_s * (1.0 - 1e-12)
         if int(np.sum(active)) - 1 < min_components:
             raise ValueError("fixed spectral grid did not reach min_components")
     active_omega = omega[active]

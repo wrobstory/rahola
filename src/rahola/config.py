@@ -61,7 +61,10 @@ class ForcingConfig:
     min_components: int = 200
     deterministic_amplitudes: bool = True
     gravity_m_s2: float = 9.80665
-    max_frequency_ratio: float | None = 4.0
+    # The reference RK4 half-step grid has a Nyquist frequency 40 times the
+    # natural frequency. Fixing that ratio preserves its sea definition when
+    # the solver step is refined.
+    max_frequency_ratio: float | None = 40.0
 
     def __post_init__(self) -> None:
         _require_integer(self.min_components, "min_components")

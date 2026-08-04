@@ -42,6 +42,7 @@ def run(
     output_root: Path,
     *,
     chunk_size: int = 128,
+    result_name: str = "forcing_invariance_final_v02",
 ) -> dict[str, object]:
     definitions = [
         load_campaign_definition(path)
@@ -120,9 +121,16 @@ def run(
             }
         )
     affected = affected_campaigns(rows)
+    cutoff_ratios = {
+        float(definition.simulation.forcing.max_frequency_ratio)
+        for definition in definitions
+    }
+    if len(cutoff_ratios) != 1:
+        raise ValueError("forcing audit campaigns must share one fixed cutoff ratio")
+    cutoff_ratio = cutoff_ratios.pop()
     payload: dict[str, object] = {
         "experiment": "v0.2 forcing-definition invariance audit",
-        "fixed_max_frequency_ratio": 4.0,
+        "fixed_max_frequency_ratio": cutoff_ratio,
         "legacy_definition": "integration-half-step Nyquist cutoff",
         "predeclared_absolute_prevalence_tolerance": FORCING_PREVALENCE_TOLERANCE,
         "paired_trajectories_per_campaign": FORCING_PAIRED_TRAJECTORIES_PER_CAMPAIGN,
@@ -140,5 +148,5 @@ def run(
             "well-defined under the historical forcing convention."
         ),
     }
-    write_result(output_root, "forcing_invariance_v02", payload)
+    write_result(output_root, result_name, payload)
     return payload

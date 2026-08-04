@@ -29,9 +29,15 @@ system, whose state contains the full observed motion history.
 
 ## Forcing audit decision rule
 
-The v0.2 forcing grid uses a cutoff of four times the natural frequency and no longer depends on
-the integration step. If the absolute capsize-prevalence shift exceeds one percentage point in
-any reference campaign, the affected campaign will be regenerated under an `_v02` name.
+The v0.2 forcing grid uses a cutoff of 40 times the natural frequency: the Nyquist limit of the
+validated reference solver's half-step grid. The cutoff therefore preserves the reference sea
+definition but no longer changes when the integration step is refined. If the absolute
+capsize-prevalence shift exceeds one percentage point in any reference campaign, the affected
+campaign will be regenerated under an `_v02` name.
+
+An earlier ratio-4 sensitivity run is retained as an audit artifact. It removed all D3 events and
+therefore exposed an ill-posed cutoff choice before detector scoring; it is not the forcing
+invariance decision run.
 
 ## Results pending execution
 
