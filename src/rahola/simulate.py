@@ -294,11 +294,19 @@ def simulate_restarted_batch(
     """Restart independent futures from arbitrary state and stiffness drift.
 
     ``seeds`` define fresh forcing realizations. The initial state, current
-    stiffness multiplier, and continuing linear stiffness rate may vary by
-    trajectory, which keeps heterogeneous restart ensembles batchable.
+    stiffness multiplier, and continuing linear stiffness rate are supplied
+    explicitly by the restart comparison and may vary by trajectory, which
+    keeps heterogeneous restart ensembles batchable. The base configuration
+    must be stationary; a time-varying protocol cannot be silently continued
+    from an unspecified phase.
     """
     if duration_s <= 0.0:
         raise ValueError("restart duration must be positive")
+    if config.protocol.kind != ProtocolKind.STATIONARY:
+        raise ValueError(
+            "restart simulation requires a stationary base protocol; supply current "
+            "stiffness and drift explicitly"
+        )
     restart_config = replace(
         config,
         duration_s=duration_s,

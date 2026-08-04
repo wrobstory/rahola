@@ -78,6 +78,23 @@ def test_restart_accepts_per_trajectory_state_and_stiffness_drift() -> None:
     assert restarted.metadata[1]["restart"]["stiffness_rate_per_s"] == pytest.approx(-0.002)
 
 
+def test_restart_rejects_nonstationary_protocol() -> None:
+    config = _small_config(
+        protocol=ProtocolConfig(
+            kind=ProtocolKind.STEP,
+            steps=(SeaStateStep(16.0, SeaState(hs_m=3.0, tp_s=4.0)),),
+        )
+    )
+    with pytest.raises(ValueError, match="stationary base protocol"):
+        simulate_restarted_batch(
+            config,
+            [20],
+            duration_s=16.0,
+            initial_angle_rad=0.0,
+            initial_rate_rad_s=0.0,
+        )
+
+
 def test_restart_detects_initial_escape_boundary_at_time_zero() -> None:
     config = _small_config(
         duration_s=2.0,
