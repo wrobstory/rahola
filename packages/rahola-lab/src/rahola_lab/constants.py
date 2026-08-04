@@ -140,6 +140,26 @@ U1_HAZARD_KERNEL_PERIODS = 7.5
 U1_TRACKING_MAX_LAG_PERIODS = 30.0
 U1_SETTLING_RELATIVE_TOLERANCE = 0.10
 
+# U1-r2 controls selected on calibration and frozen before fresh TEST generation.
+U1R2_TAIL_QUANTILE = 0.75
+U1R2_PRIOR_STRENGTH = 5.0
+U1R2_TRAILING_WINDOW_S: float | None = None
+U1R2_EVENT_ACCOUNTING = "absorbing_probability"
+U1R2_CRITICAL_RATE = "unforced_eq13"
+U1R2_EMISSION_POLICY = "prior_from_start"
+U1R2_FAMILY_SCOPE_CLAIM = (
+    "The decomposition yields calibrated counts on softening-type campaigns; on "
+    "parametric and biased campaigns its prior-dominated estimate is expected to remain "
+    "uninformative, and that scope limit — if observed — is the finding."
+)
+U1R2_KILL_CRITERION = (
+    "If the full decomposition does not outperform both rolling variance and "
+    "declustered upcrossing rate alone on campaign-level CI captures and on the "
+    "bin-count-weighted mean absolute reliability error, then the split-time "
+    "decomposition adds nothing online beyond its components — report that negative "
+    "as the result and stop tuning."
+)
+
 # Disjoint 100k-wide ranges prevent phase reuse across statistical roles.
 SEED_BLOCK_SIZE = 100_000
 

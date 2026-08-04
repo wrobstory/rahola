@@ -18,8 +18,11 @@ _REFERENCE_CHECKSUMS = json.loads(
     Path(__file__).with_name("reference_checksums.json").read_text(encoding="utf-8")
 )
 _REFERENCE_CHECKSUMS.update(
+    json.loads(Path(__file__).with_name("reference_checksums_v02.json").read_text(encoding="utf-8"))
+)
+_REFERENCE_CHECKSUMS.update(
     json.loads(
-        Path(__file__).with_name("reference_checksums_v02.json").read_text(encoding="utf-8")
+        Path(__file__).with_name("reference_checksums_u1r2.json").read_text(encoding="utf-8")
     )
 )
 
@@ -80,9 +83,7 @@ def load_campaign_split(
             f"split row-count mismatch: expected {expected_total}, chunks declare {declared_total}"
         )
     expected_loaded = expected_total if limit is None else min(limit, expected_total)
-    config_payload = json.dumps(
-        manifest["simulation"], sort_keys=True, separators=(",", ":")
-    )
+    config_payload = json.dumps(manifest["simulation"], sort_keys=True, separators=(",", ":"))
     expected_config_hash = hashlib.sha256(config_payload.encode()).hexdigest()
     seeds: list[int] = []
     capsized: list[bool] = []
@@ -92,21 +93,15 @@ def load_campaign_split(
     metadata: list[dict[str, object]] = []
     time_s: np.ndarray | None = None
     for chunk in records["chunks"]:
-        chunk_manifest_path = _contained_path(
-            root, root, chunk["path"], kind="chunk manifest"
-        )
+        chunk_manifest_path = _contained_path(root, root, chunk["path"], kind="chunk manifest")
         chunk_manifest = json.loads(
-            _read_verified_bytes(
-                chunk_manifest_path, chunk["sha256"], kind="chunk manifest"
-            )
+            _read_verified_bytes(chunk_manifest_path, chunk["sha256"], kind="chunk manifest")
         )
         for shard in chunk_manifest["shards"]:
             shard_path = _contained_path(
                 root, chunk_manifest_path.parent, shard["file"], kind="Parquet shard"
             )
-            shard_bytes = _read_verified_bytes(
-                shard_path, shard["sha256"], kind="Parquet shard"
-            )
+            shard_bytes = _read_verified_bytes(shard_path, shard["sha256"], kind="Parquet shard")
             table = pq.read_table(pa.BufferReader(shard_bytes))
             if table.num_rows != int(shard["rows"]):
                 raise ValueError(f"row-count mismatch for {shard_path}")

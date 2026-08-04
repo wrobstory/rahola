@@ -789,3 +789,94 @@ uv run python -m rahola_lab.experiments.u1e
 U1a, U1b, and U1e produced `_u1` artifacts. U1c and U1d produced provenance-bound failure
 artifacts after their test reads were spent. No reserve or reserve-2 block was read. No historical
 result artifact, `docs/paper/` file, or `docs/rahola-explainer.html` was modified.
+
+# Experiment U1-r2 addendum — emission-policy repair
+
+This addendum supersedes only r1's muzzled-emission mechanics and conclusions that depended on
+them. The r1 predeclarations, executions, artifacts, and failure record remain unchanged history.
+All diagnostics and control selection below used calibration blocks only.
+
+## Phase A — calibration diagnosis
+
+The crossing structure supports a family-scope distinction. Parametric capsizes almost always
+follow the first retained crossing on that side, leaving little history for tail estimation.
+Softening stationary and evaluation trajectories more often revisit the intermediate level.
+
+| Calibration campaign | Median retained crossings/trajectory | Terminal crossing is first on side | Median first-crossing-to-capsize |
+| --- | ---: | ---: | ---: |
+| softening stationary | 6 | 40/71 (56.34%) | 0.926 s |
+| softening evaluation | 5 | 15/25 (60.00%) | 0.824 s |
+| softening ramp | 1 | 234/234 (100.00%) | 3.249 s |
+| softening step | 2 | 249/368 (67.66%) | 0.798 s |
+| softening step v0.2 | 4 | 328/620 (52.90%) | 57.272 s |
+| parametric stationary | 1 | 84/87 (96.55%) | 0.761 s |
+| parametric evaluation | 0 | 7/7 (100.00%) | 0.771 s |
+| parametric ramp | 1 | 147/147 (100.00%) | 2.465 s |
+| biased stationary | 2 | 91/119 (76.47%) | 0.476 s |
+| biased evaluation | 1 | 19/20 (95.00%) | 0.417 s |
+| biased ramp | 1 | 124/126 (98.41%) | 5.390 s |
+
+Three biased-stationary capsizes had no retained crossing. Full distributions and denominators are
+in `results/u1_phase_a_u1r2.json`.
+
+The softening-stationary calibration attribution table is the following frozen Phase-A record.
+`Magnitude` is the absolute change from the nominal exponential critical-crossing baseline;
+`residual` is predicted minus the 71 realized capsizes.
+
+| Cause | Direction | Magnitude | Predicted count | Residual |
+| --- | --- | ---: | ---: | ---: |
+| baseline: nominal-declustered exponential critical crossings | none | 0.000000 | 339.744966 | 268.744966 |
+| event versus crossing accounting: absorbing transform | down | 60.650039 | 279.094927 | 208.094927 |
+| tail form: empirical terminal-crossing probability | down | 271.714953 | 68.030014 | -2.969986 |
+| tail form: diagnostic GPD under absorbing accounting | down | 46.341308 | 293.403659 | 222.403659 |
+| Eq. 15 motion-derived forced correction | up | 2062.255034 | 2402.000000 | 2331.000000 |
+| declustering: 0.5x decorrelation time | up | 43.412764 | 383.157730 | 312.157730 |
+| declustering: 1.5x decorrelation time | down | 16.028964 | 323.716003 | 252.716003 |
+
+The empirical terminal-crossing probability was 0.011901 (71/5,966). The r1-selected exponential
+model estimated 0.056947; the diagnostic GPD estimated 0.060583. The motion-derived Eq. 15 variant
+estimated 0.402615 and therefore moved sharply away from ground truth.
+
+The r1 gate covered 1.3118% of softening-stationary exposure and 0.1079% of
+softening-evaluation exposure. It covered zero exposure in all four parametric and biased
+campaigns. On the covered slices it predicted 7.733 versus one realized softening-stationary
+capsize and 0.226 versus zero softening-evaluation capsizes.
+
+## Phase B and Phase C predeclarations
+
+The following choices are frozen before any U1-r2 TEST trajectory is materialized:
+
+1. The three-exceedance validity gate is removed. The estimator emits at the first sample. Pooled
+   family calibration fixes `w`, `P(u > w)`, and the Gamma-rate prior; emissions with fewer than
+   three observed exceedances carry `prior_dominated` but remain in every integral. A zero-crossing
+   point rate is zero and carries a Garwood Poisson upper interval. Campaign bootstrap draws retain
+   the observed-count Poisson construction, avoiding one independent pseudo-count per trajectory.
+2. Campaign counts use `sum(1 - exp(-integrated rate_i))`. On calibration, absorbing accounting
+   reduced the nominal softening prediction by 60.650039 counts, or 17.8516%; this is material on a
+   71-event headline scale.
+3. Eq. 13 without forced correction remains primary. Its absolute probability error from the
+   empirical terminal-crossing rate was 0.045046, versus 0.390714 for the motion-derived Eq. 15
+   diagnostic. The Eq. 15 row remains a known-configuration sensitivity only.
+4. Full causal history is fixed. The repaired calibration sweep selected `q = 0.75` and `a0 = 5`
+   by the r1 ordering rule: one of six campaign intervals captured, and reliability MAE was
+   0.116994. No trailing-window sweep remains.
+5. Named scope claim: “The decomposition yields calibrated counts on softening-type campaigns; on
+   parametric and biased campaigns its prior-dominated estimate is expected to remain
+   uninformative, and that scope limit — if observed — is the finding.” U1a-r2 reports the unchanged
+   pooled 5-of-6 criterion and two campaigns per family.
+6. U1a-r2 succeeds only with at least five of six 95% campaign-count captures. U1c-r2 retains the
+   D1 calibration-selected 90%-sensitivity operating point, trajectory-block AUC intervals, and the
+   D5 orientation-independent AUC >0.58 leakage-audit trigger.
+7. The U1d-r2 kill text remains: “If the full decomposition does not outperform both rolling
+   variance and declustered upcrossing rate alone on campaign-level CI captures and on the
+   bin-count-weighted mean absolute reliability error, then the split-time decomposition adds
+   nothing online beyond its components — report that negative as the result and stop tuning.”
+8. With 600-second records and a 300-second step, no fully post-step trailing window of 30 minutes
+   exists; U1b-r2 reports transient tracking only. The 900-second v0.2 step supplies the separate
+   fully post-step segment.
+9. The r1 cadence, 512-draw parametric bootstrap, seed, reliability bins, hazard kernel, lag search,
+   settling rule, adaptive-threshold sensitivity, and causal left-rectangle integration remain
+   unchanged unless item 1 or 2 explicitly replaces them.
+
+The predeclared fresh TEST offsets are recorded in `DATA.md`. U1-r2 will use only those ordinary
+TEST slices; neither reserve block is eligible.

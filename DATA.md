@@ -147,3 +147,28 @@ uv run python -c 'from pathlib import Path; from rahola_lab.campaigns import gen
 ```
 
 No reserve or reserve-2 data were opened or regenerated for v0.2.
+
+## U1-r2 fresh TEST slices — predeclared 2026-08-04
+
+U1-r2 uses 27,000 new trajectories in `data/u1r2/`. The offsets below were frozen before
+materialization. A repository check compared each half-open interval with every TEST interval in
+the v0.1 and v0.2 manifests and with every other proposed U1-r2 interval. All are pairwise disjoint
+and lie inside the ordinary `[200000, 300000)` TEST block.
+
+| Base campaign | Count | TEST offset | Absolute seed range |
+| --- | ---: | ---: | --- |
+| `softening_stationary` | 1,000 | 11,000 | `[211000, 212000)` |
+| `parametric_stationary` | 1,000 | 12,000 | `[212000, 213000)` |
+| `biased_stationary` | 1,000 | 13,000 | `[213000, 214000)` |
+| `softening_ramp` | 1,000 | 14,000 | `[214000, 215000)` |
+| `parametric_ramp` | 1,000 | 15,000 | `[215000, 216000)` |
+| `biased_ramp` | 1,000 | 16,000 | `[216000, 217000)` |
+| `softening_step` | 3,000 | 17,000 | `[217000, 220000)` |
+| `softening_step_v02` | 3,000 | 44,000 | `[244000, 247000)` |
+| `softening_evaluation` | 5,000 | 77,000 | `[277000, 282000)` |
+| `parametric_evaluation` | 5,000 | 82,000 | `[282000, 287000)` |
+| `biased_evaluation` | 5,000 | 87,000 | `[287000, 292000)` |
+
+The new campaign names append `_u1r2` to the base names. The tracked
+`reference_checksums_u1r2.json` will anchor their manifests after the one-shot materialization.
+Neither reserve block is part of this allocation.

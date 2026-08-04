@@ -208,9 +208,7 @@ def write_result(
     upstream_results: dict[str, dict[str, object]] | None = None,
 ) -> Path:
     with result_graph_lock(output_root):
-        return _write_result_locked(
-            output_root, name, payload, upstream_results=upstream_results
-        )
+        return _write_result_locked(output_root, name, payload, upstream_results=upstream_results)
 
 
 def _write_result_locked(
@@ -228,22 +226,16 @@ def _write_result_locked(
     for upstream_name, upstream in (upstream_results or {}).items():
         current = _load_result(output_root, upstream_name, ancestors=frozenset())
         if _result_depends_on(output_root, upstream_name, name):
-            raise ValueError(
-                f"writing result {name} would create a cyclic upstream dependency"
-            )
+            raise ValueError(f"writing result {name} would create a cyclic upstream dependency")
         digest = upstream.get("_artifact_sha256")
         if not isinstance(digest, str) or not digest:
             raise ValueError(f"upstream result {upstream_name} has no verified artifact digest")
         if current.get("_artifact_sha256") != digest:
             raise ValueError(f"upstream result {upstream_name} is no longer current")
         upstream_digests[upstream_name] = digest
-    document["_provenance"] = _current_provenance() | {
-        "upstream_artifacts": upstream_digests
-    }
+    document["_provenance"] = _current_provenance() | {"upstream_artifacts": upstream_digests}
     document["_artifact_sha256"] = _artifact_digest(document)
-    serialized = json.dumps(
-        _json_safe(document), indent=2, sort_keys=True, allow_nan=False
-    ) + "\n"
+    serialized = json.dumps(_json_safe(document), indent=2, sort_keys=True, allow_nan=False) + "\n"
     descriptor, temporary_name = tempfile.mkstemp(
         prefix=f".{path.name}.", suffix=".tmp", dir=output_root
     )
@@ -269,16 +261,12 @@ def load_result(output_root: Path, name: str) -> dict[str, object]:
     return _load_result(output_root, name, ancestors=frozenset())
 
 
-def _load_result(
-    output_root: Path, name: str, *, ancestors: frozenset[str]
-) -> dict[str, object]:
+def _load_result(output_root: Path, name: str, *, ancestors: frozenset[str]) -> dict[str, object]:
     if name in ancestors:
         chain = " -> ".join((*sorted(ancestors), name))
         raise ValueError(f"cyclic upstream artifact dependency: {chain}")
     path = _artifact_path(output_root, name)
-    payload = json.loads(
-        path.read_text(encoding="utf-8"), parse_constant=_reject_nonfinite_json
-    )
+    payload = json.loads(path.read_text(encoding="utf-8"), parse_constant=_reject_nonfinite_json)
     expected = _current_provenance()
     provenance = payload.get("_provenance")
     if not isinstance(provenance, dict) or any(
@@ -293,13 +281,9 @@ def _load_result(
     for upstream_name, recorded_digest in upstream_artifacts.items():
         if not isinstance(upstream_name, str) or not isinstance(recorded_digest, str):
             raise ValueError(f"{path} has an invalid upstream artifact dependency")
-        upstream = _load_result(
-            output_root, upstream_name, ancestors=ancestors | {name}
-        )
+        upstream = _load_result(output_root, upstream_name, ancestors=ancestors | {name})
         if upstream.get("_artifact_sha256") != recorded_digest:
-            raise ValueError(
-                f"{path} does not match current upstream artifact {upstream_name}"
-            )
+            raise ValueError(f"{path} does not match current upstream artifact {upstream_name}")
     return payload
 
 
@@ -329,6 +313,8 @@ def _current_provenance() -> dict[str, object]:
         / "campaigns"
         / "reference_checksums.json"
     )
+    versioned_anchor = anchor.with_name("reference_checksums_v02.json")
+    u1r2_anchor = anchor.with_name("reference_checksums_u1r2.json")
     digest = hashlib.sha256()
     source_roots = (
         repository_root / "src",
@@ -359,6 +345,8 @@ def _current_provenance() -> dict[str, object]:
         "schema_version": 1,
         "source_sha256": digest.hexdigest(),
         "reference_anchor_sha256": hashlib.sha256(anchor.read_bytes()).hexdigest(),
+        "reference_v02_anchor_sha256": hashlib.sha256(versioned_anchor.read_bytes()).hexdigest(),
+        "reference_u1r2_anchor_sha256": hashlib.sha256(u1r2_anchor.read_bytes()).hexdigest(),
     }
 
 
