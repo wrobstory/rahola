@@ -621,6 +621,15 @@ edges remain fixed on test data.
    causal left-rectangle integral: each emission applies until the next emission or exposure end;
    exposure before the first valid emission contributes zero.
 
+The reliability diagram converts each trajectory's integrated rate to capsize probability with
+`1 - exp(-integrated rate)`. U1b smooths capsize times with a Gaussian kernel whose standard
+deviation is 7.5 configured natural periods. Tracking lag maximizes mean-centered cross-correlation
+over ±30 natural periods; positive lag means the estimator trails the empirical hazard. Bias is
+the mean estimated rate minus mean empirical hazard on their common grid. Step settling requires
+the ensemble estimate to enter and remain within 10% of the post-step hazard. U1c uses D1's
+calibration-selected 90%-sensitivity target, three-window debounce and refractory rules, 50-period
+outcome horizon, and five-period ambiguity buffer.
+
 The primary estimator is a known-configuration method: it observes dimensional roll and roll rate
 and uses the configured restoring model, but no wave, encounter, future-forcing, or reserve-block
 information. The implementation follows the paper's ROM decomposition and exponential-tail
