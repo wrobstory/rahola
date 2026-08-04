@@ -160,6 +160,37 @@ U1R2_KILL_CRITERION = (
     "as the result and stop tuning."
 )
 
+# H1 controls frozen before materializing the fresh H1 TEST slices.
+H1_CONDITIONAL_BINS = 10
+H1_RMS_WINDOW_S = 1_800.0
+H1_RMS_TERCILES = 3
+H1_CAMPAIGN_CAPTURE_TARGET = 5
+H1_EXPECTED_CAPSIZE_FLOOR = 30.0
+H1_CALIBRATION_SUCCESS = (
+    "the offline-calibrated hybrid is calibrated on fresh TEST campaigns under the "
+    "predeclared 5-of-6 criterion"
+)
+H1_CALIBRATION_FAILURE = (
+    "the offline-calibrated hybrid is not calibrated on fresh TEST campaigns under the "
+    "predeclared 5-of-6 criterion"
+)
+H1_VALUE_ADDED_FAILURE = (
+    "crossing-severity information adds nothing beyond the crossing rate itself under "
+    "offline calibration"
+)
+H1_VALUE_ADDED_SUCCESS = (
+    "crossing-severity information adds value beyond the crossing rate itself under "
+    "offline calibration"
+)
+H1_TRANSFER_SUCCESS = (
+    "the stationary-only offline conditional transfers across severity to all three "
+    "rare-event campaigns"
+)
+H1_TRANSFER_FAILURE = (
+    "the stationary-only offline conditional does not transfer across severity to all three "
+    "rare-event campaigns"
+)
+
 # Disjoint 100k-wide ranges prevent phase reuse across statistical roles.
 SEED_BLOCK_SIZE = 100_000
 

@@ -187,3 +187,26 @@ The new campaign names append `_u1r2` to the base names. The tracked
 | `biased_evaluation_u1r2` | 105 / 5,000 | 2.100% | `a28439eb18d7` |
 
 Neither reserve block was opened or generated.
+
+## H1 fresh TEST slices — predeclared 2026-08-04
+
+H1 uses 7,900 new trajectories in `data/h1/`. Before H1, the union of ordinary TEST intervals
+anchored by v0.1, v0.2, and U1-r2 occupies 56,000 of 100,000 seeds, leaving 44,000 untouched. The
+six H1 slices consume offsets `[92000, 99900)`, leaving 36,100 ordinary TEST seeds untouched after
+H1. A repository check compares these ranges with every existing manifest before generation and
+refuses an overlap or overwrite.
+
+The power floor uses the measured all-split capsize fractions in this file. Every campaign expects
+at least 30 realized capsizes without using either reserve block.
+
+| Base campaign | Count | Measured fraction | Expected capsizes | TEST offset | Absolute seed range |
+| --- | ---: | ---: | ---: | ---: | --- |
+| `softening_stationary` | 500 | 8.650% | 43.25 | 92,000 | `[292000, 292500)` |
+| `parametric_stationary` | 500 | 8.450% | 42.25 | 92,500 | `[292500, 293000)` |
+| `biased_stationary` | 500 | 13.300% | 66.50 | 93,000 | `[293000, 293500)` |
+| `softening_evaluation` | 1,500 | 2.000% | 30.00 | 93,500 | `[293500, 295000)` |
+| `parametric_evaluation` | 3,200 | 0.950% | 30.40 | 95,000 | `[295000, 298200)` |
+| `biased_evaluation` | 1,700 | 1.867% | 31.74 | 98,200 | `[298200, 299900)` |
+
+The generated names append `_h1`. `reference_checksums_h1.json` will anchor their manifests after
+the one-shot materialization. Neither reserve block is eligible.

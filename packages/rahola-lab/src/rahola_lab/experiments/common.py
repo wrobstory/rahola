@@ -315,6 +315,7 @@ def _current_provenance() -> dict[str, object]:
     )
     versioned_anchor = anchor.with_name("reference_checksums_v02.json")
     u1r2_anchor = anchor.with_name("reference_checksums_u1r2.json")
+    h1_anchor = anchor.with_name("reference_checksums_h1.json")
     digest = hashlib.sha256()
     source_roots = (
         repository_root / "src",
@@ -347,6 +348,7 @@ def _current_provenance() -> dict[str, object]:
         "reference_anchor_sha256": hashlib.sha256(anchor.read_bytes()).hexdigest(),
         "reference_v02_anchor_sha256": hashlib.sha256(versioned_anchor.read_bytes()).hexdigest(),
         "reference_u1r2_anchor_sha256": hashlib.sha256(u1r2_anchor.read_bytes()).hexdigest(),
+        "reference_h1_anchor_sha256": hashlib.sha256(h1_anchor.read_bytes()).hexdigest(),
     }
 
 

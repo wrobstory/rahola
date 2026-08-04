@@ -21,6 +21,9 @@ _REFERENCE_CHECKSUMS.update(
     json.loads(Path(__file__).with_name("reference_checksums_v02.json").read_text(encoding="utf-8"))
 )
 _REFERENCE_CHECKSUMS.update(
+    json.loads(Path(__file__).with_name("reference_checksums_h1.json").read_text(encoding="utf-8"))
+)
+_REFERENCE_CHECKSUMS.update(
     json.loads(
         Path(__file__).with_name("reference_checksums_u1r2.json").read_text(encoding="utf-8")
     )

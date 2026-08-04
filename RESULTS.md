@@ -747,6 +747,7 @@ on the calibration-selected controls.
 | --- | :---: | :---: | :---: | --- |
 | `lambda_hat` U1 primary | yes, causal | yes, true restoring model | no | conditional capsize rate with interval |
 | `lambda_hat` U1e | yes, causal | yes, except online stiffness multiplier | no | ramp sensitivity diagnostic |
+| H1 hybrid | yes, causal | yes, true restoring model plus offline design-stage calibration | no | offline conditional × onboard crossing rate plus observability intercept |
 
 ### Departures and judgments
 
@@ -990,3 +991,107 @@ also failed: softening did not separate from the prior-dominated families on cou
 The `_u1r2` artifacts and `results/provenance_manifest_u1r2.json` bind the five one-shot outputs to
 the source digest, all three reference anchors, and exact U1a upstream dependencies. Neither
 reserve block was read. No r1 artifact, paper draft, or explainer was modified.
+
+# Experiment H1 addendum — hybrid offline conditional × onboard crossing rate
+
+H1 extends the U1 record and supersedes nothing. U1-r2's online-tail kill stands. H1 tests only
+whether an offline design-stage conditional transfers when the onboard estimator supplies the
+measured declustered crossing rate.
+
+## 2026-08-04 predeclarations
+
+All design work and offline fitting use train and calibration blocks. No H1 TEST trajectory exists
+at this point in history.
+
+### C1 — terminal partition and storage observability
+
+The chainwise cluster and decorrelation rules remain those of U1 and Belenky et al. Section 4.3.
+A capsize is **heralded** when it occurs before the next retained crossing on either side and within
+one decorrelation time of the cluster's last raw crossing. That retained cluster alone receives a
+terminal label. Every other capsize is **unheralded**. The two channels must be exhaustive and
+exclusive; the implementation asserts the partition.
+
+This amendment follows a fit-data diagnostic. Biased-stationary train contained 12 unheralded
+capsizes, and calibration contained 6. All 18 occurred on the weak negative side. In every case,
+the last valid 2-Hz sample remained inside the side's GZ-max threshold and capsize followed 0.3 or
+0.4 seconds later, within one 0.5-second output interval. Ten train and three calibration cases had
+no recorded cluster; the other five retained only a stale cluster outside one decorrelation time.
+This exact signature identifies an absorbing-storage observability gap.
+
+No crossing or severity is fabricated. The decorrelation condition remains unchanged. H1 fits the
+crossing conditional from the observed clusters and heralded terminal labels. Separately, it fits
+the family-specific offline intercept `lambda_0` as unheralded capsizes per exposure hour, with a
+95% Garwood Poisson interval, from the same data as each conditional variant.
+
+### C2 — offline conditionals
+
+For each family, H1 fits `P(terminal | crossing, u)` as a monotone-nondecreasing isotonic curve.
+Ten equal-frequency severity bins, with duplicate edges merged, define the fit and 95% Wilson
+bands. Weighted pool-adjacent-violators fits the bin proportions and their lower and upper bands.
+The variants form a fixed hierarchy:
+
+1. **Primary:** stationary train plus stationary calibration only. This is the hard severity-
+   transfer claim and the only variant eligible for the headline verdicts.
+2. **Secondary:** primary data plus rare-event evaluation calibration. This is a pooled-severity
+   sensitivity.
+3. **Tertiary:** secondary data plus one causal motion covariate. Trailing 30-minute roll RMS at the
+   retained crossing is split at family-specific fit-data terciles, and one isotonic curve is fit
+   per tercile. Records shorter than 30 minutes use all available causal history.
+
+The conditional contains no online tail estimate.
+
+### C3 — hybrid rate and uncertainty
+
+The onboard estimate is
+
+`lambda_hat(t) = sum_j P_hat_offline(terminal | u_j) / exposure(t) + lambda_0`,
+
+where `j` spans the full-causal-history retained clusters available at `t`; rates are converted to
+events per hour. This equals declustered crossing rate times the retained crossings' mean offline
+conditional, plus the offline observability intercept. It emits from `t=0` every 10 seconds and
+uses the r2 causal left-rectangle and absorbing-event accounting
+`sum_i(1 - exp(-integrated lambda_i))`.
+
+Every 60 seconds, 512 parametric draws with seed 20,260,804 draw Poisson counts for each observed
+conditional bin. A split-normal draw whose 2.5% and 97.5% points match that bin's Wilson limits
+supplies the conditional probability. The same construction composes the offline intercept's
+Garwood limits. Draws carry forward between interval updates. This is a fixed numerical
+composition of measured-count and offline-fit uncertainty, not an online tail model.
+
+### C4 — comparators and reliability
+
+The primary hybrid is compared with two per-family isotonic maps fitted on the primary's stationary
+train+calibration diet: declustered full-history crossing rate to realized capsize rate, and mean
+causal full-history rolling variance to realized capsize rate. The rate-only map directly absorbs
+unheralded events; it receives no separate intercept. Comparator campaign intervals use the frozen
+1,000-replicate trajectory bootstrap. All methods use absorbing-event count contributions.
+
+Five equal-frequency rate bins fitted separately for each method on the primary fit data freeze the
+reliability edges. H1 reports bin-count-weighted reliability MAE and one diagram for all three
+methods.
+
+### H1a fresh slices and verdicts
+
+The six `_h1` slices and their expected-capsize power calculation are frozen in `DATA.md`. They use
+7,900 seeds in ordinary TEST offsets `[92000, 99900)`. All six meet the expected-realized-capsize
+floor of 30; no campaign reduction is needed.
+
+The three verdicts are frozen verbatim:
+
+1. Calibration succeeds at five or more campaign captures: “the offline-calibrated hybrid is
+   calibrated on fresh TEST campaigns under the predeclared 5-of-6 criterion.” Otherwise: “the
+   offline-calibrated hybrid is not calibrated on fresh TEST campaigns under the predeclared
+   5-of-6 criterion.”
+2. The hybrid adds value only if it strictly exceeds the crossing-rate-only comparator's capture
+   count and has lower reliability MAE. Otherwise: “crossing-severity information adds nothing
+   beyond the crossing rate itself under offline calibration.” The positive alternative replaces
+   “adds nothing” with “adds value.”
+3. Severity transfer succeeds only if the primary conditional captures all three rare-event
+   campaigns: “the stationary-only offline conditional transfers across severity to all three
+   rare-event campaigns.” Otherwise: “the stationary-only offline conditional does not transfer
+   across severity to all three rare-event campaigns.”
+
+H1a will run once. It will report pooled, per-family, and per-severity captures for the primary
+hybrid and both comparators; secondary and tertiary sensitivity rows; fit and TEST unheralded
+fractions; all three exact verdicts; and a provenance manifest. No ramps, steps, detectors, MPM,
+wave inputs, future inputs, reserve data, or `rahola` core changes are in scope.
