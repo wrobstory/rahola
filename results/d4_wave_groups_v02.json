@@ -1,0 +1,74 @@
+{
+  "_artifact_sha256": "678f926ec92d28b66ea5b6eb5388bba270903732d6022f1df38b62b802625b98",
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "schema_version": 1,
+    "source_sha256": "9bc4a6bf0e18f7b94fa7e6afcdb78557ddfc02329085216c705fa6dca39db94a",
+    "upstream_artifacts": {}
+  },
+  "capsizes_preceded_by_group": {
+    "capsize_count": 1241,
+    "count": 1202,
+    "exact_capsize_event_interval": [
+      0.957287942031598,
+      0.9775593827775623
+    ],
+    "fraction": 0.9685737308622079
+  },
+  "definition": {
+    "evaluator_only": true,
+    "preceding_horizon_s": 200.0
+  },
+  "experiment": "D4_v02 selective danger-margin regeneration",
+  "interval_conditioning": "conditional on the calibration-frozen alarm policy",
+  "methods": {
+    "danger_margin": {
+      "false_episode_group_coincidence": {
+        "coincident_false_episodes": 14995,
+        "episode_level_binomial_interval_descriptive_only": [
+          0.8795444274578389,
+          0.8892273494383583
+        ],
+        "false_episode_count": 16954,
+        "fraction": 0.8844520467146396
+      },
+      "not_preceded_by_group": {
+        "capsize_count": 32,
+        "detected_capsize_count": 32,
+        "lead_time_quantiles_s": [
+          326.51,
+          328.6,
+          329.7900000000001
+        ],
+        "sensitivity": 1.0,
+        "sensitivity_exact_capsize_event_interval": [
+          0.8911188393206472,
+          1.0
+        ],
+        "sensitivity_trajectory_bootstrap_interval": [
+          1.0,
+          1.0
+        ]
+      },
+      "preceded_by_group": {
+        "capsize_count": 924,
+        "detected_capsize_count": 924,
+        "lead_time_quantiles_s": [
+          228.86,
+          328.4,
+          329.80000000000007
+        ],
+        "sensitivity": 1.0,
+        "sensitivity_exact_capsize_event_interval": [
+          0.996015664828751,
+          1.0
+        ],
+        "sensitivity_trajectory_bootstrap_interval": [
+          1.0,
+          1.0
+        ]
+      }
+    }
+  },
+  "supersedes": "methods.danger_margin in d4_wave_groups.json only"
+}
