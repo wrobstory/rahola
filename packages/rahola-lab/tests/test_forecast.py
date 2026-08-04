@@ -32,7 +32,7 @@ def _trajectory_dataset(*, capsized: bool = False) -> SimulationDataset:
         seeds=np.array([4], dtype=np.uint64),
         capsized=np.array([capsized]),
         t_capsize_s=np.array([cap_time]),
-        metadata=({},),
+        metadata=({"seed": 4},),
         config={"escape_angle_rad": 0.5, "negative_escape_angle_rad": None},
     )
 

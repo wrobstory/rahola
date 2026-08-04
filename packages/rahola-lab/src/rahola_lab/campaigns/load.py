@@ -10,8 +10,9 @@ import numpy as np
 import pyarrow as pa
 import pyarrow.parquet as pq
 
+from rahola.config import SimulationConfig
 from rahola.dataset import SimulationDataset
-from rahola_lab.constants import SeedBlock
+from rahola_lab.constants import SEED_BLOCK_START, SeedBlock
 from rahola_lab.evaluation.splits import ReserveBlockError, assert_seed_membership
 
 _REFERENCE_CHECKSUMS = json.loads(
@@ -52,6 +53,8 @@ def load_campaign_split(
 ) -> SimulationDataset:
     """Load an anchored reference split and verify every stored seed belongs to it."""
     selected = SeedBlock(block)
+    if limit is not None and limit < 1:
+        raise ValueError("limit must be positive")
     if selected in {SeedBlock.RESERVE, SeedBlock.RESERVE2}:
         raise ReserveBlockError(f"{selected} data may not be inspected by development paths")
     root = Path(campaign_dir)
@@ -66,6 +69,14 @@ def load_campaign_split(
         manifest_bytes = manifest_path.read_bytes()
     manifest = json.loads(manifest_bytes)
     records = manifest["splits"][str(selected)]
+    expected_total = int(records["count"])
+    declared_total = sum(int(chunk["rows"]) for chunk in records["chunks"])
+    if declared_total != expected_total:
+        raise ValueError(
+            f"split row-count mismatch: expected {expected_total}, chunks declare {declared_total}"
+        )
+    expected_loaded = expected_total if limit is None else min(limit, expected_total)
+    expected_config_hash = SimulationConfig.from_dict(manifest["simulation"]).config_hash
     seeds: list[int] = []
     capsized: list[bool] = []
     cap_times: list[float] = []
@@ -96,22 +107,34 @@ def load_campaign_split(
             for row in range(table.num_rows):
                 if limit is not None and len(seeds) >= limit:
                     break
+                row_time = np.asarray(payload["time_s"][row], dtype=np.float64)
+                if time_s is None:
+                    time_s = row_time
+                elif not np.array_equal(row_time, time_s):
+                    raise ValueError(f"time-vector mismatch for row {row} in {shard_path}")
+                row_metadata = json.loads(payload["metadata_json"][row])
+                if row_metadata.get("config_hash") != expected_config_hash:
+                    raise ValueError(f"metadata config hash mismatch for row {row} in {shard_path}")
                 seeds.append(payload["seed"][row])
                 capsized.append(payload["capsized"][row])
                 cap_times.append(payload["t_capsize_s"][row])
                 angle.append(payload["angle_rad"][row])
                 rate.append(payload["rate_rad_s"][row])
-                metadata.append(json.loads(payload["metadata_json"][row]))
-                if time_s is None:
-                    time_s = np.asarray(payload["time_s"][row], dtype=np.float64)
+                metadata.append(row_metadata)
             if limit is not None and len(seeds) >= limit:
                 break
         if limit is not None and len(seeds) >= limit:
             break
     if time_s is None:
         raise ValueError("campaign split contains no trajectories")
+    if len(seeds) != expected_loaded:
+        raise ValueError(f"loaded {len(seeds)} rows; expected {expected_loaded}")
     seed_array = np.asarray(seeds, dtype=np.uint64)
     assert_seed_membership(seed_array, selected)
+    split_start = SEED_BLOCK_START[selected] + int(records["offset"])
+    split_stop = split_start + expected_total
+    if np.any(seed_array < split_start) or np.any(seed_array >= split_stop):
+        raise ValueError("dataset contains seeds outside the declared split range")
     return SimulationDataset(
         time_s=time_s,
         angle_rad=np.asarray(angle, dtype=np.float64),

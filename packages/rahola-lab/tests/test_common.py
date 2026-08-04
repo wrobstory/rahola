@@ -174,7 +174,7 @@ def test_trajectory_forecast_record_ends_at_last_scored_endpoint() -> None:
         seeds=np.array([1], dtype=np.uint64),
         capsized=np.array([False]),
         t_capsize_s=np.array([np.nan]),
-        metadata=({},),
+        metadata=({"seed": 1},),
         config={"escape_angle_rad": 0.5},
     )
     stream = trajectory_forecasts(

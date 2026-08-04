@@ -81,14 +81,21 @@ def test_detector_feature_pipeline_blocks_future_only_signal() -> None:
     angle[:, 480:] += np.where(labels[:, None] == 1, 20.0, -20.0)
     rate = rng.normal(size=(rows, samples))
     cap_times = np.where(labels == 1, 300.0, np.nan)
+    dataset_angle = angle.copy()
+    dataset_rate = rate.copy()
+    dataset_time = np.arange(samples, dtype=np.float64) * 0.5
+    for row, capsize_time in enumerate(cap_times):
+        if np.isfinite(capsize_time):
+            dataset_angle[row, dataset_time > capsize_time] = np.nan
+            dataset_rate[row, dataset_time > capsize_time] = np.nan
     dataset = SimulationDataset(
-        time_s=np.arange(samples, dtype=np.float64) * 0.5,
-        angle_rad=angle,
-        rate_rad_s=rate,
+        time_s=dataset_time,
+        angle_rad=dataset_angle,
+        rate_rad_s=dataset_rate,
         seeds=np.arange(rows, dtype=np.uint64),
         capsized=np.isfinite(cap_times),
         t_capsize_s=cap_times,
-        metadata=tuple({"row": row} for row in range(rows)),
+        metadata=tuple({"row": row, "seed": row} for row in range(rows)),
         config={"natural_period_s": 4.0, "family": "softening"},
     )
     windows = extract_detector_windows(dataset, stride_s=500.0, max_windows_per_trajectory=1)
@@ -111,7 +118,7 @@ def test_detector_windows_drop_censored_negatives_but_allow_inference_features()
         seeds=np.array([1], dtype=np.uint64),
         capsized=np.array([False]),
         t_capsize_s=np.array([np.nan]),
-        metadata=({},),
+        metadata=({"seed": 1},),
         config={"natural_period_s": 1.0, "family": "softening"},
     )
     supervised = extract_detector_windows(dataset, stride_s=1.0)
@@ -123,10 +130,14 @@ def test_detector_windows_drop_censored_negatives_but_allow_inference_features()
     assert np.any(late)
     assert np.all(inference.labels == -1)
 
+    capsizing_angle = dataset.angle_rad.copy()
+    capsizing_rate = dataset.rate_rad_s.copy()
+    capsizing_angle[:, dataset.time_s > 100.0] = np.nan
+    capsizing_rate[:, dataset.time_s > 100.0] = np.nan
     capsizing = SimulationDataset(
         time_s=dataset.time_s,
-        angle_rad=dataset.angle_rad,
-        rate_rad_s=dataset.rate_rad_s,
+        angle_rad=capsizing_angle,
+        rate_rad_s=capsizing_rate,
         seeds=dataset.seeds,
         capsized=np.array([True]),
         t_capsize_s=np.array([100.0]),

@@ -9,14 +9,21 @@ from rahola.windowing import CausalTransformer, WindowConfig, binary_auc, make_w
 
 def _dataset(angle: np.ndarray, cap_times: np.ndarray) -> SimulationDataset:
     rows, samples = angle.shape
+    angle = angle.copy()
+    rate = np.zeros_like(angle)
+    time_s = np.arange(samples, dtype=np.float64)
+    for row, capsize_time in enumerate(cap_times):
+        if np.isfinite(capsize_time):
+            angle[row, time_s > capsize_time] = np.nan
+            rate[row, time_s > capsize_time] = np.nan
     return SimulationDataset(
-        time_s=np.arange(samples, dtype=np.float64),
+        time_s=time_s,
         angle_rad=angle,
-        rate_rad_s=np.zeros_like(angle),
+        rate_rad_s=rate,
         seeds=np.arange(rows, dtype=np.uint64),
         capsized=np.isfinite(cap_times),
         t_capsize_s=cap_times,
-        metadata=tuple({"row": row} for row in range(rows)),
+        metadata=tuple({"row": row, "seed": row} for row in range(rows)),
         config={"natural_period_s": 2.0},
     )
 
