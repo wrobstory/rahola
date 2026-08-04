@@ -101,3 +101,37 @@ def test_future_only_changes_do_not_change_earlier_rate_emissions() -> None:
     )
     expected = tuple(emission for emission in complete.emissions if emission.time_s <= 300.0)
     assert truncated.emissions == expected
+
+
+def test_prior_from_start_emits_and_intervals_a_zero_crossing_stream() -> None:
+    fit = _fit()
+    time = np.arange(0.0, 61.0)
+    angle = np.zeros_like(time)
+    rate = np.zeros_like(time)
+    trajectory = estimate_rate_trajectory(
+        time,
+        angle,
+        rate,
+        fit,
+        prior=GammaRatePrior.from_mean(
+            4.0,
+            strength=10.0,
+            threshold_w=0.75,
+            exceedance_probability=0.25,
+        ),
+        config=SplitTimeConfig(
+            tail_quantile=0.75,
+            trailing_window_s=None,
+            emission_cadence_s=10.0,
+            interval_cadence_s=60.0,
+            emission_policy="prior_from_start",
+        ),
+    )
+    assert [emission.time_s for emission in trajectory.emissions] == list(
+        np.arange(0.0, 61.0, 10.0)
+    )
+    assert all(emission.rate_per_hour == 0.0 for emission in trajectory.emissions)
+    assert all("prior_dominated" in emission.flags for emission in trajectory.emissions)
+    assert trajectory.emissions[0].interval_upper_per_hour > 0.0
+    assert trajectory.integrated_count == 0.0
+    assert np.all(trajectory.integrated_count_draws > 0.0)

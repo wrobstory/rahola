@@ -167,13 +167,41 @@ def calibration_prior_means(
         by_family[campaign_family(name)].append(terminal_severities(dataset))
     return {
         str(quantile): {
-            family: exponential_rate_mle(
-                np.concatenate(parts), quantile=quantile
-            )
+            family: exponential_rate_mle(np.concatenate(parts), quantile=quantile)
             for family, parts in by_family.items()
         }
         for quantile in quantiles
     }
+
+
+def calibration_tail_priors(
+    datasets: dict[str, SimulationDataset], quantiles: tuple[float, ...]
+) -> dict[str, dict[str, dict[str, float]]]:
+    """Fit pooled family thresholds and exponential-rate prior means."""
+    by_family: dict[str, list[NDArray[np.float64]]] = {
+        "softening": [],
+        "parametric": [],
+        "biased": [],
+    }
+    for name, dataset in datasets.items():
+        by_family[campaign_family(name)].append(terminal_severities(dataset))
+    output: dict[str, dict[str, dict[str, float]]] = {}
+    for quantile in quantiles:
+        family_rows = {}
+        for family, parts in by_family.items():
+            values = np.concatenate(parts)
+            threshold = min(
+                float(np.quantile(values, quantile)),
+                float(np.nextafter(1.0, -np.inf)),
+            )
+            family_rows[family] = {
+                "mean_rate": exponential_rate_mle(values, quantile=quantile),
+                "threshold_w": threshold,
+                "exceedance_probability": float(np.mean(values > threshold)),
+                "retained_crossings": len(values),
+            }
+        output[str(quantile)] = family_rows
+    return output
 
 
 def score_dataset(
@@ -184,9 +212,16 @@ def score_dataset(
     config: SplitTimeConfig,
     fit: DangerMarginFit | None = None,
     critical_rate_scales: list[dict[int, NDArray[np.float64]]] | None = None,
+    prior_threshold_w: float | None = None,
+    prior_exceedance_probability: float | None = None,
 ) -> list[ScoredRateTrajectory]:
     selected_fit = fit or restoring_fit(dataset)
-    prior = GammaRatePrior.from_mean(prior_mean, prior_strength)
+    prior = GammaRatePrior.from_mean(
+        prior_mean,
+        prior_strength,
+        threshold_w=prior_threshold_w,
+        exceedance_probability=prior_exceedance_probability,
+    )
     scored: list[ScoredRateTrajectory] = []
     for index in range(dataset.batch_size):
         trajectory_config = replace(
@@ -221,28 +256,27 @@ def score_dataset(
     return scored
 
 
-def campaign_count_summary(scores: list[ScoredRateTrajectory]) -> dict[str, object]:
-    predicted = float(sum(item.rate.integrated_count for item in scores))
-    draw_sum = np.sum(
-        np.stack([item.rate.integrated_count_draws for item in scores]), axis=0
+def campaign_count_summary(
+    scores: list[ScoredRateTrajectory], *, absorbing_events: bool = False
+) -> dict[str, object]:
+    point_contributions = np.asarray(
+        [item.rate.integrated_count for item in scores], dtype=np.float64
     )
+    draw_contributions = np.stack([item.rate.integrated_count_draws for item in scores])
+    if absorbing_events:
+        point_contributions = -np.expm1(-point_contributions)
+        draw_contributions = -np.expm1(-draw_contributions)
+    predicted = float(np.sum(point_contributions))
+    draw_sum = np.sum(draw_contributions, axis=0)
     lower, upper = (float(value) for value in np.quantile(draw_sum, [0.025, 0.975]))
     realized = sum(item.capsized for item in scores)
     emissions = sum(len(item.rate.emissions) for item in scores)
-    flagged = sum(
-        bool(emission.flags)
-        for item in scores
-        for emission in item.rate.emissions
-    )
+    flagged = sum(bool(emission.flags) for item in scores for emission in item.rate.emissions)
     side_positive = sum(
-        emission.positive_crossings
-        for item in scores
-        for emission in item.rate.emissions[-1:]
+        emission.positive_crossings for item in scores for emission in item.rate.emissions[-1:]
     )
     side_negative = sum(
-        emission.negative_crossings
-        for item in scores
-        for emission in item.rate.emissions[-1:]
+        emission.negative_crossings for item in scores for emission in item.rate.emissions[-1:]
     )
     return {
         "trajectory_count": len(scores),
@@ -256,6 +290,7 @@ def campaign_count_summary(scores: list[ScoredRateTrajectory]) -> dict[str, obje
             "positive": side_positive,
             "negative": side_negative,
         },
+        "event_accounting": "absorbing_probability" if absorbing_events else "rate_integral",
     }
 
 
@@ -280,9 +315,7 @@ def reliability_summary(
     scores: list[ScoredRateTrajectory], edges: NDArray[np.floating]
 ) -> dict[str, object]:
     edge_values = np.asarray(edges, dtype=np.float64)
-    average_rates = np.asarray(
-        [item.average_rate_per_hour for item in scores], dtype=np.float64
-    )
+    average_rates = np.asarray([item.average_rate_per_hour for item in scores], dtype=np.float64)
     assignments = np.clip(np.digitize(average_rates, edge_values[1:-1]), 0, len(edge_values) - 2)
     rows: list[dict[str, object]] = []
     weighted_error = 0.0
@@ -373,15 +406,15 @@ def ensemble_rate_and_hazard(
         dtype=np.float64,
     )
     if len(capsize_times):
-        density = np.exp(
-            -0.5 * ((grid[:, None] - capsize_times[None, :]) / bandwidth_s) ** 2
-        ).sum(axis=1) / normalization
+        density = (
+            np.exp(-0.5 * ((grid[:, None] - capsize_times[None, :]) / bandwidth_s) ** 2).sum(axis=1)
+            / normalization
+        )
     else:
         density = np.zeros(len(grid), dtype=np.float64)
     at_risk = np.sum(
         grid[:, None]
-        <= np.asarray([item.exposure_end_s for item in scores], dtype=np.float64)[None, :]
-        + 1e-9,
+        <= np.asarray([item.exposure_end_s for item in scores], dtype=np.float64)[None, :] + 1e-9,
         axis=1,
     )
     hazard = np.divide(
@@ -399,9 +432,7 @@ def tracking_statistics(
     *,
     natural_period_s: float,
 ) -> NDArray[np.float64]:
-    estimated, hazard = ensemble_rate_and_hazard(
-        scores, grid_s, natural_period_s=natural_period_s
-    )
+    estimated, hazard = ensemble_rate_and_hazard(scores, grid_s, natural_period_s=natural_period_s)
     grid = np.asarray(grid_s, dtype=np.float64)
     cadence = float(np.median(np.diff(grid)))
     maximum = round(U1_TRACKING_MAX_LAG_PERIODS * natural_period_s / cadence)
@@ -437,9 +468,7 @@ def tracking_summary(
     lag_estimable = bool(np.std(estimated_path) > 0.0 and np.std(hazard_path) > 0.0)
     interval = trajectory_block_bootstrap(
         scores,
-        lambda sample: tracking_statistics(
-            sample, grid_s, natural_period_s=natural_period_s
-        ),
+        lambda sample: tracking_statistics(sample, grid_s, natural_period_s=natural_period_s),
         replicates=TRAJECTORY_BOOTSTRAP_REPLICATES,
         seed=TRAJECTORY_BOOTSTRAP_SEED,
     )

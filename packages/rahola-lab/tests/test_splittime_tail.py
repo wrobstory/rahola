@@ -39,3 +39,21 @@ def test_tail_threshold_is_clipped_below_normalized_critical_level() -> None:
     )
     assert estimate.threshold_clipped
     assert estimate.threshold_w < 1.0
+
+
+def test_empty_tail_uses_pooled_fixed_threshold_prior() -> None:
+    prior = GammaRatePrior.from_mean(
+        4.0,
+        strength=10.0,
+        threshold_w=0.75,
+        exceedance_probability=0.25,
+    )
+    estimate = estimate_exponential_tail(
+        np.empty(0),
+        quantile=0.75,
+        prior=prior,
+    )
+    assert estimate.crossing_count == 0
+    assert estimate.exceedance_count == 0
+    assert estimate.posterior_mean_rate == pytest.approx(prior.mean_rate)
+    assert estimate.critical_probability > 0.0

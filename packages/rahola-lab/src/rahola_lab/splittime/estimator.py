@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from dataclasses import dataclass
+from typing import Literal
 
 import numpy as np
 from numpy.typing import NDArray
@@ -40,6 +41,7 @@ class SplitTimeConfig:
     bootstrap_seed: int = U1_PARAMETRIC_BOOTSTRAP_SEED
     minimum_exceedances: int = U1_MIN_EXCEEDANCES
     decorrelation_significance: float = U1_DECORRELATION_SIGNIFICANCE
+    emission_policy: Literal["gated", "prior_from_start"] = "gated"
 
     def __post_init__(self) -> None:
         if not 0.0 < self.tail_quantile < 1.0:
@@ -52,6 +54,8 @@ class SplitTimeConfig:
             raise ValueError("parametric bootstrap requires at least 500 draws")
         if self.minimum_exceedances < 1:
             raise ValueError("minimum exceedances must be positive")
+        if self.emission_policy not in {"gated", "prior_from_start"}:
+            raise ValueError("unknown split-time emission policy")
 
 
 @dataclass(frozen=True)
@@ -99,10 +103,12 @@ def _finite_stop(angle: NDArray[np.float64], rate: NDArray[np.float64]) -> int:
 def _tail_for_crossings(
     crossings: tuple[Crossing, ...], config: SplitTimeConfig, prior: GammaRatePrior
 ) -> ExponentialTailEstimate | None:
-    if not crossings:
+    if not crossings and config.emission_policy == "gated":
         return None
     values = np.asarray([event.severity_u for event in crossings], dtype=np.float64)
     estimate = estimate_exponential_tail(values, quantile=config.tail_quantile, prior=prior)
+    if config.emission_policy == "prior_from_start":
+        return estimate
     return estimate if estimate.exceedance_count >= config.minimum_exceedances else None
 
 
@@ -112,16 +118,25 @@ def _bootstrap_rate(
     *,
     draws: int,
     rng: np.random.Generator,
+    prior_from_start: bool,
 ) -> NDArray[np.float64]:
-    count_star = rng.poisson(tail.crossing_count, size=draws)
-    exceedance_fraction = tail.exceedance_count / tail.crossing_count
-    exceedance_star = rng.binomial(count_star, exceedance_fraction)
     theta_star = rng.gamma(
         shape=tail.posterior_shape,
         scale=1.0 / tail.posterior_rate,
         size=draws,
     )
     conditional = np.exp(-theta_star * (1.0 - tail.threshold_w))
+    if prior_from_start:
+        crossing_rate_star = rng.gamma(
+            shape=tail.crossing_count + 0.5,
+            scale=3_600.0 / exposure_s,
+            size=draws,
+        )
+        exceedance_fraction = tail.critical_probability / tail.predictive_exceedance
+        return crossing_rate_star * exceedance_fraction * conditional
+    count_star = rng.poisson(tail.crossing_count, size=draws)
+    exceedance_fraction = tail.exceedance_count / tail.crossing_count
+    exceedance_star = rng.binomial(count_star, exceedance_fraction)
     return exceedance_star / exposure_s * conditional * 3_600.0
 
 
@@ -155,8 +170,13 @@ def estimate_rate_trajectory(
         fit,
         critical_rate_scales=critical_rate_scales,
     )
+    first_emission_s = (
+        float(time[0])
+        if config.emission_policy == "prior_from_start"
+        else float(time[0]) + config.emission_cadence_s
+    )
     emission_times = np.arange(
-        float(time[0]) + config.emission_cadence_s,
+        first_emission_s,
         finite_end_s + 0.5 * config.emission_cadence_s,
         config.emission_cadence_s,
     )
@@ -165,13 +185,11 @@ def estimate_rate_trajectory(
     emission_draws: list[NDArray[np.float64]] = []
     last_interval_time = -np.inf
     current_draws: NDArray[np.float64] | None = None
-    minimum_raw_crossings = int(
-        np.ceil(config.minimum_exceedances / (1.0 - config.tail_quantile))
-    )
+    minimum_raw_crossings = int(np.ceil(config.minimum_exceedances / (1.0 - config.tail_quantile)))
 
     for emission_time in emission_times:
         end = int(np.searchsorted(time[:stop], emission_time, side="right"))
-        if end < 3:
+        if end < 3 and config.emission_policy == "gated":
             continue
         configured_start_s = (
             float(time[0])
@@ -179,7 +197,7 @@ def estimate_rate_trajectory(
             else max(float(time[0]), emission_time - config.trailing_window_s)
         )
         observed = tuple(event for event in all_crossings if event.time_s <= emission_time)
-        if len(observed) < minimum_raw_crossings:
+        if config.emission_policy == "gated" and len(observed) < minimum_raw_crossings:
             continue
 
         def retained_from(
@@ -190,21 +208,21 @@ def estimate_rate_trajectory(
         ) -> tuple[tuple[Crossing, ...], float]:
             start = int(np.searchsorted(time[:current_end], start_s, side="left"))
             history = angle[start:current_end]
-            decorrelation = roll_decorrelation_time(
-                history,
-                sample_interval_s,
-                significance_level=config.decorrelation_significance,
+            decorrelation = (
+                sample_interval_s
+                if len(history) < 3
+                else roll_decorrelation_time(
+                    history,
+                    sample_interval_s,
+                    significance_level=config.decorrelation_significance,
+                )
             )
-            candidates = tuple(
-                event for event in current_crossings if start_s <= event.time_s
-            )
+            candidates = tuple(event for event in current_crossings if start_s <= event.time_s)
             return decluster_crossings(candidates, decorrelation), decorrelation
 
         flags: list[str] = []
         start_s = configured_start_s
-        window_crossing_count = sum(
-            configured_start_s <= event.time_s for event in observed
-        )
+        window_crossing_count = sum(configured_start_s <= event.time_s for event in observed)
         if window_crossing_count < minimum_raw_crossings and configured_start_s > float(time[0]):
             start_s = float(time[0])
             flags.append("full_history_tail_fallback")
@@ -218,14 +236,14 @@ def estimate_rate_trajectory(
                 flags.append("full_history_tail_fallback")
         if tail is None:
             continue
+        if tail.exceedance_count < 3:
+            flags.append("prior_dominated")
         if tail.threshold_clipped:
             flags.append("tail_threshold_clipped")
-        exposure_s = emission_time - start_s
+        exposure_s = max(emission_time - start_s, sample_interval_s)
         if exposure_s <= 0.0:
             continue
-        rate_per_hour = (
-            tail.crossing_count / exposure_s * tail.critical_probability * 3_600.0
-        )
+        rate_per_hour = tail.crossing_count / exposure_s * tail.critical_probability * 3_600.0
         if (
             current_draws is None
             or emission_time - last_interval_time >= config.interval_cadence_s - 1e-9
@@ -235,6 +253,7 @@ def estimate_rate_trajectory(
                 exposure_s,
                 draws=config.bootstrap_draws,
                 rng=rng,
+                prior_from_start=config.emission_policy == "prior_from_start",
             )
             last_interval_time = emission_time
         lower, upper = np.quantile(current_draws, [0.025, 0.975])
