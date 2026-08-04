@@ -1,0 +1,53 @@
+{
+  "_artifact_sha256": "9db09cc048be717b3e701c114b9602af27844cd307874fb3bfde0c821b427eab",
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "reference_u1r2_anchor_sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+    "reference_v02_anchor_sha256": "96fdcc7a93cd4b0a760750320cf41c7f1ce15d52708b2bfc8791c3b3a9d10dfd",
+    "schema_version": 1,
+    "source_sha256": "f12f8940e11d6adbae5bf977b94bee080221b6a6ff53925a1438b9661eb2d032",
+    "upstream_artifacts": {}
+  },
+  "experiment": "U1-r2 calibration-only preflight",
+  "numpy_boolean_serialization_probe": true,
+  "prior_from_start": {
+    "all_first_emissions_at_t0": true,
+    "prior_dominated_flag_observed": true,
+    "trajectory_count": 1000
+  },
+  "test_data_accessed": false,
+  "u1c_calibration_operating_point": {
+    "alarm_opportunity_count": 71873,
+    "capsize_count": 15,
+    "detected_capsize_count": 15,
+    "exposure_hours": 187.74444444444444,
+    "false_episode_count": 4270,
+    "false_episodes_per_hour": 22.743682310469314,
+    "false_episodes_per_hour_trajectory_bootstrap_interval": [
+      22.680494267426013,
+      22.804793134184756
+    ],
+    "interval_conditioning": "conditional on the calibration-frozen alarm policy",
+    "lead_time_quantiles_s": [
+      340.0,
+      340.0,
+      340.0
+    ],
+    "sensitivity": 1.0,
+    "sensitivity_exact_capsize_event_interval": [
+      0.781980639089466,
+      1.0
+    ],
+    "sensitivity_trajectory_bootstrap_interval": [
+      1.0,
+      1.0
+    ],
+    "threshold": -1.7976931348623157e+308,
+    "trajectory_bootstrap_replicates": 1000,
+    "trajectory_bootstrap_seed": 20260804,
+    "trajectory_bootstrap_valid_replicates": [
+      1000,
+      1000
+    ]
+  }
+}
