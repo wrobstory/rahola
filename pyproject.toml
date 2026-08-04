@@ -29,7 +29,7 @@ rahola = "rahola.cli:main"
 packages = ["src/rahola"]
 
 [tool.pytest.ini_options]
-addopts = "-ra"
+addopts = "-ra --import-mode=importlib"
 markers = [
   "slow: full numerical physics validation",
   "performance: throughput benchmark not run by default",
