@@ -1,0 +1,1029 @@
+{
+  "_artifact_sha256": "05916acb694b29a1b669defdb30e09f63aef115f90824758e82c4b857243968f",
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "schema_version": 1,
+    "source_sha256": "47d9d42985103a90737d62a021d5571185716e11ffd472ee09d7743c95293de6",
+    "upstream_artifacts": {}
+  },
+  "cnn_survives_all_families": false,
+  "experiment": "D2_v02",
+  "material_fpr_reduction": 0.1,
+  "operating_point_policy": "Calibration-selected thresholds are frozen for test.",
+  "rotations": [
+    {
+      "calibration_operating_points": {
+        "classical_ews": {
+          "alarm_opportunity_count": 46301,
+          "capsize_count": 335,
+          "detected_capsize_count": 307,
+          "exposure_hours": 128.20916666666668,
+          "false_episode_count": 2526,
+          "false_episodes_per_hour": 19.702179381349485,
+          "lead_time_quantiles_s": [
+            86.96000000000002,
+            324.1,
+            329.6
+          ],
+          "sensitivity": 0.9164179104477612,
+          "sensitivity_exact_capsize_event_interval": [
+            0.8814661993126778,
+            0.9437425659504143
+          ],
+          "threshold": -0.3636363636363636
+        },
+        "cnn": {
+          "alarm_opportunity_count": 46301,
+          "capsize_count": 335,
+          "detected_capsize_count": 304,
+          "exposure_hours": 128.20916666666668,
+          "false_episode_count": 2258,
+          "false_episodes_per_hour": 17.611845226875353,
+          "lead_time_quantiles_s": [
+            92.04000000000003,
+            239.39999999999998,
+            328.30000000000007
+          ],
+          "sensitivity": 0.9074626865671642,
+          "sensitivity_exact_capsize_event_interval": [
+            0.8712241981558104,
+            0.9362576717544386
+          ],
+          "threshold": -0.14925171434879303
+        },
+        "cnn_cumulative_online": {
+          "alarm_opportunity_count": 46301,
+          "capsize_count": 335,
+          "detected_capsize_count": 306,
+          "exposure_hours": 128.20916666666668,
+          "false_episode_count": 2195,
+          "false_episodes_per_hour": 17.120460705487776,
+          "lead_time_quantiles_s": [
+            88.5,
+            249.15000000000003,
+            328.4
+          ],
+          "sensitivity": 0.9134328358208955,
+          "sensitivity_exact_capsize_event_interval": [
+            0.8780420551884172,
+            0.9412581868527963
+          ],
+          "threshold": -0.3775837779045105
+        },
+        "danger_margin": {
+          "alarm_opportunity_count": 46301,
+          "capsize_count": 335,
+          "detected_capsize_count": 335,
+          "exposure_hours": 128.20916666666668,
+          "false_episode_count": 2579,
+          "false_episodes_per_hour": 20.11556635965967,
+          "lead_time_quantiles_s": [
+            95.44000000000003,
+            328.0,
+            329.70000000000005
+          ],
+          "sensitivity": 1.0,
+          "sensitivity_exact_capsize_event_interval": [
+            0.9890488250686513,
+            1.0
+          ],
+          "threshold": -1.7976931348623157e+308
+        },
+        "galeazzi_glrt": {
+          "alarm_opportunity_count": 46301,
+          "capsize_count": 335,
+          "detected_capsize_count": 335,
+          "exposure_hours": 128.20916666666668,
+          "false_episode_count": 2579,
+          "false_episodes_per_hour": 20.11556635965967,
+          "lead_time_quantiles_s": [
+            95.44000000000003,
+            328.0,
+            329.70000000000005
+          ],
+          "sensitivity": 1.0,
+          "sensitivity_exact_capsize_event_interval": [
+            0.9890488250686513,
+            1.0
+          ],
+          "threshold": -1.7976931348623157e+308
+        },
+        "neighbor_2009": {
+          "alarm_opportunity_count": 46301,
+          "capsize_count": 335,
+          "detected_capsize_count": 335,
+          "exposure_hours": 128.20916666666668,
+          "false_episode_count": 2579,
+          "false_episodes_per_hour": 20.11556635965967,
+          "lead_time_quantiles_s": [
+            95.44000000000003,
+            328.0,
+            329.70000000000005
+          ],
+          "sensitivity": 1.0,
+          "sensitivity_exact_capsize_event_interval": [
+            0.9890488250686513,
+            1.0
+          ],
+          "threshold": -1.7976931348623157e+308
+        }
+      },
+      "cnn_materially_above_b1": false,
+      "cnn_relative_fpr_reduction_vs_b1": 0.007473569084943454,
+      "headline_at_calibration_selected_threshold": {
+        "classical_ews": {
+          "alarm_opportunity_count": 95174,
+          "capsize_count": 468,
+          "detected_capsize_count": 293,
+          "exposure_hours": 263.5448611111111,
+          "false_episode_count": 5486,
+          "false_episodes_per_hour": 20.816190370288002,
+          "false_episodes_per_hour_trajectory_bootstrap_interval": [
+            20.677966925316632,
+            20.951391637639926
+          ],
+          "interval_conditioning": "conditional on the calibration-frozen alarm policy",
+          "lead_time_quantiles_s": [
+            208.12000000000006,
+            328.1,
+            329.70000000000005
+          ],
+          "sensitivity": 0.6260683760683761,
+          "sensitivity_exact_capsize_event_interval": [
+            0.5804775037357366,
+            0.6700551795254942
+          ],
+          "sensitivity_trajectory_bootstrap_interval": [
+            0.5812879433379486,
+            0.6673778652843939
+          ],
+          "threshold": -0.3636363636363636,
+          "trajectory_bootstrap_replicates": 1000,
+          "trajectory_bootstrap_seed": 20260804,
+          "trajectory_bootstrap_valid_replicates": [
+            1000,
+            1000
+          ]
+        },
+        "cnn": {
+          "alarm_opportunity_count": 95174,
+          "capsize_count": 468,
+          "detected_capsize_count": 464,
+          "exposure_hours": 263.5448611111111,
+          "false_episode_count": 5445,
+          "false_episodes_per_hour": 20.66061913347032,
+          "false_episodes_per_hour_trajectory_bootstrap_interval": [
+            20.532761989136503,
+            20.785306550203835
+          ],
+          "interval_conditioning": "conditional on the calibration-frozen alarm policy",
+          "lead_time_quantiles_s": [
+            248.80000000000007,
+            327.20000000000005,
+            329.5
+          ],
+          "sensitivity": 0.9914529914529915,
+          "sensitivity_exact_capsize_event_interval": [
+            0.9782618230297951,
+            0.9976664585994064
+          ],
+          "sensitivity_trajectory_bootstrap_interval": [
+            0.982646420824295,
+            0.9979383560193907
+          ],
+          "threshold": -0.14925171434879303,
+          "trajectory_bootstrap_replicates": 1000,
+          "trajectory_bootstrap_seed": 20260804,
+          "trajectory_bootstrap_valid_replicates": [
+            1000,
+            1000
+          ]
+        },
+        "cnn_cumulative_online": {
+          "alarm_opportunity_count": 95174,
+          "capsize_count": 468,
+          "detected_capsize_count": 302,
+          "exposure_hours": 263.5448611111111,
+          "false_episode_count": 5410,
+          "false_episodes_per_hour": 20.52781441911376,
+          "false_episodes_per_hour_trajectory_bootstrap_interval": [
+            20.390885941240306,
+            20.659781561691283
+          ],
+          "interval_conditioning": "conditional on the calibration-frozen alarm policy",
+          "lead_time_quantiles_s": [
+            207.26000000000005,
+            327.75000000000006,
+            329.70000000000005
+          ],
+          "sensitivity": 0.6452991452991453,
+          "sensitivity_exact_capsize_event_interval": [
+            0.6000742739733607,
+            0.6886746233825207
+          ],
+          "sensitivity_trajectory_bootstrap_interval": [
+            0.6047007501630789,
+            0.6896718576195774
+          ],
+          "threshold": -0.3775837779045105,
+          "trajectory_bootstrap_replicates": 1000,
+          "trajectory_bootstrap_seed": 20260804,
+          "trajectory_bootstrap_valid_replicates": [
+            1000,
+            1000
+          ]
+        },
+        "danger_margin": {
+          "alarm_opportunity_count": 95174,
+          "capsize_count": 468,
+          "detected_capsize_count": 468,
+          "exposure_hours": 263.5448611111111,
+          "false_episode_count": 5489,
+          "false_episodes_per_hour": 20.827573631518565,
+          "false_episodes_per_hour_trajectory_bootstrap_interval": [
+            20.70771719131562,
+            20.942940651337732
+          ],
+          "interval_conditioning": "conditional on the calibration-frozen alarm policy",
+          "lead_time_quantiles_s": [
+            316.69,
+            328.1,
+            329.70000000000005
+          ],
+          "sensitivity": 1.0,
+          "sensitivity_exact_capsize_event_interval": [
+            0.9921487621895476,
+            1.0
+          ],
+          "sensitivity_trajectory_bootstrap_interval": [
+            1.0,
+            1.0
+          ],
+          "threshold": -1.7976931348623157e+308,
+          "trajectory_bootstrap_replicates": 1000,
+          "trajectory_bootstrap_seed": 20260804,
+          "trajectory_bootstrap_valid_replicates": [
+            1000,
+            1000
+          ]
+        },
+        "galeazzi_glrt": {
+          "alarm_opportunity_count": 95174,
+          "capsize_count": 468,
+          "detected_capsize_count": 468,
+          "exposure_hours": 263.5448611111111,
+          "false_episode_count": 5489,
+          "false_episodes_per_hour": 20.827573631518565,
+          "false_episodes_per_hour_trajectory_bootstrap_interval": [
+            20.70771719131562,
+            20.942940651337732
+          ],
+          "interval_conditioning": "conditional on the calibration-frozen alarm policy",
+          "lead_time_quantiles_s": [
+            316.69,
+            328.1,
+            329.70000000000005
+          ],
+          "sensitivity": 1.0,
+          "sensitivity_exact_capsize_event_interval": [
+            0.9921487621895476,
+            1.0
+          ],
+          "sensitivity_trajectory_bootstrap_interval": [
+            1.0,
+            1.0
+          ],
+          "threshold": -1.7976931348623157e+308,
+          "trajectory_bootstrap_replicates": 1000,
+          "trajectory_bootstrap_seed": 20260804,
+          "trajectory_bootstrap_valid_replicates": [
+            1000,
+            1000
+          ]
+        },
+        "neighbor_2009": {
+          "alarm_opportunity_count": 95174,
+          "capsize_count": 468,
+          "detected_capsize_count": 468,
+          "exposure_hours": 263.5448611111111,
+          "false_episode_count": 5489,
+          "false_episodes_per_hour": 20.827573631518565,
+          "false_episodes_per_hour_trajectory_bootstrap_interval": [
+            20.70771719131562,
+            20.942940651337732
+          ],
+          "interval_conditioning": "conditional on the calibration-frozen alarm policy",
+          "lead_time_quantiles_s": [
+            316.69,
+            328.1,
+            329.70000000000005
+          ],
+          "sensitivity": 1.0,
+          "sensitivity_exact_capsize_event_interval": [
+            0.9921487621895476,
+            1.0
+          ],
+          "sensitivity_trajectory_bootstrap_interval": [
+            1.0,
+            1.0
+          ],
+          "threshold": -1.7976931348623157e+308,
+          "trajectory_bootstrap_replicates": 1000,
+          "trajectory_bootstrap_seed": 20260804,
+          "trajectory_bootstrap_valid_replicates": [
+            1000,
+            1000
+          ]
+        }
+      },
+      "held_out_family": "softening",
+      "normalization_policy": {
+        "cnn_primary": "fixed_window_causal",
+        "cnn_secondary": "cumulative_online",
+        "physics_adjacent_primary": "physical"
+      },
+      "selected": {
+        "cnn_grid_index": 0,
+        "ews_fraction": 0.5,
+        "ews_statistic": "ac1",
+        "neighbor_radius": 0.2
+      }
+    },
+    {
+      "calibration_operating_points": {
+        "classical_ews": {
+          "alarm_opportunity_count": 46194,
+          "capsize_count": 409,
+          "detected_capsize_count": 409,
+          "exposure_hours": 127.91347222222223,
+          "false_episode_count": 2494,
+          "false_episodes_per_hour": 19.49755531354203,
+          "lead_time_quantiles_s": [
+            152.02000000000007,
+            327.9,
+            329.70000000000005
+          ],
+          "sensitivity": 1.0,
+          "sensitivity_exact_capsize_event_interval": [
+            0.9910212863964274,
+            1.0
+          ],
+          "threshold": -1.7976931348623157e+308
+        },
+        "cnn": {
+          "alarm_opportunity_count": 46194,
+          "capsize_count": 409,
+          "detected_capsize_count": 372,
+          "exposure_hours": 127.91347222222223,
+          "false_episode_count": 2023,
+          "false_episodes_per_hour": 15.815378668522666,
+          "lead_time_quantiles_s": [
+            172.79000000000002,
+            286.8,
+            328.7900000000001
+          ],
+          "sensitivity": 0.9095354523227384,
+          "sensitivity_exact_capsize_event_interval": [
+            0.8774635575197806,
+            0.9355042596960456
+          ],
+          "threshold": -0.8457348227500915
+        },
+        "cnn_cumulative_online": {
+          "alarm_opportunity_count": 46194,
+          "capsize_count": 409,
+          "detected_capsize_count": 370,
+          "exposure_hours": 127.91347222222223,
+          "false_episode_count": 1890,
+          "false_episodes_per_hour": 14.775613288931211,
+          "lead_time_quantiles_s": [
+            168.37,
+            316.85,
+            329.21000000000004
+          ],
+          "sensitivity": 0.9046454767726161,
+          "sensitivity_exact_capsize_event_interval": [
+            0.87195514391253,
+            0.9313128883477015
+          ],
+          "threshold": -0.7399137735366821
+        },
+        "danger_margin": {
+          "alarm_opportunity_count": 46194,
+          "capsize_count": 409,
+          "detected_capsize_count": 409,
+          "exposure_hours": 127.91347222222223,
+          "false_episode_count": 2494,
+          "false_episodes_per_hour": 19.49755531354203,
+          "lead_time_quantiles_s": [
+            152.02000000000007,
+            327.9,
+            329.70000000000005
+          ],
+          "sensitivity": 1.0,
+          "sensitivity_exact_capsize_event_interval": [
+            0.9910212863964274,
+            1.0
+          ],
+          "threshold": -1.7976931348623157e+308
+        },
+        "galeazzi_glrt": {
+          "alarm_opportunity_count": 46194,
+          "capsize_count": 409,
+          "detected_capsize_count": 409,
+          "exposure_hours": 127.91347222222223,
+          "false_episode_count": 2494,
+          "false_episodes_per_hour": 19.49755531354203,
+          "lead_time_quantiles_s": [
+            152.02000000000007,
+            327.9,
+            329.70000000000005
+          ],
+          "sensitivity": 1.0,
+          "sensitivity_exact_capsize_event_interval": [
+            0.9910212863964274,
+            1.0
+          ],
+          "threshold": -1.7976931348623157e+308
+        },
+        "neighbor_2009": {
+          "alarm_opportunity_count": 46194,
+          "capsize_count": 409,
+          "detected_capsize_count": 409,
+          "exposure_hours": 127.91347222222223,
+          "false_episode_count": 2494,
+          "false_episodes_per_hour": 19.49755531354203,
+          "lead_time_quantiles_s": [
+            152.02000000000007,
+            327.9,
+            329.70000000000005
+          ],
+          "sensitivity": 1.0,
+          "sensitivity_exact_capsize_event_interval": [
+            0.9910212863964274,
+            1.0
+          ],
+          "threshold": -1.7976931348623157e+308
+        }
+      },
+      "cnn_materially_above_b1": true,
+      "cnn_relative_fpr_reduction_vs_b1": 0.4234249912982945,
+      "headline_at_calibration_selected_threshold": {
+        "classical_ews": {
+          "alarm_opportunity_count": 95689,
+          "capsize_count": 240,
+          "detected_capsize_count": 240,
+          "exposure_hours": 264.9713888888889,
+          "false_episode_count": 5746,
+          "false_episodes_per_hour": 21.68536015943021,
+          "false_episodes_per_hour_trajectory_bootstrap_interval": [
+            21.577676525656262,
+            21.792521174623634
+          ],
+          "interval_conditioning": "conditional on the calibration-frozen alarm policy",
+          "lead_time_quantiles_s": [
+            256.96000000000004,
+            329.1,
+            329.80000000000007
+          ],
+          "sensitivity": 1.0,
+          "sensitivity_exact_capsize_event_interval": [
+            0.9847471895987213,
+            1.0
+          ],
+          "sensitivity_trajectory_bootstrap_interval": [
+            1.0,
+            1.0
+          ],
+          "threshold": -1.7976931348623157e+308,
+          "trajectory_bootstrap_replicates": 1000,
+          "trajectory_bootstrap_seed": 20260804,
+          "trajectory_bootstrap_valid_replicates": [
+            1000,
+            1000
+          ]
+        },
+        "cnn": {
+          "alarm_opportunity_count": 95689,
+          "capsize_count": 240,
+          "detected_capsize_count": 218,
+          "exposure_hours": 264.9713888888889,
+          "false_episode_count": 3313,
+          "false_episodes_per_hour": 12.503236722623091,
+          "false_episodes_per_hour_trajectory_bootstrap_interval": [
+            12.216907891595909,
+            12.772232363363015
+          ],
+          "interval_conditioning": "conditional on the calibration-frozen alarm policy",
+          "lead_time_quantiles_s": [
+            327.80000000000007,
+            329.20000000000005,
+            329.80000000000007
+          ],
+          "sensitivity": 0.9083333333333333,
+          "sensitivity_exact_capsize_event_interval": [
+            0.8645061244714323,
+            0.941659001897254
+          ],
+          "sensitivity_trajectory_bootstrap_interval": [
+            0.871359255789051,
+            0.9442119694802098
+          ],
+          "threshold": -0.8457348227500915,
+          "trajectory_bootstrap_replicates": 1000,
+          "trajectory_bootstrap_seed": 20260804,
+          "trajectory_bootstrap_valid_replicates": [
+            1000,
+            1000
+          ]
+        },
+        "cnn_cumulative_online": {
+          "alarm_opportunity_count": 95689,
+          "capsize_count": 240,
+          "detected_capsize_count": 217,
+          "exposure_hours": 264.9713888888889,
+          "false_episode_count": 3592,
+          "false_episodes_per_hour": 13.556180593921566,
+          "false_episodes_per_hour_trajectory_bootstrap_interval": [
+            13.28158491699113,
+            13.816457825909282
+          ],
+          "interval_conditioning": "conditional on the calibration-frozen alarm policy",
+          "lead_time_quantiles_s": [
+            327.80000000000007,
+            329.20000000000005,
+            329.80000000000007
+          ],
+          "sensitivity": 0.9041666666666667,
+          "sensitivity_exact_capsize_event_interval": [
+            0.8596762733892942,
+            0.9382759047111259
+          ],
+          "sensitivity_trajectory_bootstrap_interval": [
+            0.8658523387181923,
+            0.9407168826403829
+          ],
+          "threshold": -0.7399137735366821,
+          "trajectory_bootstrap_replicates": 1000,
+          "trajectory_bootstrap_seed": 20260804,
+          "trajectory_bootstrap_valid_replicates": [
+            1000,
+            1000
+          ]
+        },
+        "danger_margin": {
+          "alarm_opportunity_count": 95689,
+          "capsize_count": 240,
+          "detected_capsize_count": 240,
+          "exposure_hours": 264.9713888888889,
+          "false_episode_count": 5746,
+          "false_episodes_per_hour": 21.68536015943021,
+          "false_episodes_per_hour_trajectory_bootstrap_interval": [
+            21.577676525656262,
+            21.792521174623634
+          ],
+          "interval_conditioning": "conditional on the calibration-frozen alarm policy",
+          "lead_time_quantiles_s": [
+            256.96000000000004,
+            329.1,
+            329.80000000000007
+          ],
+          "sensitivity": 1.0,
+          "sensitivity_exact_capsize_event_interval": [
+            0.9847471895987213,
+            1.0
+          ],
+          "sensitivity_trajectory_bootstrap_interval": [
+            1.0,
+            1.0
+          ],
+          "threshold": -1.7976931348623157e+308,
+          "trajectory_bootstrap_replicates": 1000,
+          "trajectory_bootstrap_seed": 20260804,
+          "trajectory_bootstrap_valid_replicates": [
+            1000,
+            1000
+          ]
+        },
+        "galeazzi_glrt": {
+          "alarm_opportunity_count": 95689,
+          "capsize_count": 240,
+          "detected_capsize_count": 240,
+          "exposure_hours": 264.9713888888889,
+          "false_episode_count": 5746,
+          "false_episodes_per_hour": 21.68536015943021,
+          "false_episodes_per_hour_trajectory_bootstrap_interval": [
+            21.577676525656262,
+            21.792521174623634
+          ],
+          "interval_conditioning": "conditional on the calibration-frozen alarm policy",
+          "lead_time_quantiles_s": [
+            256.96000000000004,
+            329.1,
+            329.80000000000007
+          ],
+          "sensitivity": 1.0,
+          "sensitivity_exact_capsize_event_interval": [
+            0.9847471895987213,
+            1.0
+          ],
+          "sensitivity_trajectory_bootstrap_interval": [
+            1.0,
+            1.0
+          ],
+          "threshold": -1.7976931348623157e+308,
+          "trajectory_bootstrap_replicates": 1000,
+          "trajectory_bootstrap_seed": 20260804,
+          "trajectory_bootstrap_valid_replicates": [
+            1000,
+            1000
+          ]
+        },
+        "neighbor_2009": {
+          "alarm_opportunity_count": 95689,
+          "capsize_count": 240,
+          "detected_capsize_count": 240,
+          "exposure_hours": 264.9713888888889,
+          "false_episode_count": 5746,
+          "false_episodes_per_hour": 21.68536015943021,
+          "false_episodes_per_hour_trajectory_bootstrap_interval": [
+            21.577676525656262,
+            21.792521174623634
+          ],
+          "interval_conditioning": "conditional on the calibration-frozen alarm policy",
+          "lead_time_quantiles_s": [
+            256.96000000000004,
+            329.1,
+            329.80000000000007
+          ],
+          "sensitivity": 1.0,
+          "sensitivity_exact_capsize_event_interval": [
+            0.9847471895987213,
+            1.0
+          ],
+          "sensitivity_trajectory_bootstrap_interval": [
+            1.0,
+            1.0
+          ],
+          "threshold": -1.7976931348623157e+308,
+          "trajectory_bootstrap_replicates": 1000,
+          "trajectory_bootstrap_seed": 20260804,
+          "trajectory_bootstrap_valid_replicates": [
+            1000,
+            1000
+          ]
+        }
+      },
+      "held_out_family": "parametric",
+      "normalization_policy": {
+        "cnn_primary": "fixed_window_causal",
+        "cnn_secondary": "cumulative_online",
+        "physics_adjacent_primary": "physical"
+      },
+      "selected": {
+        "cnn_grid_index": 1,
+        "ews_fraction": 0.5,
+        "ews_statistic": "ac1",
+        "neighbor_radius": 0.5
+      }
+    },
+    {
+      "calibration_operating_points": {
+        "classical_ews": {
+          "alarm_opportunity_count": 46765,
+          "capsize_count": 412,
+          "detected_capsize_count": 412,
+          "exposure_hours": 129.49541666666667,
+          "false_episode_count": 2521,
+          "false_episodes_per_hour": 19.467870484476606,
+          "lead_time_quantiles_s": [
+            185.60000000000005,
+            328.30000000000007,
+            329.70000000000005
+          ],
+          "sensitivity": 1.0,
+          "sensitivity_exact_capsize_event_interval": [
+            0.9910863731242245,
+            1.0
+          ],
+          "threshold": -1.7976931348623157e+308
+        },
+        "cnn": {
+          "alarm_opportunity_count": 46765,
+          "capsize_count": 412,
+          "detected_capsize_count": 371,
+          "exposure_hours": 129.49541666666667,
+          "false_episode_count": 1857,
+          "false_episodes_per_hour": 14.340275878489907,
+          "lead_time_quantiles_s": [
+            201.3,
+            249.20000000000005,
+            279.9
+          ],
+          "sensitivity": 0.9004854368932039,
+          "sensitivity_exact_capsize_event_interval": [
+            0.8674231887783245,
+            0.9276366760363268
+          ],
+          "threshold": -0.19406974315643302
+        },
+        "cnn_cumulative_online": {
+          "alarm_opportunity_count": 46765,
+          "capsize_count": 412,
+          "detected_capsize_count": 371,
+          "exposure_hours": 129.49541666666667,
+          "false_episode_count": 2092,
+          "false_episodes_per_hour": 16.155011921271345,
+          "lead_time_quantiles_s": [
+            209.5,
+            269.9,
+            308.6
+          ],
+          "sensitivity": 0.9004854368932039,
+          "sensitivity_exact_capsize_event_interval": [
+            0.8674231887783245,
+            0.9276366760363268
+          ],
+          "threshold": -0.25494382828474044
+        },
+        "danger_margin": {
+          "alarm_opportunity_count": 46765,
+          "capsize_count": 412,
+          "detected_capsize_count": 412,
+          "exposure_hours": 129.49541666666667,
+          "false_episode_count": 2521,
+          "false_episodes_per_hour": 19.467870484476606,
+          "lead_time_quantiles_s": [
+            185.60000000000005,
+            328.30000000000007,
+            329.70000000000005
+          ],
+          "sensitivity": 1.0,
+          "sensitivity_exact_capsize_event_interval": [
+            0.9910863731242245,
+            1.0
+          ],
+          "threshold": -1.7976931348623157e+308
+        },
+        "galeazzi_glrt": {
+          "alarm_opportunity_count": 46765,
+          "capsize_count": 412,
+          "detected_capsize_count": 412,
+          "exposure_hours": 129.49541666666667,
+          "false_episode_count": 2521,
+          "false_episodes_per_hour": 19.467870484476606,
+          "lead_time_quantiles_s": [
+            185.60000000000005,
+            328.30000000000007,
+            329.70000000000005
+          ],
+          "sensitivity": 1.0,
+          "sensitivity_exact_capsize_event_interval": [
+            0.9910863731242245,
+            1.0
+          ],
+          "threshold": -1.7976931348623157e+308
+        },
+        "neighbor_2009": {
+          "alarm_opportunity_count": 46765,
+          "capsize_count": 412,
+          "detected_capsize_count": 412,
+          "exposure_hours": 129.49541666666667,
+          "false_episode_count": 2521,
+          "false_episodes_per_hour": 19.467870484476606,
+          "lead_time_quantiles_s": [
+            185.60000000000005,
+            328.30000000000007,
+            329.70000000000005
+          ],
+          "sensitivity": 1.0,
+          "sensitivity_exact_capsize_event_interval": [
+            0.9910863731242245,
+            1.0
+          ],
+          "threshold": -1.7976931348623157e+308
+        }
+      },
+      "cnn_materially_above_b1": false,
+      "cnn_relative_fpr_reduction_vs_b1": 0.8550445882147228,
+      "headline_at_calibration_selected_threshold": {
+        "classical_ews": {
+          "alarm_opportunity_count": 95366,
+          "capsize_count": 248,
+          "detected_capsize_count": 248,
+          "exposure_hours": 264.07680555555555,
+          "false_episode_count": 5719,
+          "false_episodes_per_hour": 21.656578236655687,
+          "false_episodes_per_hour_trajectory_bootstrap_interval": [
+            21.550861245204967,
+            21.76035526608479
+          ],
+          "interval_conditioning": "conditional on the calibration-frozen alarm policy",
+          "lead_time_quantiles_s": [
+            161.10000000000002,
+            327.85,
+            329.80000000000007
+          ],
+          "sensitivity": 1.0,
+          "sensitivity_exact_capsize_event_interval": [
+            0.9852355651874455,
+            1.0
+          ],
+          "sensitivity_trajectory_bootstrap_interval": [
+            1.0,
+            1.0
+          ],
+          "threshold": -1.7976931348623157e+308,
+          "trajectory_bootstrap_replicates": 1000,
+          "trajectory_bootstrap_seed": 20260804,
+          "trajectory_bootstrap_valid_replicates": [
+            1000,
+            1000
+          ]
+        },
+        "cnn": {
+          "alarm_opportunity_count": 95366,
+          "capsize_count": 248,
+          "detected_capsize_count": 189,
+          "exposure_hours": 264.07680555555555,
+          "false_episode_count": 829,
+          "false_episodes_per_hour": 3.1392382161544963,
+          "false_episodes_per_hour_trajectory_bootstrap_interval": [
+            3.0398764808885126,
+            3.234978724287348
+          ],
+          "interval_conditioning": "conditional on the calibration-frozen alarm policy",
+          "lead_time_quantiles_s": [
+            237.88,
+            269.30000000000007,
+            308.82000000000005
+          ],
+          "sensitivity": 0.7620967741935484,
+          "sensitivity_exact_capsize_event_interval": [
+            0.7041249070575784,
+            0.8136869498606502
+          ],
+          "sensitivity_trajectory_bootstrap_interval": [
+            0.7117404401082278,
+            0.8139603823880871
+          ],
+          "threshold": -0.19406974315643302,
+          "trajectory_bootstrap_replicates": 1000,
+          "trajectory_bootstrap_seed": 20260804,
+          "trajectory_bootstrap_valid_replicates": [
+            1000,
+            1000
+          ]
+        },
+        "cnn_cumulative_online": {
+          "alarm_opportunity_count": 95366,
+          "capsize_count": 248,
+          "detected_capsize_count": 189,
+          "exposure_hours": 264.07680555555555,
+          "false_episode_count": 933,
+          "false_episodes_per_hour": 3.5330630345864233,
+          "false_episodes_per_hour_trajectory_bootstrap_interval": [
+            3.4117546329164368,
+            3.6489365306703103
+          ],
+          "interval_conditioning": "conditional on the calibration-frozen alarm policy",
+          "lead_time_quantiles_s": [
+            259.92,
+            295.9,
+            327.88000000000005
+          ],
+          "sensitivity": 0.7620967741935484,
+          "sensitivity_exact_capsize_event_interval": [
+            0.7041249070575784,
+            0.8136869498606502
+          ],
+          "sensitivity_trajectory_bootstrap_interval": [
+            0.7117404401082278,
+            0.8139603823880871
+          ],
+          "threshold": -0.25494382828474044,
+          "trajectory_bootstrap_replicates": 1000,
+          "trajectory_bootstrap_seed": 20260804,
+          "trajectory_bootstrap_valid_replicates": [
+            1000,
+            1000
+          ]
+        },
+        "danger_margin": {
+          "alarm_opportunity_count": 95366,
+          "capsize_count": 248,
+          "detected_capsize_count": 248,
+          "exposure_hours": 264.07680555555555,
+          "false_episode_count": 5719,
+          "false_episodes_per_hour": 21.656578236655687,
+          "false_episodes_per_hour_trajectory_bootstrap_interval": [
+            21.550861245204967,
+            21.76035526608479
+          ],
+          "interval_conditioning": "conditional on the calibration-frozen alarm policy",
+          "lead_time_quantiles_s": [
+            161.10000000000002,
+            327.85,
+            329.80000000000007
+          ],
+          "sensitivity": 1.0,
+          "sensitivity_exact_capsize_event_interval": [
+            0.9852355651874455,
+            1.0
+          ],
+          "sensitivity_trajectory_bootstrap_interval": [
+            1.0,
+            1.0
+          ],
+          "threshold": -1.7976931348623157e+308,
+          "trajectory_bootstrap_replicates": 1000,
+          "trajectory_bootstrap_seed": 20260804,
+          "trajectory_bootstrap_valid_replicates": [
+            1000,
+            1000
+          ]
+        },
+        "galeazzi_glrt": {
+          "alarm_opportunity_count": 95366,
+          "capsize_count": 248,
+          "detected_capsize_count": 248,
+          "exposure_hours": 264.07680555555555,
+          "false_episode_count": 5719,
+          "false_episodes_per_hour": 21.656578236655687,
+          "false_episodes_per_hour_trajectory_bootstrap_interval": [
+            21.550861245204967,
+            21.76035526608479
+          ],
+          "interval_conditioning": "conditional on the calibration-frozen alarm policy",
+          "lead_time_quantiles_s": [
+            161.10000000000002,
+            327.85,
+            329.80000000000007
+          ],
+          "sensitivity": 1.0,
+          "sensitivity_exact_capsize_event_interval": [
+            0.9852355651874455,
+            1.0
+          ],
+          "sensitivity_trajectory_bootstrap_interval": [
+            1.0,
+            1.0
+          ],
+          "threshold": -1.7976931348623157e+308,
+          "trajectory_bootstrap_replicates": 1000,
+          "trajectory_bootstrap_seed": 20260804,
+          "trajectory_bootstrap_valid_replicates": [
+            1000,
+            1000
+          ]
+        },
+        "neighbor_2009": {
+          "alarm_opportunity_count": 95366,
+          "capsize_count": 248,
+          "detected_capsize_count": 248,
+          "exposure_hours": 264.07680555555555,
+          "false_episode_count": 5719,
+          "false_episodes_per_hour": 21.656578236655687,
+          "false_episodes_per_hour_trajectory_bootstrap_interval": [
+            21.550861245204967,
+            21.76035526608479
+          ],
+          "interval_conditioning": "conditional on the calibration-frozen alarm policy",
+          "lead_time_quantiles_s": [
+            161.10000000000002,
+            327.85,
+            329.80000000000007
+          ],
+          "sensitivity": 1.0,
+          "sensitivity_exact_capsize_event_interval": [
+            0.9852355651874455,
+            1.0
+          ],
+          "sensitivity_trajectory_bootstrap_interval": [
+            1.0,
+            1.0
+          ],
+          "threshold": -1.7976931348623157e+308,
+          "trajectory_bootstrap_replicates": 1000,
+          "trajectory_bootstrap_seed": 20260804,
+          "trajectory_bootstrap_valid_replicates": [
+            1000,
+            1000
+          ]
+        }
+      },
+      "held_out_family": "biased",
+      "normalization_policy": {
+        "cnn_primary": "fixed_window_causal",
+        "cnn_secondary": "cumulative_online",
+        "physics_adjacent_primary": "physical"
+      },
+      "selected": {
+        "cnn_grid_index": 0,
+        "ews_fraction": 0.5,
+        "ews_statistic": "ac1",
+        "neighbor_radius": 0.35
+      }
+    }
+  ]
+}
