@@ -598,7 +598,10 @@ edges remain fixed on test data.
    `{2, 5, 10}` pseudo-exceedances, and trailing history over `{full history, 1,800 s, 900 s}`.
    Calibration freezes all controls before test scoring. On records shorter than a candidate
    window, the available causal history is used; candidates that coincide because of record
-   length remain separate reported rows.
+   length remain separate reported rows. If the empirical quantile reaches or exceeds the critical
+   level, `w` is clipped to the largest representable value below 1 and the emission is flagged.
+   An emission starts only after its available full causal history contains three tail
+   exceedances; earlier exposure contributes zero predicted events.
 5. U1a succeeds when 95% predicted-count intervals capture the realized count in at least five of
    the six stationary and rare-event evaluation campaigns.
 6. U1c expects the estimated rate to rank vulnerability comparably to the danger margin and to
