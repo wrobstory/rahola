@@ -431,6 +431,10 @@ def tracking_summary(
     natural_period_s: float,
 ) -> dict[str, object]:
     estimate = tracking_statistics(scores, grid_s, natural_period_s=natural_period_s)
+    estimated_path, hazard_path = ensemble_rate_and_hazard(
+        scores, grid_s, natural_period_s=natural_period_s
+    )
+    lag_estimable = bool(np.std(estimated_path) > 0.0 and np.std(hazard_path) > 0.0)
     interval = trajectory_block_bootstrap(
         scores,
         lambda sample: tracking_statistics(
@@ -441,6 +445,7 @@ def tracking_summary(
     )
     return {
         "tracking_lag_s": float(estimate[0]),
+        "tracking_lag_estimable": lag_estimable,
         "tracking_lag_trajectory_bootstrap_interval": [
             float(interval.lower[0]),
             float(interval.upper[0]),

@@ -52,6 +52,25 @@ def test_crossing_detection_is_unchanged_when_only_future_samples_are_nan() -> N
     assert truncated == tuple(event for event in complete if event.detection_index < 5)
 
 
+def test_dynamic_critical_rate_scale_changes_only_normalized_severity() -> None:
+    fit = _fit()
+    time = np.arange(3, dtype=np.float64)
+    angle = np.array([0.0, 0.2, 0.5])
+    rate = np.full(3, 0.4)
+    fixed = detect_crossings(time, angle, rate, fit)[0]
+    adaptive = detect_crossings(
+        time,
+        angle,
+        rate,
+        fit,
+        critical_rate_scales={1: np.full(3, 2.0), -1: np.ones(3)},
+    )[0]
+    assert adaptive.time_s == fixed.time_s
+    assert adaptive.outward_rate_rad_s == fixed.outward_rate_rad_s
+    assert adaptive.critical_rate_rad_s == pytest.approx(2.0 * fixed.critical_rate_rad_s)
+    assert adaptive.severity_u == pytest.approx(0.5 * fixed.severity_u)
+
+
 def _event(time_s: float, severity: float) -> Crossing:
     return Crossing(time_s, int(time_s), 1, severity, 1.0, severity)
 

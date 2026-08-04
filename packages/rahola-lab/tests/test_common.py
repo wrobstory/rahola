@@ -21,8 +21,14 @@ from rahola.dataset import SimulationDataset
 
 
 def test_result_writer_serializes_non_finite_values_as_null(tmp_path: Path) -> None:
-    path = write_result(tmp_path, "nonfinite", {"missing": float("nan")})
-    assert json.loads(path.read_text(encoding="utf-8"))["missing"] is None
+    path = write_result(
+        tmp_path,
+        "nonfinite",
+        {"missing": float("nan"), "numpy_boolean": np.bool_(True)},
+    )
+    document = json.loads(path.read_text(encoding="utf-8"))
+    assert document["missing"] is None
+    assert document["numpy_boolean"] is True
     assert "NaN" not in path.read_text(encoding="utf-8")
     assert load_result(tmp_path, "nonfinite")["missing"] is None
 

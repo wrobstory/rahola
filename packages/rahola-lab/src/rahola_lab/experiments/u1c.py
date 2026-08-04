@@ -22,6 +22,7 @@ from rahola_lab.experiments.detector_common import (
     bootstrap_window_auc,
     decorrelation_times,
     matched_point,
+    point_payload,
     threshold_grids,
 )
 from rahola_lab.experiments.u1_common import (
@@ -92,6 +93,39 @@ def _post_step(scores: list[TrajectoryScores]) -> list[TrajectoryScores]:
     return output
 
 
+def _point_with_bootstrap_or_unevaluable(
+    point,
+    scores: list[TrajectoryScores],
+    *,
+    horizon_s: float,
+    decorrelation_s: float,
+    campaign_strata: list[str] | None = None,
+) -> dict[str, object]:
+    try:
+        return bootstrap_point_payload(
+            point,
+            scores,
+            horizon_s=horizon_s,
+            decorrelation_s=decorrelation_s,
+            campaign_strata=campaign_strata,
+        )
+    except ValueError as error:
+        if "no finite replicates" not in str(error):
+            raise
+        return point_payload(point) | {
+            "trajectory_bootstrap_status": "unevaluable: no finite replicates"
+        }
+
+
+def _auc_or_unevaluable(
+    scores: list[TrajectoryScores], *, campaign_strata: list[str] | None = None
+) -> dict[str, object]:
+    try:
+        return bootstrap_window_auc(scores, campaign_strata=campaign_strata)
+    except ValueError as error:
+        return {"auc": None, "auc_status": f"unevaluable: {error}"}
+
+
 def run(data_root: Path, versioned_root: Path, output_root: Path) -> dict[str, object]:
     u1a = load_result(output_root, "u1a_u1")
     selected = u1a["selected_controls"]
@@ -148,13 +182,13 @@ def run(data_root: Path, versioned_root: Path, output_root: Path) -> dict[str, o
         horizon_s=horizon_s,
         decorrelation_time_s=decorrelation,
     )[0]
-    d1_payload = bootstrap_point_payload(
+    d1_payload = _point_with_bootstrap_or_unevaluable(
         d1_point,
         d1,
         horizon_s=horizon_s,
         decorrelation_s=decorrelation,
         campaign_strata=d1_strata,
-    ) | bootstrap_window_auc(d1, campaign_strata=d1_strata)
+    ) | _auc_or_unevaluable(d1, campaign_strata=d1_strata)
 
     step_name = "softening_step_v02"
     calibration_dataset = load_split(versioned_root, step_name, SeedBlock.CALIBRATION)
@@ -187,8 +221,12 @@ def run(data_root: Path, versioned_root: Path, output_root: Path) -> dict[str, o
             natural_period_s=float(test_dataset.config["natural_period_s"]),
         )
     )
-    d5_auc = bootstrap_window_auc(d5)
-    orientation_auc = max(float(d5_auc["auc"]), 1.0 - float(d5_auc["auc"]))
+    d5_auc = _auc_or_unevaluable(d5)
+    orientation_auc = (
+        None
+        if d5_auc["auc"] is None
+        else max(float(d5_auc["auc"]), 1.0 - float(d5_auc["auc"]))
+    )
     payload: dict[str, object] = {
         "experiment": "U1c",
         "selected_controls": selected,
@@ -199,7 +237,9 @@ def run(data_root: Path, versioned_root: Path, output_root: Path) -> dict[str, o
         | {
             "orientation_independent_auc": orientation_auc,
             "leakage_trigger": U1_D5_LEAKAGE_AUC,
-            "leakage_audit_triggered": orientation_auc > U1_D5_LEAKAGE_AUC,
+            "leakage_audit_triggered": (
+                None if orientation_auc is None else orientation_auc > U1_D5_LEAKAGE_AUC
+            ),
             "calibration_trajectory_count": len(d5_calibration),
         },
     }
