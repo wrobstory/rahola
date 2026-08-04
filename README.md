@@ -1,11 +1,6 @@
 # Rahola
 
-**W. R. Story · August 2026**
-
 *On the warning of capsize from measured roll motion: a synthetic-data study*
-
-Distribution statement: research code, released for method development and review.
-Not approved for operational use aboard any vessel.
 
 ## Abstract
 
