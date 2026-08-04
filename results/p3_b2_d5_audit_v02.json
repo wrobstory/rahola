@@ -1,0 +1,51 @@
+{
+  "_artifact_sha256": "fe153e9ec5f9f98ec57d71c41701e217ff454595af93ab3ee7092e08d5ebf7fc",
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "schema_version": 1,
+    "source_sha256": "4a0a18b481f27fcf92bfd4fb9a3bc362542f8465aa016d98daa33b7f70c82e7f",
+    "upstream_artifacts": {}
+  },
+  "any_leakage_audit_triggered": false,
+  "checkpoint": "amazon/chronos-t5-tiny",
+  "experiment": "B2 D5_v02 orientation/leakage audit",
+  "geometry": {
+    "complete_history_and_horizon": true,
+    "first_endpoint_s": 540.0,
+    "last_endpoint_s": 700.0,
+    "transition_s": 300.0
+  },
+  "license": "Apache-2.0",
+  "modes": {
+    "finetune": {
+      "auc": 0.4869664256709914,
+      "auc_trajectory_bootstrap_interval": [
+        0.4207023031390802,
+        0.564137294514125
+      ],
+      "interval_conditioning": "conditional on the frozen scoring and sampling policy",
+      "leakage_audit_triggered": false,
+      "orientation_independent_auc": 0.5130335743290086,
+      "scored_trajectories": 128,
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_bootstrap_valid_replicates": 1000
+    },
+    "frozen": {
+      "auc": 0.5179409725661087,
+      "auc_trajectory_bootstrap_interval": [
+        0.4331944018586448,
+        0.606775311082909
+      ],
+      "interval_conditioning": "conditional on the frozen scoring and sampling policy",
+      "leakage_audit_triggered": false,
+      "orientation_independent_auc": 0.5179409725661087,
+      "scored_trajectories": 128,
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_bootstrap_valid_replicates": 1000
+    }
+  },
+  "orientation_independent_trigger": 0.58,
+  "revision": "29d808298f1a62493e7b9a5e08529d0d930fa189"
+}
