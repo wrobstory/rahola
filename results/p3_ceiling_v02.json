@@ -1,0 +1,302 @@
+{
+  "_artifact_sha256": "17564b3b4afc1e161c91cfce5db2c1f397a2097698f5b06865459c22cd8b1cb2",
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "schema_version": 1,
+    "source_sha256": "89e37fdc5c57758b2c97e16babb6958903ada8c785db206f61fcff9ab01a069a",
+    "upstream_artifacts": {}
+  },
+  "architecture_gate_valid": false,
+  "elapsed_s": 1878.4257438330096,
+  "experiment": "Prototype #3 independent-future restart comparison",
+  "gaps": {
+    "C1_minus_C2": 0.36379407575992034,
+    "C1_minus_CNN": 0.19816455055211468,
+    "C2_minus_CNN": -0.16562952520780566,
+    "CNN_minus_clock_only": -0.004341578463774698
+  },
+  "gate_verdict": "No information-ceiling gate is applied. C1 and C2 use fresh independent forcing and need not upper-bound a model that observes the full correlated motion history. The clock-only baseline quantifies protocol-time confounding in this sampled estimand.",
+  "historical_gap_trigger_threshold_auc": 0.03,
+  "historical_gap_triggered": true,
+  "methods": {
+    "B0_XGBoost_cumulative_online": {
+      "auc": 0.7677142686551266,
+      "bootstrap_replicates": 2000,
+      "bootstrap_unit": "trajectory",
+      "interval": [
+        0.7500114564860557,
+        0.7859247614072278
+      ]
+    },
+    "B0_XGBoost_fixed_window_causal": {
+      "auc": 0.7231276307275265,
+      "bootstrap_replicates": 2000,
+      "bootstrap_unit": "trajectory",
+      "interval": [
+        0.7026033471972459,
+        0.7442785128907619
+      ]
+    },
+    "C1_exact_state_independent_future_restart": {
+      "auc": 0.8502780021379215,
+      "bootstrap_replicates": 2000,
+      "bootstrap_unit": "trajectory",
+      "interval": [
+        0.8346519872610727,
+        0.8669640058651795
+      ]
+    },
+    "C2_filtered_state_independent_future_restart": {
+      "auc": 0.48648392637800114,
+      "bootstrap_replicates": 2000,
+      "bootstrap_unit": "trajectory",
+      "interval": [
+        0.46128276197710255,
+        0.5146668564653725
+      ]
+    },
+    "CNN_cumulative_online": {
+      "auc": 0.6222926859851234,
+      "bootstrap_replicates": 2000,
+      "bootstrap_unit": "trajectory",
+      "interval": [
+        0.5907115661406861,
+        0.6577494603388946
+      ]
+    },
+    "CNN_fixed_window_causal": {
+      "auc": 0.6521134515858068,
+      "bootstrap_replicates": 2000,
+      "bootstrap_unit": "trajectory",
+      "interval": [
+        0.6233381754141696,
+        0.684067421405846
+      ]
+    },
+    "clock_only_protocol_quartile": {
+      "auc": 0.6564550300495815,
+      "bootstrap_replicates": 2000,
+      "bootstrap_unit": "trajectory",
+      "interval": [
+        0.6436274882466587,
+        0.6705974964962534
+      ]
+    }
+  },
+  "particle_count": 2000,
+  "pf_judgment": "Rao-Blackwellized bootstrap PF: observed roll/rate are pinned; 2,000 particles infer current stiffness and linear drift under a robust encounter-innovation likelihood. Family is known; no family-marginalized variant was run.",
+  "population_weighted_restart_calibration": {
+    "bins": [
+      {
+        "observed": 0.004357550530682937,
+        "population_weight": 329313.45027342683,
+        "predicted": 0.004019842171777359,
+        "sample_count": 14230
+      },
+      {
+        "observed": 0.14657476771174377,
+        "population_weight": 1582.809944862098,
+        "predicted": 0.16253360096213848,
+        "sample_count": 324
+      },
+      {
+        "observed": 0.2443619063799101,
+        "population_weight": 1481.409297229813,
+        "predicted": 0.2413234693539605,
+        "sample_count": 455
+      },
+      {
+        "observed": 0.4425872684574839,
+        "population_weight": 1222.3578004977562,
+        "predicted": 0.3457194439294764,
+        "sample_count": 605
+      },
+      {
+        "observed": 0.41725153024152956,
+        "population_weight": 786.0965777887848,
+        "predicted": 0.43545505717085414,
+        "sample_count": 367
+      },
+      {
+        "observed": 0.4238162212845757,
+        "population_weight": 18.876106194690266,
+        "predicted": 0.5102320675105485,
+        "sample_count": 9
+      },
+      {
+        "observed": 1.0,
+        "population_weight": 1.0,
+        "predicted": 0.65,
+        "sample_count": 1
+      },
+      {
+        "observed": 1.0,
+        "population_weight": 1.0,
+        "predicted": 0.775,
+        "sample_count": 1
+      },
+      {
+        "observed": 1.0,
+        "population_weight": 2.0,
+        "predicted": 0.805,
+        "sample_count": 2
+      },
+      {
+        "observed": 1.0,
+        "population_weight": 6.0,
+        "predicted": 0.9825,
+        "sample_count": 6
+      }
+    ],
+    "estimand": "population windows reconstructed from label/time-stratified sampling",
+    "weighted_brier": 0.007226258498290313,
+    "weighted_ece_10_bin": 0.0008264908557807924
+  },
+  "restart_common_random_numbers": true,
+  "restart_reference_semantics": "C1 knows exact endpoint roll state, current stiffness, deterministic remaining ramp, family, and sea-state specification. C1 and C2 discard the observed forcing phase and draw a fresh independent future. They are restart comparators, not Bayes ceilings.",
+  "rollouts_per_window": 200,
+  "sampling": {
+    "auc_estimand": "unweighted AUC on a capped-equal allocation: round-robin across nonempty strata until a stratum is exhausted, then reallocating unused slots",
+    "auc_interval_conditioning": "trajectory bootstrap conditional on the realized sampled windows and rollout draws",
+    "calibration_estimand": "source-window population via post-stratum weights",
+    "campaigns": [
+      {
+        "campaign": "softening_evaluation",
+        "elapsed_s": 199.51881558299647,
+        "population_stratum_counts": {
+          "label=0,time_quartile=1": 34475,
+          "label=0,time_quartile=2": 49115,
+          "label=1,time_quartile=1": 199,
+          "label=1,time_quartile=2": 292
+        },
+        "positive_fraction": 0.2455,
+        "sampled_stratum_counts": {
+          "label=0,time_quartile=1": 755,
+          "label=0,time_quartile=2": 754,
+          "label=1,time_quartile=1": 199,
+          "label=1,time_quartile=2": 292
+        },
+        "windows": 2000
+      },
+      {
+        "campaign": "parametric_evaluation",
+        "elapsed_s": 307.4943088339933,
+        "population_stratum_counts": {
+          "label=0,time_quartile=1": 34762,
+          "label=0,time_quartile=2": 49544,
+          "label=1,time_quartile=1": 118,
+          "label=1,time_quartile=2": 214
+        },
+        "positive_fraction": 0.166,
+        "sampled_stratum_counts": {
+          "label=0,time_quartile=1": 834,
+          "label=0,time_quartile=2": 834,
+          "label=1,time_quartile=1": 118,
+          "label=1,time_quartile=2": 214
+        },
+        "windows": 2000
+      },
+      {
+        "campaign": "biased_evaluation",
+        "elapsed_s": 185.56060287501896,
+        "population_stratum_counts": {
+          "label=0,time_quartile=1": 34516,
+          "label=0,time_quartile=2": 49137,
+          "label=1,time_quartile=1": 229,
+          "label=1,time_quartile=2": 404
+        },
+        "positive_fraction": 0.3165,
+        "sampled_stratum_counts": {
+          "label=0,time_quartile=1": 684,
+          "label=0,time_quartile=2": 683,
+          "label=1,time_quartile=1": 229,
+          "label=1,time_quartile=2": 404
+        },
+        "windows": 2000
+      },
+      {
+        "campaign": "softening_ramp",
+        "elapsed_s": 183.39813704098924,
+        "population_stratum_counts": {
+          "label=0,time_quartile=1": 7000,
+          "label=0,time_quartile=2": 8603,
+          "label=1,time_quartile=2": 417
+        },
+        "positive_fraction": 0.2085,
+        "sampled_stratum_counts": {
+          "label=0,time_quartile=1": 792,
+          "label=0,time_quartile=2": 791,
+          "label=1,time_quartile=2": 417
+        },
+        "windows": 2000
+      },
+      {
+        "campaign": "parametric_ramp",
+        "elapsed_s": 301.67521454099915,
+        "population_stratum_counts": {
+          "label=0,time_quartile=1": 7000,
+          "label=0,time_quartile=2": 9242,
+          "label=1,time_quartile=2": 204
+        },
+        "positive_fraction": 0.102,
+        "sampled_stratum_counts": {
+          "label=0,time_quartile=1": 898,
+          "label=0,time_quartile=2": 898,
+          "label=1,time_quartile=2": 204
+        },
+        "windows": 2000
+      },
+      {
+        "campaign": "biased_ramp",
+        "elapsed_s": 184.5195206250064,
+        "population_stratum_counts": {
+          "label=0,time_quartile=1": 7000,
+          "label=0,time_quartile=2": 9336,
+          "label=1,time_quartile=2": 190
+        },
+        "positive_fraction": 0.095,
+        "sampled_stratum_counts": {
+          "label=0,time_quartile=1": 905,
+          "label=0,time_quartile=2": 905,
+          "label=1,time_quartile=2": 190
+        },
+        "windows": 2000
+      },
+      {
+        "campaign": "softening_bandwidth_gamma_1",
+        "elapsed_s": 182.85427662497386,
+        "population_stratum_counts": {
+          "label=0,time_quartile=1": 7000,
+          "label=0,time_quartile=2": 8864,
+          "label=1,time_quartile=2": 326
+        },
+        "positive_fraction": 0.163,
+        "sampled_stratum_counts": {
+          "label=0,time_quartile=1": 837,
+          "label=0,time_quartile=2": 837,
+          "label=1,time_quartile=2": 326
+        },
+        "windows": 2000
+      },
+      {
+        "campaign": "softening_bandwidth_gamma_3_3",
+        "elapsed_s": 183.1565735830227,
+        "population_stratum_counts": {
+          "label=0,time_quartile=1": 7000,
+          "label=0,time_quartile=2": 8905,
+          "label=1,time_quartile=2": 323
+        },
+        "positive_fraction": 0.1615,
+        "sampled_stratum_counts": {
+          "label=0,time_quartile=1": 839,
+          "label=0,time_quartile=2": 838,
+          "label=1,time_quartile=2": 323
+        },
+        "windows": 2000
+      }
+    ],
+    "requested_windows_per_campaign": 2000,
+    "strata": "label x quartile of protocol time",
+    "total_windows": 16000
+  }
+}
