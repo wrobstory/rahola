@@ -53,6 +53,23 @@ def test_instantaneous_danger_score_is_zero_on_fitted_separatrix() -> None:
     np.testing.assert_allclose(fit.danger_score(angle, critical), [0.0], atol=1e-12)
 
 
+def test_large_negative_rate_reduces_margin_at_equilibrium() -> None:
+    fit = fit_piecewise_linear_restoring(_config())
+    angle = np.array([fit.equilibrium_angle_rad])
+    stationary_margin = fit.safety_margin(angle, np.array([0.0]))
+    negative_rate_margin = fit.safety_margin(angle, np.array([-10.0]))
+    assert negative_rate_margin[0] < stationary_margin[0]
+    assert negative_rate_margin[0] < 0.0
+
+
+def test_symmetric_fit_gives_mirrored_states_equal_margins() -> None:
+    fit = fit_piecewise_linear_restoring(_config())
+    angles = np.array([0.1, -0.1])
+    rates = np.array([0.4, -0.4])
+    margins = fit.safety_margin(angles, rates)
+    assert margins[0] == pytest.approx(margins[1])
+
+
 def test_biased_fit_translates_equilibrium_and_uses_asymmetric_escapes() -> None:
     fit = fit_piecewise_linear_restoring(
         _config(

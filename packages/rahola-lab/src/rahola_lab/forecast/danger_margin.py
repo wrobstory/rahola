@@ -55,33 +55,27 @@ class DangerMarginFit:
     def safety_margin(
         self, angle_rad: NDArray[np.floating], rate_rad_s: NDArray[np.floating]
     ) -> FloatArray:
-        """Critical outward rate minus measured outward rate.
+        """Minimum margin to either fitted escape-side separatrix.
 
-        Between exact threshold upcrossings, the separatrix line is extrapolated
-        to the instantaneous state. The side whose intermediate threshold is
-        closest in angle is used. This preserves Eq. 13 at the threshold while
-        yielding a continuous, motion-only real-time statistic.
+        The positive-side margin is ``vcrit,+ (phi) - phi_dot`` and the
+        negative-side margin is ``vcrit,- (phi) + phi_dot``. Taking their
+        minimum avoids choosing an escape side from angle alone: a sufficiently
+        large rate toward either boundary must reduce the reported margin.
         """
         angle = np.asarray(angle_rad, dtype=np.float64)
         rate = np.asarray(rate_rad_s, dtype=np.float64)
         if angle.shape != rate.shape:
             raise ValueError("angle and rate arrays must match")
-        use_positive = np.abs(angle - self.positive.threshold_angle_rad) <= np.abs(
-            angle - self.negative.threshold_angle_rad
+        displacement = angle - self.equilibrium_angle_rad
+        positive_critical_rate = self.positive.growth_rate_s * np.maximum(
+            self.positive.vanishing_distance_rad - displacement, 0.0
         )
-        direction = np.where(use_positive, 1.0, -1.0)
-        distance = direction * (angle - self.equilibrium_angle_rad)
-        vanishing_distance = np.where(
-            use_positive,
-            self.positive.vanishing_distance_rad,
-            self.negative.vanishing_distance_rad,
+        negative_critical_rate = self.negative.growth_rate_s * np.maximum(
+            self.negative.vanishing_distance_rad + displacement, 0.0
         )
-        growth_rate = np.where(
-            use_positive, self.positive.growth_rate_s, self.negative.growth_rate_s
-        )
-        critical_outward_rate = growth_rate * np.maximum(vanishing_distance - distance, 0.0)
-        measured_outward_rate = direction * rate
-        return critical_outward_rate - measured_outward_rate
+        positive_margin = positive_critical_rate - rate
+        negative_margin = negative_critical_rate + rate
+        return np.minimum(positive_margin, negative_margin)
 
     def danger_score(
         self, angle_rad: NDArray[np.floating], rate_rad_s: NDArray[np.floating]
