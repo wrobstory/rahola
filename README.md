@@ -25,6 +25,14 @@ retained a 90 percent sensitivity operating point across held-out restoring fami
 conducted during the study found that the operating points first reported had been selected on
 test data; every numerical value in this report is the corrected value.
 
+## On the name
+
+The repository is named for Jaakko Rahola, whose doctoral thesis (Rahola 1939) derived working
+intact-stability criteria from the systematic analysis of recorded capsize casualties, and whose
+approach remains the foundation of stability regulation. The present program follows the same
+method at a smaller scale: criteria are sought from a recorded population of capsizes, and the
+program's own errors are part of the record.
+
 ## Administrative information
 
 The repository is a `uv` workspace requiring Python 3.12 or newer. The validated simulator is
@@ -83,9 +91,9 @@ metres, radians, and radians per second. One physical mechanism is varied per fa
 
 | Family | Restoring / bias | Archetype | Principal sweep range |
 | --- | --- | --- | --- |
-| 1: softening | $R=\omega_n^2(\phi-\phi^3/\phi_v^2)$ | dead ship, pure-loss escape | $\zeta=0.01\ldots0.10$, $r=0.01\ldots0.15$ |
-| 2: parametric | $`R=\omega_n^2[1+h(t)](\phi-\phi^3/\phi_v^2)`$ | parametric roll | $h_0=0\ldots0.4$, $\omega_e/\omega_n=1.5\ldots2.5$ |
-| 3: biased | Family 1 plus constant nondimensional moment $b$ | damage, steady heel | $b=-0.3\ldots0.3$, side-specific escape angles |
+| 1: softening | $`R=\omega_n^2(\phi-\phi^3/\phi_v^2)`$ | dead ship, pure-loss escape | $`\zeta=0.01\ldots0.10`$, $`r=0.01\ldots0.15`$ |
+| 2: parametric | $`R=\omega_n^2[1+h(t)](\phi-\phi^3/\phi_v^2)`$ | parametric roll | $`h_0=0\ldots0.4`$, $`\omega_e/\omega_n=1.5\ldots2.5`$ |
+| 3: biased | Family 1 plus constant nondimensional moment $`b`$ | damage, steady heel | $`b=-0.3\ldots0.3`$, side-specific escape angles |
 
 Family 1 is the minimal escape problem. Family 2 modulates the stiffness either deterministically,
 $h=h_0\cos(\omega_e t)$, or by an independent narrow-band random process. Family 3 adds a steady
@@ -412,6 +420,8 @@ and thermal behavior at full campaign size should be measured on the execution h
   [official circular](https://wwwcdn.imo.org/localresources/en/OurWork/Safety/Documents/MSC.1-CIRC.1281.pdf)
 - Nayfeh, A. H., and Mook, D. T. (1979). *Nonlinear Oscillations*. Wiley.
   [doi:10.1002/9783527617586](https://doi.org/10.1002/9783527617586)
+- Rahola, J. (1939). *The Judging of the Stability of Ships and the Determination of the Minimum
+  Amount of Stability*. Doctoral thesis, Technical University of Finland, Helsinki.
 - Romano, Y., Patterson, E., and Candès, E. (2019). Conformalized quantile regression.
   [arXiv:1905.03222](https://arxiv.org/abs/1905.03222)
 - Shinozuka, M., and Deodatis, G. (1991). Simulation of stochastic processes by spectral
