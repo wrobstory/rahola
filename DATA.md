@@ -208,5 +208,18 @@ at least 30 realized capsizes without using either reserve block.
 | `parametric_evaluation` | 3,200 | 0.950% | 30.40 | 95,000 | `[295000, 298200)` |
 | `biased_evaluation` | 1,700 | 1.867% | 31.74 | 98,200 | `[298200, 299900)` |
 
-The generated names append `_h1`. `reference_checksums_h1.json` will anchor their manifests after
-the one-shot materialization. Neither reserve block is eligible.
+The generated names append `_h1`. The tracked `reference_checksums_h1.json` anchors their
+manifests. The one-shot materialization produced:
+
+| Campaign | Capsizes | Capsize fraction | Manifest SHA-256 prefix |
+| --- | ---: | ---: | --- |
+| `softening_stationary_h1` | 31 / 500 | 6.200% | `be6ab7be934b` |
+| `parametric_stationary_h1` | 58 / 500 | 11.600% | `cd774914ab58` |
+| `biased_stationary_h1` | 69 / 500 | 13.800% | `feb44abb190e` |
+| `softening_evaluation_h1` | 34 / 1,500 | 2.267% | `c29dcdc8d4fe` |
+| `parametric_evaluation_h1` | 24 / 3,200 | 0.750% | `424dcd432087` |
+| `biased_evaluation_h1` | 32 / 1,700 | 1.882% | `8018de7e22c7` |
+
+Five of six campaigns realized at least 30 capsizes. `parametric_evaluation_h1` realized 24; this
+is a power shortfall in the frozen one-shot sample, not grounds to redraw it. Neither reserve block
+was opened or generated.

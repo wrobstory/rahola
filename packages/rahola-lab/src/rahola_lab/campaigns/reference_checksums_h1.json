@@ -1,1 +1,8 @@
-{}
+{
+  "biased_evaluation_h1": "8018de7e22c709c55a3138eeade4cbce80339d447262650d95ad986b1880e7c7",
+  "biased_stationary_h1": "feb44abb190e6843360ef742218736d262b846dc4d22129f84510b178903f7b1",
+  "parametric_evaluation_h1": "424dcd43208712231efa5ab9ca131927ad27da8dfa4925fe2d6e5129d72e2520",
+  "parametric_stationary_h1": "cd774914ab581be4d29a89695c0174073e5aa0938e4431bdcdfb4957bb390fd8",
+  "softening_evaluation_h1": "c29dcdc8d4fe6a88085d47dbea2ea697bd58dd7f2e75889d8b2cf3d258cf6ce6",
+  "softening_stationary_h1": "be6ab7be934bcea2a9c1bf3ab35ddb814f6bb0e1df3ffe51e676317ed522d1e8"
+}
