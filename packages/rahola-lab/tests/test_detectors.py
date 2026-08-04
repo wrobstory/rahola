@@ -50,6 +50,18 @@ def test_roll_power_glrt_increases_for_late_resonant_power() -> None:
     assert scores[1] > scores[0]
 
 
+def test_roll_power_glrt_ignores_late_scale_decrease() -> None:
+    samples_per_period = 8
+    length = 60 * samples_per_period
+    time = np.arange(length)
+    decreasing = np.sin(2.0 * np.pi * time / samples_per_period)
+    decreasing[-4 * samples_per_period :] *= 0.1
+    features = np.zeros((1, length, 2))
+    features[0, :, 0] = decreasing
+    score = galeazzi_roll_power_glrt(features, samples_per_period=samples_per_period)
+    np.testing.assert_allclose(score, [0.0], atol=1e-12)
+
+
 def test_cnn_stays_under_parameter_cap_and_learns_simple_signal() -> None:
     rng = np.random.default_rng(22)
     features = rng.normal(size=(64, 80, 2)).astype(np.float32)

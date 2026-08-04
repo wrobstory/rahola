@@ -1,4 +1,4 @@
-"""Roll-only signal-power adaptation of Galeazzi's double-Weibull GLRT."""
+"""Windowed roll-band scale-increase statistic adapted from Galeazzi et al."""
 
 from __future__ import annotations
 
@@ -13,12 +13,15 @@ def galeazzi_roll_power_glrt(
     shape: float = 0.55,
     band_fraction: float = 0.20,
 ) -> NDArray[np.float64]:
-    """Score a scale increase in roll motion near its natural frequency.
+    """Compute a roll-band scale-increase statistic adapted from Galeazzi et al.
 
     Galeazzi et al.'s original W2-GLRT monitors ``d=roll^2*pitch``. Rahola
     has no pitch channel and prohibits wave inputs, so this detector applies
     their equal-shape scale-change statistic (Eqs. 37 and 42) to band-limited
-    roll. The detection segment remains the published four roll periods.
+    roll. The detection segment remains the published four roll periods. The
+    FFT bandpass uses the complete scored history and is therefore a windowed
+    two-sided-filter adaptation, not a sample-by-sample causal filter. Ratios
+    at or below one receive zero score because the alternative is an increase.
     """
     values = np.asarray(features, dtype=np.float64)
     if values.ndim != 3 or values.shape[-1] != 2:
@@ -42,5 +45,5 @@ def galeazzi_roll_power_glrt(
     scale0 = np.maximum(np.mean(np.abs(reference) ** shape, axis=1), epsilon) ** (1.0 / shape)
     scale1 = np.maximum(np.mean(np.abs(detection) ** shape, axis=1), epsilon) ** (1.0 / shape)
     count = detection.shape[1]
-    ratio = np.maximum(scale1 / scale0, epsilon)
+    ratio = np.maximum(scale1 / scale0, 1.0)
     return count * (-shape * np.log(ratio) + ratio**shape - 1.0)
