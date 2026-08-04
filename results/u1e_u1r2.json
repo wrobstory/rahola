@@ -1,0 +1,217 @@
+{
+  "_artifact_sha256": "dea6ea4978924a974c4608bb8f2b5d45e4a300044ec43512eaa578b0eead0cab",
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "reference_u1r2_anchor_sha256": "2f68a4ce89ab90997c91bd98ca614bfe26b7fba923c69c6e439c865b4432cd5d",
+    "reference_v02_anchor_sha256": "96fdcc7a93cd4b0a760750320cf41c7f1ce15d52708b2bfc8791c3b3a9d10dfd",
+    "schema_version": 1,
+    "source_sha256": "f12f8940e11d6adbae5bf977b94bee080221b6a6ff53925a1438b9661eb2d032",
+    "upstream_artifacts": {
+      "u1a_u1r2": "c014a6bcd46f9e62e215f04dee7b40b96a7b92b7e3d36761105aff85097841fd"
+    }
+  },
+  "campaigns": {
+    "biased_ramp": {
+      "adaptive": {
+        "bias_per_hour": -0.8144530292001645,
+        "bias_trajectory_bootstrap_interval": [
+          -0.9188009287269852,
+          -0.7108377186469154
+        ],
+        "captures_realized_count": false,
+        "event_accounting": "absorbing_probability",
+        "flagged_emission_count": 60983,
+        "predicted_capsize_count": 2.2120007210756274,
+        "predicted_count_interval": [
+          1.2323696186543645,
+          2.1345815600364384
+        ],
+        "realized_capsize_count": 223,
+        "terminal_side_split": {
+          "negative": 979,
+          "positive": 0
+        },
+        "tracking_lag_estimable": true,
+        "tracking_lag_s": 120.0,
+        "tracking_lag_trajectory_bootstrap_interval": [
+          110.0,
+          120.0
+        ],
+        "trajectory_bootstrap_replicates": 1000,
+        "trajectory_bootstrap_seed": 20260804,
+        "trajectory_count": 1000,
+        "valid_emission_count": 60983
+      },
+      "bias_delta_per_hour": 0.00011685869172450847,
+      "fixed": {
+        "bias_per_hour": -0.814569887891889,
+        "bias_trajectory_bootstrap_interval": [
+          -0.9188571093025688,
+          -0.7108406386825459
+        ],
+        "captures_realized_count": false,
+        "event_accounting": "absorbing_probability",
+        "flagged_emission_count": 60983,
+        "predicted_capsize_count": 2.197754052409685,
+        "predicted_count_interval": [
+          1.2243506490125973,
+          2.1185223556809265
+        ],
+        "realized_capsize_count": 223,
+        "terminal_side_split": {
+          "negative": 979,
+          "positive": 0
+        },
+        "tracking_lag_estimable": true,
+        "tracking_lag_s": 120.0,
+        "tracking_lag_trajectory_bootstrap_interval": [
+          110.0,
+          120.0
+        ],
+        "trajectory_bootstrap_replicates": 1000,
+        "trajectory_bootstrap_seed": 20260804,
+        "trajectory_count": 1000,
+        "valid_emission_count": 60983
+      },
+      "tracking_lag_delta_s": 0.0
+    },
+    "parametric_ramp": {
+      "adaptive": {
+        "bias_per_hour": -1.1201142294886028,
+        "bias_trajectory_bootstrap_interval": [
+          -1.2400613624167947,
+          -1.0030601109139263
+        ],
+        "captures_realized_count": false,
+        "event_accounting": "absorbing_probability",
+        "flagged_emission_count": 61000,
+        "predicted_capsize_count": 0.0,
+        "predicted_count_interval": [
+          0.0,
+          0.0
+        ],
+        "realized_capsize_count": 295,
+        "terminal_side_split": {
+          "negative": 325,
+          "positive": 288
+        },
+        "tracking_lag_estimable": true,
+        "tracking_lag_s": 120.0,
+        "tracking_lag_trajectory_bootstrap_interval": [
+          120.0,
+          120.0
+        ],
+        "trajectory_bootstrap_replicates": 1000,
+        "trajectory_bootstrap_seed": 20260804,
+        "trajectory_count": 1000,
+        "valid_emission_count": 61000
+      },
+      "bias_delta_per_hour": 0.0,
+      "fixed": {
+        "bias_per_hour": -1.1201142294886028,
+        "bias_trajectory_bootstrap_interval": [
+          -1.2400613624167947,
+          -1.0030601109139263
+        ],
+        "captures_realized_count": false,
+        "event_accounting": "absorbing_probability",
+        "flagged_emission_count": 61000,
+        "predicted_capsize_count": 0.0,
+        "predicted_count_interval": [
+          0.0,
+          0.0
+        ],
+        "realized_capsize_count": 295,
+        "terminal_side_split": {
+          "negative": 325,
+          "positive": 288
+        },
+        "tracking_lag_estimable": true,
+        "tracking_lag_s": 120.0,
+        "tracking_lag_trajectory_bootstrap_interval": [
+          120.0,
+          120.0
+        ],
+        "trajectory_bootstrap_replicates": 1000,
+        "trajectory_bootstrap_seed": 20260804,
+        "trajectory_count": 1000,
+        "valid_emission_count": 61000
+      },
+      "tracking_lag_delta_s": 0.0
+    },
+    "softening_ramp": {
+      "adaptive": {
+        "bias_per_hour": -2.1420799994332382,
+        "bias_trajectory_bootstrap_interval": [
+          -2.321565927953818,
+          -1.9750453746036887
+        ],
+        "captures_realized_count": false,
+        "event_accounting": "absorbing_probability",
+        "flagged_emission_count": 60975,
+        "predicted_capsize_count": 0.0010276919212194701,
+        "predicted_count_interval": [
+          0.0,
+          0.0
+        ],
+        "realized_capsize_count": 497,
+        "terminal_side_split": {
+          "negative": 377,
+          "positive": 352
+        },
+        "tracking_lag_estimable": true,
+        "tracking_lag_s": 120.0,
+        "tracking_lag_trajectory_bootstrap_interval": [
+          120.0,
+          120.0
+        ],
+        "trajectory_bootstrap_replicates": 1000,
+        "trajectory_bootstrap_seed": 20260804,
+        "trajectory_count": 1000,
+        "valid_emission_count": 60975
+      },
+      "bias_delta_per_hour": 0.0,
+      "fixed": {
+        "bias_per_hour": -2.1420799994332382,
+        "bias_trajectory_bootstrap_interval": [
+          -2.321565927953818,
+          -1.9750453746036887
+        ],
+        "captures_realized_count": false,
+        "event_accounting": "absorbing_probability",
+        "flagged_emission_count": 60975,
+        "predicted_capsize_count": 0.0010276919212194701,
+        "predicted_count_interval": [
+          0.0,
+          0.0
+        ],
+        "realized_capsize_count": 497,
+        "terminal_side_split": {
+          "negative": 377,
+          "positive": 352
+        },
+        "tracking_lag_estimable": true,
+        "tracking_lag_s": 120.0,
+        "tracking_lag_trajectory_bootstrap_interval": [
+          120.0,
+          120.0
+        ],
+        "trajectory_bootstrap_replicates": 1000,
+        "trajectory_bootstrap_seed": 20260804,
+        "trajectory_count": 1000,
+        "valid_emission_count": 60975
+      },
+      "tracking_lag_delta_s": 0.0
+    }
+  },
+  "experiment": "U1e-r2",
+  "ramp_test": {
+    "adaptive_capture_count": 0,
+    "adaptive_reliability_weighted_mean_absolute_error": 0.33759565719566775,
+    "capture_count_delta": 0,
+    "fixed_capture_count": 0,
+    "fixed_reliability_weighted_mean_absolute_error": 0.33760040608522307,
+    "reliability_error_delta": -4.7488895553171595e-06
+  },
+  "variant": "mean causal equilibrium-upcrossing period; kappa_hat=(T_n/T_hat)^2; piecewise critical growth rate recomputed at each detected crossing"
+}

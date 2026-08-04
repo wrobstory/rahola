@@ -1,0 +1,47 @@
+{
+  "_manifest_sha256": "469dfc8b952680b9cd6729eb27a1ad9407b81270c9d67fac10e1b6cfd282ea41",
+  "artifacts": {
+    "u1a_u1r2.json": {
+      "artifact_sha256": "c014a6bcd46f9e62e215f04dee7b40b96a7b92b7e3d36761105aff85097841fd",
+      "upstream_artifacts": {}
+    },
+    "u1b_u1r2.json": {
+      "artifact_sha256": "16302f70b4249f820d6823cc081d6acdeac3d606f83f61711bf0dc06dc2dde40",
+      "upstream_artifacts": {
+        "u1a_u1r2.json": "c014a6bcd46f9e62e215f04dee7b40b96a7b92b7e3d36761105aff85097841fd"
+      }
+    },
+    "u1c_u1r2.json": {
+      "artifact_sha256": "654eff57ed7642b8585d3b4c407e8aa973e7434b179f7594ab3ba7d114b20405",
+      "upstream_artifacts": {
+        "u1a_u1r2.json": "c014a6bcd46f9e62e215f04dee7b40b96a7b92b7e3d36761105aff85097841fd"
+      }
+    },
+    "u1d_u1r2.json": {
+      "artifact_sha256": "8694ebc80ac977433bc032edea81000ffef096813030d8362450c5d94c33eaff",
+      "upstream_artifacts": {
+        "u1a_u1r2.json": "c014a6bcd46f9e62e215f04dee7b40b96a7b92b7e3d36761105aff85097841fd"
+      }
+    },
+    "u1e_u1r2.json": {
+      "artifact_sha256": "dea6ea4978924a974c4608bb8f2b5d45e4a300044ec43512eaa578b0eead0cab",
+      "upstream_artifacts": {
+        "u1a_u1r2.json": "c014a6bcd46f9e62e215f04dee7b40b96a7b92b7e3d36761105aff85097841fd"
+      }
+    }
+  },
+  "one_shot": {
+    "experiments": ["U1a-r2", "U1b-r2", "U1c-r2", "U1d-r2", "U1e-r2"],
+    "runs_per_experiment": 1,
+    "test_anchor_commit": "a17aee2",
+    "test_data_materialized_after_predeclaration": true,
+    "predeclaration_commit": "ce5c37f"
+  },
+  "reference_anchors_sha256": {
+    "reference_checksums.json": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "reference_checksums_u1r2.json": "2f68a4ce89ab90997c91bd98ca614bfe26b7fba923c69c6e439c865b4432cd5d",
+    "reference_checksums_v02.json": "96fdcc7a93cd4b0a760750320cf41c7f1ce15d52708b2bfc8791c3b3a9d10dfd"
+  },
+  "schema_version": 1,
+  "source_sha256": "f12f8940e11d6adbae5bf977b94bee080221b6a6ff53925a1438b9661eb2d032"
+}

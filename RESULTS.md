@@ -880,3 +880,113 @@ The following choices are frozen before any U1-r2 TEST trajectory is materialize
 
 The predeclared fresh TEST offsets are recorded in `DATA.md`. U1-r2 will use only those ordinary
 TEST slices; neither reserve block is eligible.
+
+## Phase C — fresh one-shot results
+
+All five runners completed once against the anchored `_u1r2` TEST campaigns. No runner was retried,
+and no control was changed after commit `ce5c37f`.
+
+### U1a-r2 — repaired emission policy
+
+The repaired estimator captured **0 of 6** campaign counts, below the unchanged 5-of-6 success
+criterion. It captured 0 of 2 campaigns in each of the softening, parametric, and biased families;
+the named softening-scope claim therefore failed. The pooled bin-count-weighted reliability MAE
+was 0.103151.
+
+| Fresh TEST campaign | Predicted capsizes | 95% interval | Realized | Captured |
+| --- | ---: | ---: | ---: | :---: |
+| softening stationary | 249.349 | [214.704, 223.780] | 82 | no |
+| softening evaluation | 1,129.075 | [997.158, 1,017.603] | 111 | no |
+| parametric stationary | 20.320 | [17.250, 19.553] | 96 | no |
+| parametric evaluation | 23.400 | [20.304, 22.409] | 46 | no |
+| biased stationary | 132.675 | [118.350, 124.984] | 144 | no |
+| biased evaluation | 267.126 | [243.058, 252.970] | 105 | no |
+
+The adaptive-threshold sensitivity also captured 0 of 6. Its predicted counts were 302.243 and
+804.612 for the two softening campaigns, 22.408 and 10.736 for parametric, and 149.177 and 179.812
+for biased. The prior-from-start repair did remove the r1 emission muzzle: every campaign emitted
+from the first sample. It did not repair the count calibration. All parametric-evaluation and
+biased-evaluation emissions were `prior_dominated`; even softening retained predominantly flagged
+emissions (55,388/58,386 stationary and 298,632/301,765 evaluation).
+
+The point estimate can lie outside the reported parametric interval because the frozen interval
+resamples observed crossing counts while the point retains the posterior mean. This inherited
+construction was not repaired after TEST access; it does not affect the zero-capture verdict.
+
+![U1a-r2 reliability diagram](results/u1a_reliability_u1r2.png)
+
+### U1b-r2 — tracking and steps
+
+All three ramp estimates reached the +120-second lag-search boundary. Their biases were -2.142/h
+for softening, -1.120/h for parametric, and -0.815/h for biased. Count predictions were 0.001,
+0.000, and 2.198 against 497, 295, and 223 realized capsizes, respectively.
+
+The 600-second step had a 40-second lag, -2.420/h bias, and predicted 160.121 versus 1,169
+capsizes. The 900-second v0.2 step had a 60-second lag, -3.099/h bias, and predicted 312.248 versus
+1,888. Neither step settled within the predeclared tolerance, and neither count interval captured.
+
+![U1b-r2 tracking and step response](results/u1b_tracking_u1r2.png)
+
+### U1c-r2 — detector framing
+
+The calibration-selected threshold was the lower finite floating-point sentinel
+`-1.7976931348623157e+308`, reflecting the zero-heavy calibration score stream. On fresh D1-like
+evaluation/ramp data, sensitivity was 1.000 for 30 observable capsizes, false episodes were
+22.584/h, and raw AUC was **0.309821** with trajectory-block interval [0.307920, 0.311682]. The
+orientation-independent value is 0.690179; this inversion is descriptive and was not a
+predeclared D1 pass rule.
+
+D5 was **unevaluable** because the fully post-step endpoint slice contained only one class. Its AUC
+and orientation-independent AUC are null, so the predeclared orientation-independent AUC >0.58
+leakage audit has no Boolean verdict. This is an explicit sparse/one-class result, not a rerun or a
+near-chance substitution.
+
+### U1d-r2 — frozen kill fires
+
+The full decomposition had 0 campaign captures and reliability MAE 0.103151. Rolling variance had
+0 captures and MAE 0.191410; declustered upcrossing rate alone had 1 capture and MAE 0.059882.
+Tail factor alone, reported as an additional component diagnostic, had 0 captures and MAE 0.090146.
+The full method did not strictly beat both required baselines on both metrics. **The kill fired.**
+
+The frozen verdict is: “If the full decomposition does not outperform both rolling variance and
+declustered upcrossing rate alone on campaign-level CI captures and on the bin-count-weighted mean
+absolute reliability error, then the split-time decomposition adds nothing online beyond its
+components — report that negative as the result and stop tuning.”
+
+No post-kill tuning was performed.
+
+### U1e-r2 — causal period fusion
+
+Fixed and adaptive critical-rate variants each captured 0 of 3 ramp counts. Their reliability MAEs
+were 0.337600 and 0.337596, giving an adaptive-minus-fixed delta of **-0.00000475** and a capture
+delta of **0**. Tracking-lag deltas were 0 seconds in all three families; both variants returned the
++120-second search boundary. Bias deltas were 0.000/h for softening and parametric and +0.000117/h
+for biased. The fusion produced no material rescue.
+
+## U1-r2 interpretation and departures
+
+The emission-policy diagnosis was correct but insufficient. Removing the three-exceedance gate
+made the estimator continuously available; fresh data show that its exponential critical-crossing
+probability and rate composition remain badly miscalibrated. The predeclared family-scope claim
+also failed: softening did not separate from the prior-dominated families on count capture.
+
+- Sections 3.2–3.5: as in r1, U1-r2 uses the ROM Eq. 13 unforced critical rate and omits the Motion
+  Perturbation Method, future wave replay, and higher-fidelity engineering simulation. The
+  calibration Eq. 15 diagnostic moved farther from the empirical terminal-crossing probability.
+- Sections 4.3–4.6: the paper's crossing and chainwise declustering mechanics remain unchanged.
+  U1-r2's `prior_from_start` emissions are an online-availability policy layered on those mechanics,
+  not a paper claim.
+- Section 4.7: U1-r2 fixes pooled family `w`, `P(u > w)`, and a Gamma exponential-rate prior from
+  calibration instead of selecting a tail threshold by goodness of fit or prediction error on each
+  available sample. Emissions with fewer than three exceedances are retained and flagged.
+- Section 5.2: campaign counts use absorbing first-event probabilities
+  `sum(1 - exp(-integrated rate_i))`, a Garwood zero-count upper bound, and the frozen
+  observed-count parametric bootstrap rather than composing the paper's component boundaries.
+- U1c applies an event-detector operating curve to the online rate; that AUC framing and its 0.58
+  D5 leakage trigger are Rahola diagnostics, not results claimed by the paper.
+- U1e's causal equilibrium-upcrossing period multiplier is a single motion-only sensitivity and is
+  not the paper's Eq. 15 forced correction.
+
+The `_u1r2` artifacts and `results/provenance_manifest_u1r2.json` bind the five one-shot outputs to
+the source digest, all three reference anchors, and exact U1a upstream dependencies. Neither
+reserve block was read. No r1 artifact, paper draft, or explainer was modified.

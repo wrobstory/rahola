@@ -1,0 +1,378 @@
+{
+  "_artifact_sha256": "8694ebc80ac977433bc032edea81000ffef096813030d8362450c5d94c33eaff",
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "reference_u1r2_anchor_sha256": "2f68a4ce89ab90997c91bd98ca614bfe26b7fba923c69c6e439c865b4432cd5d",
+    "reference_v02_anchor_sha256": "96fdcc7a93cd4b0a760750320cf41c7f1ce15d52708b2bfc8791c3b3a9d10dfd",
+    "schema_version": 1,
+    "source_sha256": "f12f8940e11d6adbae5bf977b94bee080221b6a6ff53925a1438b9661eb2d032",
+    "upstream_artifacts": {
+      "u1a_u1r2": "c014a6bcd46f9e62e215f04dee7b40b96a7b92b7e3d36761105aff85097841fd"
+    }
+  },
+  "baselines": {
+    "rolling_variance": {
+      "campaign_capture_count": 0,
+      "campaigns": {
+        "biased_evaluation": {
+          "captures_realized_count": false,
+          "event_accounting": "absorbing_probability",
+          "predicted_count": 1130.303954729237,
+          "predicted_count_trajectory_bootstrap_interval": [
+            1128.0138222421338,
+            1132.583754027561
+          ],
+          "realized_count": 105
+        },
+        "biased_stationary": {
+          "captures_realized_count": false,
+          "event_accounting": "absorbing_probability",
+          "predicted_count": 212.19443618135813,
+          "predicted_count_trajectory_bootstrap_interval": [
+            209.17524192536462,
+            215.12339285760592
+          ],
+          "realized_count": 144
+        },
+        "parametric_evaluation": {
+          "captures_realized_count": false,
+          "event_accounting": "absorbing_probability",
+          "predicted_count": 1116.4321443965778,
+          "predicted_count_trajectory_bootstrap_interval": [
+            1115.1777614733803,
+            1117.514577758688
+          ],
+          "realized_count": 46
+        },
+        "parametric_stationary": {
+          "captures_realized_count": false,
+          "event_accounting": "absorbing_probability",
+          "predicted_count": 218.16772241948706,
+          "predicted_count_trajectory_bootstrap_interval": [
+            216.27396874442573,
+            219.72988067813466
+          ],
+          "realized_count": 96
+        },
+        "softening_evaluation": {
+          "captures_realized_count": false,
+          "event_accounting": "absorbing_probability",
+          "predicted_count": 1129.8706223455986,
+          "predicted_count_trajectory_bootstrap_interval": [
+            1127.0068698577147,
+            1132.1650460893263
+          ],
+          "realized_count": 111
+        },
+        "softening_stationary": {
+          "captures_realized_count": false,
+          "event_accounting": "absorbing_probability",
+          "predicted_count": 222.4161176830737,
+          "predicted_count_trajectory_bootstrap_interval": [
+            218.94535380982197,
+            226.34515097666622
+          ],
+          "realized_count": 82
+        }
+      },
+      "reliability": {
+        "bins": [
+          {
+            "count": 4873,
+            "predicted_capsize_fraction": 0.22155730327909093,
+            "realized_capsize_fraction": 0.022778575825979887,
+            "realized_exact_interval": [
+              0.018774814463415244,
+              0.027367209338082198
+            ]
+          },
+          {
+            "count": 13120,
+            "predicted_capsize_fraction": 0.22442513589491786,
+            "realized_capsize_fraction": 0.035823170731707314,
+            "realized_exact_interval": [
+              0.03270828101226151,
+              0.039146069887516455
+            ]
+          },
+          {
+            "count": 7,
+            "predicted_capsize_fraction": 0.7540679907142599,
+            "realized_capsize_fraction": 0.42857142857142855,
+            "realized_exact_interval": [
+              0.09898827844250789,
+              0.8159484323599169
+            ]
+          }
+        ],
+        "edges_rate_per_hour": [
+          1.5161094344007022,
+          1.5161094344007024,
+          1.5545720557428806,
+          1.5545720557428808,
+          1.554572055742881,
+          23.452768729641697
+        ],
+        "weighted_mean_absolute_error": 0.19141027765307403,
+        "weighted_mean_absolute_error_trajectory_bootstrap_interval": [
+          0.188576445103685,
+          0.19422144272434239
+        ]
+      }
+    },
+    "tail_factor_alone": {
+      "campaign_capture_count": 0,
+      "campaigns": {
+        "biased_evaluation": {
+          "captures_realized_count": false,
+          "event_accounting": "absorbing_probability",
+          "predicted_count": 380.55614727172474,
+          "predicted_count_trajectory_bootstrap_interval": [
+            379.6838873166481,
+            381.3819472316781
+          ],
+          "realized_count": 105
+        },
+        "biased_stationary": {
+          "captures_realized_count": false,
+          "event_accounting": "absorbing_probability",
+          "predicted_count": 188.79163150707768,
+          "predicted_count_trajectory_bootstrap_interval": [
+            186.04050396681836,
+            191.4011836285102
+          ],
+          "realized_count": 144
+        },
+        "parametric_evaluation": {
+          "captures_realized_count": false,
+          "event_accounting": "absorbing_probability",
+          "predicted_count": 49.69237173584526,
+          "predicted_count_trajectory_bootstrap_interval": [
+            49.63220657313759,
+            49.74948541205761
+          ],
+          "realized_count": 46
+        },
+        "parametric_stationary": {
+          "captures_realized_count": false,
+          "event_accounting": "absorbing_probability",
+          "predicted_count": 49.416226713696545,
+          "predicted_count_trajectory_bootstrap_interval": [
+            48.98463817147638,
+            49.82869597338103
+          ],
+          "realized_count": 96
+        },
+        "softening_evaluation": {
+          "captures_realized_count": false,
+          "event_accounting": "absorbing_probability",
+          "predicted_count": 1221.2982039337676,
+          "predicted_count_trajectory_bootstrap_interval": [
+            1215.7270907435488,
+            1226.4826422970655
+          ],
+          "realized_count": 111
+        },
+        "softening_stationary": {
+          "captures_realized_count": false,
+          "event_accounting": "absorbing_probability",
+          "predicted_count": 285.008716640809,
+          "predicted_count_trajectory_bootstrap_interval": [
+            280.99651878931815,
+            288.73134341671255
+          ],
+          "realized_count": 82
+        }
+      },
+      "reliability": {
+        "bins": [
+          {
+            "count": 5121,
+            "predicted_capsize_fraction": 0.010709920321331709,
+            "realized_capsize_fraction": 0.012888107791446984,
+            "realized_exact_interval": [
+              0.009981301303639771,
+              0.016368011129799322
+            ]
+          },
+          {
+            "count": 1336,
+            "predicted_capsize_fraction": 0.057050425595194194,
+            "realized_capsize_fraction": 0.06062874251497006,
+            "realized_exact_interval": [
+              0.048436105182226685,
+              0.0747955112369794
+            ]
+          },
+          {
+            "count": 5497,
+            "predicted_capsize_fraction": 0.09648592269658245,
+            "realized_capsize_fraction": 0.020738584682554122,
+            "realized_exact_interval": [
+              0.017136476211826446,
+              0.02486117963750772
+            ]
+          },
+          {
+            "count": 2811,
+            "predicted_capsize_fraction": 0.22214524665066515,
+            "realized_capsize_fraction": 0.04980434009249377,
+            "realized_exact_interval": [
+              0.04205701011198243,
+              0.05850511125374748
+            ]
+          },
+          {
+            "count": 3235,
+            "predicted_capsize_fraction": 0.2747650763041941,
+            "realized_capsize_fraction": 0.05656877897990727,
+            "realized_exact_interval": [
+              0.04885735582311914,
+              0.06509351403802441
+            ]
+          }
+        ],
+        "edges_rate_per_hour": [
+          0.04655430020016411,
+          0.3191513362900197,
+          0.48365369460031366,
+          1.3979802179518777,
+          1.8108936519290904,
+          3.6725169367029866
+        ],
+        "weighted_mean_absolute_error": 0.09014630870452679,
+        "weighted_mean_absolute_error_trajectory_bootstrap_interval": [
+          0.0874920557231287,
+          0.09339273490292213
+        ]
+      }
+    },
+    "upcrossing_rate_alone": {
+      "campaign_capture_count": 1,
+      "campaigns": {
+        "biased_evaluation": {
+          "captures_realized_count": true,
+          "event_accounting": "absorbing_probability",
+          "predicted_count": 106.9768724716285,
+          "predicted_count_trajectory_bootstrap_interval": [
+            99.34061271709439,
+            114.92432952152708
+          ],
+          "realized_count": 105
+        },
+        "biased_stationary": {
+          "captures_realized_count": false,
+          "event_accounting": "absorbing_probability",
+          "predicted_count": 125.29159527544368,
+          "predicted_count_trajectory_bootstrap_interval": [
+            118.61785694179025,
+            132.10586072553036
+          ],
+          "realized_count": 144
+        },
+        "parametric_evaluation": {
+          "captures_realized_count": false,
+          "event_accounting": "absorbing_probability",
+          "predicted_count": 11.312601809743594,
+          "predicted_count_trajectory_bootstrap_interval": [
+            9.228014140823532,
+            13.5935499511874
+          ],
+          "realized_count": 46
+        },
+        "parametric_stationary": {
+          "captures_realized_count": false,
+          "event_accounting": "absorbing_probability",
+          "predicted_count": 27.195363845636958,
+          "predicted_count_trajectory_bootstrap_interval": [
+            23.59578201304769,
+            30.783144706057467
+          ],
+          "realized_count": 96
+        },
+        "softening_evaluation": {
+          "captures_realized_count": false,
+          "event_accounting": "absorbing_probability",
+          "predicted_count": 1143.7716406464472,
+          "predicted_count_trajectory_bootstrap_interval": [
+            1136.4227127248434,
+            1151.473669276793
+          ],
+          "realized_count": 111
+        },
+        "softening_stationary": {
+          "captures_realized_count": false,
+          "event_accounting": "absorbing_probability",
+          "predicted_count": 233.32261467856603,
+          "predicted_count_trajectory_bootstrap_interval": [
+            227.56130415617744,
+            239.1067873987981
+          ],
+          "realized_count": 82
+        }
+      },
+      "reliability": {
+        "bins": [
+          {
+            "count": 6911,
+            "predicted_capsize_fraction": 0.0,
+            "realized_capsize_fraction": 0.0010128780205469542,
+            "realized_exact_interval": [
+              0.0004073233923078134,
+              0.0020857952683660196
+            ]
+          },
+          {
+            "count": 3859,
+            "predicted_capsize_fraction": 0.0030927821684669002,
+            "realized_capsize_fraction": 0.0,
+            "realized_exact_interval": [
+              0.0,
+              0.000955459156911381
+            ]
+          },
+          {
+            "count": 1409,
+            "predicted_capsize_fraction": 0.1671113818026516,
+            "realized_capsize_fraction": 0.13555713271823988,
+            "realized_exact_interval": [
+              0.11810235820099373,
+              0.15454657228835533
+            ]
+          },
+          {
+            "count": 5821,
+            "predicted_capsize_fraction": 0.24059022597138224,
+            "realized_capsize_fraction": 0.06631163030407146,
+            "realized_exact_interval": [
+              0.060052219111384926,
+              0.07300984073764963
+            ]
+          }
+        ],
+        "edges_rate_per_hour": [
+          0.0,
+          5e-324,
+          0.01858544821979719,
+          1.138423742988973,
+          1.670668538786638,
+          553.8461538461539
+        ],
+        "weighted_mean_absolute_error": 0.05988170492930366,
+        "weighted_mean_absolute_error_trajectory_bootstrap_interval": [
+          0.056978692198922536,
+          0.06281730193351726
+        ]
+      }
+    }
+  },
+  "beats_rolling_variance_on_both_metrics": false,
+  "beats_upcrossing_rate_on_both_metrics": false,
+  "experiment": "U1d-r2",
+  "full_decomposition": {
+    "campaign_capture_count": 0,
+    "reliability_weighted_mean_absolute_error": 0.10315065364390155
+  },
+  "kill_criterion": "If the full decomposition does not outperform both rolling variance and declustered upcrossing rate alone on campaign-level CI captures and on the bin-count-weighted mean absolute reliability error, then the split-time decomposition adds nothing online beyond its components \u2014 report that negative as the result and stop tuning.",
+  "kill_fired": true
+}

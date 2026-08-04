@@ -1,0 +1,68 @@
+{
+  "_artifact_sha256": "654eff57ed7642b8585d3b4c407e8aa973e7434b179f7594ab3ba7d114b20405",
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "reference_u1r2_anchor_sha256": "2f68a4ce89ab90997c91bd98ca614bfe26b7fba923c69c6e439c865b4432cd5d",
+    "reference_v02_anchor_sha256": "96fdcc7a93cd4b0a760750320cf41c7f1ce15d52708b2bfc8791c3b3a9d10dfd",
+    "schema_version": 1,
+    "source_sha256": "f12f8940e11d6adbae5bf977b94bee080221b6a6ff53925a1438b9661eb2d032",
+    "upstream_artifacts": {
+      "u1a_u1r2": "c014a6bcd46f9e62e215f04dee7b40b96a7b92b7e3d36761105aff85097841fd"
+    }
+  },
+  "calibration_threshold": -1.7976931348623157e+308,
+  "d1": {
+    "alarm_opportunity_count": 301180,
+    "auc": 0.30982132703641024,
+    "auc_trajectory_bootstrap_interval": [
+      0.3079203402669845,
+      0.31168190845474186
+    ],
+    "capsize_count": 30,
+    "detected_capsize_count": 30,
+    "exposure_hours": 787.1472222222222,
+    "false_episode_count": 17777,
+    "false_episodes_per_hour": 22.584085286883365,
+    "false_episodes_per_hour_trajectory_bootstrap_interval": [
+      22.565831873371458,
+      22.60203129680093
+    ],
+    "interval_conditioning": "conditional on the frozen scoring and sampling policy",
+    "lead_time_quantiles_s": [
+      340.0,
+      340.0,
+      340.0
+    ],
+    "sensitivity": 1.0,
+    "sensitivity_exact_capsize_event_interval": [
+      0.8842966917779722,
+      1.0
+    ],
+    "sensitivity_trajectory_bootstrap_interval": [
+      1.0,
+      1.0
+    ],
+    "threshold": -1.7976931348623157e+308,
+    "trajectory_bootstrap_replicates": 1000,
+    "trajectory_bootstrap_seed": 20260804,
+    "trajectory_bootstrap_valid_replicates": 1000
+  },
+  "d5": {
+    "auc": null,
+    "auc_status": "unevaluable: AUC requires both classes",
+    "calibration_trajectory_count": 1000,
+    "leakage_audit_triggered": null,
+    "leakage_trigger": 0.58,
+    "orientation_independent_auc": null
+  },
+  "experiment": "U1c-r2",
+  "selected_controls": {
+    "critical_rate": "unforced_eq13",
+    "emission_policy": "prior_from_start",
+    "event_accounting": "absorbing_probability",
+    "prior_strength": 5.0,
+    "tail_quantile": 0.75,
+    "trailing_window_s": null
+  },
+  "target_sensitivity": 0.9
+}

@@ -1,0 +1,184 @@
+{
+  "_artifact_sha256": "16302f70b4249f820d6823cc081d6acdeac3d606f83f61711bf0dc06dc2dde40",
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "reference_u1r2_anchor_sha256": "2f68a4ce89ab90997c91bd98ca614bfe26b7fba923c69c6e439c865b4432cd5d",
+    "reference_v02_anchor_sha256": "96fdcc7a93cd4b0a760750320cf41c7f1ce15d52708b2bfc8791c3b3a9d10dfd",
+    "schema_version": 1,
+    "source_sha256": "f12f8940e11d6adbae5bf977b94bee080221b6a6ff53925a1438b9661eb2d032",
+    "upstream_artifacts": {
+      "u1a_u1r2": "c014a6bcd46f9e62e215f04dee7b40b96a7b92b7e3d36761105aff85097841fd"
+    }
+  },
+  "experiment": "U1b-r2",
+  "figure": "u1b_tracking_u1r2.png",
+  "geometry_caveat": "The 600-second step campaign supports transient tracking only; the 900-second v0.2 geometry also reports its frozen fully post-step segment.",
+  "ramps": {
+    "biased_ramp": {
+      "bias_per_hour": -0.814569887891889,
+      "bias_trajectory_bootstrap_interval": [
+        -0.9188571093025688,
+        -0.7108406386825459
+      ],
+      "captures_realized_count": false,
+      "event_accounting": "absorbing_probability",
+      "flagged_emission_count": 60983,
+      "predicted_capsize_count": 2.197754052409685,
+      "predicted_count_interval": [
+        1.2243506490125973,
+        2.1185223556809265
+      ],
+      "realized_capsize_count": 223,
+      "terminal_side_split": {
+        "negative": 979,
+        "positive": 0
+      },
+      "tracking_lag_estimable": true,
+      "tracking_lag_s": 120.0,
+      "tracking_lag_trajectory_bootstrap_interval": [
+        110.0,
+        120.0
+      ],
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_count": 1000,
+      "valid_emission_count": 60983
+    },
+    "parametric_ramp": {
+      "bias_per_hour": -1.1201142294886028,
+      "bias_trajectory_bootstrap_interval": [
+        -1.2400613624167947,
+        -1.0030601109139263
+      ],
+      "captures_realized_count": false,
+      "event_accounting": "absorbing_probability",
+      "flagged_emission_count": 61000,
+      "predicted_capsize_count": 0.0,
+      "predicted_count_interval": [
+        0.0,
+        0.0
+      ],
+      "realized_capsize_count": 295,
+      "terminal_side_split": {
+        "negative": 325,
+        "positive": 288
+      },
+      "tracking_lag_estimable": true,
+      "tracking_lag_s": 120.0,
+      "tracking_lag_trajectory_bootstrap_interval": [
+        120.0,
+        120.0
+      ],
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_count": 1000,
+      "valid_emission_count": 61000
+    },
+    "softening_ramp": {
+      "bias_per_hour": -2.1420799994332382,
+      "bias_trajectory_bootstrap_interval": [
+        -2.321565927953818,
+        -1.9750453746036887
+      ],
+      "captures_realized_count": false,
+      "event_accounting": "absorbing_probability",
+      "flagged_emission_count": 60975,
+      "predicted_capsize_count": 0.0010276919212194701,
+      "predicted_count_interval": [
+        0.0,
+        0.0
+      ],
+      "realized_capsize_count": 497,
+      "terminal_side_split": {
+        "negative": 377,
+        "positive": 352
+      },
+      "tracking_lag_estimable": true,
+      "tracking_lag_s": 120.0,
+      "tracking_lag_trajectory_bootstrap_interval": [
+        120.0,
+        120.0
+      ],
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_count": 1000,
+      "valid_emission_count": 60975
+    }
+  },
+  "selected_controls": {
+    "critical_rate": "unforced_eq13",
+    "emission_policy": "prior_from_start",
+    "event_accounting": "absorbing_probability",
+    "prior_strength": 5.0,
+    "tail_quantile": 0.75,
+    "trailing_window_s": null
+  },
+  "steps": {
+    "softening_step": {
+      "bias_per_hour": -2.4198906793376898,
+      "bias_trajectory_bootstrap_interval": [
+        -2.586079206308769,
+        -2.2481828957057686
+      ],
+      "captures_realized_count": false,
+      "event_accounting": "absorbing_probability",
+      "flagged_emission_count": 159456,
+      "fully_post_step_segment_reported": false,
+      "predicted_capsize_count": 160.12149251042126,
+      "predicted_count_interval": [
+        130.31835488457648,
+        136.29883656333203
+      ],
+      "realized_capsize_count": 1169,
+      "settling_time_s": null,
+      "terminal_side_split": {
+        "negative": 4133,
+        "positive": 3956
+      },
+      "tracking_lag_estimable": true,
+      "tracking_lag_s": 40.0,
+      "tracking_lag_trajectory_bootstrap_interval": [
+        40.0,
+        40.0
+      ],
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_count": 3000,
+      "transition_s": 300.0,
+      "valid_emission_count": 164120
+    },
+    "softening_step_v02": {
+      "bias_per_hour": -3.0988688624316505,
+      "bias_trajectory_bootstrap_interval": [
+        -3.2801451302351725,
+        -2.9306473648815614
+      ],
+      "captures_realized_count": false,
+      "event_accounting": "absorbing_probability",
+      "flagged_emission_count": 181237,
+      "fully_post_step_segment_reported": true,
+      "predicted_capsize_count": 312.24832774702224,
+      "predicted_count_interval": [
+        277.4541281113206,
+        284.6373056584476
+      ],
+      "realized_capsize_count": 1888,
+      "settling_time_s": null,
+      "terminal_side_split": {
+        "negative": 7003,
+        "positive": 6905
+      },
+      "tracking_lag_estimable": true,
+      "tracking_lag_s": 60.0,
+      "tracking_lag_trajectory_bootstrap_interval": [
+        50.0,
+        90.0
+      ],
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_count": 3000,
+      "transition_s": 300.0,
+      "valid_emission_count": 208574
+    }
+  }
+}

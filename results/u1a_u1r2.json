@@ -1,0 +1,370 @@
+{
+  "_artifact_sha256": "c014a6bcd46f9e62e215f04dee7b40b96a7b92b7e3d36761105aff85097841fd",
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "reference_u1r2_anchor_sha256": "2f68a4ce89ab90997c91bd98ca614bfe26b7fba923c69c6e439c865b4432cd5d",
+    "reference_v02_anchor_sha256": "96fdcc7a93cd4b0a760750320cf41c7f1ce15d52708b2bfc8791c3b3a9d10dfd",
+    "schema_version": 1,
+    "source_sha256": "f12f8940e11d6adbae5bf977b94bee080221b6a6ff53925a1438b9661eb2d032",
+    "upstream_artifacts": {}
+  },
+  "adaptive_threshold_sensitivity": {
+    "biased_evaluation": {
+      "captures_realized_count": false,
+      "declustered_crossings_per_30_minutes": 1.998,
+      "event_accounting": "absorbing_probability",
+      "flagged_emission_count": 301973,
+      "predicted_capsize_count": 179.81177541596796,
+      "predicted_count_interval": [
+        163.32315595299798,
+        171.06699824220414
+      ],
+      "realized_capsize_count": 105,
+      "target_lower": 7.0,
+      "target_upper": 10.0,
+      "terminal_side_split": {
+        "negative": 3266,
+        "positive": 0
+      },
+      "threshold_interpolation_fraction": 0.0,
+      "trajectory_count": 5000,
+      "valid_emission_count": 301973
+    },
+    "biased_stationary": {
+      "captures_realized_count": false,
+      "declustered_crossings_per_30_minutes": 5.184,
+      "event_accounting": "absorbing_probability",
+      "flagged_emission_count": 56545,
+      "predicted_capsize_count": 149.1774666466794,
+      "predicted_count_interval": [
+        133.2465058148816,
+        140.30170420897676
+      ],
+      "realized_capsize_count": 144,
+      "target_lower": 7.0,
+      "target_upper": 10.0,
+      "terminal_side_split": {
+        "negative": 1689,
+        "positive": 0
+      },
+      "threshold_interpolation_fraction": 0.0,
+      "trajectory_count": 1000,
+      "valid_emission_count": 56595
+    },
+    "parametric_evaluation": {
+      "captures_realized_count": false,
+      "declustered_crossings_per_30_minutes": 0.44099999999999995,
+      "event_accounting": "absorbing_probability",
+      "flagged_emission_count": 304045,
+      "predicted_capsize_count": 10.735555773348288,
+      "predicted_count_interval": [
+        9.17543021215179,
+        10.47324573209301
+      ],
+      "realized_capsize_count": 46,
+      "target_lower": 7.0,
+      "target_upper": 10.0,
+      "terminal_side_split": {
+        "negative": 383,
+        "positive": 404
+      },
+      "threshold_interpolation_fraction": 0.0,
+      "trajectory_count": 5000,
+      "valid_emission_count": 304045
+    },
+    "parametric_stationary": {
+      "captures_realized_count": false,
+      "declustered_crossings_per_30_minutes": 2.115,
+      "event_accounting": "absorbing_probability",
+      "flagged_emission_count": 58896,
+      "predicted_capsize_count": 22.407540585180094,
+      "predicted_count_interval": [
+        19.050269634258346,
+        21.488361250713833
+      ],
+      "realized_capsize_count": 96,
+      "target_lower": 7.0,
+      "target_upper": 10.0,
+      "terminal_side_split": {
+        "negative": 355,
+        "positive": 327
+      },
+      "threshold_interpolation_fraction": 0.0,
+      "trajectory_count": 1000,
+      "valid_emission_count": 58897
+    },
+    "softening_evaluation": {
+      "captures_realized_count": false,
+      "declustered_crossings_per_30_minutes": 8.481,
+      "event_accounting": "absorbing_probability",
+      "flagged_emission_count": 300611,
+      "predicted_capsize_count": 804.6116951357949,
+      "predicted_count_interval": [
+        723.5890490982428,
+        740.1720711769709
+      ],
+      "realized_capsize_count": 111,
+      "target_lower": 7.0,
+      "target_upper": 10.0,
+      "terminal_side_split": {
+        "negative": 7005,
+        "positive": 7038
+      },
+      "threshold_interpolation_fraction": 0.25,
+      "trajectory_count": 5000,
+      "valid_emission_count": 301765
+    },
+    "softening_stationary": {
+      "captures_realized_count": false,
+      "declustered_crossings_per_30_minutes": 8.703,
+      "event_accounting": "absorbing_probability",
+      "flagged_emission_count": 58202,
+      "predicted_capsize_count": 302.2425979653087,
+      "predicted_count_interval": [
+        270.51630784208913,
+        280.67026825715635
+      ],
+      "realized_capsize_count": 82,
+      "target_lower": 7.0,
+      "target_upper": 10.0,
+      "terminal_side_split": {
+        "negative": 1416,
+        "positive": 1526
+      },
+      "threshold_interpolation_fraction": 0.35000000000000003,
+      "trajectory_count": 1000,
+      "valid_emission_count": 58386
+    }
+  },
+  "calibration_tail_priors": {
+    "biased": {
+      "exceedance_probability": 0.2502088554720134,
+      "mean_rate": 4.364046678152915,
+      "retained_crossings": 2394,
+      "threshold_w": 0.7759427069376055
+    },
+    "parametric": {
+      "exceedance_probability": 0.25,
+      "mean_rate": 7.0002008149699355,
+      "retained_crossings": 852,
+      "threshold_w": 0.7822461319583515
+    },
+    "softening": {
+      "exceedance_probability": 0.2500224921277553,
+      "mean_rate": 7.407398153180525,
+      "retained_crossings": 11115,
+      "threshold_w": 0.7701434882796867
+    }
+  },
+  "campaign_capture_count": 0,
+  "capture_target": 5,
+  "criterion_met": false,
+  "experiment": "U1a-r2",
+  "family_capture_counts": {
+    "biased": 0,
+    "parametric": 0,
+    "softening": 0
+  },
+  "family_scope_claim": "The decomposition yields calibrated counts on softening-type campaigns; on parametric and biased campaigns its prior-dominated estimate is expected to remain uninformative, and that scope limit \u2014 if observed \u2014 is the finding.",
+  "family_scope_observed": {
+    "biased": false,
+    "parametric": false,
+    "softening": false
+  },
+  "figure": "u1a_reliability_u1r2.png",
+  "prior_dominated": {
+    "biased_evaluation": {
+      "emissions": 301973,
+      "flagged_emissions": 301973
+    },
+    "biased_stationary": {
+      "emissions": 56595,
+      "flagged_emissions": 56535
+    },
+    "parametric_evaluation": {
+      "emissions": 304045,
+      "flagged_emissions": 304045
+    },
+    "parametric_stationary": {
+      "emissions": 58897,
+      "flagged_emissions": 58896
+    },
+    "softening_evaluation": {
+      "emissions": 301765,
+      "flagged_emissions": 298632
+    },
+    "softening_stationary": {
+      "emissions": 58386,
+      "flagged_emissions": 55388
+    }
+  },
+  "reliability": {
+    "bins": [
+      {
+        "bin": 1,
+        "count": 8395,
+        "mean_rate_per_hour": 0.010738692286312612,
+        "predicted_capsize_fraction": 0.001741110182498151,
+        "realized_capsize_fraction": 0.038594401429422276,
+        "realized_exact_interval": [
+          0.034575173911036455,
+          0.042937779259659234
+        ]
+      },
+      {
+        "bin": 2,
+        "count": 3051,
+        "mean_rate_per_hour": 0.4925815497979311,
+        "predicted_capsize_fraction": 0.077447183874212,
+        "realized_capsize_fraction": 0.023926581448705343,
+        "realized_exact_interval": [
+          0.018800403809039894,
+          0.029991113691262325
+        ]
+      },
+      {
+        "bin": 3,
+        "count": 3505,
+        "mean_rate_per_hour": 1.2941373929484719,
+        "predicted_capsize_fraction": 0.19158754669815,
+        "realized_capsize_fraction": 0.02653352353780314,
+        "realized_exact_interval": [
+          0.021468163758011655,
+          0.032407864262019914
+        ]
+      },
+      {
+        "bin": 4,
+        "count": 3049,
+        "mean_rate_per_hour": 2.1651788040488804,
+        "predicted_capsize_fraction": 0.29502219625945014,
+        "realized_capsize_fraction": 0.03082978025582158,
+        "realized_exact_interval": [
+          0.02498390393712117,
+          0.03759703537289819
+        ]
+      }
+    ],
+    "edges_rate_per_hour": [
+      -5e-324,
+      0.0,
+      0.15252553943696442,
+      0.9011311729131805,
+      1.6616357913006172,
+      4.301190277961618
+    ],
+    "weighted_mean_absolute_error": 0.10315065364390155
+  },
+  "selected_controls": {
+    "critical_rate": "unforced_eq13",
+    "emission_policy": "prior_from_start",
+    "event_accounting": "absorbing_probability",
+    "prior_strength": 5.0,
+    "tail_quantile": 0.75,
+    "trailing_window_s": null
+  },
+  "test_campaigns": {
+    "biased_evaluation": {
+      "captures_realized_count": false,
+      "event_accounting": "absorbing_probability",
+      "flagged_emission_count": 301973,
+      "predicted_capsize_count": 267.12600723946593,
+      "predicted_count_interval": [
+        243.05783295876628,
+        252.97039770592522
+      ],
+      "realized_capsize_count": 105,
+      "terminal_side_split": {
+        "negative": 3266,
+        "positive": 0
+      },
+      "trajectory_count": 5000,
+      "valid_emission_count": 301973
+    },
+    "biased_stationary": {
+      "captures_realized_count": false,
+      "event_accounting": "absorbing_probability",
+      "flagged_emission_count": 56535,
+      "predicted_capsize_count": 132.67492932511942,
+      "predicted_count_interval": [
+        118.35032033691914,
+        124.98376985313877
+      ],
+      "realized_capsize_count": 144,
+      "terminal_side_split": {
+        "negative": 1689,
+        "positive": 0
+      },
+      "trajectory_count": 1000,
+      "valid_emission_count": 56595
+    },
+    "parametric_evaluation": {
+      "captures_realized_count": false,
+      "event_accounting": "absorbing_probability",
+      "flagged_emission_count": 304045,
+      "predicted_capsize_count": 23.39997922176273,
+      "predicted_count_interval": [
+        20.30447111407152,
+        22.408831860462975
+      ],
+      "realized_capsize_count": 46,
+      "terminal_side_split": {
+        "negative": 383,
+        "positive": 404
+      },
+      "trajectory_count": 5000,
+      "valid_emission_count": 304045
+    },
+    "parametric_stationary": {
+      "captures_realized_count": false,
+      "event_accounting": "absorbing_probability",
+      "flagged_emission_count": 58896,
+      "predicted_capsize_count": 20.32001990475309,
+      "predicted_count_interval": [
+        17.25039782107082,
+        19.55333655743243
+      ],
+      "realized_capsize_count": 96,
+      "terminal_side_split": {
+        "negative": 355,
+        "positive": 327
+      },
+      "trajectory_count": 1000,
+      "valid_emission_count": 58897
+    },
+    "softening_evaluation": {
+      "captures_realized_count": false,
+      "event_accounting": "absorbing_probability",
+      "flagged_emission_count": 298632,
+      "predicted_capsize_count": 1129.0753909718906,
+      "predicted_count_interval": [
+        997.1580709954541,
+        1017.6033583535794
+      ],
+      "realized_capsize_count": 111,
+      "terminal_side_split": {
+        "negative": 12907,
+        "positive": 13041
+      },
+      "trajectory_count": 5000,
+      "valid_emission_count": 301765
+    },
+    "softening_stationary": {
+      "captures_realized_count": false,
+      "event_accounting": "absorbing_probability",
+      "flagged_emission_count": 55388,
+      "predicted_capsize_count": 249.3486788913803,
+      "predicted_count_interval": [
+        214.70383842609772,
+        223.7799014066234
+      ],
+      "realized_capsize_count": 82,
+      "terminal_side_split": {
+        "negative": 2869,
+        "positive": 2984
+      },
+      "trajectory_count": 1000,
+      "valid_emission_count": 58386
+    }
+  }
+}
