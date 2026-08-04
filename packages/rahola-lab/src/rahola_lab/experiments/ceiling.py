@@ -4,14 +4,14 @@ from __future__ import annotations
 
 import gc
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 import numpy as np
 import xgboost as xgb
 from numpy.typing import NDArray
 
-from rahola.config import ProtocolKind, SimulationConfig
+from rahola.config import ProtocolConfig, ProtocolKind, SimulationConfig
 from rahola.dataset import SimulationDataset
 from rahola.simulate import simulate_restarted_batch
 from rahola.windowing import binary_auc
@@ -27,6 +27,7 @@ from rahola_lab.constants import (
 )
 from rahola_lab.detectors import (
     DetectorWindowDataset,
+    NormalizationMode,
     engineered_features,
     extract_detector_windows,
 )
@@ -36,6 +37,7 @@ from rahola_lab.experiments.detector_common import (
     fit_frozen_suite,
     training_windows,
 )
+from rahola_lab.experiments.v02_common import load_frozen_v02_result
 from rahola_lab.inference import bootstrap_particle_filter
 
 CAMPAIGNS = (
@@ -69,9 +71,7 @@ def _take(windows: DetectorWindowDataset, indices: NDArray[np.integer]) -> Detec
     )
 
 
-def _stratum_counts(
-    windows: DetectorWindowDataset, duration_s: float
-) -> dict[str, int]:
+def _stratum_counts(windows: DetectorWindowDataset, duration_s: float) -> dict[str, int]:
     # The factor four creates quartiles; it is not the four-second natural period.
     time_bin = np.minimum((4.0 * windows.end_times_s / duration_s).astype(int), 3)
     groups = 4 * windows.labels.astype(int) + time_bin
@@ -85,9 +85,7 @@ def _clock_quartile_scores(
     windows: DetectorWindowDataset, duration_s: float
 ) -> NDArray[np.float64]:
     """Protocol-time-only comparator on the exact AUC sampling strata."""
-    return np.minimum((4.0 * windows.end_times_s / duration_s).astype(int), 3).astype(
-        np.float64
-    )
+    return np.minimum((4.0 * windows.end_times_s / duration_s).astype(int), 3).astype(np.float64)
 
 
 def _sample_stratified(
@@ -151,6 +149,7 @@ def _rollout_scores(
     windows_per_batch: int = 16,
 ) -> NDArray[np.float64]:
     config = SimulationConfig.from_dict(sample.dataset.config)
+    restart_config = replace(config, protocol=ProtocolConfig())
     windows = sample.windows
     scores = np.empty(len(windows.labels), dtype=np.float64)
     dt_s = float(np.median(np.diff(sample.dataset.time_s)))
@@ -192,7 +191,7 @@ def _rollout_scores(
         count = (stop - start) * rollouts
         seed_start = seed_base * 100_000_000 + start * rollouts
         futures = simulate_restarted_batch(
-            config,
+            restart_config,
             np.arange(seed_start, seed_start + count, dtype=np.uint64),
             duration_s=50.0 * config.natural_period_s,
             initial_angle_rad=np.concatenate(angles),
@@ -240,9 +239,7 @@ def _calibration(
         or np.any(weights <= 0.0)
         or np.any((scores < 0.0) | (scores > 1.0))
     ):
-        raise ValueError(
-            "calibration labels, probability scores, and positive weights must align"
-        )
+        raise ValueError("calibration labels, probability scores, and positive weights must align")
     bins = np.minimum((10 * scores).astype(int), 9)
     rows = []
     ece = 0.0
@@ -273,6 +270,8 @@ def _calibration(
 def _fit_b0(
     data_root: Path,
     selected: dict[str, object],
+    *,
+    normalization_mode: NormalizationMode = NormalizationMode.CUMULATIVE_ONLINE,
 ) -> xgb.Booster:
     matrices = []
     labels = []
@@ -281,12 +280,24 @@ def _fit_b0(
             dataset = load_campaign_split(
                 campaign_dir(data_root, f"{family}_{role}"), SeedBlock.TRAIN
             )
-            windows = extract_detector_windows(dataset, stride_s=20.0, max_windows_per_trajectory=3)
+            windows = extract_detector_windows(
+                dataset,
+                stride_s=20.0,
+                max_windows_per_trajectory=3,
+                normalization_mode=normalization_mode,
+            )
+            physics_windows = extract_detector_windows(
+                dataset,
+                stride_s=20.0,
+                max_windows_per_trajectory=3,
+                normalization_mode=NormalizationMode.PHYSICAL,
+            )
             matrices.append(
                 engineered_features(
                     windows,
                     SimulationConfig.from_dict(dataset.config),
                     neighbor_radius=float(selected["neighbor_radius"]),
+                    physics_windows=physics_windows,
                 )
             )
             labels.append(windows.labels)
@@ -315,21 +326,43 @@ def run(
     windows_per_campaign: int = CEILING_WINDOWS_PER_CAMPAIGN,
     rollouts: int = ORACLE_ROLLOUTS,
     write: bool = True,
+    artifact_suffix: str = "",
 ) -> dict[str, object]:
     """Run the frozen restart comparison and historical architecture trigger."""
     started = time.perf_counter()
-    d1 = load_result(output_root, "d1_operating_curves")
+    d1 = (
+        load_frozen_v02_result(output_root / "d1_operating_curves_v02.json")
+        if artifact_suffix
+        else load_result(output_root, "d1_operating_curves")
+    )
     training_data = [
         load_campaign_split(campaign_dir(data_root, f"{family}_{role}"), SeedBlock.TRAIN)
         for family in FAMILIES
         for role in ("stationary", "ramp")
     ]
-    suite = fit_frozen_suite(
-        training_windows(training_data, max_windows_per_trajectory=3), d1["selected"]
+    suite_cumulative = fit_frozen_suite(
+        training_windows(
+            training_data,
+            max_windows_per_trajectory=3,
+            normalization_mode=NormalizationMode.CUMULATIVE_ONLINE,
+        ),
+        d1["selected"],
+        cnn_normalization_mode=NormalizationMode.CUMULATIVE_ONLINE,
+    )
+    suite_fixed = fit_frozen_suite(
+        training_windows(
+            training_data,
+            max_windows_per_trajectory=3,
+            normalization_mode=NormalizationMode.FIXED_WINDOW_CAUSAL,
+        ),
+        d1["selected"],
+        cnn_normalization_mode=NormalizationMode.FIXED_WINDOW_CAUSAL,
     )
     del training_data
     gc.collect()
     samples = []
+    fixed_samples = []
+    physics_samples = []
     for campaign_index, name in enumerate(CAMPAIGNS):
         dataset = load_campaign_split(campaign_dir(data_root, name), SeedBlock.TEST)
         all_windows = extract_detector_windows(dataset, stride_s=10.0)
@@ -339,6 +372,36 @@ def run(
             windows_per_campaign,
             seed=80_000 + campaign_index,
         )
+        fixed_all_windows = extract_detector_windows(
+            dataset,
+            stride_s=10.0,
+            normalization_mode=NormalizationMode.FIXED_WINDOW_CAUSAL,
+        )
+        fixed_sampled_windows, fixed_weights = _sample_stratified(
+            fixed_all_windows,
+            float(dataset.time_s[-1]),
+            windows_per_campaign,
+            seed=80_000 + campaign_index,
+        )
+        physics_all_windows = extract_detector_windows(
+            dataset,
+            stride_s=10.0,
+            normalization_mode=NormalizationMode.PHYSICAL,
+        )
+        physics_sampled_windows, physics_weights = _sample_stratified(
+            physics_all_windows,
+            float(dataset.time_s[-1]),
+            windows_per_campaign,
+            seed=80_000 + campaign_index,
+        )
+        if not np.array_equal(sampled_windows.end_times_s, fixed_sampled_windows.end_times_s):
+            raise ValueError("fixed-window and cumulative samples must align")
+        if not np.array_equal(sampled_windows.end_times_s, physics_sampled_windows.end_times_s):
+            raise ValueError("physics and motion samples must align")
+        if not np.array_equal(weights, fixed_weights) or not np.array_equal(
+            weights, physics_weights
+        ):
+            raise ValueError("normalization modes must preserve sampling weights")
         duration_s = float(dataset.time_s[-1])
         samples.append(
             SampledCampaign(
@@ -350,26 +413,63 @@ def run(
                 _stratum_counts(sampled_windows, duration_s),
             )
         )
-    b0 = _fit_b0(data_root, d1["selected"])
+        fixed_samples.append(
+            SampledCampaign(
+                name,
+                dataset,
+                fixed_sampled_windows,
+                fixed_weights,
+                _stratum_counts(fixed_all_windows, duration_s),
+                _stratum_counts(fixed_sampled_windows, duration_s),
+            )
+        )
+        physics_samples.append(physics_sampled_windows)
+    b0_cumulative = _fit_b0(
+        data_root,
+        d1["selected"],
+        normalization_mode=NormalizationMode.CUMULATIVE_ONLINE,
+    )
+    b0_fixed = _fit_b0(
+        data_root,
+        d1["selected"],
+        normalization_mode=NormalizationMode.FIXED_WINDOW_CAUSAL,
+    )
     labels = np.concatenate([sample.windows.labels for sample in samples])
-    calibration_weights = np.concatenate(
-        [sample.calibration_weights for sample in samples]
+    calibration_weights = np.concatenate([sample.calibration_weights for sample in samples])
+    cnn_cumulative_scores = np.concatenate(
+        [suite_cumulative.cnn.predict_scores(sample.windows.features) for sample in samples]
     )
-    cnn_scores = np.concatenate(
-        [suite.cnn.predict_scores(sample.windows.features) for sample in samples]
+    cnn_fixed_scores = np.concatenate(
+        [suite_fixed.cnn.predict_scores(sample.windows.features) for sample in fixed_samples]
     )
-    b0_scores = np.concatenate(
+    b0_cumulative_scores = np.concatenate(
         [
-            b0.predict(
+            b0_cumulative.predict(
                 xgb.DMatrix(
                     engineered_features(
                         sample.windows,
                         SimulationConfig.from_dict(sample.dataset.config),
                         neighbor_radius=float(d1["selected"]["neighbor_radius"]),
+                        physics_windows=physics,
                     )
                 )
             )
-            for sample in samples
+            for sample, physics in zip(samples, physics_samples, strict=True)
+        ]
+    )
+    b0_fixed_scores = np.concatenate(
+        [
+            b0_fixed.predict(
+                xgb.DMatrix(
+                    engineered_features(
+                        sample.windows,
+                        SimulationConfig.from_dict(sample.dataset.config),
+                        neighbor_radius=float(d1["selected"]["neighbor_radius"]),
+                        physics_windows=physics,
+                    )
+                )
+            )
+            for sample, physics in zip(fixed_samples, physics_samples, strict=True)
         ]
     )
     clock_scores = np.concatenate(
@@ -393,7 +493,7 @@ def run(
             sample,
             filtered=True,
             rollouts=rollouts,
-            seed_base=1_001 + campaign_index * 20,
+            seed_base=1_000 + campaign_index * 20,
         )
         c1_parts.append(c1)
         c2_parts.append(c2)
@@ -416,18 +516,16 @@ def run(
         ]
     ).astype(np.int64)
     methods = {
-        "C1_exact_state_independent_future_restart": _auc_interval(
-            labels, c1_scores, blocks
-        ),
-        "C2_filtered_state_independent_future_restart": _auc_interval(
-            labels, c2_scores, blocks
-        ),
-        "CNN": _auc_interval(labels, cnn_scores, blocks),
-        "B0_XGBoost": _auc_interval(labels, b0_scores, blocks),
+        "C1_exact_state_independent_future_restart": _auc_interval(labels, c1_scores, blocks),
+        "C2_filtered_state_independent_future_restart": _auc_interval(labels, c2_scores, blocks),
+        "CNN_fixed_window_causal": _auc_interval(labels, cnn_fixed_scores, blocks),
+        "CNN_cumulative_online": _auc_interval(labels, cnn_cumulative_scores, blocks),
+        "B0_XGBoost_fixed_window_causal": _auc_interval(labels, b0_fixed_scores, blocks),
+        "B0_XGBoost_cumulative_online": _auc_interval(labels, b0_cumulative_scores, blocks),
         "clock_only_protocol_quartile": _auc_interval(labels, clock_scores, blocks),
     }
     c1_auc = float(methods["C1_exact_state_independent_future_restart"]["auc"])
-    cnn_auc = float(methods["CNN"]["auc"])
+    cnn_auc = float(methods["CNN_fixed_window_causal"]["auc"])
     historical_gap_trigger = cnn_auc < c1_auc - CEILING_AUC_GAP
     payload: dict[str, object] = {
         "experiment": "Prototype #3 independent-future restart comparison",
@@ -446,6 +544,7 @@ def run(
             "total_windows": len(labels),
         },
         "rollouts_per_window": rollouts,
+        "restart_common_random_numbers": True,
         "particle_count": PF_PARTICLES,
         "methods": methods,
         "population_weighted_restart_calibration": _calibration(
@@ -454,13 +553,10 @@ def run(
         "gaps": {
             "C1_minus_C2": c1_auc
             - float(methods["C2_filtered_state_independent_future_restart"]["auc"]),
-            "C2_minus_CNN": float(
-                methods["C2_filtered_state_independent_future_restart"]["auc"]
-            )
+            "C2_minus_CNN": float(methods["C2_filtered_state_independent_future_restart"]["auc"])
             - cnn_auc,
             "C1_minus_CNN": c1_auc - cnn_auc,
-            "CNN_minus_clock_only": cnn_auc
-            - float(methods["clock_only_protocol_quartile"]["auc"]),
+            "CNN_minus_clock_only": cnn_auc - float(methods["clock_only_protocol_quartile"]["auc"]),
         },
         "architecture_gate_valid": False,
         "historical_gap_trigger_threshold_auc": CEILING_AUC_GAP,
@@ -485,8 +581,8 @@ def run(
     if write:
         write_result(
             output_root,
-            "p3_ceiling",
+            f"p3_ceiling{artifact_suffix}",
             payload,
-            upstream_results={"d1_operating_curves": d1},
+            upstream_results=None if artifact_suffix else {"d1_operating_curves": d1},
         )
     return payload

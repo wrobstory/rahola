@@ -36,8 +36,13 @@ def engineered_features(
     config: SimulationConfig,
     *,
     neighbor_radius: float,
+    physics_windows: DetectorWindowDataset | None = None,
 ) -> NDArray[np.float64]:
+    physics = windows if physics_windows is None else physics_windows
+    if not np.array_equal(windows.end_times_s, physics.end_times_s):
+        raise ValueError("motion and physics feature windows must align")
     values = np.asarray(windows.features, dtype=np.float64)
+    physics_values = np.asarray(physics.features, dtype=np.float64)
     roll = values[:, :, 0]
     centered_left = roll[:, :-1] - np.mean(roll[:, :-1], axis=1, keepdims=True)
     centered_right = roll[:, 1:] - np.mean(roll[:, 1:], axis=1, keepdims=True)
@@ -70,8 +75,8 @@ def engineered_features(
     columns = (
         np.var(roll, axis=1, ddof=1),
         ac1,
-        classical_ews_scores(values, statistic="variance", subwindow_fraction=0.35),
-        classical_ews_scores(values, statistic="ac1", subwindow_fraction=0.35),
+        classical_ews_scores(physics_values, statistic="variance", subwindow_fraction=0.35),
+        classical_ews_scores(physics_values, statistic="ac1", subwindow_fraction=0.35),
         np.mean(envelope, axis=1),
         np.std(envelope, axis=1, ddof=1),
         np.max(envelope, axis=1),
@@ -79,9 +84,9 @@ def engineered_features(
         estimated_period,
         danger,
         neighbor_count_scores(
-            values, radius=neighbor_radius, samples_per_period=samples_per_period
+            physics_values, radius=neighbor_radius, samples_per_period=samples_per_period
         ),
-        galeazzi_roll_power_glrt(values, samples_per_period=samples_per_period),
+        galeazzi_roll_power_glrt(physics_values, samples_per_period=samples_per_period),
         np.abs(windows.raw_angle_rad),
         np.abs(windows.raw_rate_rad_s),
     )
