@@ -23,6 +23,7 @@ from rahola_lab.constants import (
 from rahola_lab.evaluation import (
     EpisodeConfig,
     TrajectoryScores,
+    bootstrap_alarm_metrics,
     clopper_pearson_interval,
     evaluate_alarms,
 )
@@ -120,13 +121,13 @@ def _coverage_summary(bounded, start_s: float, end_s: float | None):
     interval = clopper_pearson_interval(covered, len(values))
     return {
         "coverage": covered / len(values),
-        "coverage_interval": [interval.lower, interval.upper],
+        "coverage_window_binomial_interval": [interval.lower, interval.upper],
         "covered": covered,
         "windows": len(values),
     }
 
 
-def run(data_root: Path, output_root: Path) -> dict[str, object]:
+def run(data_root: Path, output_root: Path, *, artifact_suffix: str = "") -> dict[str, object]:
     training = load_campaign_split(campaign_path(data_root, "softening", "stationary"), "train")
     models = fit_forecasters(training, HORIZON_S)
     step_path = data_root / "softening_step"
@@ -180,6 +181,33 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
     adaptive_times, adaptive_coverage = _rolling_coverage(adaptive)
     fixed_metrics = _episode_metrics(fixed, escape_angle)
     adaptive_metrics = _episode_metrics(adaptive, escape_angle)
+    fixed_trajectories = [
+        TrajectoryScores(
+            times_s=stream.times_s,
+            scores=normalized_alarm_scores(bound, escape_angle),
+            record_start_s=120.0,
+            record_end_s=stream.record_end_s,
+            t_capsize_s=stream.t_capsize_s,
+        )
+        for stream, bound, _ in fixed
+    ]
+    adaptive_trajectories = [
+        TrajectoryScores(
+            times_s=stream.times_s,
+            scores=normalized_alarm_scores(bound, escape_angle),
+            record_start_s=120.0,
+            record_end_s=stream.record_end_s,
+            t_capsize_s=stream.t_capsize_s,
+        )
+        for stream, bound, _ in adaptive
+    ]
+    episode_config = EpisodeConfig(threshold=1.0, debounce_windows=3, refractory_windows=3)
+    fixed_bootstrap = bootstrap_alarm_metrics(
+        fixed_trajectories, episode_config, horizon_s=HORIZON_S
+    )
+    adaptive_bootstrap = bootstrap_alarm_metrics(
+        adaptive_trajectories, episode_config, horizon_s=HORIZON_S
+    )
     pre = fixed_times < TRANSITION_S
     post = fixed_times >= TRANSITION_S
     recovery = _recovery_time(adaptive_times, adaptive_coverage)
@@ -196,7 +224,7 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
     aci_post = _coverage_summary(adaptive, TRANSITION_S, None)
 
     output_root.mkdir(parents=True, exist_ok=True)
-    figure_path = output_root / "e3_transition.png"
+    figure_path = output_root / f"e3_transition{artifact_suffix}.png"
     figure, axis = plt.subplots(figsize=(7.2, 4.3))
     axis.plot(fixed_times, fixed_coverage, label="fixed split-CQR")
     axis.plot(adaptive_times, adaptive_coverage, label=f"ACI, gamma={gamma:g}")
@@ -239,15 +267,18 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
         },
         "aci_recovery_time_s": recovery,
         "fixed_fpr_per_hour": fixed_metrics.false_positives_per_hour,
-        "fixed_fpr_per_hour_interval": [
-            fixed_metrics.false_positives_per_hour_interval.lower,
-            fixed_metrics.false_positives_per_hour_interval.upper,
+        "fixed_fpr_per_hour_trajectory_bootstrap_interval": [
+            fixed_bootstrap.false_positives_per_hour.lower,
+            fixed_bootstrap.false_positives_per_hour.upper,
         ],
         "aci_fpr_per_hour": adaptive_metrics.false_positives_per_hour,
-        "aci_fpr_per_hour_interval": [
-            adaptive_metrics.false_positives_per_hour_interval.lower,
-            adaptive_metrics.false_positives_per_hour_interval.upper,
+        "aci_fpr_per_hour_trajectory_bootstrap_interval": [
+            adaptive_bootstrap.false_positives_per_hour.lower,
+            adaptive_bootstrap.false_positives_per_hour.upper,
         ],
+        "interval_conditioning": "conditional on the calibration-frozen alarm policy",
+        "trajectory_bootstrap_replicates": fixed_bootstrap.requested_replicates,
+        "trajectory_bootstrap_seed": fixed_bootstrap.seed,
         "kill_criterion": {
             "absolute_fpr_per_hour": ACI_EXPLOSION_FPR_PER_HOUR,
             "relative_to_fixed": ACI_EXPLOSION_FACTOR,
@@ -257,5 +288,5 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
         },
         "figure": str(figure_path),
     }
-    write_result(output_root, "e3_transition", payload)
+    write_result(output_root, f"e3_transition{artifact_suffix}", payload)
     return payload

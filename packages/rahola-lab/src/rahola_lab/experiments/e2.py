@@ -10,7 +10,12 @@ import numpy as np
 from rahola_lab.campaigns import load_campaign_split
 from rahola_lab.conformal import SplitCQRUpper, normalized_alarm_scores
 from rahola_lab.constants import DANGER_SCORE_THRESHOLDS_RAD_S, SeedBlock
-from rahola_lab.evaluation import EpisodeConfig, TrajectoryScores, evaluate_alarms
+from rahola_lab.evaluation import (
+    EpisodeConfig,
+    TrajectoryScores,
+    bootstrap_alarm_metrics,
+    evaluate_alarms,
+)
 from rahola_lab.experiments.common import (
     FAMILIES,
     MODEL_NAMES,
@@ -116,7 +121,7 @@ def _select_control(rows: list[dict[str, object]], model_name: str) -> dict[str,
     )
 
 
-def run(data_root: Path, output_root: Path) -> dict[str, object]:
+def run(data_root: Path, output_root: Path, *, artifact_suffix: str = "") -> dict[str, object]:
     alpha_grid = np.array([0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.35, 0.5])
     calibration_by_model_alpha: dict[tuple[str, float], list[TrajectoryScores]] = {
         (model, float(alpha)): [] for model in MODEL_NAMES for alpha in alpha_grid
@@ -131,16 +136,12 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
         calibration_y, calibration_raw = snapshot(
             calibration, models, HORIZON_S, history_end_s=180.0
         )
-        calibration_streams = trajectory_forecasts(
-            calibration, models, HORIZON_S, stride_s=10.0
-        )
+        calibration_streams = trajectory_forecasts(calibration, models, HORIZON_S, stride_s=10.0)
         # Pseudo-prospective seal: this is the experiment's only test load.
         test = load_campaign_split(evaluation_path, SeedBlock.TEST)
         streams = trajectory_forecasts(test, models, HORIZON_S, stride_s=10.0)
         physics_fit = fit_piecewise_linear_restoring(test.config)
-        calibration_physics_trajectories.extend(
-            _physics_scores(calibration_streams, physics_fit)
-        )
+        calibration_physics_trajectories.extend(_physics_scores(calibration_streams, physics_fit))
         escape_angle = absolute_roll_escape_angle(test.config)
         corrections: dict[tuple[str, float], float] = {}
         for model_name in MODEL_NAMES:
@@ -156,7 +157,7 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
                         escape_angle,
                     )
                 )
-        test_bundles.append((streams, corrections, escape_angle, physics_fit))
+        test_bundles.append((family, streams, corrections, escape_angle, physics_fit))
 
     calibration_rows: list[dict[str, object]] = []
     for model_name in MODEL_NAMES:
@@ -186,18 +187,23 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
     selected_test: dict[str, list[TrajectoryScores]] = {
         model_name: [] for model_name in (*MODEL_NAMES, "danger_margin")
     }
-    for streams, corrections, escape_angle, physics_fit in test_bundles:
+    selected_strata: dict[str, list[str]] = {
+        model_name: [] for model_name in (*MODEL_NAMES, "danger_margin")
+    }
+    for family, streams, corrections, escape_angle, physics_fit in test_bundles:
         for model_name in MODEL_NAMES:
             alpha = float(calibration_controls[model_name]["alpha"])
-            selected_test[model_name].extend(
-                _trajectory_scores(
-                    streams,
-                    model_name,
-                    corrections[(model_name, alpha)],
-                    escape_angle,
-                )
+            converted = _trajectory_scores(
+                streams,
+                model_name,
+                corrections[(model_name, alpha)],
+                escape_angle,
             )
-        selected_test["danger_margin"].extend(_physics_scores(streams, physics_fit))
+            selected_test[model_name].extend(converted)
+            selected_strata[model_name].extend([family] * len(converted))
+        physics = _physics_scores(streams, physics_fit)
+        selected_test["danger_margin"].extend(physics)
+        selected_strata["danger_margin"].extend([family] * len(physics))
 
     headline: dict[str, object] = {}
     for model_name in (*MODEL_NAMES, "danger_margin"):
@@ -209,18 +215,49 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
             float(calibration_point[control_name]),
             selected_test[model_name],
         )
+        exact_event_interval = point.pop("sensitivity_interval")
+        point.pop("false_positives_per_hour_interval")
+        episode_config = EpisodeConfig(
+            threshold=1.0 if control_name == "alpha" else float(point[control_name]),
+            debounce_windows=3,
+            refractory_windows=3,
+        )
+        intervals = bootstrap_alarm_metrics(
+            selected_test[model_name],
+            episode_config,
+            horizon_s=HORIZON_S,
+            campaign_strata=selected_strata[model_name],
+        )
+        calibration_payload = dict(calibration_point)
+        calibration_payload["sensitivity_exact_capsize_event_interval"] = calibration_payload.pop(
+            "sensitivity_interval"
+        )
+        calibration_payload.pop("false_positives_per_hour_interval")
+        uncertainty = {
+            "sensitivity_trajectory_bootstrap_interval": [
+                intervals.sensitivity.lower,
+                intervals.sensitivity.upper,
+            ],
+            "sensitivity_exact_capsize_event_interval": exact_event_interval,
+            "fpr_per_hour_trajectory_bootstrap_interval": [
+                intervals.false_positives_per_hour.lower,
+                intervals.false_positives_per_hour.upper,
+            ],
+            "trajectory_bootstrap_replicates": intervals.requested_replicates,
+            "trajectory_bootstrap_seed": intervals.seed,
+            "interval_conditioning": "conditional on the calibration-frozen alarm policy",
+        }
         if calibration_point["sensitivity"] >= 0.9:
             headline[model_name] = {
                 "calibration_reached_90_percent_sensitivity": True,
                 "test_reached_90_percent_sensitivity": point["sensitivity"] >= 0.9,
                 "fpr_per_hour": point["false_positives_per_hour"],
                 "sensitivity": point["sensitivity"],
-                "sensitivity_interval": point["sensitivity_interval"],
-                "fpr_per_hour_interval": point["false_positives_per_hour_interval"],
+                **uncertainty,
                 "control": point[control_name],
                 "control_name": control_name,
                 "median_lead_time_s": point["lead_time_median_s"],
-                "calibration_point": calibration_point,
+                "calibration_point": calibration_payload,
             }
         else:
             headline[model_name] = {
@@ -228,15 +265,14 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
                 "test_reached_90_percent_sensitivity": point["sensitivity"] >= 0.9,
                 "maximum_sensitivity": point["sensitivity"],
                 "fpr_per_hour_at_maximum": point["false_positives_per_hour"],
-                "sensitivity_interval": point["sensitivity_interval"],
-                "fpr_per_hour_interval": point["false_positives_per_hour_interval"],
+                **uncertainty,
                 "control": point[control_name],
                 "control_name": control_name,
-                "calibration_point": calibration_point,
+                "calibration_point": calibration_payload,
             }
 
     output_root.mkdir(parents=True, exist_ok=True)
-    figure_path = output_root / "e2_operating_curve.png"
+    figure_path = output_root / f"e2_operating_curve{artifact_suffix}.png"
     figure, axis = plt.subplots(figsize=(6.4, 4.6))
     for model_name in (*MODEL_NAMES, "danger_margin"):
         series = [row for row in calibration_rows if row["model"] == model_name]
@@ -270,9 +306,16 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
         "danger_score_thresholds_rad_s": list(DANGER_SCORE_THRESHOLDS_RAD_S),
         "episode_config": {"debounce_windows": 3, "refractory_windows": 3},
         "operating_point_policy": "Controls are selected on calibration and frozen for test.",
-        "calibration_rows": calibration_rows,
+        "calibration_rows": [
+            {
+                key: value
+                for key, value in row.items()
+                if key not in {"sensitivity_interval", "false_positives_per_hour_interval"}
+            }
+            for row in calibration_rows
+        ],
         "test_at_calibration_selected_control": headline,
         "figure": str(figure_path),
     }
-    write_result(output_root, "e2_operating_curve", payload)
+    write_result(output_root, f"e2_operating_curve{artifact_suffix}", payload)
     return payload

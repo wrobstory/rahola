@@ -27,7 +27,7 @@ FEEDBACK_DELAY_STEPS = round(HORIZON_S / FORECAST_STRIDE_S)
 MODEL_NAME = "lstm"
 
 
-def run(data_root: Path, output_root: Path) -> dict[str, object]:
+def run(data_root: Path, output_root: Path, *, artifact_suffix: str = "") -> dict[str, object]:
     training = load_campaign_split(campaign_path(data_root, "softening", "stationary"), "train")
     models = fit_forecasters(training, HORIZON_S)
     model = models[MODEL_NAME]
@@ -83,7 +83,7 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
     aci_interval = clopper_pearson_interval(int(np.sum(~dense_aci)), len(dense_aci))
 
     output_root.mkdir(parents=True, exist_ok=True)
-    figure_path = output_root / "e4_stress_test.png"
+    figure_path = output_root / f"e4_stress_test{artifact_suffix}.png"
     labels = ["raw LSTM\n(snapshot)", "split CQR\n(snapshot)", "ACI\n(post-step stream)"]
     values = [raw_coverage, cqr_coverage, aci_coverage]
     figure, axis = plt.subplots(figsize=(6.4, 4.3))
@@ -105,21 +105,27 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
         "aci_gamma": GAMMA,
         "feedback_delay_steps": FEEDBACK_DELAY_STEPS,
         "raw_lstm_snapshot_coverage": raw_coverage,
-        "raw_lstm_snapshot_coverage_interval": [raw_interval.lower, raw_interval.upper],
+        "raw_lstm_snapshot_exact_trajectory_interval": [
+            raw_interval.lower,
+            raw_interval.upper,
+        ],
         "split_cqr_snapshot_coverage": cqr_coverage,
-        "split_cqr_snapshot_coverage_interval": [cqr_interval.lower, cqr_interval.upper],
+        "split_cqr_snapshot_exact_trajectory_interval": [
+            cqr_interval.lower,
+            cqr_interval.upper,
+        ],
         "raw_lstm_dense_post_coverage": dense_raw_coverage,
-        "raw_lstm_dense_post_coverage_interval": [
+        "raw_lstm_dense_post_window_binomial_interval": [
             dense_raw_interval.lower,
             dense_raw_interval.upper,
         ],
         "split_cqr_dense_post_coverage": dense_cqr_coverage,
-        "split_cqr_dense_post_coverage_interval": [
+        "split_cqr_dense_post_window_binomial_interval": [
             dense_cqr_interval.lower,
             dense_cqr_interval.upper,
         ],
         "aci_dense_post_coverage": aci_coverage,
-        "aci_dense_post_coverage_interval": [aci_interval.lower, aci_interval.upper],
+        "aci_dense_post_window_binomial_interval": [aci_interval.lower, aci_interval.upper],
         "raw_coverage_gap_pp": 100.0 * ((1.0 - ALPHA) - raw_coverage),
         "raw_coverage_gap_interval_pp": [
             100.0 * ((1.0 - ALPHA) - raw_interval.upper),
@@ -132,5 +138,5 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
         ],
         "figure": str(figure_path),
     }
-    write_result(output_root, "e4_stress_test", payload)
+    write_result(output_root, f"e4_stress_test{artifact_suffix}", payload)
     return payload

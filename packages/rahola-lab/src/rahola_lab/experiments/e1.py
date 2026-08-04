@@ -22,8 +22,9 @@ from rahola_lab.experiments.common import (
 )
 
 
-def run(data_root: Path, output_root: Path) -> dict[str, object]:
+def run(data_root: Path, output_root: Path, *, artifact_suffix: str = "") -> dict[str, object]:
     alphas = np.array([0.02, 0.05, 0.1, 0.2], dtype=np.float64)
+    reported_models = ("lstm",) if artifact_suffix else MODEL_NAMES
     rows: list[dict[str, object]] = []
     for family in FAMILIES:
         path = campaign_path(data_root, family, "stationary")
@@ -37,7 +38,7 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
                 calibration, models, horizon_s, history_end_s=180.0
             )
             test_y, test_raw = snapshot(test, models, horizon_s, history_end_s=180.0)
-            for model_name in MODEL_NAMES:
+            for model_name in reported_models:
                 conformal = SplitCQRUpper.calibrate(calibration_y, calibration_raw[model_name])
                 for alpha in alphas:
                     bound = conformal.upper_bound(test_raw[model_name], float(alpha))
@@ -52,7 +53,10 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
                             "alpha": float(alpha),
                             "exceedance_rate": rate,
                             "coverage": 1.0 - rate,
-                            "coverage_interval": [interval.lower, interval.upper],
+                            "coverage_exact_trajectory_interval": [
+                                interval.lower,
+                                interval.upper,
+                            ],
                             "n": len(test_y),
                             "coverage_delta_pp": 100.0 * ((1.0 - rate) - (1.0 - alpha)),
                             "coverage_delta_interval_pp": [
@@ -62,10 +66,13 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
                         }
                     )
 
-    figure_path = output_root / "e1_coverage.png"
+    figure_path = output_root / f"e1_coverage{artifact_suffix}.png"
     output_root.mkdir(parents=True, exist_ok=True)
-    figure, axes = plt.subplots(1, 3, figsize=(12, 3.8), sharex=True, sharey=True)
-    for axis, model_name in zip(axes, MODEL_NAMES, strict=True):
+    figure, axes_value = plt.subplots(
+        1, len(reported_models), figsize=(4 * len(reported_models), 3.8), sharex=True, sharey=True
+    )
+    axes = np.atleast_1d(axes_value)
+    for axis, model_name in zip(axes, reported_models, strict=True):
         selected = [row for row in rows if row["model"] == model_name]
         for family in FAMILIES:
             for horizon_s in FORECAST_HORIZONS_S:
@@ -85,7 +92,14 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
         n = int(np.median([row["n"] for row in selected]))
         low = binom.ppf(0.025, n, alphas) / n
         high = binom.ppf(0.975, n, alphas) / n
-        axis.fill_between(alphas, low, high, color="black", alpha=0.1, label="95% binomial")
+        axis.fill_between(
+            alphas,
+            low,
+            high,
+            color="black",
+            alpha=0.1,
+            label="trajectory-snapshot binomial interval",
+        )
         axis.plot(alphas, alphas, "k--", linewidth=1)
         axis.set_title(model_name)
         axis.set_xlabel("nominal alpha")
@@ -101,6 +115,11 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
     worst = rows[int(np.argmax(np.abs(deltas)))]
     payload: dict[str, object] = {
         "experiment": "E1",
+        "selective_regeneration": (
+            "LSTM rows only; envelope and linear v0.1 rows stand"
+            if artifact_suffix
+            else "historical full-model run"
+        ),
         "alphas": alphas.tolist(),
         "rows": rows,
         "mean_absolute_coverage_delta_pp": float(np.mean(np.abs(deltas))),
@@ -108,5 +127,5 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
         "worst_cell": worst,
         "figure": str(figure_path),
     }
-    write_result(output_root, "e1_coverage", payload)
+    write_result(output_root, f"e1_coverage{artifact_suffix}", payload)
     return payload
