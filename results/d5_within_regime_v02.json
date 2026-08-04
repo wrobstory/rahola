@@ -1,0 +1,442 @@
+{
+  "_artifact_sha256": "711c28094dfaf733ffcd531161c0cb0d8f00d7d141b89634d3a81acb44783d4e",
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "schema_version": 1,
+    "source_sha256": "2ab530c43d84c8cb900df8dc3d778f2678643f8d5bc126ab31545bb48eb46c15",
+    "upstream_artifacts": {}
+  },
+  "experiment": "D5_v02",
+  "methods": {
+    "classical_ews": {
+      "alarm_opportunity_count": 28637,
+      "auc": 0.5132772031003605,
+      "auc_trajectory_bootstrap_interval": [
+        0.4963333727764425,
+        0.5320814766404104
+      ],
+      "calibration_operating_point": {
+        "alarm_opportunity_count": 9910,
+        "capsize_count": 294,
+        "detected_capsize_count": 294,
+        "exposure_hours": 27.43402777777778,
+        "false_episode_count": 381,
+        "false_episodes_per_hour": 13.88786229591191,
+        "lead_time_quantiles_s": [
+          24.000000000000046,
+          157.45000000000005,
+          296.35
+        ],
+        "sensitivity": 1.0,
+        "sensitivity_exact_capsize_event_interval": [
+          0.9875311790067285,
+          1.0
+        ],
+        "threshold": -1.7976931348623157e+308
+      },
+      "capsize_count": 853,
+      "detected_capsize_count": 853,
+      "exposure_hours": 79.27638888888889,
+      "false_episode_count": 1097,
+      "false_episodes_per_hour": 13.837663589060776,
+      "false_episodes_per_hour_trajectory_bootstrap_interval": [
+        13.357422453775959,
+        14.347734946481395
+      ],
+      "interval_conditioning": "conditional on the frozen scoring and sampling policy",
+      "lead_time_quantiles_s": [
+        30.300000000000047,
+        156.0,
+        284.36000000000007
+      ],
+      "maximum_sensitivity": 1.0,
+      "orientation_independent_auc": 0.5132772031003605,
+      "sensitivity": 1.0,
+      "sensitivity_exact_capsize_event_interval": [
+        0.9956847426900839,
+        1.0
+      ],
+      "sensitivity_trajectory_bootstrap_interval": [
+        1.0,
+        1.0
+      ],
+      "target_attainable": true,
+      "target_sensitivity": 0.9,
+      "threshold": -1.7976931348623157e+308,
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_bootstrap_valid_replicates": 1000
+    },
+    "cnn": {
+      "alarm_opportunity_count": 28637,
+      "auc": 0.44411550997381716,
+      "auc_trajectory_bootstrap_interval": [
+        0.4235312537790369,
+        0.4653331566027901
+      ],
+      "calibration_operating_point": {
+        "alarm_opportunity_count": 9910,
+        "capsize_count": 294,
+        "detected_capsize_count": 265,
+        "exposure_hours": 27.43402777777778,
+        "false_episode_count": 373,
+        "false_episodes_per_hour": 13.596253638779901,
+        "lead_time_quantiles_s": [
+          24.680000000000042,
+          154.4000000000001,
+          293.42
+        ],
+        "sensitivity": 0.9013605442176871,
+        "sensitivity_exact_capsize_event_interval": [
+          0.8614142970367454,
+          0.9329399011227562
+        ],
+        "threshold": -0.10621672272682187
+      },
+      "capsize_count": 853,
+      "detected_capsize_count": 763,
+      "exposure_hours": 79.27638888888889,
+      "false_episode_count": 1064,
+      "false_episodes_per_hour": 13.421398412726221,
+      "false_episodes_per_hour_trajectory_bootstrap_interval": [
+        12.929646315151032,
+        13.925236864441176
+      ],
+      "interval_conditioning": "conditional on the frozen scoring and sampling policy",
+      "lead_time_quantiles_s": [
+        28.939999999999987,
+        146.70000000000005,
+        274.42
+      ],
+      "maximum_sensitivity": 1.0,
+      "orientation_independent_auc": 0.5558844900261828,
+      "sensitivity": 0.8944900351699883,
+      "sensitivity_exact_capsize_event_interval": [
+        0.871907317239554,
+        0.9143011085302899
+      ],
+      "sensitivity_trajectory_bootstrap_interval": [
+        0.8732864653675478,
+        0.913396303499318
+      ],
+      "target_attainable": true,
+      "target_sensitivity": 0.9,
+      "threshold": -0.10621672272682187,
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_bootstrap_valid_replicates": 1000
+    },
+    "cnn_cumulative_online": {
+      "alarm_opportunity_count": 28637,
+      "auc": 0.4623025577070222,
+      "auc_trajectory_bootstrap_interval": [
+        0.44052044200633983,
+        0.4848693890659585
+      ],
+      "calibration_operating_point": {
+        "alarm_opportunity_count": 9910,
+        "capsize_count": 294,
+        "detected_capsize_count": 266,
+        "exposure_hours": 27.43402777777778,
+        "false_episode_count": 361,
+        "false_episodes_per_hour": 13.158840653081889,
+        "lead_time_quantiles_s": [
+          23.500000000000057,
+          155.50000000000006,
+          293.70000000000005
+        ],
+        "sensitivity": 0.9047619047619048,
+        "sensitivity_exact_capsize_event_interval": [
+          0.865299429115028,
+          0.9357789130729621
+        ],
+        "threshold": -1.0426342368125916
+      },
+      "capsize_count": 853,
+      "detected_capsize_count": 741,
+      "exposure_hours": 79.27638888888889,
+      "false_episode_count": 1054,
+      "false_episodes_per_hour": 13.2952574502006,
+      "false_episodes_per_hour_trajectory_bootstrap_interval": [
+        12.817936468250164,
+        13.801139657505328
+      ],
+      "interval_conditioning": "conditional on the frozen scoring and sampling policy",
+      "lead_time_quantiles_s": [
+        29.100000000000023,
+        150.10000000000002,
+        275.6
+      ],
+      "maximum_sensitivity": 1.0,
+      "orientation_independent_auc": 0.5376974422929778,
+      "sensitivity": 0.8686987104337632,
+      "sensitivity_exact_capsize_event_interval": [
+        0.8441707507832286,
+        0.8906444481447657
+      ],
+      "sensitivity_trajectory_bootstrap_interval": [
+        0.8458738742110121,
+        0.8901762180016515
+      ],
+      "target_attainable": true,
+      "target_sensitivity": 0.9,
+      "threshold": -1.0426342368125916,
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_bootstrap_valid_replicates": 1000
+    },
+    "danger_margin": {
+      "alarm_opportunity_count": 28637,
+      "auc": 0.5001049925667073,
+      "auc_trajectory_bootstrap_interval": [
+        0.4935615823741793,
+        0.5073277832743388
+      ],
+      "calibration_operating_point": {
+        "alarm_opportunity_count": 9910,
+        "capsize_count": 294,
+        "detected_capsize_count": 269,
+        "exposure_hours": 27.43402777777778,
+        "false_episode_count": 377,
+        "false_episodes_per_hour": 13.742057967345906,
+        "lead_time_quantiles_s": [
+          24.800000000000068,
+          141.20000000000005,
+          275.0200000000001
+        ],
+        "sensitivity": 0.9149659863945578,
+        "sensitivity_exact_capsize_event_interval": [
+          0.877032446237035,
+          0.9442147286833017
+        ],
+        "threshold": -1.0211465560215285
+      },
+      "capsize_count": 853,
+      "detected_capsize_count": 781,
+      "exposure_hours": 79.27638888888889,
+      "false_episode_count": 1098,
+      "false_episodes_per_hour": 13.850277685313337,
+      "false_episodes_per_hour_trajectory_bootstrap_interval": [
+        13.370650761597735,
+        14.360088958170715
+      ],
+      "interval_conditioning": "conditional on the frozen scoring and sampling policy",
+      "lead_time_quantiles_s": [
+        30.0,
+        146.80000000000007,
+        272.30000000000007
+      ],
+      "maximum_sensitivity": 1.0,
+      "orientation_independent_auc": 0.5001049925667073,
+      "sensitivity": 0.9155920281359906,
+      "sensitivity_exact_capsize_event_interval": [
+        0.8948814852160409,
+        0.9333719454000189
+      ],
+      "sensitivity_trajectory_bootstrap_interval": [
+        0.8974069566165366,
+        0.934174672990649
+      ],
+      "target_attainable": true,
+      "target_sensitivity": 0.9,
+      "threshold": -1.0211465560215285,
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_bootstrap_valid_replicates": 1000
+    },
+    "galeazzi_glrt": {
+      "alarm_opportunity_count": 28637,
+      "auc": 0.4983328779431604,
+      "auc_trajectory_bootstrap_interval": [
+        0.48894186839127407,
+        0.5071810508881934
+      ],
+      "calibration_operating_point": {
+        "alarm_opportunity_count": 9910,
+        "capsize_count": 294,
+        "detected_capsize_count": 294,
+        "exposure_hours": 27.43402777777778,
+        "false_episode_count": 381,
+        "false_episodes_per_hour": 13.88786229591191,
+        "lead_time_quantiles_s": [
+          24.000000000000046,
+          157.45000000000005,
+          296.35
+        ],
+        "sensitivity": 1.0,
+        "sensitivity_exact_capsize_event_interval": [
+          0.9875311790067285,
+          1.0
+        ],
+        "threshold": -1.7976931348623157e+308
+      },
+      "capsize_count": 853,
+      "detected_capsize_count": 853,
+      "exposure_hours": 79.27638888888889,
+      "false_episode_count": 1097,
+      "false_episodes_per_hour": 13.837663589060776,
+      "false_episodes_per_hour_trajectory_bootstrap_interval": [
+        13.357422453775959,
+        14.347734946481395
+      ],
+      "interval_conditioning": "conditional on the frozen scoring and sampling policy",
+      "lead_time_quantiles_s": [
+        30.300000000000047,
+        156.0,
+        284.36000000000007
+      ],
+      "maximum_sensitivity": 1.0,
+      "orientation_independent_auc": 0.5016671220568396,
+      "sensitivity": 1.0,
+      "sensitivity_exact_capsize_event_interval": [
+        0.9956847426900839,
+        1.0
+      ],
+      "sensitivity_trajectory_bootstrap_interval": [
+        1.0,
+        1.0
+      ],
+      "target_attainable": true,
+      "target_sensitivity": 0.9,
+      "threshold": -1.7976931348623157e+308,
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_bootstrap_valid_replicates": 1000
+    },
+    "neighbor_2009": {
+      "alarm_opportunity_count": 28637,
+      "auc": 0.49083516264778654,
+      "auc_trajectory_bootstrap_interval": [
+        0.4825879177070762,
+        0.49921827852462775
+      ],
+      "calibration_operating_point": {
+        "alarm_opportunity_count": 9910,
+        "capsize_count": 294,
+        "detected_capsize_count": 291,
+        "exposure_hours": 27.43402777777778,
+        "false_episode_count": 380,
+        "false_episodes_per_hour": 13.851411213770408,
+        "lead_time_quantiles_s": [
+          23.700000000000045,
+          158.0,
+          293.9000000000001
+        ],
+        "sensitivity": 0.9897959183673469,
+        "sensitivity_exact_capsize_event_interval": [
+          0.9704705848939125,
+          0.9978907092682745
+        ],
+        "threshold": -202.0
+      },
+      "capsize_count": 853,
+      "detected_capsize_count": 847,
+      "exposure_hours": 79.27638888888889,
+      "false_episode_count": 1098,
+      "false_episodes_per_hour": 13.850277685313337,
+      "false_episodes_per_hour_trajectory_bootstrap_interval": [
+        13.366919862018749,
+        14.359053452456612
+      ],
+      "interval_conditioning": "conditional on the frozen scoring and sampling policy",
+      "lead_time_quantiles_s": [
+        30.060000000000013,
+        154.0,
+        282.4800000000001
+      ],
+      "maximum_sensitivity": 1.0,
+      "orientation_independent_auc": 0.5091648373522135,
+      "sensitivity": 0.9929660023446659,
+      "sensitivity_exact_capsize_event_interval": [
+        0.9847532281006698,
+        0.9974144006524492
+      ],
+      "sensitivity_trajectory_bootstrap_interval": [
+        0.9869354786322131,
+        0.9976906642117475
+      ],
+      "target_attainable": true,
+      "target_sensitivity": 0.9,
+      "threshold": -202.0,
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_bootstrap_valid_replicates": 1000
+    },
+    "protocol_clock_only": {
+      "alarm_opportunity_count": 28637,
+      "auc": 0.5152372001118135,
+      "auc_trajectory_bootstrap_interval": [
+        0.5031185729068194,
+        0.5266147437179785
+      ],
+      "calibration_operating_point": {
+        "alarm_opportunity_count": 9910,
+        "capsize_count": 294,
+        "detected_capsize_count": 294,
+        "exposure_hours": 27.43402777777778,
+        "false_episode_count": 381,
+        "false_episodes_per_hour": 13.88786229591191,
+        "lead_time_quantiles_s": [
+          24.000000000000046,
+          157.45000000000005,
+          296.35
+        ],
+        "sensitivity": 1.0,
+        "sensitivity_exact_capsize_event_interval": [
+          0.9875311790067285,
+          1.0
+        ],
+        "threshold": -1.7976931348623157e+308
+      },
+      "capsize_count": 853,
+      "detected_capsize_count": 853,
+      "exposure_hours": 79.27638888888889,
+      "false_episode_count": 1097,
+      "false_episodes_per_hour": 13.837663589060776,
+      "false_episodes_per_hour_trajectory_bootstrap_interval": [
+        13.357422453775959,
+        14.347734946481395
+      ],
+      "interval_conditioning": "conditional on the frozen scoring and sampling policy",
+      "lead_time_quantiles_s": [
+        30.300000000000047,
+        156.0,
+        284.36000000000007
+      ],
+      "maximum_sensitivity": 1.0,
+      "orientation_independent_auc": 0.5152372001118135,
+      "sensitivity": 1.0,
+      "sensitivity_exact_capsize_event_interval": [
+        0.9956847426900839,
+        1.0
+      ],
+      "sensitivity_trajectory_bootstrap_interval": [
+        1.0,
+        1.0
+      ],
+      "target_attainable": true,
+      "target_sensitivity": 0.9,
+      "threshold": -1.7976931348623157e+308,
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_bootstrap_valid_replicates": 1000
+    }
+  },
+  "normalization_policy": {
+    "cnn_primary": "fixed_window_causal",
+    "cnn_secondary": "cumulative_online normalization-plus-detector system",
+    "physics_adjacent_primary": "physical"
+  },
+  "operating_point_policy": "Calibration selects thresholds; test policies are frozen.",
+  "prediction_evaluation_uses_orientation_independent_auc": true,
+  "prediction_holds": true,
+  "prediction_preregistered_verbatim": "Prediction (preregistered): fully post-step within-regime discrimination will remain near chance (AUC below 0.58) for every motion-only method, consistent with the immediate-post-transition result it replaces.",
+  "regime": {
+    "first_endpoint_s": 540.0,
+    "history_periods": 60.0,
+    "horizon_periods": 50.0,
+    "last_endpoint_s": 700.0,
+    "transition_s": 300.0
+  },
+  "upstream_d1_artifact_sha256": "586414882985d4fe00d31b9d801be3c615c73c617b82118e2baa6da5ea7eeaf5"
+}
