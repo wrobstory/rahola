@@ -1,0 +1,500 @@
+{
+  "_artifact_sha256": "591789c329938616696ec632118e4ca6f2883696b8e6e1d5273a5408957560bd",
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "schema_version": 1,
+    "source_sha256": "d6a10a5a25bceb10f2fe3b4d9490f127d41a512e87c922f9ccea81b6590b7613",
+    "upstream_artifacts": {}
+  },
+  "crossing_structure": {
+    "biased_evaluation": {
+      "capsizes_without_retained_crossing": 0,
+      "capsizing_trajectories": 20,
+      "declustered_crossings_per_trajectory": {
+        "count": 1000,
+        "maximum": 3.0,
+        "mean": 0.666,
+        "median": 1.0,
+        "minimum": 0.0,
+        "q25": 0.0,
+        "q75": 1.0
+      },
+      "first_retained_crossing_to_capsize_s": {
+        "count": 20,
+        "maximum": 66.49152000115305,
+        "mean": 3.713845546005783,
+        "median": 0.41723608699320813,
+        "minimum": 0.24929737433734545,
+        "q25": 0.35547959667494133,
+        "q75": 0.49814023539968844
+      },
+      "terminal_is_first_on_side": {
+        "denominator": 20,
+        "fraction": 0.95,
+        "numerator": 19
+      }
+    },
+    "biased_ramp": {
+      "capsizes_without_retained_crossing": 0,
+      "capsizing_trajectories": 126,
+      "declustered_crossings_per_trajectory": {
+        "count": 500,
+        "maximum": 2.0,
+        "mean": 0.986,
+        "median": 1.0,
+        "minimum": 0.0,
+        "q25": 1.0,
+        "q75": 1.0
+      },
+      "first_retained_crossing_to_capsize_s": {
+        "count": 126,
+        "maximum": 577.6417722975245,
+        "mean": 15.029207940585334,
+        "median": 5.390367400642731,
+        "minimum": 2.492507432442835,
+        "q25": 4.4204843453036915,
+        "q75": 7.401110496045703
+      },
+      "terminal_is_first_on_side": {
+        "denominator": 126,
+        "fraction": 0.9841269841269841,
+        "numerator": 124
+      }
+    },
+    "biased_stationary": {
+      "capsizes_without_retained_crossing": 3,
+      "capsizing_trajectories": 122,
+      "declustered_crossings_per_trajectory": {
+        "count": 1000,
+        "maximum": 5.0,
+        "mean": 1.728,
+        "median": 2.0,
+        "minimum": 0.0,
+        "q25": 1.0,
+        "q75": 2.0
+      },
+      "first_retained_crossing_to_capsize_s": {
+        "count": 119,
+        "maximum": 531.5686862006348,
+        "mean": 65.61987283977174,
+        "median": 0.4755244973491415,
+        "minimum": 0.2128605736352256,
+        "q25": 0.39292008556671476,
+        "q75": 90.38855698283429
+      },
+      "terminal_is_first_on_side": {
+        "denominator": 119,
+        "fraction": 0.7647058823529411,
+        "numerator": 91
+      }
+    },
+    "parametric_evaluation": {
+      "capsizes_without_retained_crossing": 0,
+      "capsizing_trajectories": 7,
+      "declustered_crossings_per_trajectory": {
+        "count": 1000,
+        "maximum": 2.0,
+        "mean": 0.147,
+        "median": 0.0,
+        "minimum": 0.0,
+        "q25": 0.0,
+        "q75": 0.0
+      },
+      "first_retained_crossing_to_capsize_s": {
+        "count": 7,
+        "maximum": 1.2513968870394478,
+        "mean": 0.9084148320979304,
+        "median": 0.7713520290306519,
+        "minimum": 0.6630696366677284,
+        "q25": 0.7273738710184716,
+        "q75": 1.1091687649553705
+      },
+      "terminal_is_first_on_side": {
+        "denominator": 7,
+        "fraction": 1.0,
+        "numerator": 7
+      }
+    },
+    "parametric_ramp": {
+      "capsizes_without_retained_crossing": 0,
+      "capsizing_trajectories": 147,
+      "declustered_crossings_per_trajectory": {
+        "count": 500,
+        "maximum": 1.0,
+        "mean": 0.602,
+        "median": 1.0,
+        "minimum": 0.0,
+        "q25": 0.0,
+        "q75": 1.0
+      },
+      "first_retained_crossing_to_capsize_s": {
+        "count": 147,
+        "maximum": 2.6439792303096965,
+        "mean": 2.474547930033967,
+        "median": 2.46531896482486,
+        "minimum": 2.372454266187219,
+        "q25": 2.436901856296629,
+        "q75": 2.5173952060158626
+      },
+      "terminal_is_first_on_side": {
+        "denominator": 147,
+        "fraction": 1.0,
+        "numerator": 147
+      }
+    },
+    "parametric_stationary": {
+      "capsizes_without_retained_crossing": 0,
+      "capsizing_trajectories": 87,
+      "declustered_crossings_per_trajectory": {
+        "count": 1000,
+        "maximum": 4.0,
+        "mean": 0.705,
+        "median": 1.0,
+        "minimum": 0.0,
+        "q25": 0.0,
+        "q75": 1.0
+      },
+      "first_retained_crossing_to_capsize_s": {
+        "count": 87,
+        "maximum": 314.3751032880234,
+        "mean": 6.700233401617433,
+        "median": 0.7608680064394093,
+        "minimum": 0.46227785072778715,
+        "q25": 0.623390087005518,
+        "q75": 0.9101638722951293
+      },
+      "terminal_is_first_on_side": {
+        "denominator": 87,
+        "fraction": 0.9655172413793104,
+        "numerator": 84
+      }
+    },
+    "softening_evaluation": {
+      "capsizes_without_retained_crossing": 0,
+      "capsizing_trajectories": 25,
+      "declustered_crossings_per_trajectory": {
+        "count": 1000,
+        "maximum": 11.0,
+        "mean": 5.149,
+        "median": 5.0,
+        "minimum": 1.0,
+        "q25": 4.0,
+        "q75": 7.0
+      },
+      "first_retained_crossing_to_capsize_s": {
+        "count": 25,
+        "maximum": 554.9651063243929,
+        "mean": 102.62996716564703,
+        "median": 0.8236435366350179,
+        "minimum": 0.6261373855225543,
+        "q25": 0.7818360351171805,
+        "q75": 176.67022147206055
+      },
+      "terminal_is_first_on_side": {
+        "denominator": 25,
+        "fraction": 0.6,
+        "numerator": 15
+      }
+    },
+    "softening_ramp": {
+      "capsizes_without_retained_crossing": 0,
+      "capsizing_trajectories": 234,
+      "declustered_crossings_per_trajectory": {
+        "count": 500,
+        "maximum": 1.0,
+        "mean": 0.74,
+        "median": 1.0,
+        "minimum": 0.0,
+        "q25": 0.0,
+        "q75": 1.0
+      },
+      "first_retained_crossing_to_capsize_s": {
+        "count": 234,
+        "maximum": 4.164222734835903,
+        "mean": 3.2598676604469055,
+        "median": 3.2488532748730563,
+        "minimum": 2.694992555058434,
+        "q25": 3.08887373846585,
+        "q75": 3.4068827621054822
+      },
+      "terminal_is_first_on_side": {
+        "denominator": 234,
+        "fraction": 1.0,
+        "numerator": 234
+      }
+    },
+    "softening_stationary": {
+      "capsizes_without_retained_crossing": 0,
+      "capsizing_trajectories": 71,
+      "declustered_crossings_per_trajectory": {
+        "count": 1000,
+        "maximum": 13.0,
+        "mean": 5.966,
+        "median": 6.0,
+        "minimum": 1.0,
+        "q25": 4.0,
+        "q75": 8.0
+      },
+      "first_retained_crossing_to_capsize_s": {
+        "count": 71,
+        "maximum": 523.905050349882,
+        "mean": 132.56957249114834,
+        "median": 0.9260595477896452,
+        "minimum": 0.47153557359226284,
+        "q25": 0.7105507236703517,
+        "q75": 288.31658850994165
+      },
+      "terminal_is_first_on_side": {
+        "denominator": 71,
+        "fraction": 0.5633802816901409,
+        "numerator": 40
+      }
+    },
+    "softening_step": {
+      "capsizes_without_retained_crossing": 0,
+      "capsizing_trajectories": 368,
+      "declustered_crossings_per_trajectory": {
+        "count": 1000,
+        "maximum": 10.0,
+        "mean": 2.831,
+        "median": 2.0,
+        "minimum": 1.0,
+        "q25": 1.0,
+        "q75": 4.0
+      },
+      "first_retained_crossing_to_capsize_s": {
+        "count": 368,
+        "maximum": 506.4016611641159,
+        "mean": 59.89700886543112,
+        "median": 0.7982342563118721,
+        "minimum": 0.3524592439833327,
+        "q25": 0.6163698383826954,
+        "q75": 109.5809207190377
+      },
+      "terminal_is_first_on_side": {
+        "denominator": 368,
+        "fraction": 0.6766304347826086,
+        "numerator": 249
+      }
+    },
+    "softening_step_v02": {
+      "capsizes_without_retained_crossing": 0,
+      "capsizing_trajectories": 620,
+      "declustered_crossings_per_trajectory": {
+        "count": 1000,
+        "maximum": 18.0,
+        "mean": 4.862,
+        "median": 4.0,
+        "minimum": 1.0,
+        "q25": 1.0,
+        "q75": 8.0
+      },
+      "first_retained_crossing_to_capsize_s": {
+        "count": 620,
+        "maximum": 764.8000121604498,
+        "mean": 148.02272107186394,
+        "median": 57.27184526200631,
+        "minimum": 0.3418354720821526,
+        "q25": 0.6598210562397213,
+        "q75": 275.19086653653846
+      },
+      "terminal_is_first_on_side": {
+        "denominator": 620,
+        "fraction": 0.5290322580645161,
+        "numerator": 328
+      }
+    }
+  },
+  "experiment": "U1-r2 Phase A",
+  "information_boundary": "calibration blocks only",
+  "r1_gated_coverage": {
+    "biased_evaluation": {
+      "covered_slice_count_bias": 0.0,
+      "predicted_count_on_covered_slices": 0.0,
+      "realized_capsizes_on_covered_slices": 0,
+      "total_exposure_s": 592545.5,
+      "trajectories_with_valid_emission": 0,
+      "valid_emission_exposure_fraction": 0.0,
+      "valid_emission_exposure_s": 0
+    },
+    "biased_stationary": {
+      "covered_slice_count_bias": 0.0,
+      "predicted_count_on_covered_slices": 0.0,
+      "realized_capsizes_on_covered_slices": 0,
+      "total_exposure_s": 560762.5,
+      "trajectories_with_valid_emission": 0,
+      "valid_emission_exposure_fraction": 0.0,
+      "valid_emission_exposure_s": 0
+    },
+    "parametric_evaluation": {
+      "covered_slice_count_bias": 0.0,
+      "predicted_count_on_covered_slices": 0.0,
+      "realized_capsizes_on_covered_slices": 0,
+      "total_exposure_s": 598547.0,
+      "trajectories_with_valid_emission": 0,
+      "valid_emission_exposure_fraction": 0.0,
+      "valid_emission_exposure_s": 0
+    },
+    "parametric_stationary": {
+      "covered_slice_count_bias": 0.0,
+      "predicted_count_on_covered_slices": 0.0,
+      "realized_capsizes_on_covered_slices": 0,
+      "total_exposure_s": 579754.0,
+      "trajectories_with_valid_emission": 0,
+      "valid_emission_exposure_fraction": 0.0,
+      "valid_emission_exposure_s": 0
+    },
+    "softening_evaluation": {
+      "covered_slice_count_bias": 0.22588084595340566,
+      "predicted_count_on_covered_slices": 0.22588084595340566,
+      "realized_capsizes_on_covered_slices": 0,
+      "total_exposure_s": 593304.5,
+      "trajectories_with_valid_emission": 19,
+      "valid_emission_exposure_fraction": 0.0010787041055646805,
+      "valid_emission_exposure_s": 640.0
+    },
+    "softening_stationary": {
+      "covered_slice_count_bias": 6.733226113513727,
+      "predicted_count_on_covered_slices": 7.733226113513727,
+      "realized_capsizes_on_covered_slices": 1,
+      "total_exposure_s": 578009.5,
+      "trajectories_with_valid_emission": 134,
+      "valid_emission_exposure_fraction": 0.013118296498586961,
+      "valid_emission_exposure_s": 7582.5
+    }
+  },
+  "softening_overshoot_attribution": {
+    "attribution_table": [
+      {
+        "cause": "baseline: nominal-declustered exponential critical crossings",
+        "direction_vs_baseline": "none",
+        "magnitude_vs_baseline": 0.0,
+        "predicted_count": 339.7449663269838,
+        "residual_vs_realized": 268.7449663269838
+      },
+      {
+        "cause": "event versus crossing accounting: absorbing transform",
+        "direction_vs_baseline": "down",
+        "magnitude_vs_baseline": 60.650039490208826,
+        "predicted_count": 279.09492683677496,
+        "residual_vs_realized": 208.09492683677496
+      },
+      {
+        "cause": "tail form: empirical terminal-crossing probability",
+        "direction_vs_baseline": "down",
+        "magnitude_vs_baseline": 271.7149528136041,
+        "predicted_count": 68.0300135133797,
+        "residual_vs_realized": -2.9699864866203
+      },
+      {
+        "cause": "tail form: diagnostic GPD under absorbing accounting",
+        "direction_vs_baseline": "down",
+        "magnitude_vs_baseline": 46.341307570190736,
+        "predicted_count": 293.40365875679305,
+        "residual_vs_realized": 222.40365875679305
+      },
+      {
+        "cause": "Eq. 15 motion-derived forced correction",
+        "direction_vs_baseline": "up",
+        "magnitude_vs_baseline": 2062.2550336730164,
+        "predicted_count": 2402.0,
+        "residual_vs_realized": 2331.0
+      },
+      {
+        "cause": "declustering: 0.5x decorrelation time",
+        "direction_vs_baseline": "up",
+        "magnitude_vs_baseline": 43.41276415180664,
+        "predicted_count": 383.1577304787904,
+        "residual_vs_realized": 312.1577304787904
+      },
+      {
+        "cause": "declustering: 1.5x decorrelation time",
+        "direction_vs_baseline": "down",
+        "magnitude_vs_baseline": 16.028963653700032,
+        "predicted_count": 323.71600267328375,
+        "residual_vs_realized": 252.71600267328375
+      }
+    ],
+    "campaign": "softening_stationary calibration",
+    "diagnostic_gpd": {
+      "probability_critical_given_crossing": 0.06058324833207331,
+      "scale": 0.15552976193851276,
+      "shape": -0.20200093789463586,
+      "threshold_w": 0.808258767366755
+    },
+    "empirical_probability_critical_given_crossing": 0.01190077103586993,
+    "empirical_terminal_critical_crossings": 71,
+    "exponential_candidates": [
+      {
+        "absorbing_event_prediction": 350.3410456388584,
+        "crossing_count_prediction": 453.5774104951546,
+        "exponential_probability_critical_given_crossing": 0.07602705506120593,
+        "prior_strength": 2.0,
+        "retained_crossings": 5966,
+        "tail_quantile": 0.5,
+        "tail_threshold_w": 0.6335617748795479,
+        "threshold_clipped": false
+      },
+      {
+        "absorbing_event_prediction": 350.3408871127051,
+        "crossing_count_prediction": 453.5771399334091,
+        "exponential_probability_critical_given_crossing": 0.0760270097105949,
+        "prior_strength": 5.0,
+        "retained_crossings": 5966,
+        "tail_quantile": 0.5,
+        "tail_threshold_w": 0.6335617748795479,
+        "threshold_clipped": false
+      },
+      {
+        "absorbing_event_prediction": 350.34062360845076,
+        "crossing_count_prediction": 453.5766902023066,
+        "exponential_probability_critical_given_crossing": 0.07602693432824449,
+        "prior_strength": 10.0,
+        "retained_crossings": 5966,
+        "tail_quantile": 0.5,
+        "tail_threshold_w": 0.6335617748795479,
+        "threshold_clipped": false
+      },
+      {
+        "absorbing_event_prediction": 279.0958121094012,
+        "crossing_count_prediction": 339.7462918380888,
+        "exponential_probability_critical_given_crossing": 0.05694708210494281,
+        "prior_strength": 2.0,
+        "retained_crossings": 5966,
+        "tail_quantile": 0.75,
+        "tail_threshold_w": 0.808258767366755,
+        "threshold_clipped": false
+      },
+      {
+        "absorbing_event_prediction": 279.09547902385907,
+        "crossing_count_prediction": 339.74579311172624,
+        "exponential_probability_critical_given_crossing": 0.05694699851017872,
+        "prior_strength": 5.0,
+        "retained_crossings": 5966,
+        "tail_quantile": 0.75,
+        "tail_threshold_w": 0.808258767366755,
+        "threshold_clipped": false
+      },
+      {
+        "absorbing_event_prediction": 279.09492683677496,
+        "crossing_count_prediction": 339.7449663269838,
+        "exponential_probability_critical_given_crossing": 0.056946859927419345,
+        "prior_strength": 10.0,
+        "retained_crossings": 5966,
+        "tail_quantile": 0.75,
+        "tail_threshold_w": 0.808258767366755,
+        "threshold_clipped": false
+      }
+    ],
+    "forced_correction": {
+      "forced_absolute_error_from_empirical": 0.39071404626215217,
+      "forced_probability_critical_given_crossing": 0.4026148172980221,
+      "known_configuration_diagnostic": true,
+      "moment_estimator": "backward acceleration plus configured linear/quadratic damping and restoring; trailing half-period mean; quasi-static repeller response",
+      "unforced_absolute_error_from_empirical": 0.045046088891549416,
+      "unforced_probability_critical_given_crossing": 0.056946859927419345
+    },
+    "realized_capsizes": 71,
+    "retained_crossings": 5966
+  }
+}
