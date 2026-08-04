@@ -9,6 +9,7 @@ from rahola.dataset import SimulationDataset
 from rahola_lab.campaigns import load_campaign_split
 from rahola_lab.constants import SeedBlock
 from rahola_lab.evaluation import OperatingPoint
+from rahola_lab.experiments.common import _artifact_digest
 from rahola_lab.experiments.detector_common import point_payload
 
 
@@ -62,4 +63,12 @@ def point_payload_without_dependent_intervals(point: OperatingPoint) -> dict[str
         "sensitivity_interval"
     )
     payload.pop("false_episodes_per_hour_interval")
+    return payload
+
+
+def load_frozen_v02_result(path: Path) -> dict[str, object]:
+    """Verify a completed v0.2 artifact while allowing later source commits."""
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if payload.get("_artifact_sha256") != _artifact_digest(payload):
+        raise ValueError(f"result artifact digest mismatch: {path}")
     return payload
