@@ -20,7 +20,11 @@ from rahola_lab.experiments.common import (
     trajectory_forecasts,
     write_result,
 )
-from rahola_lab.forecast import DangerMarginFit, fit_piecewise_linear_restoring
+from rahola_lab.forecast import (
+    DangerMarginFit,
+    absolute_roll_escape_angle,
+    fit_piecewise_linear_restoring,
+)
 
 HORIZON_S = 60.0
 
@@ -137,7 +141,7 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
         calibration_physics_trajectories.extend(
             _physics_scores(calibration_streams, physics_fit)
         )
-        escape_angle = float(test.config["escape_angle_rad"])
+        escape_angle = absolute_roll_escape_angle(test.config)
         corrections: dict[tuple[str, float], float] = {}
         for model_name in MODEL_NAMES:
             conformal = SplitCQRUpper.calibrate(calibration_y, calibration_raw[model_name])

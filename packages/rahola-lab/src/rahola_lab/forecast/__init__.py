@@ -5,7 +5,11 @@ from rahola_lab.forecast.danger_margin import (
     RestoringSideFit,
     fit_piecewise_linear_restoring,
 )
-from rahola_lab.forecast.data import ForecastDataset, extract_forecast_dataset
+from rahola_lab.forecast.data import (
+    ForecastDataset,
+    absolute_roll_escape_angle,
+    extract_forecast_dataset,
+)
 from rahola_lab.forecast.models import (
     EnvelopePersistenceForecaster,
     JaxLSTMQuantileForecaster,
@@ -20,6 +24,7 @@ __all__ = [
     "JaxLSTMQuantileForecaster",
     "LinearQuantileForecaster",
     "RestoringSideFit",
+    "absolute_roll_escape_angle",
     "extract_forecast_dataset",
     "fit_piecewise_linear_restoring",
     "summary_features",

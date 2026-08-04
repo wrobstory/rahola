@@ -1,10 +1,15 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import numpy as np
+from rahola_lab.campaigns import load_campaign_definition
+from rahola_lab.conformal import normalized_alarm_scores
 from rahola_lab.forecast import (
     EnvelopePersistenceForecaster,
     JaxLSTMQuantileForecaster,
     LinearQuantileForecaster,
+    absolute_roll_escape_angle,
     extract_forecast_dataset,
 )
 
@@ -56,6 +61,25 @@ def test_capsize_does_not_extend_past_common_horizon_complete_cutoff() -> None:
     )
     assert np.max(dataset.history_end_s) == 14.0
     assert dataset.targets_rad[-1, 0] == 0.5
+
+
+def test_biased_alarm_uses_same_tighter_escape_as_scalar_target() -> None:
+    config_path = (
+        Path(__file__).parents[1]
+        / "src"
+        / "rahola_lab"
+        / "campaigns"
+        / "configs"
+        / "biased_evaluation.yaml"
+    )
+    definition = load_campaign_definition(config_path)
+    config = definition.simulation.to_dict()
+    escape = absolute_roll_escape_angle(config)
+
+    assert escape == config["negative_escape_angle_rad"]
+    assert escape < config["escape_angle_rad"]
+    score = normalized_alarm_scores(np.array([0.60 * escape]), escape)
+    np.testing.assert_allclose(score, [1.0])
 
 
 def test_forecaster_shapes_and_lstm_budget() -> None:

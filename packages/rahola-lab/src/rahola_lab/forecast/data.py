@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
 
 import numpy as np
@@ -20,6 +21,21 @@ class ForecastDataset:
     horizons_s: tuple[float, ...]
     escape_angle_rad: float
     sample_dt_s: float
+
+
+def absolute_roll_escape_angle(config: Mapping[str, object]) -> float:
+    """Return the conservative escape magnitude used by scalar |roll| targets.
+
+    Asymmetric families use the tighter side for both target extraction and
+    alarm normalization. A future signed-target design may instead select the
+    side from excursion direction, but scalar targets must not mix conventions.
+    """
+    positive_escape = float(config["escape_angle_rad"])
+    configured_negative = config.get("negative_escape_angle_rad")
+    negative_escape = (
+        positive_escape if configured_negative is None else float(configured_negative)
+    )
+    return min(positive_escape, negative_escape)
 
 
 def extract_forecast_dataset(
@@ -48,9 +64,7 @@ def extract_forecast_dataset(
     history_samples = round(history_s / sample_dt)
     stride_samples = max(1, round(stride_s / sample_dt))
     horizon_samples = tuple(round(value / sample_dt) for value in horizons_s)
-    positive_escape = float(dataset.config["escape_angle_rad"])
-    negative_escape = float(dataset.config.get("negative_escape_angle_rad") or positive_escape)
-    relevant_escape = min(positive_escape, negative_escape)
+    relevant_escape = absolute_roll_escape_angle(dataset.config)
     histories: list[np.ndarray] = []
     targets: list[list[float]] = []
     seeds: list[int] = []
