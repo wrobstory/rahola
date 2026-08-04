@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from numbers import Integral
 
 import numpy as np
 from numpy.typing import NDArray
@@ -21,6 +22,13 @@ class WindowConfig:
     detrend: bool = True
 
     def __post_init__(self) -> None:
+        if isinstance(self.stride_samples, bool) or not isinstance(
+            self.stride_samples, Integral
+        ):
+            raise ValueError("stride_samples must be an integer")
+        numeric = (self.length_periods, self.horizon_periods, self.exclusion_buffer_periods)
+        if not all(np.isfinite(value) for value in numeric):
+            raise ValueError("window values must be finite")
         if self.length_periods <= 0 or self.horizon_periods <= 0:
             raise ValueError("window length and horizon must be positive")
         if self.exclusion_buffer_periods < 0 or self.stride_samples < 1:
@@ -98,6 +106,8 @@ def make_windows(dataset: SimulationDataset, config: WindowConfig) -> WindowData
             window = transformed[end_index - length + 1 : end_index + 1]
             if not np.all(np.isfinite(window)):
                 break
+            if end_time + horizon_s > dataset.time_s[-1]:
+                break
             if not np.isfinite(cap_time):
                 label = 0
             else:
@@ -126,6 +136,10 @@ def binary_auc(labels: NDArray[np.integer], scores: FloatArray) -> float:
     """Dependency-free Mann-Whitney AUC, with average ranks for ties."""
     labels = np.asarray(labels)
     scores = np.asarray(scores, dtype=np.float64)
+    if labels.ndim != 1 or scores.shape != labels.shape or not len(labels):
+        raise ValueError("labels and scores must be non-empty matching vectors")
+    if not np.all(np.isin(labels, (0, 1))) or not np.all(np.isfinite(scores)):
+        raise ValueError("AUC requires binary labels and finite scores")
     positives = labels == 1
     n_pos, n_neg = int(np.sum(positives)), int(np.sum(~positives))
     if n_pos == 0 or n_neg == 0:

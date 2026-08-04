@@ -17,12 +17,16 @@ changes the simulator's behavior.
 - `rahola_lab.detectors`: causal detector-window extraction, classical EWS, roll-power GLRT,
   neighbor loss, native-JAX CNN/gray-box models, XGBoost features, and the pinned Chronos probe.
 - `rahola_lab.inference`: the fixed 2,000-particle causal stiffness/drift filter used by C2.
-- `rahola_lab.experiments`: bounded-memory E1–E4, E3b, D1–D5, and Prototype #3 ceiling runners plus
+- `rahola_lab.experiments`: bounded-memory E1–E4, E3b, D1–D5, and Prototype #3 restart-comparison runners plus
   the guarded one-time final-reserve-2 path used by root example scripts.
 
-The forecast target raises any horizon containing capsize to at least the relevant asymmetric escape
-angle and drops record-end-truncated horizons. All history features stop at the forecast timestamp.
-CQR uses calibration seeds only. ACI consumes targets sequentially after issuing each bound. For the
+The forecast target raises any complete horizon containing capsize to at least the relevant
+asymmetric escape angle. Record-end-truncated horizons are dropped for both outcomes, giving
+positive and negative examples common protocol-time support. All history features stop at the
+forecast timestamp.
+CQR uses calibration seeds only. Online conformal adapters issue each bound immediately but consume
+its target only when the forecast horizon has elapsed (six 10-second score steps for the 60-second
+target). For the
 biased family, scalar maximum-absolute-roll targets use the smaller escape magnitude in both
 directions. This is conservative but side-agnostic; signed targets remain future work.
 
@@ -38,7 +42,7 @@ frozen experiments prohibit wave-field inputs.
 From the repository root:
 
 ```bash
-uv sync --all-packages
+uv sync --all-packages --all-extras
 uv run pytest
 uv run rahola-lab generate --all --out data/reference --chunk-size 256
 uv run python examples/e1_coverage.py
@@ -56,6 +60,9 @@ uv run python examples/d5_within_regime.py
 `DATA.md` is the frozen campaign contract and includes manifest hashes. `RESULTS.md` contains the
 measured experiment record, kill-criterion verdict, judgment calls, and method citations. Numeric
 results and figures are checked in under `results/`; generated trajectories under `data/` are not.
+Every development JSON stores source-tree and reference-campaign fingerprints plus a digest of its
+own serialized content. Downstream experiments also record exact upstream artifact digests and
+reject stale or mutated dependencies.
 
 ## Prototype #2 detector layer
 
@@ -64,17 +71,28 @@ All learned and statistical methods share a 60-period, causally normalized roll/
 implementation. Normalization at sample `t` is fitted only to samples before `t`. The vectorized
 cumulative-sum transformer is regression-tested bitwise against the original per-sample loop, and
 the complete detector feature path has a future-only leakage probe with a deliberately leaky
-control.
+control. Every supervised endpoint requires the full outcome horizon to fit inside the source
+record, including endpoints on trajectories that later capsize. A separate
+inference-only mode exposes every causal pre-capsize endpoint with label `-1` for
+operational scoring and current-state plots. This mode never removes endpoints based on a future
+capsize or record-end censoring, so debounce timelines cannot acquire outcome-dependent gaps. An
+episode begins at the score window that confirms the required uninterrupted run, not at the first
+candidate window in that run.
+Evaluation clips every trajectory to the same last horizon-complete warning endpoint. Later causal
+scores remain available for live inference but do not enter labels, event counts, or exposure.
+Each operating threshold is selected on calibration trajectories and then evaluated once, without
+a test sweep. Test sensitivity may therefore differ from the 90% calibration target.
 
 The CNN has two stride-2 temporal convolutions and global average pooling. The frozen grid contains
-2,969- and 4,021-parameter variants, both far below 100k. Calibration selected the 4,021-parameter
-16/32-channel, kernel-7 model. Its family-classification head was used at weight 0.10. A
+2,969- and 4,021-parameter variants, both far below 100k. Under the corrected complete-horizon
+labels, calibration selected the 2,969-parameter 12/24-channel, kernel-9 model without auxiliary
+family loss. A
 danger-margin regression head is implemented, but its predeclared weight was zero throughout the
 grid and it was not used. Training is deterministic weighted binary cross-entropy plus the selected
 auxiliary loss.
 
 B1 takes Kendall's tau of 12 rolling variance or lag-1-autocorrelation checkpoints; calibration
-selected AC1 and a local subwindow equal to half the detector history. B2 adapts Galeazzi's
+selected lag-1 autocorrelation and a local subwindow equal to 50% of the detector history. B2 adapts Galeazzi's
 fixed-shape W2 scale-change GLRT to natural-frequency-band roll. The source statistic is
 `roll²×pitch`, but Rahola has no pitch and forbids wave inputs, so this is explicitly a roll-power
 adaptation retaining the published four-period detection interval. B3 reuses the unchanged
@@ -108,14 +126,38 @@ Calibration estimates each score's decorrelation time from the first 0.05 crossi
 autocorrelation-peak envelope; alarm episodes separated by no more than that time are merged. The
 hand-computed crossing and episode merge both have unit tests. D4 reconstructs the known forcing
 only in the evaluator and defines a group as `2×|Hilbert(elevation)| ≥ 0.75 Hs` for at least 1.5 Tp.
+Group coincidence uses the constituent active-alarm intervals beginning at debounce confirmation,
+not the preceding candidate windows or quiet span bridged by decorrelation merging.
 No detector receives elevation, spectrum, or sea-state input.
 
 Public seed utilities raise `ReserveBlockError` for both reserves. `rahola-lab final-eval` can
-construct reserve-2 only; the spent reserve is refused even internally. The command requires a
-clean committed tree, writes an access-started attestation before constructing the first seed,
-materializes the six D1-mirroring campaigns, and refuses every later invocation—even after failure.
+construct reserve-2 only; the spent reserve is refused internally. The command requires canonical
+repository paths and a clean committed tree, validates all ordinary configuration and model
+preconditions, verifies the committed survivor and anchored campaign hashes, revalidates the clean
+tree and unchanged upstream artifacts immediately before the exclusive claim, and only then
+atomically creates and directory-syncs an access-started attestation before constructing the first
+seed. The current runner also holds a cross-process result-graph lock from completed-result
+publication through recursive verification and atomic terminal attestation, and binds that result
+by SHA-256. The two immutable historical attestations predate result-digest binding.
+The repository-local guard then refuses every later invocation, including concurrent attempts.
 Prototype #2's spent-reserve run completed against `843b24a`; reserve-2 completed once against
-`5d4c6be` with 768 trajectories. Their attestations make both refusals permanent.
+`5d4c6be` with 768 trajectories. These are code and audit safeguards, not external access control:
+the reserve prohibition remains a procedural research commitment because the simulator accepts
+arbitrary public seeds. The reserve-2 Chronos threshold was retrospectively selected on reserve
+outcomes in the historical runner, so that immutable result is descriptive rather than a valid
+prospective operating-point evaluation.
+
+Prototype #3's C1 and C2 scores restart independent future forcing from exact or filtered endpoint
+state. They discard the realized forcing phase encoded in the preceding motion history, so neither
+is a Bayes-optimal motion-only ceiling and neither must upper-bound a sequence model. Their former
+three-point architecture gate is retained only as historical protocol context; no information-
+ceiling verdict is applied to the corrected run.
+
+The restart-equivalence regression currently covers stationary softening only. The ceiling sampler
+uses capped-equal allocation across nonempty label × absolute-time-quartile strata; small strata are
+fully exhausted rather than oversampled. Its AUC bootstrap conditions on the realized stratified
+window sample and rollout draws and does not propagate unequal-probability sampling-design or
+additional rollout Monte Carlo uncertainty.
 
 Prototype #3's reproducible development commands are:
 

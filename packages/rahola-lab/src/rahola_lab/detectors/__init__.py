@@ -1,6 +1,7 @@
 """Motion-only danger detectors for Prototype #2."""
 
-from rahola_lab.detectors.chronos_probe import ChronosClassifier
+from typing import TYPE_CHECKING, Any
+
 from rahola_lab.detectors.cnn import JaxTemporalCNN
 from rahola_lab.detectors.data import (
     DetectorWindowDataset,
@@ -12,6 +13,18 @@ from rahola_lab.detectors.features import ENGINEERED_FEATURE_NAMES, engineered_f
 from rahola_lab.detectors.glrt import galeazzi_roll_power_glrt
 from rahola_lab.detectors.graybox import GrayBoxDetector
 from rahola_lab.detectors.neighbor import neighbor_count_scores
+
+if TYPE_CHECKING:
+    from rahola_lab.detectors.chronos_probe import ChronosClassifier
+
+
+def __getattr__(name: str) -> Any:
+    """Load the PyTorch/Chronos stack only for experiments that request it."""
+    if name == "ChronosClassifier":
+        from rahola_lab.detectors.chronos_probe import ChronosClassifier
+
+        return ChronosClassifier
+    raise AttributeError(name)
 
 __all__ = [
     "ENGINEERED_FEATURE_NAMES",

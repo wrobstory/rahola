@@ -29,6 +29,7 @@ from rahola_lab.experiments.common import (
 )
 from rahola_lab.experiments.e3 import (
     ALPHA,
+    FEEDBACK_DELAY_STEPS,
     HORIZON_S,
     MODEL_NAME,
     TRANSITION_S,
@@ -49,6 +50,7 @@ def _dtaci_bounds(streams, scores):
             stream.targets_rad,
             alpha=ALPHA,
             gamma_experts=DTACI_GAMMA_EXPERTS,
+            feedback_delay_steps=FEEDBACK_DELAY_STEPS,
         )
         output.append((stream, result.upper_bounds, result.errors))
     return output
@@ -64,6 +66,7 @@ def _sliding_bounds(streams, scores, gamma, window_size):
             alpha=ALPHA,
             gamma=gamma,
             window_size=window_size,
+            feedback_delay_steps=FEEDBACK_DELAY_STEPS,
         )
         output.append((stream, result.upper_bounds, result.errors))
     return output
@@ -189,6 +192,7 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
     payload: dict[str, object] = {
         "experiment": "E3b",
         "alpha": ALPHA,
+        "feedback_delay_steps": FEEDBACK_DELAY_STEPS,
         "frozen_kill_thresholds": {
             "absolute_fpr_per_hour": ACI_EXPLOSION_FPR_PER_HOUR,
             "relative_to_fixed": ACI_EXPLOSION_FACTOR,

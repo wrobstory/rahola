@@ -38,7 +38,8 @@ CNN_GRID = (
     {"channels": (16, 32), "kernel_size": 7, "family_head_weight": 0.10},
 )
 DETECTOR_MATCHED_SENSITIVITY = 0.90
-# "Materially above B1" means at least 10% lower FPR/h at matched sensitivity.
+# "Materially above B1" requires both methods to retain the 90% calibration target on test,
+# plus at least 10% lower FPR/h at their calibration-selected thresholds.
 D2_MATERIAL_FPR_REDUCTION = 0.10
 D3_MATERIAL_AUC_MARGIN = 0.02
 D3_BROADBAND_VERDICT = (
@@ -50,8 +51,12 @@ D3_SURVIVAL_VERDICT = (
     "If skill survives at gamma=1.0 materially above the B1 floor, motion history contains "
     "precursor information beyond critical slowing down."
 )
+D3_INCONCLUSIVE_VERDICT = (
+    "Broadband ranking skill remains above the B1 floor, but the predeclared operating-cost "
+    "materiality criterion is not met; neither survival nor collapse is established."
+)
 
-# Prototype #3 ceiling protocol, frozen before any oracle test scoring.
+# Historical Prototype #3 restart-comparison gap, frozen before test scoring.
 CEILING_AUC_GAP = 0.03
 ORACLE_ROLLOUTS = 200
 PF_PARTICLES = 2_000

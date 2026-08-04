@@ -6,7 +6,6 @@ import argparse
 from pathlib import Path
 
 from rahola_lab.campaigns import generate_campaign, load_campaign_definition
-from rahola_lab.experiments.final_eval import run_final_evaluation
 
 
 def campaign_config_dir() -> Path:
@@ -25,9 +24,6 @@ def _parser() -> argparse.ArgumentParser:
     final_eval = subparsers.add_parser(
         "final-eval", help="run the guarded one-time reserve-2 evaluation"
     )
-    final_eval.add_argument("--data-root", type=Path, default=Path("data/reference"))
-    final_eval.add_argument("--out", type=Path, default=Path("results"))
-    final_eval.add_argument("--reserve-root", type=Path, default=Path("data/final-reserve2"))
     final_eval.add_argument("--chunk-size", type=int, default=256)
     return parser
 
@@ -35,11 +31,14 @@ def _parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     if args.command == "final-eval":
+        from rahola_lab.experiments.final_eval import run_final_evaluation
+
+        repository_root = Path(__file__).resolve().parents[4]
         run_final_evaluation(
-            data_root=args.data_root,
-            output_root=args.out,
+            data_root=repository_root / "data" / "reference",
+            output_root=repository_root / "results",
             config_root=campaign_config_dir(),
-            reserve_root=args.reserve_root,
+            reserve_root=repository_root / "data" / "final-reserve2",
             chunk_size=args.chunk_size,
         )
         return 0

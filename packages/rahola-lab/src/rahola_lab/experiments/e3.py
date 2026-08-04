@@ -37,6 +37,8 @@ from rahola_lab.experiments.common import (
 
 ALPHA = 0.1
 HORIZON_S = 60.0
+FORECAST_STRIDE_S = 10.0
+FEEDBACK_DELAY_STEPS = round(HORIZON_S / FORECAST_STRIDE_S)
 TRANSITION_S = 300.0
 MODEL_NAME = "lstm"
 
@@ -51,7 +53,12 @@ def _bounds(streams, scores, gamma=None):
             errors = stream.targets_rad > bound
         else:
             result = adaptive_conformal_bounds(
-                scores, raw, stream.targets_rad, alpha=ALPHA, gamma=gamma
+                scores,
+                raw,
+                stream.targets_rad,
+                alpha=ALPHA,
+                gamma=gamma,
+                feedback_delay_steps=FEEDBACK_DELAY_STEPS,
             )
             bound = result.upper_bounds
             errors = result.errors
@@ -62,8 +69,8 @@ def _bounds(streams, scores, gamma=None):
 def _episode_metrics(bounded, escape_angle):
     trajectories = []
     for stream, bound, _ in bounded:
-        times = stream.times_s if len(stream.times_s) else np.array([0.0])
-        values = normalized_alarm_scores(bound, escape_angle) if len(bound) else np.array([-np.inf])
+        times = stream.times_s
+        values = normalized_alarm_scores(bound, escape_angle)
         trajectories.append(
             TrajectoryScores(
                 times_s=times,
@@ -96,7 +103,7 @@ def _rolling_coverage(bounded, width_bins=6):
 def _recovery_time(times, coverage):
     acceptable = np.abs(coverage - (1.0 - ALPHA)) <= 0.03
     for index in range(len(times) - 2):
-        if times[index] >= TRANSITION_S and np.all(acceptable[index : index + 3]):
+        if times[index] >= TRANSITION_S and np.all(acceptable[index:]):
             return float(times[index] - TRANSITION_S)
     return None
 
@@ -129,7 +136,7 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
     calibration_y, calibration_raw = snapshot(score_half, models, HORIZON_S, history_end_s=240.0)
     calibration_scores = calibration_y - calibration_raw[MODEL_NAME]
     tuning_streams = trajectory_forecasts(
-        tuning_half, {MODEL_NAME: models[MODEL_NAME]}, HORIZON_S, stride_s=10.0
+        tuning_half, {MODEL_NAME: models[MODEL_NAME]}, HORIZON_S, stride_s=FORECAST_STRIDE_S
     )
     escape_angle = float(calibration.config["escape_angle_rad"])
     fixed_tuning = _bounds(tuning_streams, calibration_scores)
@@ -165,7 +172,7 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
     # Pseudo-prospective seal: this is the experiment's only test load.
     test = load_campaign_split(step_path, SeedBlock.TEST)
     test_streams = trajectory_forecasts(
-        test, {MODEL_NAME: models[MODEL_NAME]}, HORIZON_S, stride_s=10.0
+        test, {MODEL_NAME: models[MODEL_NAME]}, HORIZON_S, stride_s=FORECAST_STRIDE_S
     )
     fixed = _bounds(test_streams, calibration_scores)
     adaptive = _bounds(test_streams, calibration_scores, gamma)
@@ -216,6 +223,7 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
         "experiment": "E3",
         "alpha": ALPHA,
         "selected_gamma": gamma,
+        "feedback_delay_steps": FEEDBACK_DELAY_STEPS,
         "gamma_calibration": gamma_rows,
         "fixed_trailing_curve_mean_before_step": float(np.mean(fixed_coverage[pre])),
         "fixed_trailing_curve_mean_after_step": float(np.mean(fixed_coverage[post])),

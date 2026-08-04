@@ -22,6 +22,8 @@ from rahola_lab.experiments.common import (
 ALPHA = 0.05
 GAMMA = 0.05
 HORIZON_S = 60.0
+FORECAST_STRIDE_S = 10.0
+FEEDBACK_DELAY_STEPS = round(HORIZON_S / FORECAST_STRIDE_S)
 MODEL_NAME = "lstm"
 
 
@@ -67,6 +69,7 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
             stream.targets_rad,
             alpha=ALPHA,
             gamma=GAMMA,
+            feedback_delay_steps=FEEDBACK_DELAY_STEPS,
         )
         aci_errors.append(adaptive.errors)
     dense_raw = np.concatenate(raw_errors)
@@ -100,6 +103,7 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
         "experiment": "E4",
         "alpha": ALPHA,
         "aci_gamma": GAMMA,
+        "feedback_delay_steps": FEEDBACK_DELAY_STEPS,
         "raw_lstm_snapshot_coverage": raw_coverage,
         "raw_lstm_snapshot_coverage_interval": [raw_interval.lower, raw_interval.upper],
         "split_cqr_snapshot_coverage": cqr_coverage,

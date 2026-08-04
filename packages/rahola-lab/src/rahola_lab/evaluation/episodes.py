@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from numbers import Integral
 
 import numpy as np
 from numpy.typing import NDArray
@@ -15,6 +16,14 @@ class EpisodeConfig:
     refractory_windows: int = 3
 
     def __post_init__(self) -> None:
+        if not np.isfinite(self.threshold):
+            raise ValueError("threshold must be finite")
+        for name, value in (
+            ("debounce_windows", self.debounce_windows),
+            ("refractory_windows", self.refractory_windows),
+        ):
+            if isinstance(value, bool) or not isinstance(value, Integral):
+                raise ValueError(f"{name} must be an integer")
         if self.debounce_windows < 1 or self.refractory_windows < 1:
             raise ValueError("debounce and refractory windows must be positive")
 
@@ -35,15 +44,19 @@ def alarm_episodes(
 ) -> tuple[AlarmEpisode, ...]:
     """Apply threshold, debounce, and refractory logic.
 
-    An episode starts at the first flag in a run once ``debounce_windows``
-    consecutive flags have been observed. It remains open until
+    An episode starts at the window that confirms ``debounce_windows``
+    consecutive flags, the first time the alarm can be issued. It remains open until
     ``refractory_windows`` consecutive unflagged windows confirm closure; its
     recorded end is the last flagged window, not the confirmation delay.
     """
     times = np.asarray(times_s, dtype=np.float64)
     values = np.asarray(scores, dtype=np.float64)
-    if times.ndim != 1 or values.shape != times.shape or len(times) == 0:
-        raise ValueError("times and scores must be non-empty matching vectors")
+    if times.ndim != 1 or values.shape != times.shape:
+        raise ValueError("times and scores must be matching vectors")
+    if not len(times):
+        return ()
+    if not np.all(np.isfinite(times)) or not np.all(np.isfinite(values)):
+        raise ValueError("times and scores must be finite")
     if np.any(np.diff(times) <= 0):
         raise ValueError("window times must increase strictly")
     flagged = values >= config.threshold
@@ -61,7 +74,7 @@ def alarm_episodes(
                     opening_start = index
                 opening_run += 1
                 if opening_run >= config.debounce_windows:
-                    active_start = opening_start
+                    active_start = index
                     last_flag = index
                     maximum = float(np.max(values[opening_start : index + 1]))
             else:

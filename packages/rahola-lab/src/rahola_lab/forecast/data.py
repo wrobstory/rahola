@@ -65,13 +65,11 @@ def extract_forecast_dataset(
     for trajectory_index in range(dataset.batch_size):
         accepted = 0
         cap_time = dataset.t_capsize_s[trajectory_index]
-        for end_index in range(
-            first_end_index,
-            len(dataset.time_s) - last_horizon,
-            stride_samples,
-        ):
+        for end_index in range(first_end_index, len(dataset.time_s), stride_samples):
             end_time = float(dataset.time_s[end_index])
             if np.isfinite(cap_time) and end_time >= cap_time:
+                break
+            if end_index + last_horizon >= len(dataset.time_s):
                 break
             start_index = end_index - history_samples + 1
             history = np.stack(

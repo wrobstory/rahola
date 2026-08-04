@@ -15,6 +15,7 @@ from rahola_lab.constants import (
     DETECTOR_MATCHED_SENSITIVITY,
     EWS_HORIZON_PERIODS,
     EWS_SUBWINDOW_FRACTIONS,
+    EXCLUSION_BUFFER_PERIODS,
     NEIGHBOR_RADIUS_GRID,
 )
 from rahola_lab.detectors import (
@@ -183,7 +184,9 @@ def score_dataset(
             metadata=dataset.metadata[start:stop],
             config=dataset.config,
         )
-        windows = extract_detector_windows(chunk, stride_s=10.0)
+        windows = extract_detector_windows(
+            chunk, stride_s=10.0, allow_censored_for_inference=True
+        )
         scores = {
             "cnn": suite.cnn.predict_scores(windows.features),
             "classical_ews": classical_ews_scores(
@@ -204,24 +207,63 @@ def score_dataset(
         for local in range(chunk.batch_size):
             selected = windows.trajectory_indices == local
             selected_times = windows.end_times_s[selected]
-            if not len(selected_times):
-                selected_times = np.array([60.0 * period], dtype=np.float64)
             capsize = float(chunk.t_capsize_s[local])
+            record_end_s = detector_risk_end_s(
+                selected_times,
+                t_capsize_s=capsize,
+                raw_record_end_s=float(chunk.time_s[-1]),
+                horizon_s=EWS_HORIZON_PERIODS * period,
+                record_start_s=60.0 * period,
+            )
             capsize_value = capsize if np.isfinite(capsize) else None
             for name in DETECTOR_NAMES:
                 selected_scores = scores[name][selected]
-                if not len(selected_scores):
-                    selected_scores = np.array([-np.inf], dtype=np.float64)
                 output[name].append(
                     TrajectoryScores(
                         times_s=selected_times,
                         scores=selected_scores,
-                        record_end_s=float(chunk.time_s[-1]),
+                        record_end_s=record_end_s,
                         t_capsize_s=capsize_value,
                         record_start_s=60.0 * period,
                     )
                 )
     return output
+
+
+def detector_risk_end_s(
+    score_times_s: np.ndarray,
+    *,
+    t_capsize_s: float,
+    raw_record_end_s: float,
+    horizon_s: float,
+    record_start_s: float,
+) -> float:
+    """End the evaluable risk interval without censoring the causal score stream.
+
+    Every trajectory uses the same horizon-complete follow-up cutoff. Causal
+    scores may continue beyond it for live inference, but neither late events nor
+    late non-events enter supervised comparisons or false-alarm exposure.
+    """
+    times = np.asarray(score_times_s, dtype=np.float64)
+    if not len(times):
+        return float(record_start_s)
+    outcome_end = min(float(times[-1]), float(raw_record_end_s - horizon_s))
+    evaluable = times <= outcome_end + 1e-9
+    return float(times[evaluable][-1]) if np.any(evaluable) else float(record_start_s)
+
+
+def relative_fpr_reduction(candidate: float, baseline: float) -> float | None:
+    """Return relative FPR improvement when the baseline supports that estimand."""
+    if (
+        not np.isfinite(candidate)
+        or not np.isfinite(baseline)
+        or candidate < 0.0
+        or baseline < 0.0
+    ):
+        raise ValueError("FPR values must be finite and nonnegative")
+    if baseline == 0.0:
+        return None
+    return 1.0 - candidate / baseline
 
 
 def merge_scores(
@@ -257,7 +299,10 @@ def threshold_grids(
         values = values[np.isfinite(values)]
         if not len(values):
             raise ValueError(f"{name} produced no finite calibration scores")
-        grid = np.quantile(values, np.linspace(0.0, 1.0, count))
+        grid = np.append(
+            np.quantile(values, np.linspace(0.0, 1.0, count)),
+            -np.finfo(np.float64).max,
+        )
         if name == "neighbor_2009":
             # Story (2009, Ch. 3) flagged fewer than 50 neighbors. The score is
             # negative count, so -50 is the faithful binary point on the sweep.
@@ -284,6 +329,30 @@ def evaluate_suite(
     }
 
 
+def select_operating_points(
+    calibration_scores: dict[str, list[TrajectoryScores]],
+    grids: dict[str, np.ndarray],
+    decorrelation_s: dict[str, float],
+) -> dict[str, OperatingPoint]:
+    """Choose every operational threshold from calibration outcomes only."""
+    curves = evaluate_suite(calibration_scores, grids, decorrelation_s)
+    return {name: matched_point(curve) for name, curve in curves.items()}
+
+
+def evaluate_suite_at_thresholds(
+    scores: dict[str, list[TrajectoryScores]],
+    thresholds: dict[str, float],
+    decorrelation_s: dict[str, float],
+) -> dict[str, OperatingPoint]:
+    """Evaluate one frozen threshold per detector without reopening a sweep."""
+    curves = evaluate_suite(
+        scores,
+        {name: np.asarray([thresholds[name]], dtype=np.float64) for name in scores},
+        decorrelation_s,
+    )
+    return {name: curve[0] for name, curve in curves.items()}
+
+
 def point_payload(point: OperatingPoint) -> dict[str, object]:
     metrics = point.metrics
     return {
@@ -299,6 +368,11 @@ def point_payload(point: OperatingPoint) -> dict[str, object]:
             metrics.false_positives_per_hour_interval.upper,
         ],
         "lead_time_quantiles_s": list(point.lead_time_quantiles_s),
+        "false_episode_count": metrics.false_episode_count,
+        "capsize_count": metrics.capsize_count,
+        "detected_capsize_count": metrics.detected_capsize_count,
+        "exposure_hours": metrics.exposure_hours,
+        "alarm_opportunity_count": metrics.alarm_opportunity_count,
     }
 
 
@@ -311,22 +385,36 @@ def matched_point(curve: tuple[OperatingPoint, ...]) -> OperatingPoint:
     return max(curve, key=lambda point: point.metrics.sensitivity)
 
 
-def window_auc(trajectories: list[TrajectoryScores], *, horizon_s: float = 200.0) -> float:
+def window_auc(
+    trajectories: list[TrajectoryScores],
+    *,
+    horizon_s: float = 200.0,
+    buffer_s: float = EXCLUSION_BUFFER_PERIODS * 4.0,
+) -> float:
+    """Rank horizon-complete positive and unambiguous negative endpoints."""
+    if horizon_s <= 0.0 or buffer_s < 0.0:
+        raise ValueError("horizon must be positive and buffer must be nonnegative")
     labels = []
     values = []
     for trajectory in trajectories:
+        times = np.asarray(trajectory.times_s, dtype=np.float64)
+        scores = np.asarray(trajectory.scores, dtype=np.float64)
+        selected = (
+            (times >= trajectory.record_start_s)
+            & (times <= trajectory.record_end_s)
+            & np.isfinite(scores)
+        )
         capsize = trajectory.t_capsize_s
         if capsize is None:
-            labels.extend([0] * len(trajectory.scores))
+            labels.extend([0] * int(np.sum(selected)))
         else:
-            labels.extend(
-                ((capsize - trajectory.times_s > 0.0) & (capsize - trajectory.times_s <= horizon_s))
-                .astype(np.int8)
-                .tolist()
+            lead = capsize - times
+            selected &= ((lead > 0.0) & (lead <= horizon_s)) | (
+                lead > horizon_s + buffer_s
             )
-        values.extend(trajectory.scores.tolist())
-    finite = np.isfinite(values)
-    return binary_auc(np.asarray(labels)[finite], np.asarray(values)[finite])
+            labels.extend(((lead[selected] > 0.0) & (lead[selected] <= horizon_s)).tolist())
+        values.extend(scores[selected].tolist())
+    return binary_auc(np.asarray(labels, dtype=np.int8), np.asarray(values, dtype=np.float64))
 
 
 def campaign_dir(data_root: Path, name: str) -> Path:

@@ -1,4 +1,4 @@
-"""Run or pilot the frozen Prototype #3 ceiling experiment."""
+"""Run or pilot the frozen Prototype #3 restart comparison."""
 
 from __future__ import annotations
 

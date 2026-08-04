@@ -35,6 +35,7 @@ def extract_detector_windows(
     *,
     stride_s: float = 10.0,
     max_windows_per_trajectory: int | None = None,
+    allow_censored_for_inference: bool = False,
 ) -> DetectorWindowDataset:
     """Extract frozen 60-period histories and 50-period horizon labels.
 
@@ -70,6 +71,12 @@ def extract_detector_windows(
                 break
             window = normalized[end - length + 1 : end + 1]
             if not np.all(np.isfinite(window)):
+                break
+            if allow_censored_for_inference:
+                label = -1
+                candidates.append((end, label))
+                continue
+            if end_time + horizon_s > float(time[-1]):
                 break
             if not np.isfinite(cap_time):
                 label = 0

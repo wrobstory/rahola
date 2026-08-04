@@ -50,6 +50,14 @@ def test_end_of_record_truncated_horizons_are_dropped() -> None:
     assert np.max(dataset.history_end_s) <= 14.0
 
 
+def test_capsize_does_not_extend_past_common_horizon_complete_cutoff() -> None:
+    dataset = extract_forecast_dataset(
+        _trajectory_dataset(capsized=True), history_s=5, horizons_s=(6.0,), stride_s=1
+    )
+    assert np.max(dataset.history_end_s) == 14.0
+    assert dataset.targets_rad[-1, 0] == 0.5
+
+
 def test_forecaster_shapes_and_lstm_budget() -> None:
     rng = np.random.default_rng(8)
     histories = rng.normal(size=(64, 20, 2))

@@ -2,15 +2,45 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 
 import numpy as np
+import pyarrow as pa
 import pyarrow.parquet as pq
 
 from rahola.dataset import SimulationDataset
 from rahola_lab.constants import SeedBlock
-from rahola_lab.evaluation.splits import assert_seed_membership
+from rahola_lab.evaluation.splits import ReserveBlockError, assert_seed_membership
+
+_REFERENCE_CHECKSUMS = json.loads(
+    Path(__file__).with_name("reference_checksums.json").read_text(encoding="utf-8")
+)
+
+
+def _read_verified_bytes(path: Path, expected: str, *, kind: str) -> bytes:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        blocks = []
+        for block in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(block)
+            blocks.append(block)
+    actual = digest.hexdigest()
+    if actual != expected:
+        raise ValueError(f"{kind} hash mismatch for {path}: expected {expected}, got {actual}")
+    return b"".join(blocks)
+
+
+def _contained_path(root: Path, base: Path, relative: object, *, kind: str) -> Path:
+    if not isinstance(relative, str) or not relative:
+        raise ValueError(f"{kind} path must be a nonempty relative string")
+    candidate = base / relative
+    try:
+        candidate.resolve().relative_to(root.resolve())
+    except ValueError as error:
+        raise ValueError(f"{kind} path escapes campaign root: {relative!r}") from error
+    return candidate
 
 
 def load_campaign_split(
@@ -18,11 +48,23 @@ def load_campaign_split(
     block: SeedBlock | str,
     *,
     limit: int | None = None,
+    allow_unanchored: bool = False,
 ) -> SimulationDataset:
-    """Load a named split and verify every stored seed belongs to it."""
+    """Load an anchored reference split and verify every stored seed belongs to it."""
     selected = SeedBlock(block)
+    if selected in {SeedBlock.RESERVE, SeedBlock.RESERVE2}:
+        raise ReserveBlockError(f"{selected} data may not be inspected by development paths")
     root = Path(campaign_dir)
-    manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
+    manifest_path = root / "manifest.json"
+    if not allow_unanchored and root.name not in _REFERENCE_CHECKSUMS:
+        raise ValueError(f"campaign {root.name!r} has no tracked reference anchor")
+    if not allow_unanchored:
+        manifest_bytes = _read_verified_bytes(
+            manifest_path, _REFERENCE_CHECKSUMS[root.name], kind="anchored reference manifest"
+        )
+    else:
+        manifest_bytes = manifest_path.read_bytes()
+    manifest = json.loads(manifest_bytes)
     records = manifest["splits"][str(selected)]
     seeds: list[int] = []
     capsized: list[bool] = []
@@ -32,10 +74,24 @@ def load_campaign_split(
     metadata: list[dict[str, object]] = []
     time_s: np.ndarray | None = None
     for chunk in records["chunks"]:
-        chunk_manifest_path = root / chunk["path"]
-        chunk_manifest = json.loads(chunk_manifest_path.read_text(encoding="utf-8"))
+        chunk_manifest_path = _contained_path(
+            root, root, chunk["path"], kind="chunk manifest"
+        )
+        chunk_manifest = json.loads(
+            _read_verified_bytes(
+                chunk_manifest_path, chunk["sha256"], kind="chunk manifest"
+            )
+        )
         for shard in chunk_manifest["shards"]:
-            table = pq.read_table(chunk_manifest_path.parent / shard["file"])
+            shard_path = _contained_path(
+                root, chunk_manifest_path.parent, shard["file"], kind="Parquet shard"
+            )
+            shard_bytes = _read_verified_bytes(
+                shard_path, shard["sha256"], kind="Parquet shard"
+            )
+            table = pq.read_table(pa.BufferReader(shard_bytes))
+            if table.num_rows != int(shard["rows"]):
+                raise ValueError(f"row-count mismatch for {shard_path}")
             payload = table.to_pydict()
             for row in range(table.num_rows):
                 if limit is not None and len(seeds) >= limit:

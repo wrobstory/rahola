@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import gc
-import json
 import math
 from pathlib import Path
 
@@ -31,7 +30,7 @@ from rahola_lab.evaluation import (
     identify_wave_groups,
     intervals_overlap,
 )
-from rahola_lab.experiments.common import FAMILIES, write_result
+from rahola_lab.experiments.common import FAMILIES, load_result, write_result
 from rahola_lab.experiments.detector_common import (
     DETECTOR_NAMES,
     campaign_dir,
@@ -109,34 +108,75 @@ def _false_group_fraction(
     group_coincident = 0
     config = EpisodeConfig(threshold=threshold, debounce_windows=3, refractory_windows=3)
     for trajectory, groups in zip(trajectories, groups_by_trajectory, strict=True):
-        episodes = decluster_episodes(
-            alarm_episodes(trajectory.times_s, trajectory.scores, config), decorrelation_s
+        times = np.asarray(trajectory.times_s, dtype=np.float64)
+        within_record = (
+            (times >= trajectory.record_start_s) & (times <= trajectory.record_end_s)
         )
+        record_times = times[within_record]
+        observation_start = trajectory.record_start_s
+        if len(record_times) >= config.debounce_windows:
+            observation_start = max(
+                observation_start,
+                float(record_times[config.debounce_windows - 1]),
+            )
+        else:
+            observation_start = float("inf")
         capsize_s = trajectory.t_capsize_s
+        observable_capsize = (
+            capsize_s
+            if capsize_s is not None
+            and capsize_s > observation_start
+            and np.any(
+                within_record
+                & (times < capsize_s)
+                & (times >= capsize_s - horizon_s)
+            )
+            else None
+        )
+        event_end = min(
+            trajectory.record_end_s,
+            observable_capsize or trajectory.record_end_s,
+        )
+        risk = within_record & (times <= event_end)
+        raw_episodes = alarm_episodes(times[risk], trajectory.scores[risk], config)
+        episodes = decluster_episodes(raw_episodes, decorrelation_s)
         associated = set()
-        if capsize_s is not None and capsize_s > trajectory.record_start_s:
+        if observable_capsize is not None:
             associated = {
                 episode
                 for episode in episodes
-                if episode.start_s < capsize_s
-                and episode.end_s >= capsize_s - horizon_s
+                if episode.start_s < observable_capsize
+                and episode.end_s >= observable_capsize - horizon_s
             }
         noncapsizing_groups = [
             group
             for group in groups
-            if capsize_s is None
+            if observable_capsize is None
             or not intervals_overlap(
-                group.start_s, group.end_s, capsize_s - horizon_s, capsize_s
+                group.start_s,
+                group.end_s,
+                observable_capsize - horizon_s,
+                observable_capsize,
             )
         ]
         for episode in episodes:
             if episode in associated:
                 continue
             false_count += 1
+            constituent_episodes = (
+                raw_episode
+                for raw_episode in raw_episodes
+                if raw_episode.start_s >= episode.start_s
+                and raw_episode.end_s <= episode.end_s
+            )
             if any(
                 intervals_overlap(
-                    episode.start_s, episode.end_s, group.start_s, group.end_s
+                    raw_episode.start_s,
+                    raw_episode.end_s,
+                    group.start_s,
+                    group.end_s,
                 )
+                for raw_episode in constituent_episodes
                 for group in noncapsizing_groups
             ):
                 group_coincident += 1
@@ -150,7 +190,7 @@ def _false_group_fraction(
 
 
 def run(data_root: Path, output_root: Path) -> dict[str, object]:
-    d1 = json.loads((output_root / "d1_operating_curves.json").read_text(encoding="utf-8"))
+    d1 = load_result(output_root, "d1_operating_curves")
     training_data = [
         load_campaign_split(campaign_dir(data_root, f"{family}_{role}"), SeedBlock.TRAIN)
         for family in FAMILIES
@@ -184,7 +224,6 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
     capsize = np.asarray(
         [
             trajectory.t_capsize_s is not None
-            and trajectory.t_capsize_s > trajectory.record_start_s
             for trajectory in scores[DETECTOR_NAMES[0]]
         ],
         dtype=bool,
@@ -195,7 +234,9 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
 
     methods = {}
     for name in DETECTOR_NAMES:
-        threshold = float(d1["headline_at_90_percent_sensitivity"][name]["threshold"])
+        threshold = float(
+            d1["headline_at_calibration_selected_threshold"][name]["threshold"]
+        )
         decorrelation_s = float(d1["decorrelation_time_s"][name])
         with_group = [
             trajectory
@@ -249,6 +290,7 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
             "evaluator_only": True,
         },
         "capsizes_preceded_by_group": {
+            "population": "all capsizes in the six source campaign records",
             "count": capsize_group_count,
             "capsize_count": capsize_count,
             "fraction": capsize_group_count / capsize_count,
@@ -256,5 +298,10 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
         },
         "methods": methods,
     }
-    write_result(output_root, "d4_wave_groups", payload)
+    write_result(
+        output_root,
+        "d4_wave_groups",
+        payload,
+        upstream_results={"d1_operating_curves": d1},
+    )
     return payload

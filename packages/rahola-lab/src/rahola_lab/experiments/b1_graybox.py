@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import gc
-import json
 from dataclasses import dataclass
 from itertools import pairwise
 from pathlib import Path
@@ -16,6 +15,7 @@ from rahola.dataset import SimulationDataset
 from rahola.windowing import binary_auc
 from rahola_lab.campaigns import load_campaign_split
 from rahola_lab.constants import (
+    DETECTOR_MATCHED_SENSITIVITY,
     EWS_HORIZON_PERIODS,
     GRAYBOX_AUXILIARY_WEIGHT_GRID,
     GRAYBOX_STIFFNESS_MAE_LIMIT,
@@ -30,8 +30,14 @@ from rahola_lab.evaluation import (
     estimate_decorrelation_time,
     operating_curve,
 )
-from rahola_lab.experiments.common import FAMILIES, subset_dataset, write_result
-from rahola_lab.experiments.detector_common import campaign_dir, matched_point, point_payload
+from rahola_lab.experiments.common import FAMILIES, load_result, subset_dataset, write_result
+from rahola_lab.experiments.detector_common import (
+    campaign_dir,
+    detector_risk_end_s,
+    matched_point,
+    point_payload,
+    relative_fpr_reduction,
+)
 
 
 @dataclass(frozen=True)
@@ -80,11 +86,13 @@ def _extract(
     *,
     stride_s: float,
     max_windows_per_trajectory: int | None = None,
+    allow_censored_for_inference: bool = False,
 ) -> GrayWindows:
     windows = extract_detector_windows(
         dataset,
         stride_s=stride_s,
         max_windows_per_trajectory=max_windows_per_trajectory,
+        allow_censored_for_inference=allow_censored_for_inference,
     )
     states, latents = _physical_arrays(windows, SimulationConfig.from_dict(dataset.config))
     return GrayWindows(windows, states, latents)
@@ -144,21 +152,27 @@ def _score_dataset(dataset: SimulationDataset, model: GrayBoxDetector) -> list[T
     period = float(dataset.config["natural_period_s"])
     for start in range(0, dataset.batch_size, 128):
         chunk = subset_dataset(dataset, start, min(start + 128, dataset.batch_size))
-        extracted = _extract(chunk, stride_s=10.0)
+        extracted = _extract(
+            chunk, stride_s=10.0, allow_censored_for_inference=True
+        )
         scores = model.predict_scores(extracted.windows.features, extracted.states)
         for trajectory in range(chunk.batch_size):
             selected = extracted.windows.trajectory_indices == trajectory
             capsize = float(chunk.t_capsize_s[trajectory])
             times = extracted.windows.end_times_s[selected]
             trajectory_scores = scores[selected]
-            if not len(times):
-                times = np.array([60.0 * period], dtype=np.float64)
-                trajectory_scores = np.array([-np.inf], dtype=np.float64)
+            record_end_s = detector_risk_end_s(
+                times,
+                t_capsize_s=capsize,
+                raw_record_end_s=float(chunk.time_s[-1]),
+                horizon_s=EWS_HORIZON_PERIODS * period,
+                record_start_s=60.0 * period,
+            )
             output.append(
                 TrajectoryScores(
                     times_s=times,
                     scores=trajectory_scores,
-                    record_end_s=float(chunk.time_s[-1]),
+                    record_end_s=record_end_s,
                     t_capsize_s=capsize if np.isfinite(capsize) else None,
                     record_start_s=60.0 * period,
                 )
@@ -176,46 +190,74 @@ def _evaluate(
     values = values[np.isfinite(values)]
     if not len(values):
         raise ValueError("gray-box produced no finite calibration scores")
-    thresholds = np.unique(np.quantile(values, np.linspace(0.0, 1.0, 41)))
+    thresholds = np.unique(
+        np.append(
+            np.quantile(values, np.linspace(0.0, 1.0, 41)),
+            -np.finfo(np.float64).max,
+        )
+    )
     estimates = []
     for trajectory in calibration:
         if len(trajectory.scores) >= 4:
             dt_s = float(np.median(np.diff(trajectory.times_s)))
             estimates.append(estimate_decorrelation_time(trajectory.scores, dt_s))
     decorrelation_s = float(np.median(estimates)) if estimates else 10.0
-    test = [item for dataset in test_data for item in _score_dataset(dataset, model)]
-    curve = operating_curve(
-        test,
+    calibration_curve = operating_curve(
+        calibration,
         EpisodeConfig(threshold=0.0, debounce_windows=3, refractory_windows=3),
         thresholds,
         horizon_s=EWS_HORIZON_PERIODS * 4.0,
         decorrelation_time_s=decorrelation_s,
     )
-    return point_payload(matched_point(curve)), decorrelation_s
+    calibration_point = matched_point(calibration_curve)
+    test = [item for dataset in test_data for item in _score_dataset(dataset, model)]
+    test_point = operating_curve(
+        test,
+        EpisodeConfig(threshold=0.0, debounce_windows=3, refractory_windows=3),
+        np.asarray([calibration_point.threshold], dtype=np.float64),
+        horizon_s=EWS_HORIZON_PERIODS * 4.0,
+        decorrelation_time_s=decorrelation_s,
+    )[0]
+    return point_payload(test_point), point_payload(calibration_point), decorrelation_s
 
 
 def _tracking(
     data_root: Path,
     output_root: Path,
     model: GrayBoxDetector,
-) -> tuple[float, str]:
+) -> tuple[float, int, str]:
     figure_path = output_root / "p3_b1_stiffness_tracking.png"
     figure, axis = plt.subplots(figsize=(7.2, 4.8))
-    errors = []
+    trajectory_errors = []
     for family in FAMILIES:
         dataset = load_campaign_split(campaign_dir(data_root, f"{family}_ramp"), SeedBlock.TEST)
-        extracted = _extract(dataset, stride_s=10.0)
+        extracted = _extract(
+            dataset, stride_s=10.0, allow_censored_for_inference=True
+        )
         predicted = model.predict_latents(extracted.windows.features, extracted.states)[:, 0]
         true = extracted.latents[:, 0]
+        survivor_indices = np.flatnonzero(~dataset.capsized)
+        survivor_windows = np.isin(
+            extracted.windows.trajectory_indices, survivor_indices
+        )
         final = extracted.windows.end_times_s >= 2.0 * float(dataset.time_s[-1]) / 3.0
-        errors.extend(np.abs(predicted[final] - true[final]).tolist())
+        for trajectory_index in survivor_indices:
+            selected = (
+                final & (extracted.windows.trajectory_indices == trajectory_index)
+            )
+            if np.any(selected):
+                trajectory_errors.append(
+                    float(np.mean(np.abs(predicted[selected] - true[selected])))
+                )
         bins = np.linspace(240.0, 600.0, 19)
         centers = 0.5 * (bins[:-1] + bins[1:])
         means = []
         truth = []
         for left, right in pairwise(bins):
-            selected = (extracted.windows.end_times_s >= left) & (
-                extracted.windows.end_times_s < right
+            selected = (
+                survivor_windows
+                & (extracted.windows.end_times_s >= left)
+                & (extracted.windows.end_times_s < right)
             )
             means.append(float(np.mean(predicted[selected])))
             truth.append(float(np.mean(true[selected])))
@@ -228,12 +270,12 @@ def _tracking(
     figure.tight_layout()
     figure.savefig(figure_path, dpi=180)
     plt.close(figure)
-    return float(np.mean(errors)), str(figure_path)
+    return float(np.mean(trajectory_errors)), len(trajectory_errors), str(figure_path)
 
 
 def run(data_root: Path, output_root: Path) -> dict[str, object]:
-    d1 = json.loads((output_root / "d1_operating_curves.json").read_text(encoding="utf-8"))
-    d2 = json.loads((output_root / "d2_family_generalization.json").read_text(encoding="utf-8"))
+    d1 = load_result(output_root, "d1_operating_curves")
+    d2 = load_result(output_root, "d2_family_generalization")
     all_training = [
         load_campaign_split(campaign_dir(data_root, f"{family}_{role}"), SeedBlock.TRAIN)
         for family in FAMILIES
@@ -250,13 +292,18 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
         for family in FAMILIES
         for role in ("evaluation", "ramp")
     ]
-    d1_gray, d1_decorrelation = _evaluate(all_calibration, all_test, model)
-    cnn_d1 = d1["headline_at_90_percent_sensitivity"]["cnn"]
+    d1_gray, d1_gray_calibration, d1_decorrelation = _evaluate(
+        all_calibration, all_test, model
+    )
+    cnn_d1 = d1["headline_at_calibration_selected_threshold"]["cnn"]
     cnn_ci = cnn_d1["false_episodes_per_hour_interval"]
     parity_limit = float(cnn_d1["false_episodes_per_hour"]) + float(cnn_ci[1] - cnn_ci[0])
-    parity_kill = float(d1_gray["false_episodes_per_hour"]) > parity_limit
-    tracking_mae, figure = _tracking(data_root, output_root, model)
-    tracking_kill = tracking_mae > GRAYBOX_STIFFNESS_MAE_LIMIT
+    parity_diagnostic = (
+        float(d1_gray["sensitivity"]) < DETECTOR_MATCHED_SENSITIVITY
+        or float(d1_gray["false_episodes_per_hour"]) > parity_limit
+    )
+    tracking_mae, tracking_trajectories, figure = _tracking(data_root, output_root, model)
+    tracking_diagnostic = tracking_mae > GRAYBOX_STIFFNESS_MAE_LIMIT
     del all_training, all_calibration, all_test, model
     gc.collect()
 
@@ -280,17 +327,24 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
             load_campaign_split(campaign_dir(data_root, f"{held_out}_{role}"), SeedBlock.TEST)
             for role in ("evaluation", "ramp")
         ]
-        gray, decorrelation = _evaluate(calibration, test, rotation_model)
-        cnn = d2_by_family[held_out]["headline_at_90_percent_sensitivity"]["cnn"]
-        reduction = 1.0 - float(gray["false_episodes_per_hour"]) / float(
-            cnn["false_episodes_per_hour"]
+        gray, gray_calibration, decorrelation = _evaluate(calibration, test, rotation_model)
+        cnn = d2_by_family[held_out]["headline_at_calibration_selected_threshold"]["cnn"]
+        reduction = relative_fpr_reduction(
+            float(gray["false_episodes_per_hour"]),
+            float(cnn["false_episodes_per_hour"]),
         )
-        earns = reduction >= GRAYBOX_TRANSFER_FPR_REDUCTION
+        earns = (
+            float(gray["sensitivity"]) >= DETECTOR_MATCHED_SENSITIVITY
+            and float(cnn["sensitivity"]) >= DETECTOR_MATCHED_SENSITIVITY
+            and reduction is not None
+            and reduction >= GRAYBOX_TRANSFER_FPR_REDUCTION
+        )
         improvements += int(earns)
         rotations.append(
             {
                 "held_out_family": held_out,
                 "graybox": gray,
+                "graybox_calibration_operating_point": gray_calibration,
                 "cnn": cnn,
                 "relative_fpr_reduction": reduction,
                 "earns_15_percent_improvement": earns,
@@ -301,22 +355,25 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
         del training, calibration, test, rotation_model
         gc.collect()
     transfer_kill = improvements < GRAYBOX_TRANSFER_ROTATIONS_REQUIRED
-    survives = not transfer_kill and not parity_kill and not tracking_kill
+    survives = False
     payload: dict[str, object] = {
         "experiment": "B1 gray-box",
+        "operating_point_policy": "Thresholds are selected on calibration and frozen for test.",
         "selection": selection,
         "parameter_count": GrayBoxDetector(
             auxiliary_weight=selection[0]["auxiliary_weight"]
         ).parameter_count(),
         "d1": {
             "graybox": d1_gray,
+            "graybox_calibration_operating_point": d1_gray_calibration,
             "cnn": cnn_d1,
             "decorrelation_time_s": d1_decorrelation,
             "parity_limit_fpr_per_hour": parity_limit,
         },
         "d2_rotations": rotations,
         "stiffness_tracking": {
-            "final_third_mae": tracking_mae,
+            "survivor_conditioned_final_third_trajectory_mean_mae": tracking_mae,
+            "trajectory_count": tracking_trajectories,
             "limit": GRAYBOX_STIFFNESS_MAE_LIMIT,
             "figure": figure,
         },
@@ -330,20 +387,41 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
                 "rotations_earned": improvements,
             },
             "within_distribution_parity": {
-                "fired": parity_kill,
+                "fired": None,
+                "evaluable_without_test_selection": False,
+                "calibration_targeted_diagnostic_fired": parity_diagnostic,
                 "verbatim": (
                     "Kill: worse than the CNN by more than its CI width at matched sensitivity."
                 ),
+                "reason": (
+                    "The calibration-selected methods have different test sensitivities; matching "
+                    "them on test would violate the frozen-threshold protocol."
+                ),
             },
             "stiffness_tracking": {
-                "fired": tracking_kill,
+                "fired": None,
+                "evaluable_unconditionally": False,
+                "survivor_conditioned_diagnostic_fired": tracking_diagnostic,
                 "verbatim": (
                     "Kill: mean absolute stiffness error exceeds 10% over the final third of "
                     "the ramp."
+                ),
+                "reason": (
+                    "Trajectories that capsize before the final third have no defined final-third "
+                    "error; the reported diagnostic conditions on survival and weights each "
+                    "trajectory equally."
                 ),
             },
         },
         "survives_all_kills": survives,
     }
-    write_result(output_root, "p3_b1_graybox", payload)
+    write_result(
+        output_root,
+        "p3_b1_graybox",
+        payload,
+        upstream_results={
+            "d1_operating_curves": d1,
+            "d2_family_generalization": d2,
+        },
+    )
     return payload

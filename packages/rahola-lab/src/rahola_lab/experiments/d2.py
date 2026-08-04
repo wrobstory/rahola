@@ -3,30 +3,31 @@
 from __future__ import annotations
 
 import gc
-import json
 from pathlib import Path
 
 from rahola_lab.campaigns import load_campaign_split
-from rahola_lab.constants import D2_MATERIAL_FPR_REDUCTION, SeedBlock
+from rahola_lab.constants import (
+    D2_MATERIAL_FPR_REDUCTION,
+    DETECTOR_MATCHED_SENSITIVITY,
+    SeedBlock,
+)
 from rahola_lab.experiments.common import FAMILIES, write_result
 from rahola_lab.experiments.detector_common import (
     campaign_dir,
     decorrelation_times,
-    evaluate_suite,
+    evaluate_suite_at_thresholds,
     fit_detector_suite,
-    matched_point,
     merge_scores,
     point_payload,
+    relative_fpr_reduction,
     score_dataset,
+    select_operating_points,
     threshold_grids,
     training_windows,
 )
 
 
 def run(data_root: Path, output_root: Path) -> dict[str, object]:
-    d1 = json.loads((output_root / "d1_operating_curves.json").read_text(encoding="utf-8"))
-    fixed_ews = d1["selected"]["ews_statistic"], float(d1["selected"]["ews_fraction"])
-    fixed_radius = float(d1["selected"]["neighbor_radius"])
     rotations = []
     for held_out in FAMILIES:
         included = [family for family in FAMILIES if family != held_out]
@@ -43,13 +44,15 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
         training = training_windows(training_data, max_windows_per_trajectory=3)
         calibration = training_windows(calibration_data, max_windows_per_trajectory=3)
         suite = fit_detector_suite(training, calibration)
-        suite.ews_statistic, suite.ews_fraction = fixed_ews
-        suite.neighbor_radius = fixed_radius
         calibration_scores = merge_scores(
             [score_dataset(dataset, suite) for dataset in calibration_data]
         )
         grids = threshold_grids(calibration_scores)
         decorrelation = decorrelation_times(calibration_scores)
+        calibration_points = select_operating_points(calibration_scores, grids, decorrelation)
+        frozen_thresholds = {
+            name: point.threshold for name, point in calibration_points.items()
+        }
         del training, calibration, training_data, calibration_data
         gc.collect()
 
@@ -58,23 +61,34 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
             load_campaign_split(campaign_dir(data_root, f"{held_out}_ramp"), SeedBlock.TEST),
         ]
         scores = merge_scores([score_dataset(dataset, suite) for dataset in test_data])
-        curves = evaluate_suite(scores, grids, decorrelation)
-        headline = {name: point_payload(matched_point(curve)) for name, curve in curves.items()}
+        test_points = evaluate_suite_at_thresholds(scores, frozen_thresholds, decorrelation)
+        headline = {name: point_payload(point) for name, point in test_points.items()}
         cnn_fpr = headline["cnn"]["false_episodes_per_hour"]
         b1_fpr = headline["classical_ews"]["false_episodes_per_hour"]
-        materially_above_b1 = cnn_fpr <= (1.0 - D2_MATERIAL_FPR_REDUCTION) * b1_fpr
+        fpr_reduction = relative_fpr_reduction(cnn_fpr, b1_fpr)
+        materially_above_b1 = (
+            headline["cnn"]["sensitivity"] >= DETECTOR_MATCHED_SENSITIVITY
+            and headline["classical_ews"]["sensitivity"] >= DETECTOR_MATCHED_SENSITIVITY
+            and fpr_reduction is not None
+            and fpr_reduction >= D2_MATERIAL_FPR_REDUCTION
+        )
         rotations.append(
             {
                 "held_out_family": held_out,
                 "cnn_grid_index": suite.cnn_grid_index,
-                "headline_at_90_percent_sensitivity": headline,
+                "calibration_operating_points": {
+                    name: point_payload(point) for name, point in calibration_points.items()
+                },
+                "headline_at_calibration_selected_threshold": headline,
+                "cnn_relative_fpr_reduction_vs_b1": fpr_reduction,
                 "cnn_materially_above_b1": materially_above_b1,
             }
         )
-        del test_data, scores, curves, suite
+        del test_data, scores, test_points, suite
         gc.collect()
     payload: dict[str, object] = {
         "experiment": "D2",
+        "operating_point_policy": "Thresholds are selected on calibration and frozen for test.",
         "material_fpr_reduction": D2_MATERIAL_FPR_REDUCTION,
         "rotations": rotations,
         "cnn_survives_all_families": all(row["cnn_materially_above_b1"] for row in rotations),

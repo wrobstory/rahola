@@ -9,6 +9,7 @@ from rahola_lab.detectors import (
     galeazzi_roll_power_glrt,
     neighbor_count_scores,
 )
+from rahola_lab.experiments.d3 import _all_motion_skill_collapses
 
 from rahola.dataset import SimulationDataset
 from rahola.windowing import binary_auc
@@ -86,3 +87,60 @@ def test_detector_feature_pipeline_blocks_future_only_signal() -> None:
     full_std = angle.std(axis=1, keepdims=True)
     leaky_scores = ((angle - full_mean) / full_std)[:, :480].mean(axis=1)
     assert min(binary_auc(labels, leaky_scores), 1.0 - binary_auc(labels, leaky_scores)) < 0.05
+
+
+def test_detector_windows_drop_censored_negatives_but_allow_inference_features() -> None:
+    samples = 121
+    angle = np.sin(np.arange(samples, dtype=np.float64))[None, :]
+    dataset = SimulationDataset(
+        time_s=np.arange(samples, dtype=np.float64),
+        angle_rad=angle,
+        rate_rad_s=np.zeros_like(angle),
+        seeds=np.array([1], dtype=np.uint64),
+        capsized=np.array([False]),
+        t_capsize_s=np.array([np.nan]),
+        metadata=({},),
+        config={"natural_period_s": 1.0, "family": "softening"},
+    )
+    supervised = extract_detector_windows(dataset, stride_s=1.0)
+    inference = extract_detector_windows(
+        dataset, stride_s=1.0, allow_censored_for_inference=True
+    )
+    assert np.max(supervised.end_times_s) == 70.0
+    late = inference.end_times_s > 70.0
+    assert np.any(late)
+    assert np.all(inference.labels == -1)
+
+    capsizing = SimulationDataset(
+        time_s=dataset.time_s,
+        angle_rad=dataset.angle_rad,
+        rate_rad_s=dataset.rate_rad_s,
+        seeds=dataset.seeds,
+        capsized=np.array([True]),
+        t_capsize_s=np.array([100.0]),
+        metadata=dataset.metadata,
+        config=dataset.config,
+    )
+    capsizing_windows = extract_detector_windows(capsizing, stride_s=1.0)
+    assert np.max(capsizing_windows.end_times_s) == 70.0
+    assert np.any(capsizing_windows.labels == 1)
+
+    capsizing_inference = extract_detector_windows(
+        capsizing, stride_s=1.0, allow_censored_for_inference=True
+    )
+    np.testing.assert_array_equal(
+        capsizing_inference.end_times_s,
+        inference.end_times_s[inference.end_times_s < 100.0],
+    )
+
+
+def test_d3_collapse_requires_every_motion_detector_to_reach_b1_floor() -> None:
+    methods = {
+        "classical_ews": {"auc": 0.50},
+        "cnn": {"auc": 0.51},
+        "cnn_cross_gamma": {"auc": 0.51},
+        "galeazzi_glrt": {"auc": 0.90},
+    }
+    assert not _all_motion_skill_collapses(methods)
+    methods["galeazzi_glrt"]["auc"] = 0.52
+    assert _all_motion_skill_collapses(methods)

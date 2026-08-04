@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-import math
 import subprocess
 from collections.abc import Iterable
 from dataclasses import replace
+from numbers import Integral
 
 import jax
 import numpy as np
@@ -94,6 +94,20 @@ def _trajectory_values(value: float | np.ndarray, size: int, *, name: str) -> np
     return values
 
 
+def _validated_seeds(seeds: Iterable[int]) -> np.ndarray:
+    values = list(seeds)
+    maximum = np.iinfo(np.uint64).max
+    if not values or any(
+        isinstance(value, bool)
+        or not isinstance(value, Integral)
+        or value < 0
+        or value > maximum
+        for value in values
+    ):
+        raise ValueError("seeds must be a non-empty iterable of uint64 integers")
+    return np.asarray(values, dtype=np.uint64)
+
+
 def _simulate_batch(
     config: SimulationConfig,
     seeds: Iterable[int],
@@ -104,14 +118,14 @@ def _simulate_batch(
     stiffness_rate_per_s: float | np.ndarray | None = None,
     time_offset_s: float | np.ndarray | None = None,
 ) -> SimulationDataset:
-    seed_array = np.asarray(list(seeds), dtype=np.uint64)
-    if seed_array.ndim != 1 or seed_array.size == 0:
+    seed_array = _validated_seeds(seeds)
+    if seed_array.ndim != 1:
         raise ValueError("seeds must be a non-empty one-dimensional iterable")
     if len(np.unique(seed_array)) != len(seed_array):
         raise ValueError("seeds must be unique within a batch")
 
     dt_s = config.integration_dt_s
-    n_steps = math.ceil(config.duration_s / dt_s)
+    n_steps = round(config.duration_s / dt_s)
     n_half_steps = 2 * n_steps
     time_half_s = np.arange(n_half_steps + 1, dtype=np.float64) * (0.5 * dt_s)
     time_offsets = _trajectory_values(
@@ -211,10 +225,8 @@ def _simulate_batch(
     state_array = np.asarray(states)
     cap_step_array = np.asarray(cap_steps, dtype=np.int32)
 
-    output_stride = max(1, round((1.0 / config.output_rate_hz) / dt_s))
+    output_stride = round((1.0 / config.output_rate_hz) / dt_s)
     output_indices = np.arange(0, n_steps + 1, output_stride, dtype=np.int64)
-    if output_indices[-1] != n_steps:
-        output_indices = np.append(output_indices, n_steps)
     output_time = output_indices.astype(np.float64) * dt_s
     angle = state_array[:, output_indices, 0] * config.escape_angle_rad
     rate = state_array[:, output_indices, 1] * config.escape_angle_rad * config.omega_n_rad_s

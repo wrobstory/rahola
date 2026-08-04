@@ -14,11 +14,12 @@ from rahola_lab.experiments.detector_common import (
     campaign_dir,
     decorrelation_times,
     evaluate_suite,
+    evaluate_suite_at_thresholds,
     fit_detector_suite,
-    matched_point,
     merge_scores,
     point_payload,
     score_dataset,
+    select_operating_points,
     threshold_grids,
     training_windows,
 )
@@ -54,6 +55,11 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
     )
     grids = threshold_grids(calibration_scores)
     decorrelation = decorrelation_times(calibration_scores)
+    calibration_curves = evaluate_suite(calibration_scores, grids, decorrelation)
+    calibration_points = select_operating_points(calibration_scores, grids, decorrelation)
+    frozen_thresholds = {
+        name: point.threshold for name, point in calibration_points.items()
+    }
     del training, calibration, training_data, calibration_data
     gc.collect()
 
@@ -68,18 +74,26 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
             ]
         )
     scores = merge_scores([score_dataset(dataset, suite) for dataset in evaluation_data])
-    curves = evaluate_suite(scores, grids, decorrelation)
-    headline = {name: point_payload(matched_point(curve)) for name, curve in curves.items()}
+    test_points = evaluate_suite_at_thresholds(scores, frozen_thresholds, decorrelation)
+    headline = {name: point_payload(point) for name, point in test_points.items()}
 
     output_root.mkdir(parents=True, exist_ok=True)
     figure_path = output_root / "d1_operating_curves.png"
     figure, axis = plt.subplots(figsize=(7.2, 4.8))
-    for name, curve in curves.items():
+    for name, curve in calibration_curves.items():
         axis.plot(
             [point.metrics.false_positives_per_hour for point in curve],
             [point.metrics.sensitivity for point in curve],
             marker=".",
             label=name,
+        )
+        point = test_points[name]
+        axis.scatter(
+            [point.metrics.false_positives_per_hour],
+            [point.metrics.sensitivity],
+            marker="x",
+            s=55,
+            color=axis.lines[-1].get_color(),
         )
     axis.set_xlabel("declustered false episodes per exposure hour")
     axis.set_ylabel("capsize sensitivity")
@@ -100,9 +114,17 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
             "neighbor_radius": suite.neighbor_radius,
         },
         "decorrelation_time_s": decorrelation,
-        "headline_at_90_percent_sensitivity": headline,
-        "curves": {
-            name: [point_payload(point) for point in curve] for name, curve in curves.items()
+        "operating_point_policy": (
+            "Select the minimum-FPR threshold attaining at least 90% sensitivity on the "
+            "calibration block, freeze it, then evaluate that single point on test."
+        ),
+        "calibration_operating_points": {
+            name: point_payload(point) for name, point in calibration_points.items()
+        },
+        "headline_at_calibration_selected_threshold": headline,
+        "calibration_curves": {
+            name: [point_payload(point) for point in curve]
+            for name, curve in calibration_curves.items()
         },
         "figure": str(figure_path),
     }

@@ -35,6 +35,12 @@ def test_batch_determinism_and_seed_separation() -> None:
     assert not np.array_equal(first.angle_rad[0], first.angle_rad[1])
 
 
+def test_output_grid_honors_requested_rate_and_duration() -> None:
+    dataset = simulate_batch(_small_config(duration_s=2.0, output_rate_hz=3.0), [10])
+    assert dataset.time_s[-1] == pytest.approx(2.0)
+    assert np.diff(dataset.time_s) == pytest.approx(np.full(6, 1.0 / 3.0))
+
+
 def test_step_protocol_and_asymmetric_capsize() -> None:
     protocol = ProtocolConfig(
         kind=ProtocolKind.STEP,
@@ -70,6 +76,29 @@ def test_restart_accepts_per_trajectory_state_and_stiffness_drift() -> None:
     assert restarted.rate_rad_s[:, 0] == pytest.approx(rates)
     assert restarted.metadata[1]["restart"]["stiffness_multiplier"] == pytest.approx(0.8)
     assert restarted.metadata[1]["restart"]["stiffness_rate_per_s"] == pytest.approx(-0.002)
+
+
+def test_restart_detects_initial_escape_boundary_at_time_zero() -> None:
+    config = _small_config(
+        duration_s=2.0,
+        escape_angle_rad=0.5,
+        forcing=ForcingConfig(effective_wave_slope=0.0),
+    )
+    restarted = simulate_restarted_batch(
+        config,
+        [20],
+        duration_s=2.0,
+        initial_angle_rad=0.5,
+        initial_rate_rad_s=-1.0,
+    )
+    assert restarted.capsized[0]
+    assert restarted.t_capsize_s[0] == 0.0
+
+
+@pytest.mark.parametrize("seeds", [[1.2, 2.8], [True, False], [-1, 2]])
+def test_simulator_rejects_non_uint64_seed_values(seeds) -> None:
+    with pytest.raises(ValueError, match="seeds"):
+        simulate_batch(_small_config(duration_s=2.0), seeds)
 
 
 @pytest.mark.slow

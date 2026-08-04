@@ -1,9 +1,8 @@
-"""Prototype #3 oracle, filtered-state ceiling, and fixed XGBoost ablation."""
+"""Prototype #3 independent-future restart comparisons and XGBoost ablation."""
 
 from __future__ import annotations
 
 import gc
-import json
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -31,7 +30,7 @@ from rahola_lab.detectors import (
     engineered_features,
     extract_detector_windows,
 )
-from rahola_lab.experiments.common import FAMILIES, write_result
+from rahola_lab.experiments.common import FAMILIES, load_result, write_result
 from rahola_lab.experiments.detector_common import (
     campaign_dir,
     fit_frozen_suite,
@@ -56,6 +55,9 @@ class SampledCampaign:
     name: str
     dataset: SimulationDataset
     windows: DetectorWindowDataset
+    calibration_weights: NDArray[np.float64]
+    population_stratum_counts: dict[str, int]
+    sampled_stratum_counts: dict[str, int]
 
 
 def _take(windows: DetectorWindowDataset, indices: NDArray[np.integer]) -> DetectorWindowDataset:
@@ -67,28 +69,63 @@ def _take(windows: DetectorWindowDataset, indices: NDArray[np.integer]) -> Detec
     )
 
 
+def _stratum_counts(
+    windows: DetectorWindowDataset, duration_s: float
+) -> dict[str, int]:
+    time_bin = np.minimum((4.0 * windows.end_times_s / duration_s).astype(int), 3)
+    groups = 4 * windows.labels.astype(int) + time_bin
+    return {
+        f"label={group // 4},time_quartile={group % 4}": int(np.sum(groups == group))
+        for group in np.unique(groups)
+    }
+
+
+def _clock_quartile_scores(
+    windows: DetectorWindowDataset, duration_s: float
+) -> NDArray[np.float64]:
+    """Protocol-time-only comparator on the exact AUC sampling strata."""
+    return np.minimum((4.0 * windows.end_times_s / duration_s).astype(int), 3).astype(
+        np.float64
+    )
+
+
 def _sample_stratified(
     windows: DetectorWindowDataset,
     duration_s: float,
     count: int,
     *,
     seed: int,
-) -> DetectorWindowDataset:
-    """Sample evenly by label and quartile of current protocol time."""
+) -> tuple[DetectorWindowDataset, NDArray[np.float64]]:
+    """Sample evenly across nonempty label/time strata and return population weights."""
+    if count < 1:
+        raise ValueError("sample count must be positive")
     rng = np.random.default_rng(seed)
     time_bin = np.minimum((4.0 * windows.end_times_s / duration_s).astype(int), 3)
     group = 4 * windows.labels.astype(int) + time_bin
     target = min(count, len(windows.labels))
-    quota = target // 8
+    strata = [int(value) for value in np.unique(group)]
+    if target < len(strata):
+        raise ValueError("sample count must cover every nonempty stratum")
+    allocation = {value: 0 for value in strata}
+    while sum(allocation.values()) < target:
+        available = [value for value in strata if allocation[value] < int(np.sum(group == value))]
+        if not available:
+            break
+        for value in available:
+            if sum(allocation.values()) >= target:
+                break
+            allocation[value] += 1
     selected: list[int] = []
-    for value in range(8):
+    sample_weights: list[float] = []
+    for value in strata:
         candidates = np.flatnonzero(group == value)
-        if len(candidates):
-            selected.extend(rng.choice(candidates, min(quota, len(candidates)), replace=False))
-    remaining = np.setdiff1d(np.arange(len(group)), np.asarray(selected), assume_unique=False)
-    if len(selected) < target:
-        selected.extend(rng.choice(remaining, target - len(selected), replace=False))
-    return _take(windows, np.sort(np.asarray(selected, dtype=np.int64)))
+        chosen = rng.choice(candidates, allocation[value], replace=False)
+        selected.extend(int(index) for index in chosen)
+        sample_weights.extend([len(candidates) / len(chosen)] * len(chosen))
+    order = np.argsort(np.asarray(selected, dtype=np.int64))
+    indices = np.asarray(selected, dtype=np.int64)[order]
+    weights = np.asarray(sample_weights, dtype=np.float64)[order]
+    return _take(windows, indices), weights
 
 
 def _true_stiffness(
@@ -189,20 +226,47 @@ def _auc_interval(
     }
 
 
-def _calibration(labels: NDArray[np.int8], scores: NDArray[np.float64]) -> dict[str, object]:
+def _calibration(
+    labels: NDArray[np.int8],
+    scores: NDArray[np.float64],
+    weights: NDArray[np.float64],
+) -> dict[str, object]:
+    if (
+        labels.shape != scores.shape
+        or weights.shape != scores.shape
+        or not np.all(np.isfinite(scores))
+        or not np.all(np.isfinite(weights))
+        or np.any(weights <= 0.0)
+        or np.any((scores < 0.0) | (scores > 1.0))
+    ):
+        raise ValueError(
+            "calibration labels, probability scores, and positive weights must align"
+        )
     bins = np.minimum((10 * scores).astype(int), 9)
     rows = []
     ece = 0.0
+    total_weight = float(np.sum(weights))
     for index in range(10):
         selected = bins == index
         if np.any(selected):
-            predicted = float(np.mean(scores[selected]))
-            observed = float(np.mean(labels[selected]))
-            ece += np.mean(selected) * abs(predicted - observed)
+            bin_weight = float(np.sum(weights[selected]))
+            predicted = float(np.average(scores[selected], weights=weights[selected]))
+            observed = float(np.average(labels[selected], weights=weights[selected]))
+            ece += bin_weight / total_weight * abs(predicted - observed)
             rows.append(
-                {"count": int(np.sum(selected)), "predicted": predicted, "observed": observed}
+                {
+                    "sample_count": int(np.sum(selected)),
+                    "population_weight": bin_weight,
+                    "predicted": predicted,
+                    "observed": observed,
+                }
             )
-    return {"brier": float(np.mean((scores - labels) ** 2)), "ece_10_bin": ece, "bins": rows}
+    return {
+        "weighted_brier": float(np.average((scores - labels) ** 2, weights=weights)),
+        "weighted_ece_10_bin": ece,
+        "estimand": "population windows reconstructed from label/time-stratified sampling",
+        "bins": rows,
+    }
 
 
 def _fit_b0(
@@ -251,9 +315,9 @@ def run(
     rollouts: int = ORACLE_ROLLOUTS,
     write: bool = True,
 ) -> dict[str, object]:
-    """Run the fixed ceiling program and apply the architecture gate."""
+    """Run the frozen restart comparison and historical architecture trigger."""
     started = time.perf_counter()
-    d1 = json.loads((output_root / "d1_operating_curves.json").read_text(encoding="utf-8"))
+    d1 = load_result(output_root, "d1_operating_curves")
     training_data = [
         load_campaign_split(campaign_dir(data_root, f"{family}_{role}"), SeedBlock.TRAIN)
         for family in FAMILIES
@@ -268,20 +332,28 @@ def run(
     for campaign_index, name in enumerate(CAMPAIGNS):
         dataset = load_campaign_split(campaign_dir(data_root, name), SeedBlock.TEST)
         all_windows = extract_detector_windows(dataset, stride_s=10.0)
+        sampled_windows, weights = _sample_stratified(
+            all_windows,
+            float(dataset.time_s[-1]),
+            windows_per_campaign,
+            seed=80_000 + campaign_index,
+        )
+        duration_s = float(dataset.time_s[-1])
         samples.append(
             SampledCampaign(
                 name,
                 dataset,
-                _sample_stratified(
-                    all_windows,
-                    float(dataset.time_s[-1]),
-                    windows_per_campaign,
-                    seed=80_000 + campaign_index,
-                ),
+                sampled_windows,
+                weights,
+                _stratum_counts(all_windows, duration_s),
+                _stratum_counts(sampled_windows, duration_s),
             )
         )
     b0 = _fit_b0(data_root, d1["selected"])
     labels = np.concatenate([sample.windows.labels for sample in samples])
+    calibration_weights = np.concatenate(
+        [sample.calibration_weights for sample in samples]
+    )
     cnn_scores = np.concatenate(
         [suite.cnn.predict_scores(sample.windows.features) for sample in samples]
     )
@@ -296,6 +368,12 @@ def run(
                     )
                 )
             )
+            for sample in samples
+        ]
+    )
+    clock_scores = np.concatenate(
+        [
+            _clock_quartile_scores(sample.windows, float(sample.dataset.time_s[-1]))
             for sample in samples
         ]
     )
@@ -323,6 +401,8 @@ def run(
                 "campaign": sample.name,
                 "windows": len(sample.windows.labels),
                 "positive_fraction": float(np.mean(sample.windows.labels)),
+                "population_stratum_counts": sample.population_stratum_counts,
+                "sampled_stratum_counts": sample.sampled_stratum_counts,
                 "elapsed_s": time.perf_counter() - campaign_started,
             }
         )
@@ -335,44 +415,64 @@ def run(
         ]
     ).astype(np.int64)
     methods = {
-        "C1_oracle": _auc_interval(labels, c1_scores, blocks),
-        "C2_filtered": _auc_interval(labels, c2_scores, blocks),
+        "C1_exact_state_independent_future_restart": _auc_interval(
+            labels, c1_scores, blocks
+        ),
+        "C2_filtered_state_independent_future_restart": _auc_interval(
+            labels, c2_scores, blocks
+        ),
         "CNN": _auc_interval(labels, cnn_scores, blocks),
         "B0_XGBoost": _auc_interval(labels, b0_scores, blocks),
+        "clock_only_protocol_quartile": _auc_interval(labels, clock_scores, blocks),
     }
-    c1_auc = float(methods["C1_oracle"]["auc"])
+    c1_auc = float(methods["C1_exact_state_independent_future_restart"]["auc"])
     cnn_auc = float(methods["CNN"]["auc"])
-    gate_closed = cnn_auc >= c1_auc - CEILING_AUC_GAP
-    verdict = (
-        "CNN AUC >= C1 AUC - 0.03: declare the motion-only problem information-limited; "
-        "skip Part B's architectures entirely."
-        if gate_closed
-        else "CNN AUC < C1 AUC - 0.03: proceed to Part B and report where the deficit lives."
-    )
+    historical_gap_trigger = cnn_auc < c1_auc - CEILING_AUC_GAP
     payload: dict[str, object] = {
-        "experiment": "Prototype #3 ceiling",
+        "experiment": "Prototype #3 independent-future restart comparison",
         "sampling": {
             "requested_windows_per_campaign": windows_per_campaign,
             "strata": "label x quartile of protocol time",
+            "auc_estimand": (
+                "unweighted AUC on a capped-equal allocation: round-robin across nonempty "
+                "strata until a stratum is exhausted, then reallocating unused slots"
+            ),
+            "auc_interval_conditioning": (
+                "trajectory bootstrap conditional on the realized sampled windows and rollout draws"
+            ),
+            "calibration_estimand": "source-window population via post-stratum weights",
             "campaigns": campaign_rows,
             "total_windows": len(labels),
         },
         "rollouts_per_window": rollouts,
         "particle_count": PF_PARTICLES,
         "methods": methods,
-        "oracle_calibration": _calibration(labels, c1_scores),
+        "population_weighted_restart_calibration": _calibration(
+            labels, c1_scores, calibration_weights
+        ),
         "gaps": {
-            "C1_minus_C2": c1_auc - float(methods["C2_filtered"]["auc"]),
-            "C2_minus_CNN": float(methods["C2_filtered"]["auc"]) - cnn_auc,
+            "C1_minus_C2": c1_auc
+            - float(methods["C2_filtered_state_independent_future_restart"]["auc"]),
+            "C2_minus_CNN": float(
+                methods["C2_filtered_state_independent_future_restart"]["auc"]
+            )
+            - cnn_auc,
             "C1_minus_CNN": c1_auc - cnn_auc,
+            "CNN_minus_clock_only": cnn_auc
+            - float(methods["clock_only_protocol_quartile"]["auc"]),
         },
-        "gate_threshold_auc": CEILING_AUC_GAP,
-        "gate_closed": gate_closed,
-        "gate_verdict": verdict,
-        "oracle_fairness": (
-            "C1 knows exact roll state, current stiffness, deterministic remaining ramp, family, "
-            "and sea-state specification, but never the realized future forcing. Every rollout "
-            "uses a fresh independent forcing seed."
+        "architecture_gate_valid": False,
+        "historical_gap_trigger_threshold_auc": CEILING_AUC_GAP,
+        "historical_gap_triggered": historical_gap_trigger,
+        "gate_verdict": (
+            "No information-ceiling gate is applied. C1 and C2 use fresh independent forcing "
+            "and need not upper-bound a model that observes the full correlated motion history. "
+            "The clock-only baseline quantifies protocol-time confounding in this sampled estimand."
+        ),
+        "restart_reference_semantics": (
+            "C1 knows exact endpoint roll state, current stiffness, deterministic remaining ramp, "
+            "family, and sea-state specification. C1 and C2 discard the observed forcing phase "
+            "and draw a fresh independent future. They are restart comparators, not Bayes ceilings."
         ),
         "pf_judgment": (
             "Rao-Blackwellized bootstrap PF: observed roll/rate are pinned; 2,000 particles infer "
@@ -382,5 +482,10 @@ def run(
         "elapsed_s": time.perf_counter() - started,
     }
     if write:
-        write_result(output_root, "p3_ceiling", payload)
+        write_result(
+            output_root,
+            "p3_ceiling",
+            payload,
+            upstream_results={"d1_operating_curves": d1},
+        )
     return payload

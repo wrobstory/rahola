@@ -1,0 +1,17 @@
+{
+  "biased_evaluation": "c416ddc02233a1c5d09944fc860476178de85d8d3e049a9804f9e261c3000256",
+  "biased_ramp": "55820347af4ed6f3383483c21efcce81196ea5cf3446e3c90a09f9ddc0af0842",
+  "biased_stationary": "6540e85019db8aac02d15f029f5f8a79db1b224c330ec1d60bcdd6c13512fb0e",
+  "parametric_evaluation": "b0d022af64fa35342935e406932699076802b414c86e75a66f2985a6da08a506",
+  "parametric_ramp": "5ac54c72ee14f70b1f5e331bcba9d5226d00e23982b0a2609d59f306488907b1",
+  "parametric_stationary": "cbe939395daf0892d0463c70a3cde6891e93a996ebf68fe2a19b6afa50ca197b",
+  "softening_bandwidth_gamma_1": "f973c581443824dfd18cfe41302e0cb143623af2323b8b4c1a5cc2a5dd0a0321",
+  "softening_bandwidth_gamma_15": "f48de367e516d69f44e96efa436fab8e85e79c10f553550a1ed3d66a43780aa5",
+  "softening_bandwidth_gamma_30": "29aeb7d5b6dbde85b32d4a936395d0ff743b1053a49ad9d5d203a700bfbc10a1",
+  "softening_bandwidth_gamma_3_3": "9e36a8b217e0b3187563ddf39ce306ab7eaa8eca71fdfef3c16a3996e8577031",
+  "softening_bandwidth_gamma_7": "76ce921118cc45af2864a242facf5f27c2f8bf0aa813cde93b9681a9af3873f3",
+  "softening_evaluation": "b02bd4debcbe48d008a2056b75a674ce2347bd36f580787e5b03c357a70cb29c",
+  "softening_ramp": "da75672f2c8959ae77021c5d7cb5bf155c79b2c847f1b1d3ebd397d9f41d9212",
+  "softening_stationary": "bfc73be2c9ec075be87f9e47df1c16ea96106ca4e5be8e1d9b140c16a93236c0",
+  "softening_step": "7402eb0a3547c79e697f09c4c1557a6b59c948c9ec7a602df3227a8ac3ff04b4"
+}

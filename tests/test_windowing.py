@@ -34,8 +34,38 @@ def test_horizon_buffer_and_post_capsize_rules() -> None:
     )
     first = windows.trajectory_indices == 0
     assert np.all(windows.end_times_s[first] < 15.0)
+    assert np.max(windows.end_times_s[first]) <= 15.0
     assert np.all(windows.labels[windows.trajectory_indices == 1] == 0)
     assert not np.any((windows.end_times_s[first] >= 9) & (windows.end_times_s[first] < 11))
+    safe = windows.trajectory_indices == 1
+    assert np.max(windows.end_times_s[safe]) == 15.0
+
+
+def test_capsize_and_non_event_windows_share_horizon_complete_support() -> None:
+    samples = 121
+    angle = np.sin(np.arange(samples, dtype=np.float64))[None, :]
+    dataset = _dataset(angle, np.array([100.0]))
+    windows = make_windows(
+        dataset,
+        WindowConfig(
+            length_periods=30.0,
+            horizon_periods=25.0,
+            exclusion_buffer_periods=1.0,
+        ),
+    )
+    assert np.max(windows.end_times_s) == 70.0
+    assert np.any(windows.labels == 1)
+
+
+def test_auc_rejects_non_finite_scores() -> None:
+    with pytest.raises(ValueError, match="finite"):
+        binary_auc(np.array([0, 1]), np.array([0.0, np.nan]))
+
+
+@pytest.mark.parametrize("stride", [float("nan"), 1.5])
+def test_window_stride_must_be_an_integer(stride: float) -> None:
+    with pytest.raises(ValueError, match="integer"):
+        WindowConfig(length_periods=2.0, horizon_periods=2.0, stride_samples=stride)
 
 
 def test_future_only_leakage_probe_has_teeth() -> None:

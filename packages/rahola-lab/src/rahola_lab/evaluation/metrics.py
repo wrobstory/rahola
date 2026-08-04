@@ -101,7 +101,9 @@ def evaluate_alarms(
     nominal horizon.
 
     Reported 95% intervals use Clopper--Pearson binomial quantiles. Sensitivity
-    trials are observable capsize events. For false episodes, each scorable
+    trials are capsize events after enough scores exist to satisfy the configured
+    debounce and with at least one scored endpoint inside the event horizon. For
+    false episodes, each scorable
     window is an alarm-opening opportunity and the probability interval is
     rescaled by observed opportunities per exposure hour. Debounce/refractory
     logic is followed by merging episodes separated by no more than the supplied
@@ -118,22 +120,49 @@ def evaluate_alarms(
     lead_times: list[float] = []
     for trajectory in trajectories:
         capsize = trajectory.t_capsize_s
-        observable_capsize = (
-            capsize if capsize is not None and capsize > trajectory.record_start_s else None
+        times = np.asarray(trajectory.times_s, dtype=np.float64)
+        scores = np.asarray(trajectory.scores, dtype=np.float64)
+        within_record = (
+            (times >= trajectory.record_start_s)
+            & (times <= trajectory.record_end_s)
         )
-        if capsize is not None and capsize <= trajectory.record_start_s:
+        record_times = times[within_record]
+        event_observation_start = trajectory.record_start_s
+        if len(record_times) >= episode_config.debounce_windows:
+            event_observation_start = max(
+                event_observation_start,
+                float(record_times[episode_config.debounce_windows - 1]),
+            )
+        else:
+            event_observation_start = float("inf")
+        has_horizon_opportunity = bool(
+            capsize is not None
+            and np.any(
+                within_record
+                & (times < capsize)
+                & (times >= capsize - horizon_s)
+            )
+        )
+        observable_capsize = (
+            capsize
+            if capsize is not None
+            and capsize > event_observation_start
+            and has_horizon_opportunity
+            else None
+        )
+        if capsize is not None and capsize <= event_observation_start:
             event_end = trajectory.record_start_s
         else:
             event_end = min(trajectory.record_end_s, observable_capsize or trajectory.record_end_s)
         exposure_s += max(0.0, event_end - trajectory.record_start_s)
-        alarm_opportunities += int(
-            np.sum(
-                (trajectory.times_s >= trajectory.record_start_s)
-                & (trajectory.times_s <= event_end)
-            )
+        risk = (
+            within_record & (times <= event_end)
+            if event_end > trajectory.record_start_s
+            else np.zeros(len(times), dtype=bool)
         )
+        alarm_opportunities += int(np.sum(risk))
         episodes = decluster_episodes(
-            alarm_episodes(trajectory.times_s, trajectory.scores, episode_config),
+            alarm_episodes(times[risk], scores[risk], episode_config),
             decorrelation_time_s,
         )
         associated: tuple[AlarmEpisode, ...] = ()

@@ -27,6 +27,7 @@ class ChronosClassifier:
     seed: int = 71_903
     pipeline_: ChronosPipeline | None = None
     head_: torch.nn.Linear | None = None
+    training_sample_counts_: dict[str, int] | None = None
 
     def _load(self) -> None:
         torch.manual_seed(self.seed)
@@ -101,6 +102,12 @@ class ChronosClassifier:
         self._load()
         assert self.pipeline_ is not None and self.head_ is not None
         if self.mode == "frozen":
+            labels_array = np.asarray(labels, dtype=np.int8)
+            self.training_sample_counts_ = {
+                "total": len(labels_array),
+                "positive": int(np.sum(labels_array == 1)),
+                "negative": int(np.sum(labels_array == 0)),
+            }
             embeddings = self._frozen_embeddings(features)
             self._train_head(
                 embeddings,
@@ -125,6 +132,11 @@ class ChronosClassifier:
         targets = torch.from_numpy(labels_array[selected].astype(np.float32))[:, None]
         negative_count = np.sum(labels_array[selected] == 0)
         positive_count = np.sum(labels_array[selected] == 1)
+        self.training_sample_counts_ = {
+            "total": len(selected),
+            "positive": int(positive_count),
+            "negative": int(negative_count),
+        }
         positive_weight = torch.tensor([float(negative_count / max(positive_count, 1))])
         loss_fn = torch.nn.BCEWithLogitsLoss(pos_weight=positive_weight)
         encoder = self.pipeline_.model.model.encoder

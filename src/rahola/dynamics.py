@@ -78,9 +78,16 @@ def integrate_rk4_batch(
             next_active = active & ~crossed
             return (next_state, next_active, next_cap_step), next_state
 
+        initially_crossed = (state0[0] >= positive_escape) | (
+            state0[0] <= -negative_escape
+        )
         (_, _, cap_step), history = jax.lax.scan(
             scan_step,
-            (state0, jnp.array(True), jnp.array(-1, dtype=jnp.int32)),
+            (
+                state0,
+                ~initially_crossed,
+                jnp.where(initially_crossed, 0, -1).astype(jnp.int32),
+            ),
             jnp.arange(n_steps),
         )
         states = jnp.concatenate((state0[None, :], history), axis=0)
