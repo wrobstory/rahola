@@ -18,12 +18,14 @@ from rahola_lab.constants import (
     WAVE_GROUP_MIN_PERIODS,
     SeedBlock,
 )
+from rahola_lab.detectors import NormalizationMode, extract_detector_windows
 from rahola_lab.evaluation import (
     AlarmMetrics,
     EpisodeConfig,
     TrajectoryScores,
     WaveGroup,
     alarm_episodes,
+    bootstrap_alarm_metrics,
     clopper_pearson_interval,
     decluster_episodes,
     evaluate_alarms,
@@ -35,20 +37,21 @@ from rahola_lab.experiments.detector_common import (
     DETECTOR_NAMES,
     campaign_dir,
     common_natural_period_s,
+    detector_risk_end_s,
     fit_frozen_suite,
     merge_scores,
     score_dataset,
     training_windows,
 )
+from rahola_lab.experiments.v02_common import load_frozen_v02_result
+from rahola_lab.forecast import fit_piecewise_linear_restoring
 
 
 def _groups_for_dataset(dataset: SimulationDataset) -> list[tuple[WaveGroup, ...]]:
     config = SimulationConfig.from_dict(dataset.config)
     n_steps = math.ceil(config.duration_s / config.integration_dt_s)
     n_half_steps = 2 * n_steps
-    times_s = np.arange(n_half_steps + 1, dtype=np.float64) * (
-        0.5 * config.integration_dt_s
-    )
+    times_s = np.arange(n_half_steps + 1, dtype=np.float64) * (0.5 * config.integration_dt_s)
     sea = config.forcing.sea_state
     groups = []
     for seed in dataset.seeds:
@@ -110,9 +113,7 @@ def _false_group_fraction(
     config = EpisodeConfig(threshold=threshold, debounce_windows=3, refractory_windows=3)
     for trajectory, groups in zip(trajectories, groups_by_trajectory, strict=True):
         times = np.asarray(trajectory.times_s, dtype=np.float64)
-        within_record = (
-            (times >= trajectory.record_start_s) & (times <= trajectory.record_end_s)
-        )
+        within_record = (times >= trajectory.record_start_s) & (times <= trajectory.record_end_s)
         record_times = times[within_record]
         observation_start = trajectory.record_start_s
         if len(record_times) >= config.debounce_windows:
@@ -127,11 +128,7 @@ def _false_group_fraction(
             capsize_s
             if capsize_s is not None
             and capsize_s > observation_start
-            and np.any(
-                within_record
-                & (times < capsize_s)
-                & (times >= capsize_s - horizon_s)
-            )
+            and np.any(within_record & (times < capsize_s) & (times >= capsize_s - horizon_s))
             else None
         )
         event_end = min(
@@ -167,8 +164,7 @@ def _false_group_fraction(
             constituent_episodes = (
                 raw_episode
                 for raw_episode in raw_episodes
-                if raw_episode.start_s >= episode.start_s
-                and raw_episode.end_s <= episode.end_s
+                if raw_episode.start_s >= episode.start_s and raw_episode.end_s <= episode.end_s
             )
             if any(
                 intervals_overlap(
@@ -186,8 +182,57 @@ def _false_group_fraction(
         "coincident_false_episodes": group_coincident,
         "false_episode_count": false_count,
         "fraction": group_coincident / false_count if false_count else float("nan"),
-        "interval": [interval.lower, interval.upper],
+        "episode_level_binomial_interval_descriptive_only": [
+            interval.lower,
+            interval.upper,
+        ],
     }
+
+
+def _danger_scores(dataset: SimulationDataset) -> list[TrajectoryScores]:
+    """Score the corrected two-sided known-configuration comparator."""
+    period = float(dataset.config["natural_period_s"])
+    danger = fit_piecewise_linear_restoring(dataset.config)
+    output: list[TrajectoryScores] = []
+    for start in range(0, dataset.batch_size, 128):
+        stop = min(start + 128, dataset.batch_size)
+        chunk = SimulationDataset(
+            time_s=dataset.time_s,
+            angle_rad=dataset.angle_rad[start:stop],
+            rate_rad_s=dataset.rate_rad_s[start:stop],
+            seeds=dataset.seeds[start:stop],
+            capsized=dataset.capsized[start:stop],
+            t_capsize_s=dataset.t_capsize_s[start:stop],
+            metadata=dataset.metadata[start:stop],
+            config=dataset.config,
+        )
+        windows = extract_detector_windows(
+            chunk,
+            stride_s=10.0,
+            allow_censored_for_inference=True,
+            normalization_mode=NormalizationMode.PHYSICAL,
+        )
+        values = danger.danger_score(windows.raw_angle_rad, windows.raw_rate_rad_s)
+        for local in range(chunk.batch_size):
+            selected = windows.trajectory_indices == local
+            times = windows.end_times_s[selected]
+            capsize = float(chunk.t_capsize_s[local])
+            output.append(
+                TrajectoryScores(
+                    times_s=times,
+                    scores=values[selected],
+                    record_end_s=detector_risk_end_s(
+                        times,
+                        t_capsize_s=capsize,
+                        raw_record_end_s=float(chunk.time_s[-1]),
+                        horizon_s=EWS_HORIZON_PERIODS * period,
+                        record_start_s=60.0 * period,
+                    ),
+                    t_capsize_s=capsize if np.isfinite(capsize) else None,
+                    record_start_s=60.0 * period,
+                )
+            )
+    return output
 
 
 def run(data_root: Path, output_root: Path) -> dict[str, object]:
@@ -223,10 +268,7 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
         dtype=bool,
     )
     capsize = np.asarray(
-        [
-            trajectory.t_capsize_s is not None
-            for trajectory in scores[DETECTOR_NAMES[0]]
-        ],
+        [trajectory.t_capsize_s is not None for trajectory in scores[DETECTOR_NAMES[0]]],
         dtype=bool,
     )
     capsize_group_count = int(np.sum(capsize & preceded))
@@ -235,9 +277,7 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
 
     methods = {}
     for name in DETECTOR_NAMES:
-        threshold = float(
-            d1["headline_at_calibration_selected_threshold"][name]["threshold"]
-        )
+        threshold = float(d1["headline_at_calibration_selected_threshold"][name]["threshold"])
         decorrelation_s = float(d1["decorrelation_time_s"][name])
         with_group = [
             trajectory
@@ -305,4 +345,92 @@ def run(data_root: Path, output_root: Path) -> dict[str, object]:
         payload,
         upstream_results={"d1_operating_curves": d1},
     )
+    return payload
+
+
+def run_v02_danger(data_root: Path, output_root: Path) -> dict[str, object]:
+    """Regenerate only the D4 row affected by the two-sided danger repair."""
+    d1 = load_frozen_v02_result(output_root / "d1_operating_curves_v02.json")
+    names = [f"{family}_{role}" for family in FAMILIES for role in ("evaluation", "ramp")]
+    datasets = [
+        load_campaign_split(campaign_dir(data_root, name), SeedBlock.TEST) for name in names
+    ]
+    scores = [trajectory for dataset in datasets for trajectory in _danger_scores(dataset)]
+    strata = [
+        name
+        for name, dataset in zip(names, datasets, strict=True)
+        for _ in range(dataset.batch_size)
+    ]
+    groups = [group for dataset in datasets for group in _groups_for_dataset(dataset)]
+    horizon_s = EWS_HORIZON_PERIODS * common_natural_period_s(datasets)
+    capsize = np.asarray([trajectory.t_capsize_s is not None for trajectory in scores])
+    preceded = np.asarray(
+        [
+            _precedes_capsize(group, trajectory.t_capsize_s, horizon_s)
+            for group, trajectory in zip(groups, scores, strict=True)
+        ]
+    )
+    threshold = float(
+        d1["headline_at_calibration_selected_threshold"]["danger_margin"]["threshold"]
+    )
+    decorrelation_s = float(d1["decorrelation_time_s"]["danger_margin"])
+    config = EpisodeConfig(threshold=threshold, debounce_windows=3, refractory_windows=3)
+
+    def subset_payload(selected: np.ndarray) -> dict[str, object]:
+        selected_scores = [score for score, keep in zip(scores, selected, strict=True) if keep]
+        selected_strata = [stratum for stratum, keep in zip(strata, selected, strict=True) if keep]
+        point = _sensitivity_payload(
+            evaluate_alarms(
+                selected_scores,
+                config,
+                horizon_s=horizon_s,
+                decorrelation_time_s=decorrelation_s,
+            )
+        )
+        point["sensitivity_exact_capsize_event_interval"] = point.pop("sensitivity_interval")
+        interval = bootstrap_alarm_metrics(
+            selected_scores,
+            config,
+            horizon_s=horizon_s,
+            decorrelation_time_s=decorrelation_s,
+            campaign_strata=selected_strata,
+        )
+        point["sensitivity_trajectory_bootstrap_interval"] = [
+            interval.sensitivity.lower,
+            interval.sensitivity.upper,
+        ]
+        return point
+
+    group_count = int(np.sum(capsize & preceded))
+    capsize_count = int(np.sum(capsize))
+    group_interval = clopper_pearson_interval(group_count, capsize_count)
+    payload: dict[str, object] = {
+        "experiment": "D4_v02 selective danger-margin regeneration",
+        "supersedes": "methods.danger_margin in d4_wave_groups.json only",
+        "interval_conditioning": "conditional on the calibration-frozen alarm policy",
+        "definition": {
+            "preceding_horizon_s": horizon_s,
+            "evaluator_only": True,
+        },
+        "capsizes_preceded_by_group": {
+            "count": group_count,
+            "capsize_count": capsize_count,
+            "fraction": group_count / capsize_count,
+            "exact_capsize_event_interval": [group_interval.lower, group_interval.upper],
+        },
+        "methods": {
+            "danger_margin": {
+                "preceded_by_group": subset_payload(capsize & preceded),
+                "not_preceded_by_group": subset_payload(capsize & ~preceded),
+                "false_episode_group_coincidence": _false_group_fraction(
+                    scores,
+                    groups,
+                    threshold=threshold,
+                    decorrelation_s=decorrelation_s,
+                    horizon_s=horizon_s,
+                ),
+            }
+        },
+    }
+    write_result(output_root, "d4_wave_groups_v02", payload)
     return payload
