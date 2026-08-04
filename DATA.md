@@ -170,5 +170,20 @@ and lie inside the ordinary `[200000, 300000)` TEST block.
 | `biased_evaluation` | 5,000 | 87,000 | `[287000, 292000)` |
 
 The new campaign names append `_u1r2` to the base names. The tracked
-`reference_checksums_u1r2.json` will anchor their manifests after the one-shot materialization.
-Neither reserve block is part of this allocation.
+`reference_checksums_u1r2.json` anchors their manifests. The one-shot materialization produced:
+
+| Campaign | Capsizes | Capsize fraction | Manifest SHA-256 prefix |
+| --- | ---: | ---: | --- |
+| `softening_stationary_u1r2` | 82 / 1,000 | 8.200% | `6b9d465727c2` |
+| `parametric_stationary_u1r2` | 96 / 1,000 | 9.600% | `70e8a6595d12` |
+| `biased_stationary_u1r2` | 144 / 1,000 | 14.400% | `3d13a74941eb` |
+| `softening_ramp_u1r2` | 497 / 1,000 | 49.700% | `2a9f5a39ebc2` |
+| `parametric_ramp_u1r2` | 295 / 1,000 | 29.500% | `3558011099a7` |
+| `biased_ramp_u1r2` | 223 / 1,000 | 22.300% | `086a4125e702` |
+| `softening_step_u1r2` | 1,169 / 3,000 | 38.967% | `e94b37c4eb35` |
+| `softening_step_v02_u1r2` | 1,888 / 3,000 | 62.933% | `5890da592a0c` |
+| `softening_evaluation_u1r2` | 111 / 5,000 | 2.220% | `abbd243aa4d7` |
+| `parametric_evaluation_u1r2` | 46 / 5,000 | 0.920% | `2b2285dedced` |
+| `biased_evaluation_u1r2` | 105 / 5,000 | 2.100% | `a28439eb18d7` |
+
+Neither reserve block was opened or generated.

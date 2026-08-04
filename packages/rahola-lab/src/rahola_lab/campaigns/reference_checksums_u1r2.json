@@ -1,1 +1,13 @@
-{}
+{
+  "biased_evaluation_u1r2": "a28439eb18d7c94b798692f1878ef657e3bc54d42e11d19252cdf820e432f031",
+  "biased_ramp_u1r2": "086a4125e7021a4983036d39dfd05b68e403fa437823dc81f7179d87f43dff14",
+  "biased_stationary_u1r2": "3d13a74941ebc5a72dd8be3cec58aa2ef06765e11affe6384060d9693907e576",
+  "parametric_evaluation_u1r2": "2b2285dedced4f42a9f1b46e114922cabdb5d11b509191dc015379716f543816",
+  "parametric_ramp_u1r2": "3558011099a73a0aa9785bb3f19b7313c1f9e4123a02339b00060b50a7551fa8",
+  "parametric_stationary_u1r2": "70e8a6595d12784e226dc6f8078388895918d0e0cef58b6fe5ea6130701e1a7a",
+  "softening_evaluation_u1r2": "abbd243aa4d7014c54c68c465a7d5f27357ed9fe513e31090f039299af2ba447",
+  "softening_ramp_u1r2": "2a9f5a39ebc21d108c7ca5284703c74d2cee337b6d7702cc83db8cfe2381ffbf",
+  "softening_stationary_u1r2": "6b9d465727c26bc5b3bbda1abb861a76813d51e492c0f9e93fcabf05c832d7e0",
+  "softening_step_u1r2": "e94b37c4eb35fbd007d16e7e9dc9e615952f36047ba69137f54904424782fad2",
+  "softening_step_v02_u1r2": "5890da592a0c2172e72c9c3f5e283e8c1ce820e30a106efac94472930aa58cf3"
+}
