@@ -22,6 +22,20 @@ EXCLUSION_BUFFER_PERIODS = 5.0
 TRAJECTORY_BOOTSTRAP_REPLICATES = 1_000
 TRAJECTORY_BOOTSTRAP_SEED = 20_260_804
 
+# v0.2 preprocessing freeze, declared before any v0.2 test scoring.
+PRIMARY_NORMALIZATION_MODE = {
+    "classical_ews": "physical",
+    "neighbor_2009": "physical",
+    "galeazzi_glrt": "physical",
+    "danger_margin": "physical",
+    "cnn": "fixed_window_causal",
+    "xgboost": "fixed_window_causal",
+}
+REPORTED_NORMALIZATION_MODES = {
+    "cnn": ("fixed_window_causal", "cumulative_online"),
+    "xgboost": ("fixed_window_causal", "cumulative_online"),
+}
+
 # ACI is operationally unacceptable only if it exceeds both this absolute rate...
 ACI_EXPLOSION_FPR_PER_HOUR = 2.0
 # ...and four times the corresponding fixed-CQR episode rate.

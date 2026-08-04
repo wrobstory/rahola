@@ -4,6 +4,7 @@ import numpy as np
 import pytest
 from rahola_lab.detectors import (
     JaxTemporalCNN,
+    NormalizationMode,
     classical_ews_scores,
     extract_detector_windows,
     galeazzi_roll_power_glrt,
@@ -73,7 +74,64 @@ def test_cnn_stays_under_parameter_cap_and_learns_simple_signal() -> None:
     assert binary_auc(labels, model.predict_scores(features)) > 0.75
 
 
-def test_detector_feature_pipeline_blocks_future_only_signal() -> None:
+def test_physical_mode_uses_configured_nondimensionalization() -> None:
+    samples = 121
+    angle = np.full((1, samples), 0.25)
+    rate = np.full((1, samples), np.pi / 2.0)
+    dataset = SimulationDataset(
+        time_s=np.arange(samples, dtype=np.float64),
+        angle_rad=angle,
+        rate_rad_s=rate,
+        seeds=np.array([1], dtype=np.uint64),
+        capsized=np.array([False]),
+        t_capsize_s=np.array([np.nan]),
+        metadata=({"seed": 1},),
+        config={
+            "natural_period_s": 1.0,
+            "escape_angle_rad": 0.5,
+            "family": "softening",
+        },
+    )
+    windows = extract_detector_windows(
+        dataset,
+        stride_s=100.0,
+        max_windows_per_trajectory=1,
+        normalization_mode=NormalizationMode.PHYSICAL,
+    )
+    np.testing.assert_allclose(windows.features[0, :, 0], 0.5)
+    np.testing.assert_allclose(windows.features[0, :, 1], 0.5)
+
+
+def test_fixed_window_mode_applies_one_fit_to_the_scored_history() -> None:
+    samples = 121
+    time = np.arange(samples, dtype=np.float64)
+    angle = (2.0 + 0.1 * time)[None, :]
+    rate = np.full_like(angle, 0.1)
+    dataset = SimulationDataset(
+        time_s=time,
+        angle_rad=angle,
+        rate_rad_s=rate,
+        seeds=np.array([1], dtype=np.uint64),
+        capsized=np.array([False]),
+        t_capsize_s=np.array([np.nan]),
+        metadata=({"seed": 1},),
+        config={
+            "natural_period_s": 1.0,
+            "escape_angle_rad": 0.5,
+            "family": "softening",
+        },
+    )
+    windows = extract_detector_windows(
+        dataset,
+        stride_s=100.0,
+        max_windows_per_trajectory=1,
+        normalization_mode=NormalizationMode.FIXED_WINDOW_CAUSAL,
+    )
+    np.testing.assert_allclose(windows.features, 0.0, atol=1e-3)
+
+
+@pytest.mark.parametrize("mode", list(NormalizationMode))
+def test_detector_feature_pipeline_blocks_future_only_signal(mode: NormalizationMode) -> None:
     rng = np.random.default_rng(91)
     rows, samples = 256, 900
     labels = np.repeat([0, 1], rows // 2)
@@ -96,9 +154,18 @@ def test_detector_feature_pipeline_blocks_future_only_signal() -> None:
         capsized=np.isfinite(cap_times),
         t_capsize_s=cap_times,
         metadata=tuple({"row": row, "seed": row} for row in range(rows)),
-        config={"natural_period_s": 4.0, "family": "softening"},
+        config={
+            "natural_period_s": 4.0,
+            "escape_angle_rad": 0.5,
+            "family": "softening",
+        },
     )
-    windows = extract_detector_windows(dataset, stride_s=500.0, max_windows_per_trajectory=1)
+    windows = extract_detector_windows(
+        dataset,
+        stride_s=500.0,
+        max_windows_per_trajectory=1,
+        normalization_mode=mode,
+    )
     causal_scores = windows.features[:, :, 0].mean(axis=1)
     assert binary_auc(windows.labels, causal_scores) == pytest.approx(0.5, abs=0.08)
 
@@ -119,7 +186,11 @@ def test_detector_windows_drop_censored_negatives_but_allow_inference_features()
         capsized=np.array([False]),
         t_capsize_s=np.array([np.nan]),
         metadata=({"seed": 1},),
-        config={"natural_period_s": 1.0, "family": "softening"},
+        config={
+            "natural_period_s": 1.0,
+            "escape_angle_rad": 0.5,
+            "family": "softening",
+        },
     )
     supervised = extract_detector_windows(dataset, stride_s=1.0)
     inference = extract_detector_windows(

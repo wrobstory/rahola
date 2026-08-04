@@ -21,6 +21,7 @@ from rahola_lab.constants import (
 from rahola_lab.detectors import (
     DetectorWindowDataset,
     JaxTemporalCNN,
+    NormalizationMode,
     classical_ews_scores,
     extract_detector_windows,
     galeazzi_roll_power_glrt,
@@ -56,6 +57,7 @@ class DetectorSuite:
     ews_fraction: float
     neighbor_radius: float
     selection_rows: list[dict[str, object]]
+    cnn_normalization_mode: NormalizationMode = NormalizationMode.CUMULATIVE_ONLINE
 
 
 def _concatenate(parts: list[DetectorWindowDataset]) -> DetectorWindowDataset:
@@ -73,7 +75,10 @@ def _concatenate(parts: list[DetectorWindowDataset]) -> DetectorWindowDataset:
 
 
 def training_windows(
-    datasets: list[SimulationDataset], *, max_windows_per_trajectory: int = 3
+    datasets: list[SimulationDataset],
+    *,
+    max_windows_per_trajectory: int = 3,
+    normalization_mode: NormalizationMode | str = NormalizationMode.CUMULATIVE_ONLINE,
 ) -> DetectorWindowDataset:
     return _concatenate(
         [
@@ -81,6 +86,7 @@ def training_windows(
                 dataset,
                 stride_s=20.0,
                 max_windows_per_trajectory=max_windows_per_trajectory,
+                normalization_mode=normalization_mode,
             )
             for dataset in datasets
         ]
@@ -88,16 +94,23 @@ def training_windows(
 
 
 def fit_detector_suite(
-    training: DetectorWindowDataset, calibration: DetectorWindowDataset
+    training: DetectorWindowDataset,
+    calibration: DetectorWindowDataset,
+    *,
+    physics_calibration: DetectorWindowDataset | None = None,
+    cnn_normalization_mode: NormalizationMode = NormalizationMode.CUMULATIVE_ONLINE,
 ) -> DetectorSuite:
     """Select only from the frozen train/calibration detector grids."""
-    samples_per_period = training.features.shape[1] // 60
+    physics = physics_calibration or calibration
+    if not np.array_equal(physics.labels, calibration.labels):
+        raise ValueError("CNN and physics calibration windows must align")
+    samples_per_period = physics.features.shape[1] // 60
     selection: list[dict[str, object]] = []
     best_ews: tuple[float, str, float] | None = None
     for statistic in ("variance", "ac1"):
         for fraction in EWS_SUBWINDOW_FRACTIONS:
             scores = classical_ews_scores(
-                calibration.features, statistic=statistic, subwindow_fraction=fraction
+                physics.features, statistic=statistic, subwindow_fraction=fraction
             )
             auc = binary_auc(calibration.labels, scores)
             selection.append(
@@ -114,7 +127,7 @@ def fit_detector_suite(
     best_neighbor: tuple[float, float] | None = None
     for radius in NEIGHBOR_RADIUS_GRID:
         scores = neighbor_count_scores(
-            calibration.features, radius=radius, samples_per_period=samples_per_period
+            physics.features, radius=radius, samples_per_period=samples_per_period
         )
         auc = binary_auc(calibration.labels, scores)
         selection.append({"method": "neighbor_2009", "radius": radius, "auc": auc})
@@ -150,10 +163,16 @@ def fit_detector_suite(
         ews_fraction=best_ews[2],
         neighbor_radius=best_neighbor[1],
         selection_rows=selection,
+        cnn_normalization_mode=cnn_normalization_mode,
     )
 
 
-def fit_frozen_suite(training: DetectorWindowDataset, selected: dict[str, object]) -> DetectorSuite:
+def fit_frozen_suite(
+    training: DetectorWindowDataset,
+    selected: dict[str, object],
+    *,
+    cnn_normalization_mode: NormalizationMode = NormalizationMode.CUMULATIVE_ONLINE,
+) -> DetectorSuite:
     """Refit the deterministic D1-selected CNN without reopening the grid."""
     index = int(selected["cnn_grid_index"])
     config = CNN_GRID[index]
@@ -171,6 +190,7 @@ def fit_frozen_suite(training: DetectorWindowDataset, selected: dict[str, object
         ews_fraction=float(selected["ews_fraction"]),
         neighbor_radius=float(selected["neighbor_radius"]),
         selection_rows=[],
+        cnn_normalization_mode=cnn_normalization_mode,
     )
 
 
@@ -194,29 +214,42 @@ def score_dataset(
             metadata=dataset.metadata[start:stop],
             config=dataset.config,
         )
-        windows = extract_detector_windows(
-            chunk, stride_s=10.0, allow_censored_for_inference=True
+        cnn_windows = extract_detector_windows(
+            chunk,
+            stride_s=10.0,
+            allow_censored_for_inference=True,
+            normalization_mode=suite.cnn_normalization_mode,
         )
+        physics_windows = extract_detector_windows(
+            chunk,
+            stride_s=10.0,
+            allow_censored_for_inference=True,
+            normalization_mode=NormalizationMode.PHYSICAL,
+        )
+        if not np.array_equal(cnn_windows.end_times_s, physics_windows.end_times_s):
+            raise ValueError("CNN and physics score windows must align")
         scores = {
-            "cnn": suite.cnn.predict_scores(windows.features),
+            "cnn": suite.cnn.predict_scores(cnn_windows.features),
             "classical_ews": classical_ews_scores(
-                windows.features,
+                physics_windows.features,
                 statistic=suite.ews_statistic,
                 subwindow_fraction=suite.ews_fraction,
             ),
             "galeazzi_glrt": galeazzi_roll_power_glrt(
-                windows.features, samples_per_period=samples_per_period
+                physics_windows.features, samples_per_period=samples_per_period
             ),
-            "danger_margin": danger.danger_score(windows.raw_angle_rad, windows.raw_rate_rad_s),
+            "danger_margin": danger.danger_score(
+                physics_windows.raw_angle_rad, physics_windows.raw_rate_rad_s
+            ),
             "neighbor_2009": neighbor_count_scores(
-                windows.features,
+                physics_windows.features,
                 radius=suite.neighbor_radius,
                 samples_per_period=samples_per_period,
             ),
         }
         for local in range(chunk.batch_size):
-            selected = windows.trajectory_indices == local
-            selected_times = windows.end_times_s[selected]
+            selected = cnn_windows.trajectory_indices == local
+            selected_times = cnn_windows.end_times_s[selected]
             capsize = float(chunk.t_capsize_s[local])
             record_end_s = detector_risk_end_s(
                 selected_times,

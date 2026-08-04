@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, Any
 from rahola_lab.detectors.cnn import JaxTemporalCNN
 from rahola_lab.detectors.data import (
     DetectorWindowDataset,
+    NormalizationMode,
     acausal_whole_record_features,
     extract_detector_windows,
 )
@@ -32,6 +33,7 @@ __all__ = [
     "DetectorWindowDataset",
     "GrayBoxDetector",
     "JaxTemporalCNN",
+    "NormalizationMode",
     "acausal_whole_record_features",
     "classical_ews_scores",
     "engineered_features",

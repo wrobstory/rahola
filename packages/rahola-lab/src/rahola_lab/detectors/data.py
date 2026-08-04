@@ -1,8 +1,9 @@
-"""Causally normalized roll/rate windows shared by every learned detector."""
+"""Selectable past-only preprocessing for detector roll/rate windows."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
+from enum import StrEnum
 
 import numpy as np
 from numpy.typing import NDArray
@@ -30,19 +31,65 @@ class DetectorWindowDataset:
 _FAMILY_LABEL = {"softening": 0, "parametric": 1, "biased": 2}
 
 
+class NormalizationMode(StrEnum):
+    """Frozen v0.2 detector preprocessing modes."""
+
+    PHYSICAL = "physical"
+    FIXED_WINDOW_CAUSAL = "fixed_window_causal"
+    CUMULATIVE_ONLINE = "cumulative_online"
+
+
+def _fixed_window_causal(values: np.ndarray, *, epsilon: float = 1e-12) -> np.ndarray:
+    """Fit one linear trend and residual scale to a scored past-only window."""
+    source = np.asarray(values, dtype=np.float64)
+    index = np.arange(len(source), dtype=np.float64)
+    centered_index = index - np.mean(index)
+    centered_source = source - np.mean(source)
+    denominator = float(centered_index @ centered_index)
+    slope = float(centered_index @ centered_source) / max(denominator, epsilon)
+    residual = centered_source - slope * centered_index
+    scale = float(np.std(residual, ddof=1)) if len(residual) > 1 else 0.0
+    return residual / max(scale, epsilon)
+
+
+def _window_features(
+    angle: np.ndarray,
+    rate: np.ndarray,
+    *,
+    mode: NormalizationMode,
+    escape_angle_rad: float,
+    omega_n_rad_s: float,
+) -> np.ndarray:
+    if mode == NormalizationMode.PHYSICAL:
+        return np.column_stack(
+            (
+                angle / escape_angle_rad,
+                rate / (omega_n_rad_s * escape_angle_rad),
+            )
+        )
+    if mode == NormalizationMode.FIXED_WINDOW_CAUSAL:
+        return np.column_stack(
+            (_fixed_window_causal(angle), _fixed_window_causal(rate))
+        )
+    raise ValueError("cumulative-online windows must be prepared from the full prior record")
+
+
 def extract_detector_windows(
     dataset: SimulationDataset,
     *,
     stride_s: float = 10.0,
     max_windows_per_trajectory: int | None = None,
     allow_censored_for_inference: bool = False,
+    normalization_mode: NormalizationMode | str = NormalizationMode.CUMULATIVE_ONLINE,
 ) -> DetectorWindowDataset:
     """Extract frozen 60-period histories and 50-period horizon labels.
 
-    Each channel is standardized and detrended sample-by-sample using statistics
-    fitted strictly before that sample. No per-window or per-trajectory future
-    statistic enters the feature tensor.
+    All modes exclude motion after the scoring endpoint. Physical mode applies
+    the configured nondimensionalization. Fixed-window mode fits one trend and
+    scale to the complete scored history and applies them uniformly. Cumulative
+    mode retains the historical sample-by-sample prior-only transformer.
     """
+    mode = NormalizationMode(normalization_mode)
     time = dataset.time_s
     dt = float(np.median(np.diff(time)))
     period = float(dataset.config["natural_period_s"])
@@ -51,6 +98,8 @@ def extract_detector_windows(
     horizon_s = EWS_HORIZON_PERIODS * period
     buffer_s = EXCLUSION_BUFFER_PERIODS * period
     transformer = CausalTransformer(detrend=True)
+    escape_angle = float(dataset.config["escape_angle_rad"])
+    omega_n = 2.0 * np.pi / period
     features: list[np.ndarray] = []
     labels: list[int] = []
     families: list[int] = []
@@ -62,15 +111,23 @@ def extract_detector_windows(
     for trajectory in range(dataset.batch_size):
         angle = dataset.angle_rad[trajectory]
         rate = dataset.rate_rad_s[trajectory]
-        normalized = np.column_stack((transformer.transform(angle), transformer.transform(rate)))
+        cumulative = None
+        if mode == NormalizationMode.CUMULATIVE_ONLINE:
+            cumulative = np.column_stack(
+                (transformer.transform(angle), transformer.transform(rate))
+            )
         cap_time = float(dataset.t_capsize_s[trajectory])
         candidates: list[tuple[int, int]] = []
         for end in range(length - 1, len(time), stride):
             end_time = float(time[end])
             if np.isfinite(cap_time) and end_time >= cap_time:
                 break
-            window = normalized[end - length + 1 : end + 1]
-            if not np.all(np.isfinite(window)):
+            window_slice = slice(end - length + 1, end + 1)
+            raw_angle_window = angle[window_slice]
+            raw_rate_window = rate[window_slice]
+            if not np.all(np.isfinite(raw_angle_window)) or not np.all(
+                np.isfinite(raw_rate_window)
+            ):
                 break
             if allow_censored_for_inference:
                 label = -1
@@ -93,7 +150,21 @@ def extract_detector_windows(
             chosen = np.linspace(0, len(candidates) - 1, max_windows_per_trajectory, dtype=np.int64)
             candidates = [candidates[index] for index in chosen]
         for end, label in candidates:
-            features.append(normalized[end - length + 1 : end + 1].astype(np.float32))
+            window_slice = slice(end - length + 1, end + 1)
+            window = (
+                cumulative[window_slice]
+                if cumulative is not None
+                else _window_features(
+                    angle[window_slice],
+                    rate[window_slice],
+                    mode=mode,
+                    escape_angle_rad=escape_angle,
+                    omega_n_rad_s=omega_n,
+                )
+            )
+            if not np.all(np.isfinite(window)):
+                raise ValueError("normalization produced non-finite detector features")
+            features.append(window.astype(np.float32))
             labels.append(label)
             families.append(family)
             trajectories.append(trajectory)
