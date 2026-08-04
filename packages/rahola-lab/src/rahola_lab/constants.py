@@ -17,6 +17,11 @@ EWS_HORIZON_PERIODS = 50.0
 # Five periods remove ambiguous near-misses from the negative class.
 EXCLUSION_BUFFER_PERIODS = 5.0
 
+# v0.2 intervals resample whole trajectories within campaigns, conditional on
+# calibration-frozen policies. Freeze these values before v0.2 scoring.
+TRAJECTORY_BOOTSTRAP_REPLICATES = 1_000
+TRAJECTORY_BOOTSTRAP_SEED = 20_260_804
+
 # ACI is operationally unacceptable only if it exceeds both this absolute rate...
 ACI_EXPLOSION_FPR_PER_HOUR = 2.0
 # ...and four times the corresponding fixed-CQR episode rate.

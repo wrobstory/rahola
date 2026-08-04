@@ -30,8 +30,10 @@ from rahola_lab.evaluation import (
     EpisodeConfig,
     OperatingPoint,
     TrajectoryScores,
+    bootstrap_alarm_metrics,
     estimate_decorrelation_time,
     operating_curve,
+    trajectory_block_bootstrap,
 )
 from rahola_lab.forecast import fit_piecewise_linear_restoring
 
@@ -384,6 +386,49 @@ def point_payload(point: OperatingPoint) -> dict[str, object]:
     }
 
 
+def bootstrap_point_payload(
+    point: OperatingPoint,
+    trajectories: list[TrajectoryScores],
+    *,
+    horizon_s: float,
+    decorrelation_s: float,
+    campaign_strata: list[str] | None = None,
+) -> dict[str, object]:
+    """Serialize a frozen point with trajectory-bootstrap uncertainty."""
+    payload = point_payload(point)
+    exact_event_interval = payload.pop("sensitivity_interval")
+    payload.pop("false_episodes_per_hour_interval")
+    intervals = bootstrap_alarm_metrics(
+        trajectories,
+        EpisodeConfig(
+            threshold=point.threshold,
+            debounce_windows=3,
+            refractory_windows=3,
+        ),
+        horizon_s=horizon_s,
+        decorrelation_time_s=decorrelation_s,
+        campaign_strata=campaign_strata,
+    )
+    payload.update(
+        {
+            "sensitivity_trajectory_bootstrap_interval": [
+                intervals.sensitivity.lower,
+                intervals.sensitivity.upper,
+            ],
+            "sensitivity_exact_capsize_event_interval": exact_event_interval,
+            "false_episodes_per_hour_trajectory_bootstrap_interval": [
+                intervals.false_positives_per_hour.lower,
+                intervals.false_positives_per_hour.upper,
+            ],
+            "trajectory_bootstrap_replicates": intervals.requested_replicates,
+            "trajectory_bootstrap_valid_replicates": list(intervals.valid_replicates),
+            "trajectory_bootstrap_seed": intervals.seed,
+            "interval_conditioning": "conditional on the calibration-frozen alarm policy",
+        }
+    )
+    return payload
+
+
 def matched_point(curve: tuple[OperatingPoint, ...]) -> OperatingPoint:
     eligible = [
         point for point in curve if point.metrics.sensitivity >= DETECTOR_MATCHED_SENSITIVITY
@@ -423,6 +468,32 @@ def window_auc(
             labels.extend(((lead[selected] > 0.0) & (lead[selected] <= horizon_s)).tolist())
         values.extend(scores[selected].tolist())
     return binary_auc(np.asarray(labels, dtype=np.int8), np.asarray(values, dtype=np.float64))
+
+
+def bootstrap_window_auc(
+    trajectories: list[TrajectoryScores],
+    *,
+    campaign_strata: list[str] | None = None,
+    horizon_s: float = 200.0,
+    buffer_s: float = EXCLUSION_BUFFER_PERIODS * 4.0,
+) -> dict[str, object]:
+    """Compute window AUC while resampling trajectories with all their windows."""
+    result = trajectory_block_bootstrap(
+        trajectories,
+        lambda sample: window_auc(sample, horizon_s=horizon_s, buffer_s=buffer_s),
+        strata=campaign_strata,
+    )
+    return {
+        "auc": float(result.estimate[0]),
+        "auc_trajectory_bootstrap_interval": [
+            float(result.lower[0]),
+            float(result.upper[0]),
+        ],
+        "trajectory_bootstrap_replicates": result.requested_replicates,
+        "trajectory_bootstrap_valid_replicates": int(result.valid_replicates[0]),
+        "trajectory_bootstrap_seed": result.seed,
+        "interval_conditioning": "conditional on the frozen scoring and sampling policy",
+    }
 
 
 def campaign_dir(data_root: Path, name: str) -> Path:

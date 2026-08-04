@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+from collections.abc import Hashable, Sequence
 from dataclasses import dataclass, replace
 
 import numpy as np
 from numpy.typing import NDArray
 from scipy.stats import beta
 
+from rahola_lab.evaluation.bootstrap import trajectory_block_bootstrap
 from rahola_lab.evaluation.declustering import decluster_episodes
 from rahola_lab.evaluation.episodes import AlarmEpisode, EpisodeConfig, alarm_episodes
 
@@ -47,6 +49,17 @@ class OperatingPoint:
     threshold: float
     metrics: AlarmMetrics
     lead_time_quantiles_s: tuple[float, float, float]
+
+
+@dataclass(frozen=True)
+class AlarmBootstrapIntervals:
+    """Trajectory-bootstrap intervals conditional on a frozen alarm policy."""
+
+    sensitivity: RateInterval
+    false_positives_per_hour: RateInterval
+    valid_replicates: tuple[int, int]
+    requested_replicates: int
+    seed: int
 
 
 def clopper_pearson_interval(
@@ -192,6 +205,49 @@ def evaluate_alarms(
         detected_capsize_count=detected,
         exposure_hours=exposure_hours,
         alarm_opportunity_count=alarm_opportunities,
+    )
+
+
+def bootstrap_alarm_metrics(
+    trajectories: list[TrajectoryScores],
+    episode_config: EpisodeConfig,
+    *,
+    horizon_s: float,
+    decorrelation_time_s: float = 0.0,
+    campaign_strata: Sequence[Hashable] | None = None,
+    replicates: int = 1_000,
+    seed: int = 20_260_804,
+) -> AlarmBootstrapIntervals:
+    """Resample trajectories and recompute complete episode metrics."""
+
+    def statistic(sample: list[TrajectoryScores]) -> NDArray[np.float64]:
+        metrics = evaluate_alarms(
+            sample,
+            episode_config,
+            horizon_s=horizon_s,
+            decorrelation_time_s=decorrelation_time_s,
+        )
+        sensitivity = metrics.sensitivity if metrics.capsize_count else float("nan")
+        return np.asarray(
+            [sensitivity, metrics.false_positives_per_hour], dtype=np.float64
+        )
+
+    estimate = trajectory_block_bootstrap(
+        trajectories,
+        statistic,
+        strata=campaign_strata,
+        replicates=replicates,
+        seed=seed,
+    )
+    return AlarmBootstrapIntervals(
+        sensitivity=RateInterval(estimate.lower[0], estimate.upper[0]),
+        false_positives_per_hour=RateInterval(estimate.lower[1], estimate.upper[1]),
+        valid_replicates=(
+            int(estimate.valid_replicates[0]),
+            int(estimate.valid_replicates[1]),
+        ),
+        requested_replicates=estimate.requested_replicates,
+        seed=estimate.seed,
     )
 
 
