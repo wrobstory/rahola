@@ -1095,3 +1095,108 @@ H1a will run once. It will report pooled, per-family, and per-severity captures 
 hybrid and both comparators; secondary and tertiary sensitivity rows; fit and TEST unheralded
 fractions; all three exact verdicts; and a provenance manifest. No ramps, steps, detectors, MPM,
 wave inputs, future inputs, reserve data, or `rahola` core changes are in scope.
+
+## 2026-08-04 H1a one-shot result
+
+H1a ran once after the predeclaration commit `6d10d1f` and the fresh-data anchor commit `638e5c3`.
+It extends the U1 record and supersedes nothing. The U1 and U1-r2 results, including the online-
+tail kill, stand unchanged.
+
+The six frozen slices used 7,900 ordinary TEST seeds and left 36,100 seeds in the ordinary TEST
+block untouched. Five campaigns realized the planning floor of at least 30 capsizes. The frozen
+`parametric_evaluation_h1` slice realized 24 instead of its expected 30.4. It was neither redrawn
+nor supplemented; this is a power shortfall in the one-shot sample.
+
+### Primary campaign counts
+
+Each cell gives predicted count and 95% interval. None of the 18 method-campaign intervals
+captured its realized count.
+
+| Campaign | Realized | Hybrid | Crossing rate only | Rolling variance |
+| --- | ---: | ---: | ---: | ---: |
+| softening stationary | 31 | 28.840 [25.635, 28.602] | 85.321 [80.979, 90.013] | 187.722 [184.822, 190.514] |
+| softening evaluation | 34 | 45.674 [42.579, 46.627] | 240.607 [237.700, 243.616] | 572.451 [570.077, 574.863] |
+| parametric stationary | 58 | 2.725 [2.363, 3.429] | 47.279 [38.697, 56.065] | 73.809 [72.371, 75.035] |
+| parametric evaluation | 24 | 4.548 [4.830, 6.321] | 17.398 [12.287, 23.655] | 373.776 [367.287, 379.633] |
+| biased stationary | 69 | 18.675 [17.184, 19.596] | 83.154 [75.649, 90.797] | 207.254 [203.602, 211.142] |
+| biased evaluation | 32 | 25.068 [24.758, 27.137] | 71.787 [67.240, 76.727] | 730.001 [727.346, 732.512] |
+
+As in U1-r2, a point estimate can lie outside its reported parametric interval because the frozen
+interval resamples observed crossing counts while the point uses the fitted conditional. That
+construction was not repaired after TEST access and does not change any capture.
+
+### Capture and reliability comparison
+
+| Method | Pooled | Softening | Parametric | Biased | Stationary | Evaluation | Reliability MAE |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Hybrid | 0 / 6 | 0 / 2 | 0 / 2 | 0 / 2 | 0 / 3 | 0 / 3 | 0.039848 |
+| Crossing rate only | 0 / 6 | 0 / 2 | 0 / 2 | 0 / 2 | 0 / 3 | 0 / 3 | 0.042806 |
+| Rolling variance | 0 / 6 | 0 / 2 | 0 / 2 | 0 / 2 | 0 / 3 | 0 / 3 | 0.242303 |
+
+The hybrid's reliability MAE was slightly lower than the crossing-rate-only map's, but its capture
+count was not strictly higher. The predeclared value-added rule therefore fails.
+
+![H1a reliability diagram](results/h1_reliability_h1.png)
+
+### Fit hierarchy sensitivities
+
+The table gives predicted counts for the primary, secondary, and tertiary hybrids. Every listed
+interval missed, so each variant captured 0 of 6. The primary remains the headline result; neither
+sensitivity was promoted.
+
+| Campaign | Realized | Primary | Secondary | Tertiary |
+| --- | ---: | ---: | ---: | ---: |
+| softening stationary | 31 | 28.840 | 29.823 | 29.267 |
+| softening evaluation | 34 | 45.674 | 48.048 | 49.651 |
+| parametric stationary | 58 | 2.725 | 2.780 | 3.084 |
+| parametric evaluation | 24 | 4.548 | 4.388 | 4.569 |
+| biased stationary | 69 | 18.675 | 18.774 | 19.933 |
+| biased evaluation | 32 | 25.068 | 21.699 | 21.990 |
+
+### Heralded and unheralded channels
+
+The fit-data sampling-gap diagnosis remained family-specific on TEST. The biased family had 8
+unheralded capsizes among 101; the other families had none.
+
+| Family | Primary stationary fit | Pooled-severity fit | Fresh H1 TEST |
+| --- | ---: | ---: | ---: |
+| Softening | 0 / 251 (0.000%) | 0 / 276 (0.000%) | 0 / 65 (0.000%) |
+| Parametric | 0 / 259 (0.000%) | 0 / 266 (0.000%) | 0 / 82 (0.000%) |
+| Biased | 18 / 394 (4.569%) | 18 / 414 (4.348%) | 8 / 101 (7.921%) |
+
+The intercept preserved those measured events without inventing severities, but it was not enough
+to calibrate the hybrid. A post-verdict mechanistic audit, not a predeclared score, found that the
+retained terminal crossing preceded capsize by a median 0.720 seconds for softening, 0.749 seconds
+for parametric, and 0.438 seconds for biased. Only 4 of 65, 5 of 82, and 10 of 93 heralded TEST
+capsizes, respectively, had a 10-second emission time between the retained terminal crossing and
+capsize. This timing mismatch explains why a conditional learned from terminal crossings can be
+informative offline yet contribute too late to the causal onboard hazard. It is a diagnosis of the
+frozen negative, not a revised estimator.
+
+### Frozen verdicts
+
+1. “the offline-calibrated hybrid is not calibrated on fresh TEST campaigns under the
+   predeclared 5-of-6 criterion”
+2. “crossing-severity information adds nothing beyond the crossing rate itself under offline
+   calibration”
+3. “the stationary-only offline conditional does not transfer across severity to all three
+   rare-event campaigns”
+
+### H1 judgments, scope, and provenance
+
+The only design amendment was made before materialization: the impossible original one-terminal-
+cluster assertion became an exhaustive heralded/unheralded partition after the 18 fit-data gaps
+all matched the 2-Hz sampling signature. The terminal rule itself was not relaxed, missing
+severities were not synthesized, and the conditional excluded unheralded events. The per-family
+offline intercept carried that measured observability channel. The rate-only comparator remained
+unchanged because its direct realized-rate fit already absorbs it.
+
+H1 uses the paper's rate-times-conditional factorization and chainwise declustering, but its
+family-specific empirical isotonic conditional, Wilson/Garwood composition, observability
+intercept, absorbing accounting, and 10-second causal emissions are Rahola choices. It does not
+implement the paper's perturbation-derived conditional or Motion Perturbation Method.
+
+`results/provenance_manifest_h1.json` binds the frozen calibration artifact and sole H1a output to
+the source digest, all four reference anchors, and the exact predeclaration and data-anchor
+commits. Neither reserve block was read. No r1/r2 artifact, `rahola` core file, paper draft, or
+explainer was modified.

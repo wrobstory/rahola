@@ -1,0 +1,33 @@
+{
+  "_manifest_sha256": "e9894fa17a484ee0caee48f2e42732f017cc2f11f28d648dc75cfcb259ec5ff0",
+  "artifacts": {
+    "h1_offline_fit_h1.json": {
+      "artifact_sha256": "08686e47f8641aff53d19cc1c255da90939fd99961388292cce785928aec2bff",
+      "upstream_artifacts": {}
+    },
+    "h1a_h1.json": {
+      "artifact_sha256": "daec63b1ee270c53b11f06e935a99436408e3722c8a7cd8d1ac336be717e7961",
+      "upstream_artifacts": {
+        "h1_offline_fit_h1.json": "08686e47f8641aff53d19cc1c255da90939fd99961388292cce785928aec2bff"
+      }
+    }
+  },
+  "one_shot": {
+    "experiments": [
+      "H1a"
+    ],
+    "runs_per_experiment": 1,
+    "test_anchor_commit": "638e5c355baefadf9df83ee16519b2f40502f8f2",
+    "test_data_materialized_after_predeclaration": true,
+    "offline_fit_frozen_before_test_materialization": true,
+    "predeclaration_commit": "6d10d1f9681a5b1af96049fee096a2b3d7cb8ab0"
+  },
+  "reference_anchors_sha256": {
+    "reference_checksums.json": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "reference_checksums_h1.json": "81491c11171c3516a461c1938a943b1af04fcf9859d5d6bd2cfe2c5ec8939f5b",
+    "reference_checksums_u1r2.json": "2f68a4ce89ab90997c91bd98ca614bfe26b7fba923c69c6e439c865b4432cd5d",
+    "reference_checksums_v02.json": "96fdcc7a93cd4b0a760750320cf41c7f1ce15d52708b2bfc8791c3b3a9d10dfd"
+  },
+  "schema_version": 1,
+  "source_sha256": "bde332f5180fbcf82b74dc4cc02792254f79c02b9f47075f59f955b18d5ab9dd"
+}

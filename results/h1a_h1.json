@@ -1,0 +1,667 @@
+{
+  "_artifact_sha256": "daec63b1ee270c53b11f06e935a99436408e3722c8a7cd8d1ac336be717e7961",
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "reference_h1_anchor_sha256": "81491c11171c3516a461c1938a943b1af04fcf9859d5d6bd2cfe2c5ec8939f5b",
+    "reference_u1r2_anchor_sha256": "2f68a4ce89ab90997c91bd98ca614bfe26b7fba923c69c6e439c865b4432cd5d",
+    "reference_v02_anchor_sha256": "96fdcc7a93cd4b0a760750320cf41c7f1ce15d52708b2bfc8791c3b3a9d10dfd",
+    "schema_version": 1,
+    "source_sha256": "bde332f5180fbcf82b74dc4cc02792254f79c02b9f47075f59f955b18d5ab9dd",
+    "upstream_artifacts": {}
+  },
+  "capture_breakdown": {
+    "crossing_rate_only": {
+      "by_family": {
+        "biased": 0,
+        "parametric": 0,
+        "softening": 0
+      },
+      "by_severity": {
+        "evaluation": 0,
+        "stationary": 0
+      },
+      "pooled": 0
+    },
+    "hybrid": {
+      "by_family": {
+        "biased": 0,
+        "parametric": 0,
+        "softening": 0
+      },
+      "by_severity": {
+        "evaluation": 0,
+        "stationary": 0
+      },
+      "pooled": 0
+    },
+    "rolling_variance": {
+      "by_family": {
+        "biased": 0,
+        "parametric": 0,
+        "softening": 0
+      },
+      "by_severity": {
+        "evaluation": 0,
+        "stationary": 0
+      },
+      "pooled": 0
+    }
+  },
+  "experiment": "H1a",
+  "figure": "h1_reliability_h1.png",
+  "frozen_offline_fit_artifact_sha256": "08686e47f8641aff53d19cc1c255da90939fd99961388292cce785928aec2bff",
+  "hybrid_sensitivities": {
+    "secondary": {
+      "campaigns": {
+        "biased_evaluation": {
+          "captures_realized_count": false,
+          "event_accounting": "absorbing_probability",
+          "interval_method": "Poisson/Wilson/intercept parametric draws",
+          "predicted_capsize_count": 21.69874472290519,
+          "predicted_count_interval": [
+            21.02924854964464,
+            23.584610547976048
+          ],
+          "realized_capsize_count": 32,
+          "trajectory_count": 1700
+        },
+        "biased_stationary": {
+          "captures_realized_count": false,
+          "event_accounting": "absorbing_probability",
+          "interval_method": "Poisson/Wilson/intercept parametric draws",
+          "predicted_capsize_count": 18.77416636235953,
+          "predicted_count_interval": [
+            16.84600192412238,
+            19.668672643904927
+          ],
+          "realized_capsize_count": 69,
+          "trajectory_count": 500
+        },
+        "parametric_evaluation": {
+          "captures_realized_count": false,
+          "event_accounting": "absorbing_probability",
+          "interval_method": "Poisson/Wilson/intercept parametric draws",
+          "predicted_capsize_count": 4.387692300791619,
+          "predicted_count_interval": [
+            4.468412992536348,
+            5.898006784524418
+          ],
+          "realized_capsize_count": 24,
+          "trajectory_count": 3200
+        },
+        "parametric_stationary": {
+          "captures_realized_count": false,
+          "event_accounting": "absorbing_probability",
+          "interval_method": "Poisson/Wilson/intercept parametric draws",
+          "predicted_capsize_count": 2.7797017925710223,
+          "predicted_count_interval": [
+            2.3402726343896783,
+            3.3796876912805085
+          ],
+          "realized_capsize_count": 58,
+          "trajectory_count": 500
+        },
+        "softening_evaluation": {
+          "captures_realized_count": false,
+          "event_accounting": "absorbing_probability",
+          "interval_method": "Poisson/Wilson/intercept parametric draws",
+          "predicted_capsize_count": 48.04787166100415,
+          "predicted_count_interval": [
+            44.02087050064633,
+            47.92748977885874
+          ],
+          "realized_capsize_count": 34,
+          "trajectory_count": 1500
+        },
+        "softening_stationary": {
+          "captures_realized_count": false,
+          "event_accounting": "absorbing_probability",
+          "interval_method": "Poisson/Wilson/intercept parametric draws",
+          "predicted_capsize_count": 29.822764800347485,
+          "predicted_count_interval": [
+            26.34394924466758,
+            29.45980211061429
+          ],
+          "realized_capsize_count": 31,
+          "trajectory_count": 500
+        }
+      },
+      "capture_breakdown": {
+        "by_family": {
+          "biased": 0,
+          "parametric": 0,
+          "softening": 0
+        },
+        "by_severity": {
+          "evaluation": 0,
+          "stationary": 0
+        },
+        "pooled": 0
+      }
+    },
+    "tertiary": {
+      "campaigns": {
+        "biased_evaluation": {
+          "captures_realized_count": false,
+          "event_accounting": "absorbing_probability",
+          "interval_method": "Poisson/Wilson/intercept parametric draws",
+          "predicted_capsize_count": 21.989505239938072,
+          "predicted_count_interval": [
+            23.776135849319612,
+            26.177528794842274
+          ],
+          "realized_capsize_count": 32,
+          "trajectory_count": 1700
+        },
+        "biased_stationary": {
+          "captures_realized_count": false,
+          "event_accounting": "absorbing_probability",
+          "interval_method": "Poisson/Wilson/intercept parametric draws",
+          "predicted_capsize_count": 19.933372209371225,
+          "predicted_count_interval": [
+            19.51084689826985,
+            22.286378805733698
+          ],
+          "realized_capsize_count": 69,
+          "trajectory_count": 500
+        },
+        "parametric_evaluation": {
+          "captures_realized_count": false,
+          "event_accounting": "absorbing_probability",
+          "interval_method": "Poisson/Wilson/intercept parametric draws",
+          "predicted_capsize_count": 4.568834095026963,
+          "predicted_count_interval": [
+            5.746623018773896,
+            7.370971543927524
+          ],
+          "realized_capsize_count": 24,
+          "trajectory_count": 3200
+        },
+        "parametric_stationary": {
+          "captures_realized_count": false,
+          "event_accounting": "absorbing_probability",
+          "interval_method": "Poisson/Wilson/intercept parametric draws",
+          "predicted_capsize_count": 3.084413041381428,
+          "predicted_count_interval": [
+            3.216910250031625,
+            4.517665043880761
+          ],
+          "realized_capsize_count": 58,
+          "trajectory_count": 500
+        },
+        "softening_evaluation": {
+          "captures_realized_count": false,
+          "event_accounting": "absorbing_probability",
+          "interval_method": "Poisson/Wilson/intercept parametric draws",
+          "predicted_capsize_count": 49.65113887694103,
+          "predicted_count_interval": [
+            49.5995348225951,
+            53.72765088503378
+          ],
+          "realized_capsize_count": 34,
+          "trajectory_count": 1500
+        },
+        "softening_stationary": {
+          "captures_realized_count": false,
+          "event_accounting": "absorbing_probability",
+          "interval_method": "Poisson/Wilson/intercept parametric draws",
+          "predicted_capsize_count": 29.267472513447952,
+          "predicted_count_interval": [
+            27.279149318119156,
+            30.42003454164652
+          ],
+          "realized_capsize_count": 31,
+          "trajectory_count": 500
+        }
+      },
+      "capture_breakdown": {
+        "by_family": {
+          "biased": 0,
+          "parametric": 0,
+          "softening": 0
+        },
+        "by_severity": {
+          "evaluation": 0,
+          "stationary": 0
+        },
+        "pooled": 0
+      }
+    }
+  },
+  "methods": {
+    "crossing_rate_only": {
+      "biased_evaluation": {
+        "captures_realized_count": false,
+        "event_accounting": "absorbing_probability",
+        "interval_method": "trajectory bootstrap",
+        "predicted_capsize_count": 71.78672073576466,
+        "predicted_count_interval": [
+          67.23972504529647,
+          76.72732511280833
+        ],
+        "realized_capsize_count": 32,
+        "trajectory_count": 1700
+      },
+      "biased_stationary": {
+        "captures_realized_count": false,
+        "event_accounting": "absorbing_probability",
+        "interval_method": "trajectory bootstrap",
+        "predicted_capsize_count": 83.15355005002951,
+        "predicted_count_interval": [
+          75.64938004609436,
+          90.79689603049589
+        ],
+        "realized_capsize_count": 69,
+        "trajectory_count": 500
+      },
+      "parametric_evaluation": {
+        "captures_realized_count": false,
+        "event_accounting": "absorbing_probability",
+        "interval_method": "trajectory bootstrap",
+        "predicted_capsize_count": 17.39774044204146,
+        "predicted_count_interval": [
+          12.286694365853304,
+          23.654888610765422
+        ],
+        "realized_capsize_count": 24,
+        "trajectory_count": 3200
+      },
+      "parametric_stationary": {
+        "captures_realized_count": false,
+        "event_accounting": "absorbing_probability",
+        "interval_method": "trajectory bootstrap",
+        "predicted_capsize_count": 47.279398213674554,
+        "predicted_count_interval": [
+          38.69749249686623,
+          56.0652822192932
+        ],
+        "realized_capsize_count": 58,
+        "trajectory_count": 500
+      },
+      "softening_evaluation": {
+        "captures_realized_count": false,
+        "event_accounting": "absorbing_probability",
+        "interval_method": "trajectory bootstrap",
+        "predicted_capsize_count": 240.60675404395124,
+        "predicted_count_interval": [
+          237.7004235913835,
+          243.6155926695575
+        ],
+        "realized_capsize_count": 34,
+        "trajectory_count": 1500
+      },
+      "softening_stationary": {
+        "captures_realized_count": false,
+        "event_accounting": "absorbing_probability",
+        "interval_method": "trajectory bootstrap",
+        "predicted_capsize_count": 85.32142932159277,
+        "predicted_count_interval": [
+          80.97948237172035,
+          90.01347422785388
+        ],
+        "realized_capsize_count": 31,
+        "trajectory_count": 500
+      }
+    },
+    "hybrid": {
+      "biased_evaluation": {
+        "captures_realized_count": false,
+        "event_accounting": "absorbing_probability",
+        "interval_method": "Poisson/Wilson/intercept parametric draws",
+        "predicted_capsize_count": 25.0682339360202,
+        "predicted_count_interval": [
+          24.757605193916635,
+          27.136780067983373
+        ],
+        "realized_capsize_count": 32,
+        "trajectory_count": 1700
+      },
+      "biased_stationary": {
+        "captures_realized_count": false,
+        "event_accounting": "absorbing_probability",
+        "interval_method": "Poisson/Wilson/intercept parametric draws",
+        "predicted_capsize_count": 18.675402841423818,
+        "predicted_count_interval": [
+          17.183661697191262,
+          19.595721807081457
+        ],
+        "realized_capsize_count": 69,
+        "trajectory_count": 500
+      },
+      "parametric_evaluation": {
+        "captures_realized_count": false,
+        "event_accounting": "absorbing_probability",
+        "interval_method": "Poisson/Wilson/intercept parametric draws",
+        "predicted_capsize_count": 4.547879737268925,
+        "predicted_count_interval": [
+          4.8296538260810316,
+          6.320970834205208
+        ],
+        "realized_capsize_count": 24,
+        "trajectory_count": 3200
+      },
+      "parametric_stationary": {
+        "captures_realized_count": false,
+        "event_accounting": "absorbing_probability",
+        "interval_method": "Poisson/Wilson/intercept parametric draws",
+        "predicted_capsize_count": 2.7247729839418877,
+        "predicted_count_interval": [
+          2.3626559880560993,
+          3.429080881676939
+        ],
+        "realized_capsize_count": 58,
+        "trajectory_count": 500
+      },
+      "softening_evaluation": {
+        "captures_realized_count": false,
+        "event_accounting": "absorbing_probability",
+        "interval_method": "Poisson/Wilson/intercept parametric draws",
+        "predicted_capsize_count": 45.673539873683026,
+        "predicted_count_interval": [
+          42.57898770342247,
+          46.6265031405597
+        ],
+        "realized_capsize_count": 34,
+        "trajectory_count": 1500
+      },
+      "softening_stationary": {
+        "captures_realized_count": false,
+        "event_accounting": "absorbing_probability",
+        "interval_method": "Poisson/Wilson/intercept parametric draws",
+        "predicted_capsize_count": 28.839734612885355,
+        "predicted_count_interval": [
+          25.63506991878111,
+          28.601886531097016
+        ],
+        "realized_capsize_count": 31,
+        "trajectory_count": 500
+      }
+    },
+    "rolling_variance": {
+      "biased_evaluation": {
+        "captures_realized_count": false,
+        "event_accounting": "absorbing_probability",
+        "interval_method": "trajectory bootstrap",
+        "predicted_capsize_count": 730.0005306125377,
+        "predicted_count_interval": [
+          727.346499450842,
+          732.5119026763931
+        ],
+        "realized_capsize_count": 32,
+        "trajectory_count": 1700
+      },
+      "biased_stationary": {
+        "captures_realized_count": false,
+        "event_accounting": "absorbing_probability",
+        "interval_method": "trajectory bootstrap",
+        "predicted_capsize_count": 207.25377250652227,
+        "predicted_count_interval": [
+          203.60217785720943,
+          211.14206497549839
+        ],
+        "realized_capsize_count": 69,
+        "trajectory_count": 500
+      },
+      "parametric_evaluation": {
+        "captures_realized_count": false,
+        "event_accounting": "absorbing_probability",
+        "interval_method": "trajectory bootstrap",
+        "predicted_capsize_count": 373.7760059046285,
+        "predicted_count_interval": [
+          367.2871351317379,
+          379.6326893373659
+        ],
+        "realized_capsize_count": 24,
+        "trajectory_count": 3200
+      },
+      "parametric_stationary": {
+        "captures_realized_count": false,
+        "event_accounting": "absorbing_probability",
+        "interval_method": "trajectory bootstrap",
+        "predicted_capsize_count": 73.80937757935769,
+        "predicted_count_interval": [
+          72.37080938753655,
+          75.03515103924622
+        ],
+        "realized_capsize_count": 58,
+        "trajectory_count": 500
+      },
+      "softening_evaluation": {
+        "captures_realized_count": false,
+        "event_accounting": "absorbing_probability",
+        "interval_method": "trajectory bootstrap",
+        "predicted_capsize_count": 572.4513325338272,
+        "predicted_count_interval": [
+          570.0770661741893,
+          574.8631772001803
+        ],
+        "realized_capsize_count": 34,
+        "trajectory_count": 1500
+      },
+      "softening_stationary": {
+        "captures_realized_count": false,
+        "event_accounting": "absorbing_probability",
+        "interval_method": "trajectory bootstrap",
+        "predicted_capsize_count": 187.72218473551038,
+        "predicted_count_interval": [
+          184.8220563657419,
+          190.5138808473614
+        ],
+        "realized_capsize_count": 31,
+        "trajectory_count": 500
+      }
+    }
+  },
+  "reliability": {
+    "crossing_rate_only": {
+      "bins": [
+        {
+          "bin": 1,
+          "count": 4387,
+          "mean_rate_per_hour": 0.0,
+          "predicted_capsize_fraction": 0.0,
+          "realized_capsize_fraction": 0.0013676772281741509,
+          "realized_exact_interval": [
+            0.000502073593401704,
+            0.0029744629313485133
+          ]
+        },
+        {
+          "bin": 2,
+          "count": 1398,
+          "mean_rate_per_hour": 0.4840640670901644,
+          "predicted_capsize_fraction": 0.07616253517891458,
+          "realized_capsize_fraction": 0.024320457796852647,
+          "realized_exact_interval": [
+            0.016900067746648855,
+            0.03382074140430766
+          ]
+        },
+        {
+          "bin": 3,
+          "count": 1779,
+          "mean_rate_per_hour": 1.1021161513530582,
+          "predicted_capsize_fraction": 0.16547666510173742,
+          "realized_capsize_fraction": 0.027543563799887576,
+          "realized_exact_interval": [
+            0.020444807227455484,
+            0.036251949517851836
+          ]
+        },
+        {
+          "bin": 4,
+          "count": 336,
+          "mean_rate_per_hour": 13.016262314922963,
+          "predicted_capsize_fraction": 0.4306172065801808,
+          "realized_capsize_fraction": 0.4732142857142857,
+          "realized_exact_interval": [
+            0.41878298655428653,
+            0.528121781302616
+          ]
+        }
+      ],
+      "edges_rate_per_hour": [
+        -5e-324,
+        0.0,
+        0.33461608394721365,
+        1.102116151353058,
+        1.1021161513530582,
+        553.846153846154
+      ],
+      "weighted_mean_absolute_error": 0.04280643417533832
+    },
+    "hybrid": {
+      "bins": [
+        {
+          "bin": 1,
+          "count": 4619,
+          "mean_rate_per_hour": 1.7705319764025524e-05,
+          "predicted_capsize_fraction": 2.9495116485801517e-06,
+          "realized_capsize_fraction": 0.026412643429313706,
+          "realized_exact_interval": [
+            0.02198123414046838,
+            0.03145554864470238
+          ]
+        },
+        {
+          "bin": 2,
+          "count": 1791,
+          "mean_rate_per_hour": 0.031218066993735645,
+          "predicted_capsize_fraction": 0.00504334164641874,
+          "realized_capsize_fraction": 0.05080960357342267,
+          "realized_exact_interval": [
+            0.04110299292610786,
+            0.06201881371757815
+          ]
+        },
+        {
+          "bin": 3,
+          "count": 832,
+          "mean_rate_per_hour": 0.06852199391867861,
+          "predicted_capsize_fraction": 0.011201362234246781,
+          "realized_capsize_fraction": 0.028846153846153848,
+          "realized_exact_interval": [
+            0.01856785051779834,
+            0.04261808975274727
+          ]
+        },
+        {
+          "bin": 4,
+          "count": 658,
+          "mean_rate_per_hour": 1.2304878109911919,
+          "predicted_capsize_fraction": 0.16286289046092572,
+          "realized_capsize_fraction": 0.016717325227963525,
+          "realized_exact_interval": [
+            0.008374012378416925,
+            0.029714678648017856
+          ]
+        }
+      ],
+      "edges_rate_per_hour": [
+        -5e-324,
+        0.0,
+        0.001217825392655232,
+        0.04694084839622905,
+        0.1541357899261665,
+        54.24265141775511
+      ],
+      "weighted_mean_absolute_error": 0.03984784808371584
+    },
+    "rolling_variance": {
+      "bins": [
+        {
+          "bin": 0,
+          "count": 1637,
+          "mean_rate_per_hour": 0.4763861710505691,
+          "predicted_capsize_fraction": 0.07442768376790483,
+          "realized_capsize_fraction": 0.005497861942577886,
+          "realized_exact_interval": [
+            0.002516962066821323,
+            0.010410892171579015
+          ]
+        },
+        {
+          "bin": 1,
+          "count": 2067,
+          "mean_rate_per_hour": 1.04824042770676,
+          "predicted_capsize_fraction": 0.15778344749783701,
+          "realized_capsize_fraction": 0.03725205611998065,
+          "realized_exact_interval": [
+            0.029508398320603216,
+            0.0463407242384451
+          ]
+        },
+        {
+          "bin": 2,
+          "count": 1983,
+          "mean_rate_per_hour": 2.919087420327047,
+          "predicted_capsize_fraction": 0.3803490444023113,
+          "realized_capsize_fraction": 0.02773575390821987,
+          "realized_exact_interval": [
+            0.020961193822504776,
+            0.035950285889874346
+          ]
+        },
+        {
+          "bin": 3,
+          "count": 10,
+          "mean_rate_per_hour": 3.210252182182983,
+          "predicted_capsize_fraction": 0.14108263241498395,
+          "realized_capsize_fraction": 1.0,
+          "realized_exact_interval": [
+            0.6915028921812392,
+            1.0
+          ]
+        },
+        {
+          "bin": 4,
+          "count": 2203,
+          "mean_rate_per_hour": 3.6535934218460255,
+          "predicted_capsize_fraction": 0.42732352164882487,
+          "realized_capsize_fraction": 0.04403086699954607,
+          "realized_exact_interval": [
+            0.03584858943281552,
+            0.05345188566077778
+          ]
+        }
+      ],
+      "edges_rate_per_hour": [
+        -5e-324,
+        1.0446129977646943,
+        2.9190874203270476,
+        2.919087420327048,
+        3.404362023420273,
+        360.00000000000006
+      ],
+      "weighted_mean_absolute_error": 0.24230272800304858
+    }
+  },
+  "test_terminal_partition_by_family": {
+    "biased": {
+      "capsizes": 101,
+      "heralded_capsizes": 93,
+      "unheralded_capsizes": 8,
+      "unheralded_fraction_of_capsizes": 0.07920792079207921
+    },
+    "parametric": {
+      "capsizes": 82,
+      "heralded_capsizes": 82,
+      "unheralded_capsizes": 0,
+      "unheralded_fraction_of_capsizes": 0.0
+    },
+    "softening": {
+      "capsizes": 65,
+      "heralded_capsizes": 65,
+      "unheralded_capsizes": 0,
+      "unheralded_fraction_of_capsizes": 0.0
+    }
+  },
+  "verdicts": {
+    "calibration": "the offline-calibrated hybrid is not calibrated on fresh TEST campaigns under the predeclared 5-of-6 criterion",
+    "calibration_criterion_met": false,
+    "severity_transfer": "the stationary-only offline conditional does not transfer across severity to all three rare-event campaigns",
+    "severity_transfer_criterion_met": false,
+    "value_added": "crossing-severity information adds nothing beyond the crossing rate itself under offline calibration",
+    "value_added_criterion_met": false
+  }
+}
