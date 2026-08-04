@@ -12,6 +12,7 @@ from rahola_lab.forecast import (
     absolute_roll_escape_angle,
     extract_forecast_dataset,
 )
+from rahola_lab.forecast.models import _epoch_minibatches
 
 from rahola.dataset import SimulationDataset
 
@@ -96,3 +97,10 @@ def test_forecaster_shapes_and_lstm_budget() -> None:
         assert prediction.shape == (5, 3)
         assert np.all(np.diff(prediction, axis=1) >= 0)
     assert JaxLSTMQuantileForecaster().parameter_count() < 100_000
+
+
+def test_lstm_epoch_batches_visit_every_sample_exactly_once() -> None:
+    first = _epoch_minibatches(23, 7, np.random.default_rng(731))
+    second = _epoch_minibatches(23, 7, np.random.default_rng(731))
+    np.testing.assert_array_equal(np.concatenate(first), np.concatenate(second))
+    np.testing.assert_array_equal(np.sort(np.concatenate(first)), np.arange(23))

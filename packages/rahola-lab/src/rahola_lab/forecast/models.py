@@ -118,6 +118,14 @@ def _parameter_count(parameters: dict[str, jax.Array]) -> int:
     return sum(math.prod(value.shape) for value in parameters.values())
 
 
+def _epoch_minibatches(
+    sample_count: int, batch_size: int, rng: np.random.Generator
+) -> tuple[NDArray[np.int64], ...]:
+    """Partition one epoch's permutation without replacement."""
+    order = rng.permutation(sample_count)
+    return tuple(order[start : start + batch_size] for start in range(0, sample_count, batch_size))
+
+
 @dataclass
 class JaxLSTMQuantileForecaster:
     """Single-layer LSTM quantile regressor trained with pinball loss and Adam."""
@@ -204,8 +212,7 @@ class JaxLSTMQuantileForecaster:
         rng = np.random.default_rng(self.seed)
         step_number = 0
         for _ in range(self.epochs):
-            for start in range(0, len(inputs), self.batch_size):
-                indices = rng.permutation(len(inputs))[start : start + self.batch_size]
+            for indices in _epoch_minibatches(len(inputs), self.batch_size, rng):
                 step_number += 1
                 parameters, first, second, _ = train_step(
                     parameters, first, second, inputs[indices], labels[indices], step_number
