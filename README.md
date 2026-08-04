@@ -10,12 +10,15 @@ causal data path is paired with a test intended to disprove it.
 
 > This research software is not a vessel-operational safety system.
 
+See [`PROJECT_SUMMARY.md`](PROJECT_SUMMARY.md) for the full project arc and the August 2026 audit,
+and [`RESULTS.md`](RESULTS.md) for the corrected numeric record.
+
 ## Install and run
 
 Python 3.12 or newer and [`uv`](https://docs.astral.sh/uv/) are required.
 
 ```sh
-uv sync --all-extras
+uv sync --all-packages --all-extras
 uv run pytest
 uv run rahola validate
 uv run rahola generate --config configs/family1_stationary.yaml --out data/demo
@@ -83,8 +86,8 @@ Family 2 accepts deterministic \(h=h_0\cos(\omega_e t)\), or an independent
 narrow-band JONSWAP realization normalized to the requested modulation standard
 deviation. Family 3 can use unequal positive and negative escape angles.
 
-Capsize is the first integration endpoint at which either applicable escape
-angle is reached. That state is absorbing. The event time is recorded; emitted
+Capsize is the initial state, when already outside an applicable escape angle, or the first later
+integration endpoint at which either escape angle is reached. That state is absorbing. The event time is recorded; emitted
 samples strictly after it are NaN and cannot enter a window.
 
 ## Irregular-sea forcing
@@ -197,9 +200,12 @@ fully determines the batch.
 `CausalTransformer` walks forward once. Each output sample is standardized and,
 optionally, linearly detrended using sums fitted strictly before that sample.
 Callers cannot fit it on a future slice. `make_windows` then cuts that already
-causal stream. A window is positive when capsize occurs within its horizon,
-negative when the run is non-capsizing or capsize lies beyond horizon plus
-buffer, and discarded inside the exclusion buffer. Windows stop before capsize.
+causal stream. A supervised window is positive when capsize occurs within its
+horizon, negative when capsize lies beyond horizon plus buffer, and discarded
+inside the exclusion buffer. Every supervised endpoint requires the same complete outcome horizon,
+regardless of whether the trajectory later capsizes. Windows stop before capsize. Operational
+inference is separate: it emits every
+causal pre-capsize endpoint with an unknown label and never filters timestamps using future outcome.
 
 Storage is uncompressed sharded Parquet plus a sorted JSON manifest containing
 the full configuration, seed list, package version, Git commit, SHA-256 per
@@ -236,11 +242,13 @@ JAX owns the backend choice, so selecting a GPU does not change the model code.
   time scale \(\omega_n\) is kept fixed during that trajectory.
 - `simulate_restarted_batch` starts independent futures from per-trajectory roll,
   rate, stiffness, drift, and deterministic-parametric phase offsets; it is the
-  validated core extension used by the Prototype #3 oracle.
+  validated core extension used by the Prototype #3 restart comparators. Because
+  those futures discard the realized forcing phase, they are not Bayes-optimal
+  motion-history ceilings.
 - Stochastic parametric modulation uses an independently phased JONSWAP
   elevation record, RMS-normalized to `stochastic_std`.
-- Capsize time is the first RK4 endpoint beyond the threshold, without
-  sub-step root interpolation.
+- Capsize time is zero for an initially escaped state; otherwise it is the first RK4 endpoint beyond
+  the threshold, without sub-step root interpolation.
 - The Melnikov comparison defines the simulated boundary at 50% capsize over
   uniformly spaced forcing phases and 120 natural periods. Melnikov remains only
   a necessary heteroclinic-intersection bound.

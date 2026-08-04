@@ -1,4 +1,11 @@
 {
+  "_artifact_sha256": "cf155afa3b6b6c963f81e91e4837533bf30412e1c8f12c89b42014a51b3af4cb",
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "schema_version": 1,
+    "source_sha256": "6273f390690924d5fe8b06062c824411cd8311dab5a6bbd62f1ae040c23ce3b3",
+    "upstream_artifacts": {}
+  },
   "alphas": [
     0.02,
     0.05,

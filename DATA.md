@@ -72,9 +72,10 @@ fixed-outcome-band rule prevents severity from becoming the bandwidth axis.
 
 Campaign offsets in YAML allocate disjoint subranges within each block. Public split utilities take
 a block name and reject both reserves; they do not accept arbitrary seed vectors. The guarded
-`rahola-lab final-eval` path can construct reserve-2 seeds only. It permanently refuses the spent
-Prototype #2 reserve, requires a clean tree, and refuses any second reserve-2 invocation once access
-has begun.
+`rahola-lab final-eval` path can construct reserve-2 seeds only. It refuses the spent Prototype #2
+reserve, requires canonical paths and a clean tree, and atomically refuses a second reserve-2
+invocation once access has begun. This repository-local mechanism supports the audit; the no-rerun
+rule remains procedural rather than external access control.
 
 The one-time access completed on commit `843b24a25437c5386208bc66ee0b79776ad207dc`. It materialized
 18,000 trajectories (514 MiB allocated): 5,000 evaluation plus 1,000 ramp trajectories per family.
@@ -82,26 +83,34 @@ Reserve capsize fractions were 2.38%/48.9% for softening evaluation/ramp, 1.08%/
 parametric, and 1.90%/24.5% for biased. The timestamped attestation and headline result are checked
 in under `results/`; public reserve guards remain in force.
 
-Prototype #3 adds no campaigns. Its oracle restarts independent 200-second futures from arbitrary
+Prototype #3 adds no campaigns. Its restart reference draws independent 200-second futures from
 per-trajectory roll, roll-rate, current stiffness, and linear stiffness drift while preserving the
 absolute phase of deterministic parametric modulation. Fresh rollout seeds are unique and outside
-all campaign seed ranges. Restarted stationary-ensemble variance must match the corresponding
-full-run segment within the predeclared 15%, with capsize fraction within five percentage points.
-Chronos B2 survived its predeclared kill, so reserve-2 was materialized once on commit `5d4c6be`:
+all campaign seed ranges. The restart discards the realized stochastic-forcing phase and is a
+comparator, not a Bayes motion-history ceiling. Restarted stationary-ensemble variance must match
+the corresponding full-run segment within the predeclared 15%, with capsize fraction within five
+percentage points.
+Chronos B2 appeared to survive its predeclared kill under the historical test-selected-threshold
+procedure, so reserve-2 was materialized once on commit `5d4c6be`:
 128 trajectories from each of the six D1-mirroring campaigns (768 total), matching the CPU probe's
-frozen campaign limit. It contains 129 capsizes and 22 MiB on disk. The CNN, physics floor, and both
+frozen campaign limit. It contains 131 total capsizes, 129 observable under the historical scoring
+rule, and 22 MiB on disk. The CNN, physics floor, and both
 Chronos modes use the same holdout. This is an explicit reduction from Prototype #2's
-18,000-trajectory final audit, not a new campaign. The complete attestation permanently forbids a
-repeat.
+18,000-trajectory final audit, not a new campaign. The spent reserve-2 result remains an immutable
+historical audit and will not be repeated.
 
 ## Exact regeneration
 
 From the repository root:
 
 ```bash
-uv sync --all-packages
+uv sync --all-packages --all-extras
 uv run rahola-lab generate --all --out data/reference --chunk-size 256
 ```
+
+The tracked `rahola_lab/campaigns/reference_checksums.json` anchors the checked-in reference
+manifests. An intentional regeneration changes provenance fields and therefore requires reviewing
+and updating those anchors before the replacement data can be treated as the new reference set.
 
 The generator writes deterministic Parquet shards, chunk manifests and the top-level manifests used
 above. On this machine the final per-campaign timings sum to 94.480 seconds; filesystem and first-run

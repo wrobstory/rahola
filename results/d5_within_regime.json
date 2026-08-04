@@ -1,116 +1,266 @@
 {
+  "_artifact_sha256": "459886f226096ff8e0d82ac81f2c68367d33090460664c9e07c14dfbb73ff77f",
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "schema_version": 1,
+    "source_sha256": "6273f390690924d5fe8b06062c824411cd8311dab5a6bbd62f1ae040c23ce3b3",
+    "upstream_artifacts": {
+      "d1_operating_curves": "b5da74c41639b37b4dbe2ff72673c86ea56b76b44a7504e4c5e6a9bf94b60484"
+    }
+  },
   "experiment": "D5",
   "methods": {
     "classical_ews": {
-      "false_episodes_per_hour": 9.265548648563072,
+      "alarm_opportunity_count": 27407,
+      "calibration_operating_point": {
+        "alarm_opportunity_count": 9163,
+        "capsize_count": 321,
+        "detected_capsize_count": 291,
+        "exposure_hours": 25.320416666666667,
+        "false_episode_count": 620,
+        "false_episodes_per_hour": 24.48616893481874,
+        "false_episodes_per_hour_interval": [
+          22.655330721385994,
+          26.417213324268403
+        ],
+        "lead_time_quantiles_s": [
+          25.80000000000001,
+          119.60000000000002,
+          219.60000000000002
+        ],
+        "sensitivity": 0.9065420560747663,
+        "sensitivity_interval": [
+          0.8692738070961118,
+          0.9360538051331145
+        ],
+        "threshold": -0.0909090909090909
+      },
+      "capsize_count": 1020,
+      "detected_capsize_count": 949,
+      "exposure_hours": 75.73486111111112,
+      "false_episode_count": 1807,
+      "false_episodes_per_hour": 23.859553889574556,
       "false_episodes_per_hour_interval": [
-        8.85094125050252,
-        9.694163465760884
+        22.80643266559881,
+        24.946122780426776
       ],
       "lead_time_quantiles_s": [
-        46.87000000000003,
-        142.3,
-        256.65000000000003
+        24.58000000000002,
+        113.20000000000005,
+        223.4200000000001
       ],
-      "maximum_sensitivity": 0.8710503842869343,
-      "sensitivity": 0.8710503842869343,
+      "maximum_sensitivity": 1.0,
+      "sensitivity": 0.9303921568627451,
       "sensitivity_interval": [
-        0.8504930278202152,
-        0.8897224155606539
+        0.91300675652904,
+        0.9452388669292985
       ],
-      "target_attainable": false,
+      "target_attainable": true,
       "target_sensitivity": 0.9,
-      "threshold": -0.9999999999999998,
-      "within_regime_auc": 0.5001589467634143
+      "threshold": -0.0909090909090909,
+      "within_regime_auc": 0.5085666862988347
     },
     "cnn": {
-      "false_episodes_per_hour": 9.265548648563072,
+      "alarm_opportunity_count": 27407,
+      "calibration_operating_point": {
+        "alarm_opportunity_count": 9163,
+        "capsize_count": 321,
+        "detected_capsize_count": 294,
+        "exposure_hours": 25.320416666666667,
+        "false_episode_count": 591,
+        "false_episodes_per_hour": 23.340848129803025,
+        "false_episodes_per_hour_interval": [
+          21.551336739272603,
+          25.231330406544785
+        ],
+        "lead_time_quantiles_s": [
+          25.80000000000001,
+          124.05000000000001,
+          230.03000000000003
+        ],
+        "sensitivity": 0.9158878504672897,
+        "sensitivity_interval": [
+          0.8799805980897153,
+          0.9438384379831936
+        ],
+        "threshold": -0.7863049224019051
+      },
+      "capsize_count": 1020,
+      "detected_capsize_count": 925,
+      "exposure_hours": 75.73486111111112,
+      "false_episode_count": 1725,
+      "false_episodes_per_hour": 22.77682925263758,
       "false_episodes_per_hour_interval": [
-        8.85094125050252,
-        9.694163465760884
+        21.746564026148967,
+        23.840778667667927
       ],
       "lead_time_quantiles_s": [
-        46.87000000000003,
-        142.3,
-        256.6
+        23.600000000000023,
+        122.60000000000002,
+        233.02000000000007
       ],
-      "maximum_sensitivity": 0.8710503842869343,
-      "sensitivity": 0.8710503842869343,
+      "maximum_sensitivity": 1.0,
+      "sensitivity": 0.9068627450980392,
       "sensitivity_interval": [
-        0.8504930278202152,
-        0.8897224155606539
+        0.8873434042565209,
+        0.9239936653123267
       ],
-      "target_attainable": false,
+      "target_attainable": true,
       "target_sensitivity": 0.9,
-      "threshold": -1.9135518074035645,
-      "within_regime_auc": 0.4627358756523554
+      "threshold": -0.7863049224019051,
+      "within_regime_auc": 0.47425406266804165
     },
     "danger_margin": {
-      "false_episodes_per_hour": 9.265548648563072,
+      "alarm_opportunity_count": 27407,
+      "calibration_operating_point": {
+        "alarm_opportunity_count": 9163,
+        "capsize_count": 321,
+        "detected_capsize_count": 293,
+        "exposure_hours": 25.320416666666667,
+        "false_episode_count": 613,
+        "false_episodes_per_hour": 24.209712188780465,
+        "false_episodes_per_hour_interval": [
+          22.388739198525155,
+          26.131075691725975
+        ],
+        "lead_time_quantiles_s": [
+          21.02000000000003,
+          115.5,
+          227.56
+        ],
+        "sensitivity": 0.9127725856697819,
+        "sensitivity_interval": [
+          0.8764005187274599,
+          0.9412552112691579
+        ],
+        "threshold": -1.2300833409281458
+      },
+      "capsize_count": 1020,
+      "detected_capsize_count": 935,
+      "exposure_hours": 75.73486111111112,
+      "false_episode_count": 1773,
+      "false_episodes_per_hour": 23.410619284015322,
       "false_episodes_per_hour_interval": [
-        8.85094125050252,
-        9.694163465760884
+        22.366896452042713,
+        24.48788779139223
       ],
       "lead_time_quantiles_s": [
-        46.87000000000003,
-        142.3,
-        256.65000000000003
+        20.780000000000044,
+        109.80000000000001,
+        221.66000000000003
       ],
-      "maximum_sensitivity": 0.8710503842869343,
-      "sensitivity": 0.8710503842869343,
+      "maximum_sensitivity": 1.0,
+      "sensitivity": 0.9166666666666666,
       "sensitivity_interval": [
-        0.8504930278202152,
-        0.8897224155606539
+        0.8979869499729036,
+        0.9328961368537098
       ],
-      "target_attainable": false,
+      "target_attainable": true,
       "target_sensitivity": 0.9,
-      "threshold": -2.027241638920752,
-      "within_regime_auc": 0.498733341220109
+      "threshold": -1.2300833409281458,
+      "within_regime_auc": 0.4988659971450305
     },
     "galeazzi_glrt": {
-      "false_episodes_per_hour": 9.265548648563072,
+      "alarm_opportunity_count": 27407,
+      "calibration_operating_point": {
+        "alarm_opportunity_count": 9163,
+        "capsize_count": 321,
+        "detected_capsize_count": 289,
+        "exposure_hours": 25.320416666666667,
+        "false_episode_count": 606,
+        "false_episodes_per_hour": 23.933255442742187,
+        "false_episodes_per_hour_interval": [
+          22.12221700799683,
+          25.844868881799567
+        ],
+        "lead_time_quantiles_s": [
+          23.180000000000017,
+          117.70000000000005,
+          222.45999999999998
+        ],
+        "sensitivity": 0.9003115264797508,
+        "sensitivity_interval": [
+          0.8621884898907275,
+          0.930809253008275
+        ],
+        "threshold": 0.11201145849454691
+      },
+      "capsize_count": 1020,
+      "detected_capsize_count": 928,
+      "exposure_hours": 75.73486111111112,
+      "false_episode_count": 1745,
+      "false_episodes_per_hour": 23.040908432378306,
       "false_episodes_per_hour_interval": [
-        8.85094125050252,
-        9.694163465760884
+        22.005008495881036,
+        24.110434821915014
       ],
       "lead_time_quantiles_s": [
-        46.87000000000003,
-        142.3,
-        256.65000000000003
+        21.920000000000016,
+        111.10000000000002,
+        219.82000000000008
       ],
-      "maximum_sensitivity": 0.8710503842869343,
-      "sensitivity": 0.8710503842869343,
+      "maximum_sensitivity": 1.0,
+      "sensitivity": 0.9098039215686274,
       "sensitivity_interval": [
-        0.8504930278202152,
-        0.8897224155606539
+        0.8905298347333851,
+        0.9266711357539791
       ],
-      "target_attainable": false,
+      "target_attainable": true,
       "target_sensitivity": 0.9,
-      "threshold": 1.526726123302069e-08,
-      "within_regime_auc": 0.5289260859764134
+      "threshold": 0.11201145849454691,
+      "within_regime_auc": 0.49303776480662714
     },
     "neighbor_2009": {
-      "false_episodes_per_hour": 9.265548648563072,
+      "alarm_opportunity_count": 27407,
+      "calibration_operating_point": {
+        "alarm_opportunity_count": 9163,
+        "capsize_count": 321,
+        "detected_capsize_count": 292,
+        "exposure_hours": 25.320416666666667,
+        "false_episode_count": 620,
+        "false_episodes_per_hour": 24.48616893481874,
+        "false_episodes_per_hour_interval": [
+          22.655330721385994,
+          26.417213324268403
+        ],
+        "lead_time_quantiles_s": [
+          25.80000000000001,
+          113.35000000000002,
+          222.0
+        ],
+        "sensitivity": 0.9096573208722741,
+        "sensitivity_interval": [
+          0.872831758429182,
+          0.9386601497042218
+        ],
+        "threshold": -4.0
+      },
+      "capsize_count": 1020,
+      "detected_capsize_count": 929,
+      "exposure_hours": 75.73486111111112,
+      "false_episode_count": 1793,
+      "false_episodes_per_hour": 23.674698463756048,
       "false_episodes_per_hour_interval": [
-        8.85094125050252,
-        9.694163465760884
+        22.625433939364548,
+        24.757451001266908
       ],
       "lead_time_quantiles_s": [
-        46.87000000000003,
-        142.3,
-        256.65000000000003
+        23.540000000000024,
+        114.80000000000001,
+        225.58
       ],
-      "maximum_sensitivity": 0.8710503842869343,
-      "sensitivity": 0.8710503842869343,
+      "maximum_sensitivity": 1.0,
+      "sensitivity": 0.9107843137254902,
       "sensitivity_interval": [
-        0.8504930278202152,
-        0.8897224155606539
+        0.8915932044050183,
+        0.9275623824650687
       ],
-      "target_attainable": false,
+      "target_attainable": true,
       "target_sensitivity": 0.9,
-      "threshold": -53.0,
-      "within_regime_auc": 0.5176598935386053
+      "threshold": -4.0,
+      "within_regime_auc": 0.4983665108967872
     }
   },
+  "operating_point_policy": "Thresholds are selected on calibration and frozen for test.",
   "regime": "softening_step times >=300 s"
 }

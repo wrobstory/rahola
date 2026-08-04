@@ -1,8 +1,15 @@
 {
-  "aci_dense_post_coverage": 0.9676062466760141,
+  "_artifact_sha256": "ddf91e08afe6289ea7e63fdaf3f97ccea2e536a37d9999a26e4e90d252ae63ba",
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "schema_version": 1,
+    "source_sha256": "6273f390690924d5fe8b06062c824411cd8311dab5a6bbd62f1ae040c23ce3b3",
+    "upstream_artifacts": {}
+  },
+  "aci_dense_post_coverage": 0.9211590839497816,
   "aci_dense_post_coverage_interval": [
-    0.9661831056765813,
-    0.9689854314055979
+    0.9190108402252778,
+    0.923267840484783
   ],
   "aci_gamma": 0.05,
   "alpha": 0.05,
@@ -12,6 +19,7 @@
   ],
   "cqr_coverage_delta_pp": -0.6550755180892098,
   "experiment": "E4",
+  "feedback_delay_steps": 6,
   "figure": "results/e4_stress_test.png",
   "raw_coverage_gap_interval_pp": [
     23.834955044924953,

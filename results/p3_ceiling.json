@@ -1,160 +1,280 @@
 {
-  "elapsed_s": 1889.834846999991,
-  "experiment": "Prototype #3 ceiling",
-  "gaps": {
-    "C1_minus_C2": 0.1585119509422377,
-    "C1_minus_CNN": 0.12015303957890289,
-    "C2_minus_CNN": -0.0383589113633348
+  "_artifact_sha256": "662a1ce221a7caea8535397d31d6b4d49f4e67ad45c973efaa80629223385d50",
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "schema_version": 1,
+    "source_sha256": "6273f390690924d5fe8b06062c824411cd8311dab5a6bbd62f1ae040c23ce3b3",
+    "upstream_artifacts": {
+      "d1_operating_curves": "b5da74c41639b37b4dbe2ff72673c86ea56b76b44a7504e4c5e6a9bf94b60484"
+    }
   },
-  "gate_closed": false,
-  "gate_threshold_auc": 0.03,
-  "gate_verdict": "CNN AUC < C1 AUC - 0.03: proceed to Part B and report where the deficit lives.",
+  "architecture_gate_valid": false,
+  "elapsed_s": 1950.4840653749998,
+  "experiment": "Prototype #3 independent-future restart comparison",
+  "gaps": {
+    "C1_minus_C2": 0.36569154401296,
+    "C1_minus_CNN": 0.2246465305534482,
+    "C2_minus_CNN": -0.14104501345951181,
+    "CNN_minus_clock_only": -0.029922042188933018
+  },
+  "gate_verdict": "No information-ceiling gate is applied. C1 and C2 use fresh independent forcing and need not upper-bound a model that observes the full correlated motion history. The clock-only baseline quantifies protocol-time confounding in this sampled estimand.",
+  "historical_gap_trigger_threshold_auc": 0.03,
+  "historical_gap_triggered": true,
   "methods": {
     "B0_XGBoost": {
-      "auc": 0.6475970241678128,
+      "auc": 0.7622033833090311,
       "bootstrap_replicates": 2000,
       "bootstrap_unit": "trajectory",
       "interval": [
-        0.6277532318114383,
-        0.6684572256877767
+        0.7438260335924884,
+        0.7811025358552434
       ]
     },
-    "C1_oracle": {
-      "auc": 0.7233927567210124,
+    "C1_exact_state_independent_future_restart": {
+      "auc": 0.8511795184140967,
       "bootstrap_replicates": 2000,
       "bootstrap_unit": "trajectory",
       "interval": [
-        0.7072669845438269,
-        0.7398986477597415
+        0.8350527322447224,
+        0.8679613580750045
       ]
     },
-    "C2_filtered": {
-      "auc": 0.5648808057787748,
+    "C2_filtered_state_independent_future_restart": {
+      "auc": 0.48548797440113667,
       "bootstrap_replicates": 2000,
       "bootstrap_unit": "trajectory",
       "interval": [
-        0.5426178905841651,
-        0.5885935136698043
+        0.4602659757519146,
+        0.5144144448367588
       ]
     },
     "CNN": {
-      "auc": 0.6032397171421096,
+      "auc": 0.6265329878606485,
       "bootstrap_replicates": 2000,
       "bootstrap_unit": "trajectory",
       "interval": [
-        0.5770741537824774,
-        0.6317022189063168
+        0.5958787976055556,
+        0.6630916893483069
+      ]
+    },
+    "clock_only_protocol_quartile": {
+      "auc": 0.6564550300495815,
+      "bootstrap_replicates": 2000,
+      "bootstrap_unit": "trajectory",
+      "interval": [
+        0.6436274882466587,
+        0.6705974964962534
       ]
     }
   },
-  "oracle_calibration": {
-    "bins": [
-      {
-        "count": 9693,
-        "observed": 0.18920870731455688,
-        "predicted": 0.0038837305271845657
-      },
-      {
-        "count": 99,
-        "observed": 0.5151515151515151,
-        "predicted": 0.16232323232323229
-      },
-      {
-        "count": 105,
-        "observed": 0.6,
-        "predicted": 0.24100000000000002
-      },
-      {
-        "count": 115,
-        "observed": 0.5478260869565217,
-        "predicted": 0.34373913043478266
-      },
-      {
-        "count": 56,
-        "observed": 0.6785714285714286,
-        "predicted": 0.4384821428571429
-      },
-      {
-        "count": 3,
-        "observed": 0.6666666666666666,
-        "predicted": 0.5099999999999999
-      },
-      {
-        "count": 1,
-        "observed": 1.0,
-        "predicted": 0.64
-      },
-      {
-        "count": 1,
-        "observed": 1.0,
-        "predicted": 0.75
-      },
-      {
-        "count": 4,
-        "observed": 1.0,
-        "predicted": 0.8474999999999999
-      },
-      {
-        "count": 5923,
-        "observed": 0.5026169171028195,
-        "predicted": 0.9979815971635996
-      }
-    ],
-    "brier": 0.30415500625,
-    "ece_10_bin": 0.30260187499999996
-  },
-  "oracle_fairness": "C1 knows exact roll state, current stiffness, deterministic remaining ramp, family, and sea-state specification, but never the realized future forcing. Every rollout uses a fresh independent forcing seed.",
   "particle_count": 2000,
   "pf_judgment": "Rao-Blackwellized bootstrap PF: observed roll/rate are pinned; 2,000 particles infer current stiffness and linear drift under a robust encounter-innovation likelihood. Family is known; no family-marginalized variant was run.",
+  "population_weighted_restart_calibration": {
+    "bins": [
+      {
+        "observed": 0.004354527133150768,
+        "population_weight": 329312.45027342683,
+        "predicted": 0.004054737860033929,
+        "sample_count": 14229
+      },
+      {
+        "observed": 0.14523791347936568,
+        "population_weight": 1652.4610843717292,
+        "predicted": 0.16659267182076895,
+        "sample_count": 332
+      },
+      {
+        "observed": 0.2623559806496436,
+        "population_weight": 1318.8188016268498,
+        "predicted": 0.23986538003230404,
+        "sample_count": 431
+      },
+      {
+        "observed": 0.392876940904758,
+        "population_weight": 1405.020103060253,
+        "predicted": 0.3419306561690962,
+        "sample_count": 632
+      },
+      {
+        "observed": 0.46180939277487726,
+        "population_weight": 710.2497375143112,
+        "predicted": 0.4308860145628947,
+        "sample_count": 360
+      },
+      {
+        "observed": 1.0,
+        "population_weight": 6.0,
+        "predicted": 0.5075,
+        "sample_count": 6
+      },
+      {
+        "observed": 1.0,
+        "population_weight": 1.0,
+        "predicted": 0.65,
+        "sample_count": 1
+      },
+      {
+        "observed": 1.0,
+        "population_weight": 1.0,
+        "predicted": 0.775,
+        "sample_count": 1
+      },
+      {
+        "observed": 1.0,
+        "population_weight": 2.0,
+        "predicted": 0.8025,
+        "sample_count": 2
+      },
+      {
+        "observed": 1.0,
+        "population_weight": 6.0,
+        "predicted": 0.9833333333333334,
+        "sample_count": 6
+      }
+    ],
+    "estimand": "population windows reconstructed from label/time-stratified sampling",
+    "weighted_brier": 0.007210282348726323,
+    "weighted_ece_10_bin": 0.0007811914826281957
+  },
+  "restart_reference_semantics": "C1 knows exact endpoint roll state, current stiffness, deterministic remaining ramp, family, and sea-state specification. C1 and C2 discard the observed forcing phase and draw a fresh independent future. They are restart comparators, not Bayes ceilings.",
   "rollouts_per_window": 200,
   "sampling": {
+    "auc_estimand": "unweighted AUC on a capped-equal allocation: round-robin across nonempty strata until a stratum is exhausted, then reallocating unused slots",
+    "auc_interval_conditioning": "trajectory bootstrap conditional on the realized sampled windows and rollout draws",
+    "calibration_estimand": "source-window population via post-stratum weights",
     "campaigns": [
       {
         "campaign": "softening_evaluation",
-        "elapsed_s": 191.4088359999878,
-        "positive_fraction": 0.3275,
+        "elapsed_s": 202.20737112499774,
+        "population_stratum_counts": {
+          "label=0,time_quartile=1": 34475,
+          "label=0,time_quartile=2": 49115,
+          "label=1,time_quartile=1": 199,
+          "label=1,time_quartile=2": 292
+        },
+        "positive_fraction": 0.2455,
+        "sampled_stratum_counts": {
+          "label=0,time_quartile=1": 755,
+          "label=0,time_quartile=2": 754,
+          "label=1,time_quartile=1": 199,
+          "label=1,time_quartile=2": 292
+        },
         "windows": 2000
       },
       {
         "campaign": "parametric_evaluation",
-        "elapsed_s": 318.78020604199264,
-        "positive_fraction": 0.2625,
+        "elapsed_s": 331.1177551250148,
+        "population_stratum_counts": {
+          "label=0,time_quartile=1": 34762,
+          "label=0,time_quartile=2": 49544,
+          "label=1,time_quartile=1": 118,
+          "label=1,time_quartile=2": 214
+        },
+        "positive_fraction": 0.166,
+        "sampled_stratum_counts": {
+          "label=0,time_quartile=1": 834,
+          "label=0,time_quartile=2": 834,
+          "label=1,time_quartile=1": 118,
+          "label=1,time_quartile=2": 214
+        },
         "windows": 2000
       },
       {
         "campaign": "biased_evaluation",
-        "elapsed_s": 193.25747016698006,
-        "positive_fraction": 0.348,
+        "elapsed_s": 199.5056511249859,
+        "population_stratum_counts": {
+          "label=0,time_quartile=1": 34516,
+          "label=0,time_quartile=2": 49137,
+          "label=1,time_quartile=1": 229,
+          "label=1,time_quartile=2": 404
+        },
+        "positive_fraction": 0.3165,
+        "sampled_stratum_counts": {
+          "label=0,time_quartile=1": 684,
+          "label=0,time_quartile=2": 683,
+          "label=1,time_quartile=1": 229,
+          "label=1,time_quartile=2": 404
+        },
         "windows": 2000
       },
       {
         "campaign": "softening_ramp",
-        "elapsed_s": 193.6448956669774,
-        "positive_fraction": 0.343,
+        "elapsed_s": 199.1000993750058,
+        "population_stratum_counts": {
+          "label=0,time_quartile=1": 7000,
+          "label=0,time_quartile=2": 8603,
+          "label=1,time_quartile=2": 417
+        },
+        "positive_fraction": 0.2085,
+        "sampled_stratum_counts": {
+          "label=0,time_quartile=1": 792,
+          "label=0,time_quartile=2": 791,
+          "label=1,time_quartile=2": 417
+        },
         "windows": 2000
       },
       {
         "campaign": "parametric_ramp",
-        "elapsed_s": 325.4392057080113,
-        "positive_fraction": 0.299,
+        "elapsed_s": 334.953257791989,
+        "population_stratum_counts": {
+          "label=0,time_quartile=1": 7000,
+          "label=0,time_quartile=2": 9242,
+          "label=1,time_quartile=2": 204
+        },
+        "positive_fraction": 0.102,
+        "sampled_stratum_counts": {
+          "label=0,time_quartile=1": 898,
+          "label=0,time_quartile=2": 898,
+          "label=1,time_quartile=2": 204
+        },
         "windows": 2000
       },
       {
         "campaign": "biased_ramp",
-        "elapsed_s": 194.3985069580085,
-        "positive_fraction": 0.2935,
+        "elapsed_s": 200.49545229200157,
+        "population_stratum_counts": {
+          "label=0,time_quartile=1": 7000,
+          "label=0,time_quartile=2": 9336,
+          "label=1,time_quartile=2": 190
+        },
+        "positive_fraction": 0.095,
+        "sampled_stratum_counts": {
+          "label=0,time_quartile=1": 905,
+          "label=0,time_quartile=2": 905,
+          "label=1,time_quartile=2": 190
+        },
         "windows": 2000
       },
       {
         "campaign": "softening_bandwidth_gamma_1",
-        "elapsed_s": 202.7828652910248,
-        "positive_fraction": 0.3305,
+        "elapsed_s": 200.297772291,
+        "population_stratum_counts": {
+          "label=0,time_quartile=1": 7000,
+          "label=0,time_quartile=2": 8864,
+          "label=1,time_quartile=2": 326
+        },
+        "positive_fraction": 0.163,
+        "sampled_stratum_counts": {
+          "label=0,time_quartile=1": 837,
+          "label=0,time_quartile=2": 837,
+          "label=1,time_quartile=2": 326
+        },
         "windows": 2000
       },
       {
         "campaign": "softening_bandwidth_gamma_3_3",
-        "elapsed_s": 194.97785604101955,
-        "positive_fraction": 0.313,
+        "elapsed_s": 199.00406745800865,
+        "population_stratum_counts": {
+          "label=0,time_quartile=1": 7000,
+          "label=0,time_quartile=2": 8905,
+          "label=1,time_quartile=2": 323
+        },
+        "positive_fraction": 0.1615,
+        "sampled_stratum_counts": {
+          "label=0,time_quartile=1": 839,
+          "label=0,time_quartile=2": 838,
+          "label=1,time_quartile=2": 323
+        },
         "windows": 2000
       }
     ],

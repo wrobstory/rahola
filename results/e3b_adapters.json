@@ -1,20 +1,27 @@
 {
+  "_artifact_sha256": "df6173ef4b40832aa0c11f6a198626b05392328096890a9e6bbdc11e3b8a465a",
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "schema_version": 1,
+    "source_sha256": "6273f390690924d5fe8b06062c824411cd8311dab5a6bbd62f1ae040c23ce3b3",
+    "upstream_artifacts": {}
+  },
   "alpha": 0.1,
   "dtaci": {
     "exploded": true,
-    "false_positives_per_hour": 5.32242685201288,
+    "false_positives_per_hour": 6.075949367088608,
     "false_positives_per_hour_interval": [
-      5.08437604961426,
-      5.568607262849603
+      5.808450518290191,
+      6.352431273127931
     ],
     "passed": false,
     "post_transition": {
-      "coverage": 0.7527276829602411,
+      "coverage": 0.6722106722106722,
       "coverage_interval": [
-        0.7493132632968813,
-        0.7561184517698571
+        0.6685011874633187,
+        0.6759040451615593
       ],
-      "covered": 46706,
+      "covered": 41710,
       "windows": 62049
     },
     "recovery_time_s": null
@@ -30,13 +37,14 @@
     0.128
   ],
   "experiment": "E3b",
+  "feedback_delay_steps": 6,
   "figure": "results/e3b_adapters.png",
   "fixed": {
     "exploded": false,
     "false_positives_per_hour": 0.0,
     "false_positives_per_hour_interval": [
       0.0,
-      0.010618431050045556
+      0.01174690175958753
     ],
     "passed": false,
     "post_transition": {
@@ -57,161 +65,161 @@
   },
   "selected_sliding": {
     "gamma": 0.05,
-    "window_size": 100
+    "window_size": 25
   },
   "sliding_aci": {
     "exploded": true,
-    "false_positives_per_hour": 5.40014752535217,
+    "false_positives_per_hour": 5.862590558076587,
     "false_positives_per_hour_interval": [
-      5.1603726410799355,
-      5.648047659089199
+      5.599808904200636,
+      6.134367223205997
     ],
     "passed": false,
     "post_transition": {
-      "coverage": 0.9196441522022918,
+      "coverage": 0.8718271043852439,
       "coverage_interval": [
-        0.9174774674402999,
-        0.9217714935142132
+        0.8691714182937997,
+        0.8744479623542316
       ],
-      "covered": 57063,
+      "covered": 54096,
       "windows": 62049
     },
-    "recovery_time_s": 50.0
+    "recovery_time_s": null
   },
   "sliding_candidate_grid": [
     {
       "exploded": true,
-      "false_positives_per_hour": 5.445934828213491,
+      "false_positives_per_hour": 6.022233986236104,
       "gamma": 0.001,
       "passed": false,
-      "post_transition_mean_absolute_coverage_delta_pp": 24.290783179802954,
+      "post_transition_mean_absolute_coverage_delta_pp": 43.90666493518437,
       "recovery_time_s": null,
       "window_size": 25
     },
     {
       "exploded": true,
-      "false_positives_per_hour": 5.445934828213491,
+      "false_positives_per_hour": 6.060349391212282,
       "gamma": 0.001,
       "passed": false,
-      "post_transition_mean_absolute_coverage_delta_pp": 36.51321849665344,
+      "post_transition_mean_absolute_coverage_delta_pp": 50.266337149142856,
       "recovery_time_s": null,
       "window_size": 50
     },
     {
       "exploded": true,
-      "false_positives_per_hour": 5.428755223077171,
+      "false_positives_per_hour": 6.022233986236104,
       "gamma": 0.001,
       "passed": false,
-      "post_transition_mean_absolute_coverage_delta_pp": 57.17193411228969,
+      "post_transition_mean_absolute_coverage_delta_pp": 67.14253317649012,
       "recovery_time_s": null,
       "window_size": 100
     },
     {
       "exploded": true,
-      "false_positives_per_hour": 5.445934828213491,
+      "false_positives_per_hour": 6.022233986236104,
       "gamma": 0.005,
       "passed": false,
-      "post_transition_mean_absolute_coverage_delta_pp": 18.837672548793826,
+      "post_transition_mean_absolute_coverage_delta_pp": 41.050048867355095,
       "recovery_time_s": null,
       "window_size": 25
     },
     {
       "exploded": true,
-      "false_positives_per_hour": 5.463114433349811,
+      "false_positives_per_hour": 6.060349391212282,
       "gamma": 0.005,
       "passed": false,
-      "post_transition_mean_absolute_coverage_delta_pp": 30.396077335871862,
+      "post_transition_mean_absolute_coverage_delta_pp": 47.526941944328826,
       "recovery_time_s": null,
       "window_size": 50
     },
     {
       "exploded": true,
-      "false_positives_per_hour": 5.428755223077171,
+      "false_positives_per_hour": 6.022233986236104,
       "gamma": 0.005,
       "passed": false,
-      "post_transition_mean_absolute_coverage_delta_pp": 40.21351304217042,
+      "post_transition_mean_absolute_coverage_delta_pp": 54.15413568218928,
       "recovery_time_s": null,
       "window_size": 100
     },
     {
       "exploded": true,
-      "false_positives_per_hour": 5.445934828213491,
+      "false_positives_per_hour": 6.022233986236104,
       "gamma": 0.01,
       "passed": false,
-      "post_transition_mean_absolute_coverage_delta_pp": 13.837740247963422,
+      "post_transition_mean_absolute_coverage_delta_pp": 30.68006273562868,
       "recovery_time_s": 150.0,
       "window_size": 25
     },
     {
       "exploded": true,
-      "false_positives_per_hour": 5.480294038486131,
+      "false_positives_per_hour": 6.117522498676548,
       "gamma": 0.01,
       "passed": false,
-      "post_transition_mean_absolute_coverage_delta_pp": 21.080012412581187,
-      "recovery_time_s": 190.0,
+      "post_transition_mean_absolute_coverage_delta_pp": 36.011756536786756,
+      "recovery_time_s": 170.0,
       "window_size": 50
     },
     {
       "exploded": true,
-      "false_positives_per_hour": 5.428755223077171,
+      "false_positives_per_hour": 6.022233986236104,
       "gamma": 0.01,
       "passed": false,
-      "post_transition_mean_absolute_coverage_delta_pp": 25.565861335376276,
-      "recovery_time_s": 190.0,
+      "post_transition_mean_absolute_coverage_delta_pp": 38.71115663583483,
+      "recovery_time_s": 170.0,
       "window_size": 100
     },
     {
       "exploded": true,
-      "false_positives_per_hour": 5.445934828213491,
+      "false_positives_per_hour": 6.060349391212282,
       "gamma": 0.02,
       "passed": false,
-      "post_transition_mean_absolute_coverage_delta_pp": 9.537014657796679,
-      "recovery_time_s": 80.0,
+      "post_transition_mean_absolute_coverage_delta_pp": 26.998711964024587,
+      "recovery_time_s": null,
       "window_size": 25
     },
     {
       "exploded": true,
-      "false_positives_per_hour": 5.445934828213491,
+      "false_positives_per_hour": 6.327157226045527,
       "gamma": 0.02,
       "passed": false,
-      "post_transition_mean_absolute_coverage_delta_pp": 12.940269953004318,
-      "recovery_time_s": 90.0,
+      "post_transition_mean_absolute_coverage_delta_pp": 29.880320279748208,
+      "recovery_time_s": null,
       "window_size": 50
     },
     {
       "exploded": true,
-      "false_positives_per_hour": 5.428755223077171,
+      "false_positives_per_hour": 6.212811011116993,
       "gamma": 0.02,
       "passed": false,
-      "post_transition_mean_absolute_coverage_delta_pp": 14.296643998014751,
-      "recovery_time_s": 90.0,
+      "post_transition_mean_absolute_coverage_delta_pp": 30.059957733333675,
+      "recovery_time_s": null,
       "window_size": 100
     },
     {
       "exploded": true,
-      "false_positives_per_hour": 5.514653248758772,
+      "false_positives_per_hour": 6.079407093700371,
       "gamma": 0.05,
       "passed": false,
-      "post_transition_mean_absolute_coverage_delta_pp": 7.17581608950667,
-      "recovery_time_s": 220.0,
+      "post_transition_mean_absolute_coverage_delta_pp": 21.26940682475124,
+      "recovery_time_s": null,
       "window_size": 25
     },
     {
       "exploded": true,
-      "false_positives_per_hour": 5.531832853895092,
+      "false_positives_per_hour": 6.174695606140816,
       "gamma": 0.05,
       "passed": false,
-      "post_transition_mean_absolute_coverage_delta_pp": 7.271100382376787,
-      "recovery_time_s": 80.0,
+      "post_transition_mean_absolute_coverage_delta_pp": 24.14377615327518,
+      "recovery_time_s": null,
       "window_size": 50
     },
     {
       "exploded": true,
-      "false_positives_per_hour": 5.583371669304052,
+      "false_positives_per_hour": 6.26998411858126,
       "gamma": 0.05,
       "passed": false,
-      "post_transition_mean_absolute_coverage_delta_pp": 6.665795556858109,
-      "recovery_time_s": 50.0,
+      "post_transition_mean_absolute_coverage_delta_pp": 21.801165814140013,
+      "recovery_time_s": null,
       "window_size": 100
     }
   ]

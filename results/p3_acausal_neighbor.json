@@ -1,10 +1,17 @@
 {
+  "_artifact_sha256": "212eef545856765f946817f47ea14bc1474c9029c4b57d64f3cf4fcc6dceb9b3",
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "schema_version": 1,
+    "source_sha256": "6273f390690924d5fe8b06062c824411cd8311dab5a6bbd62f1ae040c23ce3b3",
+    "upstream_artifacts": {}
+  },
   "calibration_split": "first 64 trajectories select; next 64 report, per campaign",
   "experiment": "Acausal neighbor appendix",
-  "heldout_auc": 0.35198023457448835,
+  "heldout_auc": 0.3848373029184837,
   "heldout_windows": 3066,
   "normalization": "whole finite trajectory mean and standard deviation",
-  "selected_radius": 0.2,
+  "selected_radius": 0.5,
   "selection_windows": 3052,
   "warning": "Deliberately acausal; not an operational detector result."
 }
