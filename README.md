@@ -42,20 +42,20 @@ The public boundary uses SI seconds, metres, radians, and radians/second. YAML
 comments show degree equivalents where useful, but values stored and returned by
 the library are radians. Internally,
 
-\[
+$$
   x=\phi/\phi_v,\qquad \tau=\omega_n t,\qquad
   x'=\dot\phi/(\phi_v\omega_n).
-\]
+$$
 
 This makes the common equation
 
-\[
+$$
  x''+2\zeta x'+q x'|x'|+\kappa(\tau)[1+h(\tau)]
  (x-x^3+\lambda x^5)=f(\tau)+b.
-\]
+$$
 
 Here `q` is the configured nondimensional quadratic-damping coefficient
-(equivalent to \(\beta\phi_v\) under the dimensional damping convention in the
+(equivalent to $\beta\phi_v$ under the dimensional damping convention in the
 mission), `lambda` is zero unless the quintic option is enabled, and `kappa` is
 one except in a stiffness-ramp campaign. Fixed-step classical RK4 is evaluated
 at the beginning, midpoint, midpoint, and end of every step. The implementation
@@ -69,20 +69,20 @@ classical RK family [R8].
 
 The dimensional models use
 
-\[
+$$
  \ddot\phi+2\zeta\omega_n\dot\phi+\beta\dot\phi|\dot\phi|
  +R(\phi,t)=m(t).
-\]
+$$
 
 | Family | Restoring / bias | Intended archetype | Principal sweep range |
 | --- | --- | --- | --- |
-| 1: softening | \(R=\omega_n^2(\phi-\phi^3/\phi_v^2)\) | dead ship / pure-loss escape | \(\zeta=0.01\ldots0.10\), \(r=0.01\ldots0.15\) |
-| 2: parametric | \(R=\omega_n^2[1+h(t)](\phi-\phi^3/\phi_v^2)\) | parametric roll | \(h_0=0\ldots0.4\), \(\omega_e/\omega_n=1.5\ldots2.5\) |
-| 3: biased | Family 1 plus constant nondimensional moment \(b\) | damage / steady heel | \(b=-0.3\ldots0.3\), side-specific escape angles |
+| 1: softening | $R=\omega_n^2(\phi-\phi^3/\phi_v^2)$ | dead ship / pure-loss escape | $\zeta=0.01\ldots0.10$, $r=0.01\ldots0.15$ |
+| 2: parametric | $`R=\omega_n^2[1+h(t)](\phi-\phi^3/\phi_v^2)`$ | parametric roll | $h_0=0\ldots0.4$, $\omega_e/\omega_n=1.5\ldots2.5$ |
+| 3: biased | Family 1 plus constant nondimensional moment $b$ | damage / steady heel | $b=-0.3\ldots0.3$, side-specific escape angles |
 
 The cubic/quintic 1-DOF form and the limits of alternative excitation models are
 consistent with Bulian & Francescutto's nonlinear roll-model comparison [R4].
-Family 2 accepts deterministic \(h=h_0\cos(\omega_e t)\), or an independent
+Family 2 accepts deterministic $h=h_0\cos(\omega_e t)$, or an independent
 narrow-band JONSWAP realization normalized to the requested modulation standard
 deviation. Family 3 can use unequal positive and negative escape angles.
 
@@ -94,24 +94,24 @@ samples strictly after it are NaN and cannot enter a window.
 
 The one-sided angular-frequency JONSWAP spectrum is
 
-\[
+$$
  S_\eta(\omega)=\alpha g^2\omega^{-5}
  \exp[-\tfrac54(\omega_p/\omega)^4]
  \gamma^{\exp[-(\omega-\omega_p)^2/(2\sigma^2\omega_p^2)]},
-\]
+$$
 
-with \(\sigma=0.07\) below the peak and 0.09 above it. Rahola numerically
-normalizes \(\alpha\) so \(m_0=H_s^2/16\), hence
-\(H_s=4\sqrt{m_0}\). The form and constants come from the JONSWAP field program
+with $\sigma=0.07$ below the peak and 0.09 above it. Rahola numerically
+normalizes $\alpha$ so $m_0=H_s^2/16$, hence
+$H_s=4\sqrt{m_0}$. The form and constants come from the JONSWAP field program
 [R1].
 
-For FFT-bin width \(\Delta\omega\), the deterministic component amplitude is
-\(A_j=\sqrt{2S_\eta(\omega_j)\Delta\omega}\), while each phase is independently
+For FFT-bin width $\Delta\omega$, the deterministic component amplitude is
+$A_j=\sqrt{2S_\eta(\omega_j)\Delta\omega}$, while each phase is independently
 uniform. Thus
 
-\[
+$$
  \eta(t)=\sum_j A_j\cos(\omega_jt+\theta_j).
-\]
+$$
 
 This deterministic-amplitude/random-phase spectral representation is chosen
 because every finite realization has the prescribed bin energy and converges to
@@ -121,17 +121,17 @@ variance. The ergodicity and FFT tradeoff is treated by Shinozuka & Deodatis
 [R2]. Rahola uses at least 200 positive-frequency components.
 
 For a progressive Airy component, the deep-water dispersion relation gives
-\(k_j=\omega_j^2/g\), and spatial differentiation puts slope in quadrature:
-\(\alpha_j=\partial\eta_j/\partial x=-k_jA_j\sin(\cdot)\) [R3]. The simplified
+$k_j=\omega_j^2/g$, and spatial differentiation puts slope in quadrature:
+$\alpha_j=\partial\eta_j/\partial x=-k_jA_j\sin(\cdot)$ [R3]. The simplified
 roll-excitation chain is
 
-\[
+$$
  \eta\longrightarrow \alpha=\partial\eta/\partial x
  \longrightarrow m=\omega_n^2 r\alpha
  \longrightarrow f=m/(\phi_v\omega_n^2)=r\alpha/\phi_v.
-\]
+$$
 
-The effective wave-slope coefficient \(r\) is an input, not a hull-derived
+The effective wave-slope coefficient $r$ is an input, not a hull-derived
 quantity. This follows the established 1-DOF effective-slope abstraction in
 Bulian & Francescutto [R5] and the IMO intact-stability explanatory notes [R6].
 
@@ -145,30 +145,30 @@ declared environmental step.
 
 For the linear limit, angular-acceleration input has transfer function
 
-\[
+$$
  H(\omega)=\frac{1}{\omega_n^2-\omega^2+i2\zeta\omega_n\omega},\qquad
- \sigma_\phi^2=\int_0^\infty|H(\omega)|^2S_m(\omega)\,d\omega,
-\]
+ \sigma_\phi^2=\int_0^\infty|H(\omega)|^2S_m(\omega)\mathrm{d}\omega,
+$$
 
 using the standard random-vibration input/output spectral relation [R7]. At
 exact principal parametric tuning, first-order averaging of
-\(x''+2\zeta x'+[1+h_0\cos(2\tau)]x=0\) gives the small-damping boundary
-\(h_{0,c}=4\zeta\) [R9].
+$x''+2\zeta x'+[1+h_0\cos(2\tau)]x=0$ gives the small-damping boundary
+$h_{0,c}=4\zeta$ [R9].
 
 For Family 1 with harmonic forcing,
 
-\[
+$$
  x''+2\zeta x'+x-x^3=F\cos(\Omega\tau),
-\]
+$$
 
 the unperturbed heteroclinic orbit is
-\(x_h=\tanh(\tau/\sqrt2)\). Substitution into the Melnikov integral gives the
+$x_h=\tanh(\tau/\sqrt2)$. Substitution into the Melnikov integral gives the
 simple-zero threshold
 
-\[
+$$
  F_M(\Omega)=\frac{4\zeta}{3\pi\Omega}
- \sinh\!\left(\frac{\pi\Omega}{\sqrt2}\right).
-\]
+ \sinh\left(\frac{\pi\Omega}{\sqrt2}\right).
+$$
 
 Rahola independently quadratures both orbit integrals and compares this
 necessary-condition lower bound with direct phase-ensemble capsize sweeps. The
@@ -177,10 +177,10 @@ Shaw & Troesch [R10]. It is not treated as a sufficient capsize condition.
 
 | Physics component | Falsification test | Acceptance used here |
 | --- | --- | --- |
-| JONSWAP and FFT realization | `test_jonswap_spectral_fidelity_and_significant_height` | recovered \(H_s\) within 2%; log-PSD correlation >0.95; band energy within 12% |
+| JONSWAP and FFT realization | `test_jonswap_spectral_fidelity_and_significant_height` | recovered $H_s$ within 2%; log-PSD correlation >0.95; band energy within 12% |
 | Linear forcing/response chain | `test_linear_limit_variance_matches_spectral_response` | ensemble variance within 6% |
-| Parametric stiffness | `test_mathieu_principal_tongue_boundary` | growth sign brackets \(4\zeta\); boundary within 10% |
-| Softening separatrix | Melnikov quadrature and capsize-boundary tests | formula within \(10^{-5}\); capsize bound above prediction with correlated shape and narrowing low-damping gap |
+| Parametric stiffness | `test_mathieu_principal_tongue_boundary` | growth sign brackets $4\zeta$; boundary within 10% |
+| Softening separatrix | Melnikov quadrature and capsize-boundary tests | formula within $10^{-5}$; capsize bound above prediction with correlated shape and narrowing low-damping gap |
 | RK4 and precomputed forcing | `test_step_halving_convergence_statistics` | variance within 3%; capsize-rate change <=0.05 |
 | Seed propagation | spectrum/batch determinism tests | bitwise equality |
 | Causal normalization | `test_future_only_leakage_probe_has_teeth` | causal AUC within 0.08 of 0.5; leaky control near perfect |
@@ -235,11 +235,11 @@ JAX owns the backend choice, so selecting a GPU does not change the model code.
   spectral energy and lower finite-record variance; phases remain the stochastic
   degrees of freedom.
 - The requested output rate may force an integration step smaller than
-  \(T_n/40\); output is never interpolated upward from a coarser state grid.
+  $T_n/40$; output is never interpolated upward from a coarser state grid.
 - Each step-sea segment is independently synthesized, so forcing may jump while
   roll angle and rate remain continuous.
-- A ramp in `stiffness` is a nondimensional multiplier \(\kappa\); the reference
-  time scale \(\omega_n\) is kept fixed during that trajectory.
+- A ramp in `stiffness` is a nondimensional multiplier $\kappa$; the reference
+  time scale $\omega_n$ is kept fixed during that trajectory.
 - `simulate_restarted_batch` starts independent futures from per-trajectory roll,
   rate, stiffness, drift, and deterministic-parametric phase offsets; it is the
   validated core extension used by the Prototype #3 restart comparators. Because
