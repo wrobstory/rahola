@@ -1,31 +1,44 @@
 # Rahola
 
-Rahola is a falsification-first synthetic 1-DOF ship-roll dynamics library. It
-generates seeded nonlinear roll trajectories for softening, parametric, and
-biased-restoring archetypes. Phase 0 contains the shared data engine and its
-analytic validation suite; it deliberately contains no alarm or machine-learning
-model. The separate `rahola-lab` workspace package contains the conformal-alarm
-and motion-history early-warning prototypes. Every physics component and every
-causal data path is paired with a test intended to disprove it.
+Rahola is a controlled study of a hard warning problem: can recent roll motion reveal an
+approaching capsize soon enough to act, without producing an unusable number of false alarms? It
+builds the problem from seeded nonlinear trajectories, then tests forecasts, statistical alarms,
+deep sequence models, physical-state estimators, and transfer methods under one causal evaluation
+protocol.
 
-> This research software is not a vessel-operational safety system.
+> Rahola is research software, not a vessel-operational safety system.
 
-See [`PROJECT_SUMMARY.md`](PROJECT_SUMMARY.md) for the full project arc and the August 2026 audit,
-and [`RESULTS.md`](RESULTS.md) for the corrected numeric record.
+## The problem
 
-## Install and run
+A warning method can fail in several distinct ways. It may rank dangerous windows above ordinary
+ones yet offer no useful operating threshold. A threshold may work on familiar dynamics and fail
+under a different restoring law or sea spectrum. A model may appear predictive because it learned
+protocol time, saw a truncated outcome window, or used future data during normalization. Rare
+capsizes make each of these errors easy to hide behind a single aggregate score.
+
+Rahola separates those questions. It first validates a small roll model against analytic limits.
+It then generates fixed train, calibration, test, and guarded-reserve campaigns. Every warning
+method receives the same roll and roll-rate history, the same causal normalization, the same
+capsize horizon, and the same episode accounting. Thresholds are selected on calibration data and
+evaluated once on test data.
+
+The experiments support a restrained conclusion. Motion history often ranks risk, but the tested
+alarm thresholds do not transfer reliably across failure mechanisms. In the tested softening-step
+regime, motion-only scores approach chance discrimination after the trajectory enters the harsh
+state. Protocol time can also rival the learned motion score. These results point toward exogenous
+encounter sensing and action-aware policies, not another unconstrained search over motion-only
+architectures.
+
+## Start with one simulated batch
 
 Python 3.12 or newer and [`uv`](https://docs.astral.sh/uv/) are required.
 
 ```sh
 uv sync --all-packages --all-extras
-uv run pytest
 uv run rahola validate
-uv run rahola generate --config configs/family1_stationary.yaml --out data/demo
-uv run python examples/d1_detectors.py
 ```
 
-The public API is:
+The smallest useful experiment generates 128 independently forced trajectories:
 
 ```python
 from rahola import SimulationConfig, simulate_batch
@@ -33,46 +46,26 @@ from rahola import SimulationConfig, simulate_batch
 dataset = simulate_batch(SimulationConfig(), seeds=range(128))
 ```
 
-Three campaign files live in `configs/`. The validation figures are reproducible
-scripts in `examples/`; for example, `uv run python examples/basin_erosion.py`.
+The result contains a common time grid, roll angle, roll rate, seed, capsize indicator, capsize
+time, configuration, and per-trajectory metadata. Samples after capsize are `NaN` and cannot enter
+a training or evaluation window.
 
-## Units and nondimensionalization
+## 1. Base roll dynamics
 
-The public boundary uses SI seconds, metres, radians, and radians/second. YAML
-comments show degree equivalents where useful, but values stored and returned by
-the library are radians. Internally,
-
-$$
-  x=\phi/\phi_v,\qquad \tau=\omega_n t,\qquad
-  x'=\dot\phi/(\phi_v\omega_n).
-$$
-
-This makes the common equation
-
-$$
- x''+2\zeta x'+q x'|x'|+\kappa(\tau)[1+h(\tau)]
- (x-x^3+\lambda x^5)=f(\tau)+b.
-$$
-
-Here `q` is the configured nondimensional quadratic-damping coefficient
-(equivalent to $\beta\phi_v$ under the dimensional damping convention in the
-mission), `lambda` is zero unless the quintic option is enabled, and `kappa` is
-one except in a stiffness-ramp campaign. Fixed-step classical RK4 is evaluated
-at the beginning, midpoint, midpoint, and end of every step. The implementation
-uses at least 40 steps per natural period and also refines the step when needed
-to make the requested output rate a true decimation. RK4 is appropriate here
-because every random input is realized first as a finite, smooth trigonometric
-record; this is a random ODE, not an Itô SDE. See Hairer, Nørsett & Wanner for the
-classical RK family [R8].
-
-## Roll families
-
-The dimensional models use
+The simplest case is a damped roll oscillator with a softening restoring curve and an external
+moment. All three Rahola families share the dimensional form
 
 $$
  \ddot\phi+2\zeta\omega_n\dot\phi+\beta\dot\phi|\dot\phi|
  +R(\phi,t)=m(t).
 $$
+
+Here $\phi$ is roll angle, $\omega_n$ is the reference natural frequency, $\zeta$ is linear
+damping, $\beta$ is quadratic damping, $R$ is the restoring moment per unit inertia, and $m$ is the
+wave-induced moment per unit inertia. The public API uses seconds, metres, radians, and
+radians/second.
+
+Rahola changes one physical mechanism at a time:
 
 | Family | Restoring / bias | Intended archetype | Principal sweep range |
 | --- | --- | --- | --- |
@@ -80,17 +73,36 @@ $$
 | 2: parametric | $`R=\omega_n^2[1+h(t)](\phi-\phi^3/\phi_v^2)`$ | parametric roll | $h_0=0\ldots0.4$, $\omega_e/\omega_n=1.5\ldots2.5$ |
 | 3: biased | Family 1 plus constant nondimensional moment $b$ | damage / steady heel | $b=-0.3\ldots0.3$, side-specific escape angles |
 
-The cubic/quintic 1-DOF form and the limits of alternative excitation models are
-consistent with Bulian & Francescutto's nonlinear roll-model comparison [R4].
-Family 2 accepts deterministic $h=h_0\cos(\omega_e t)$, or an independent
-narrow-band JONSWAP realization normalized to the requested modulation standard
-deviation. Family 3 can use unequal positive and negative escape angles.
+Family 1 supplies the minimal escape problem. Family 2 modulates stiffness either deterministically,
+$h=h_0\cos(\omega_e t)$, or with an independent narrow-band process. Family 3 adds steady bias and
+unequal positive and negative escape angles. The cubic/quintic forms follow the scope of established
+1-DOF nonlinear roll comparisons [R4].
 
-Capsize is the initial state, when already outside an applicable escape angle, or the first later
-integration endpoint at which either escape angle is reached. That state is absorbing. The event time is recorded; emitted
-samples strictly after it are NaN and cannot enter a window.
+For simulation, Rahola scales angle by the escape angle $\phi_v$ and time by $\omega_n$:
 
-## Irregular-sea forcing
+$$
+  x=\phi/\phi_v,\qquad \tau=\omega_n t,\qquad
+  x'=\dot\phi/(\phi_v\omega_n).
+$$
+
+The three families then share one nondimensional equation:
+
+$$
+ x''+2\zeta x'+q x'|x'|+\kappa(\tau)[1+h(\tau)]
+ (x-x^3+\lambda x^5)=f(\tau)+b.
+$$
+
+The coefficient `q` is the configured nondimensional quadratic damping, equivalent to
+$\beta\phi_v$ under the dimensional convention. `lambda` activates the optional quintic term, and
+`kappa` changes only in a stiffness-ramp campaign.
+
+Rahola integrates the smooth random ODE with fixed-step classical RK4. It uses at least 40 steps
+per natural period and refines the step when the requested output rate requires an exact
+decimation. Each random input is synthesized before integration as a finite trigonometric record;
+the model is not an Itô SDE [R8]. Capsize occurs when the state first reaches either escape angle.
+The escaped state is absorbing, and later samples are `NaN`.
+
+## 2. Irregular-sea forcing
 
 The one-sided angular-frequency JONSWAP spectrum is
 
@@ -141,7 +153,11 @@ piecewise-stationary sea independently and replace the boundary sample with the
 new segment. State remains continuous, but forcing need not be continuous at a
 declared environmental step.
 
-## Analytic validation
+## 3. Physics checks before warning models
+
+Rahola tests the generator before it tests any warning method. Three limits expose different
+failure modes in the implementation: linear response checks forcing scale, Mathieu instability
+checks parametric stiffness, and the Melnikov calculation checks nonlinear escape geometry.
 
 For the linear limit, angular-acceleration input has transfer function
 
@@ -170,10 +186,10 @@ $$
  \sinh\left(\frac{\pi\Omega}{\sqrt2}\right).
 $$
 
-Rahola independently quadratures both orbit integrals and compares this
-necessary-condition lower bound with direct phase-ensemble capsize sweeps. The
-global ship-roll application and interpretation of the bound follow Falzarano,
-Shaw & Troesch [R10]. It is not treated as a sufficient capsize condition.
+Rahola computes both orbit integrals by quadrature and compares this necessary-condition lower
+bound with direct phase-ensemble capsize sweeps. The global ship-roll application and interpretation
+of the bound follow Falzarano, Shaw & Troesch [R10]. Rahola does not treat the bound as a sufficient
+capsize condition.
 
 | Physics component | Falsification test | Acceptance used here |
 | --- | --- | --- |
@@ -190,30 +206,151 @@ No acceptance test is skipped by `uv run pytest` or `rahola validate`. Slow
 tests are marked only so developers can request `pytest -m 'not slow'` while
 iterating; the acceptance command includes them.
 
-## Campaigns, windows, and storage
+## 4. Reference data and causal examples
 
-Stationary, linear-ramp, and multi-step sea-state protocols are first-class
-configuration types. Ramps can change nondimensional stiffness or forcing scale.
-Step segments use independent phases. A configuration plus ordered unique seeds
-fully determines the batch.
+The validated simulator feeds a fixed synthetic data program. Every reference trajectory lasts
+600 seconds, is sampled at 2 Hz, and uses a four-second natural period. The checked campaign
+contract contains 58,500 trajectories and 1.629 GiB of Parquet data.
 
-`CausalTransformer` walks forward once. Each output sample is standardized and,
-optionally, linearly detrended using sums fitted strictly before that sample.
-Callers cannot fit it on a future slice. `make_windows` then cuts that already
-causal stream. A supervised window is positive when capsize occurs within its
-horizon, negative when capsize lies beyond horizon plus buffer, and discarded
-inside the exclusion buffer. Every supervised endpoint requires the same complete outcome horizon,
-regardless of whether the trajectory later capsizes. Windows stop before capsize. Operational
-inference is separate: it emits every
-causal pre-capsize endpoint with an unknown label and never filters timestamps using future outcome.
+| Campaign layer | Trajectories | Purpose |
+| --- | ---: | --- |
+| Three stationary families | 12,000 | fit forecasters and detectors under fixed dynamics |
+| Three stiffness ramps | 10,500 | test warning as stability erodes |
+| One sea-state step | 6,000 | test adaptation after abrupt distribution shift |
+| Three rare-event evaluation campaigns | 18,000 | measure false-alarm cost at 0.95–2.00% capsize rates |
+| Five forcing-bandwidth campaigns | 12,000 | separate bandwidth from failure severity |
 
-Storage is uncompressed sharded Parquet plus a sorted JSON manifest containing
-the full configuration, seed list, package version, Git commit, SHA-256 per
-shard, and family/protocol outcome counts. Parquet was selected over Zarr for
-portable tabular metadata and simple independent shards. Compression and
-dictionary encoding are disabled to make byte determinism straightforward.
+Each stored row represents one trajectory. It contains the seed, capsize outcome and time, common
+time vector, roll angle, roll rate, and metadata. A sorted manifest records the full configuration,
+ordered seeds, package version, Git commit, shard hashes, and outcome counts. Generation is byte
+deterministic for a fixed software environment.
 
-## Performance
+The split design makes model selection explicit. Stationary campaigns use 2,000 train, 1,000
+calibration, and 1,000 test trajectories per family. Evaluation campaigns use 1,000 calibration
+and 5,000 test trajectories. Step, ramp, and bandwidth campaigns have their own frozen allocations.
+Disjoint seed blocks protect train, calibration, test, reserve, and reserve-2 data; public utilities
+refuse both reserve blocks.
+
+### From trajectories to labels
+
+Rahola builds examples only from information available at the scoring time. `CausalTransformer`
+standardizes and optionally detrends each sample from statistics fitted strictly before that
+sample. A future-only leakage probe verifies the full feature path against a deliberately leaky
+control.
+
+The forecasting experiments use 120 seconds of history and 30- or 60-second outcome horizons. The
+detector experiments use 60 natural periods of roll and roll-rate history, a 50-period capsize
+horizon, a five-period exclusion band, and a ten-second score stride. A positive window precedes
+capsize within the horizon; a negative window has a complete event-free horizon plus the exclusion
+band. A negative window places capsize beyond the horizon plus exclusion band. Ambiguous and
+record-end-truncated windows are discarded for both outcomes.
+
+Operational inference remains separate from supervised evaluation. It emits every causal
+pre-capsize score, while exposure, event counts, and labels stop at the last endpoint with a
+complete outcome horizon. Three consecutive threshold crossings open an alarm episode at the
+confirming window; refractory and decorrelation rules prevent dense scores from becoming a count of
+duplicate alarms.
+
+The full campaign table, split counts, capsize rates, seed ranges, and manifest hashes are in
+[`DATA.md`](DATA.md).
+
+## 5. Research program: forecasts, warnings, and state
+
+Each stage asks a harder question while retaining the same simulator and split discipline.
+
+### Prototype #1: forecast uncertainty under shift
+
+The first warning layer predicts future maximum absolute roll from causal motion history. It
+compares an envelope extrapolator, linear quantile regression, and a 4.6k-parameter JAX LSTM. Split
+conformalized quantile regression calibrates their upper bounds; a zero-training split-time danger
+margin supplies a physical baseline.
+
+Experiments E1–E4 move from stationary marginal coverage to operational alarms, abrupt sea-state
+shift, delayed-feedback adaptive conformal methods, and cross-sea-state stress tests. This sequence
+distinguishes a calibrated forecast interval from a useful alarm policy: nominal marginal coverage
+can coexist with poor rolling coverage or excessive alarm episodes after a shift.
+
+### Prototype #2: direct warning from motion history
+
+The second layer places five scores behind one threshold-selection and episode harness:
+
+- a 2,969-parameter temporal CNN;
+- classical variance and autocorrelation trends;
+- a roll-power adaptation of Galeazzi's GLRT;
+- the split-time danger margin;
+- Story's phase-space neighbor-loss score.
+
+D1 measures pooled in-distribution performance. D2 holds out each failure family in turn. D3 varies
+forcing bandwidth while retuning severity to a common capsize band. D4 asks whether alarms coincide
+with evaluator-only critical wave groups, and D5 asks whether a method can still rank risk after
+entry into an established harsh regime. No detector receives wave elevation, spectrum, family, or
+sea-state input.
+
+### Prototype #3: state inference and transfer
+
+The final layer asks what information or architecture might close the remaining gap. C1 restarts
+independent futures from the exact simulated state. C2 first infers stiffness and drift with a
+2,000-particle filter. An engineered-feature XGBoost model tests whether the CNN simply missed an
+easy representation, and a clock-only comparator measures protocol-time confounding.
+
+Two architecture probes follow: a 4,329-parameter gray-box network with a physical latent head, and
+a pinned Chronos-T5-tiny transfer experiment with frozen and one-epoch fine-tuned encoders. These
+are bounded falsification tests, not an open-ended model search. C1 and C2 also replace the future
+forcing realization, so they are restart comparators rather than Bayes-optimal information ceilings.
+
+## 6. What the experiments established
+
+The corrected development record supports the following claims:
+
+| Question | Result | Interpretation |
+| --- | --- | --- |
+| Does stationary conformal calibration work? | Mean absolute coverage error across E1 was 0.75 percentage points. | The basic forecast and calibration implementation behaves as intended. |
+| Does adaptation repair an abrupt sea-state shift? | ACI, DtACI, and recent-score recalibration missed the joint rolling-coverage and alarm-cost criteria. | Marginal conformal machinery did not yield a satisfactory online alarm under this shift. |
+| Which detector has the best pooled operating point? | The CNN reached 92.36% sensitivity at 15.548 false episodes/h; classical EWS reached 100% at 21.391/h. | The CNN lowers pooled alarm cost, with lower sensitivity. |
+| Does that threshold transfer across failure families? | The CNN missed 90% test sensitivity in all three D2 rotations. | No all-family operating point was established. |
+| Does bandwidth destroy ranking skill? | CNN AUC remained 0.862–0.920, but its broadband FPR improvement was only 8.6%. | D3 is inconclusive under its predeclared 10% materiality rule. |
+| Are false alarms simply critical-wave encounters? | 75–88% overlapped evaluator-defined groups. | The overlap is descriptive because groups are common and no matched null was tested. |
+| Can motion rank risk inside the harsh regime? | D5 AUCs ranged from 0.474 to 0.509. | The tested motion-only scores were near chance after regime entry. |
+| Do more complex state and transfer models resolve the problem? | XGBoost beat the CNN in the restart sample; the clock score also beat the CNN. B1 failed transfer, and B2 produced one development survivor. | Architecture comparisons remain confounded by protocol time and lack a valid new final holdout. |
+
+The historical reserve and reserve-2 artifacts remain immutable. An August 2026 audit found that
+their old procedures differ from the corrected calibration-only threshold protocol; reserve-2 also
+selected the Chronos threshold using reserve outcomes. They remain audit records, not prospective
+validation of the corrected methods.
+
+[`RESULTS.md`](RESULTS.md) gives every interval, lead-time distribution, kill criterion, and
+methodological qualification. [`PROJECT_SUMMARY.md`](PROJECT_SUMMARY.md) traces the full project and
+the audit corrections.
+
+## 7. Reproducibility and performance
+
+The repository separates the validated simulator (`rahola`) from the experimental layer
+(`rahola-lab`). From the repository root:
+
+| Path | Role |
+| --- | --- |
+| `src/rahola/` | dynamics, spectra, simulation, causal windows, storage, and analytic validation |
+| `packages/rahola-lab/` | campaigns, forecasters, detectors, evaluation, and experiment runners |
+| `configs/` | small demonstration campaigns |
+| `examples/` | reproducible validation and research entry points |
+| `results/` | checked numeric artifacts and figures |
+
+```sh
+uv sync --all-packages --all-extras
+uv run pytest
+uv run rahola validate
+uv run rahola-lab generate --all --out data/reference --chunk-size 256
+uv run python examples/e1_coverage.py
+uv run python examples/d1_detectors.py
+uv run python examples/p3_ceiling.py
+```
+
+Generated trajectories stay outside Git, while frozen campaign definitions, manifest anchors,
+numeric result JSON, and figures are tracked. Each development artifact records the source-tree and
+reference-data fingerprints used to produce it, binds its serialized content, and records exact
+upstream artifact digests. Loaders reject stale or mutated dependencies.
+
+### Simulator throughput
 
 Measured on this arm64 Apple-silicon host with JAX 0.11.0, CPU backend, after a
 one-trajectory warm-up:
@@ -229,7 +366,7 @@ guideline by 25x. It is not an extrapolation to 10,000 trajectories; memory and
 thermal behavior at that campaign size should be measured on the execution host.
 JAX owns the backend choice, so selecting a GPU does not change the model code.
 
-## Explicit judgment calls
+## 8. Explicit scope decisions
 
 - Deterministic amplitudes plus random phases were selected for exact discrete
   spectral energy and lower finite-record variance; phases remain the stochastic
@@ -255,7 +392,7 @@ JAX owns the backend choice, so selecting a GPU does not change the model code.
 - Uncompressed Parquet was favored over smaller files so identical inputs remain
   byte-identical across repeat writes with a fixed PyArrow version.
 
-## Known limitations
+## 9. Known limitations
 
 - One roll DOF only: no heave, sway, yaw, pitch, or hull-geometry input.
 - Cubic/quintic polynomial restoring is an archetype, not a vessel-specific GZ.
