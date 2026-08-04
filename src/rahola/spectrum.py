@@ -50,38 +50,61 @@ def synthesize_jonswap(
     *,
     min_components: int = 200,
     gravity_m_s2: float = 9.80665,
+    max_frequency_rad_s: float | None = None,
 ) -> SeaRealization:
     """Synthesize eta and deep-water slope with deterministic amplitudes/random phases.
 
-    The FFT grid is extended, when needed, so at least ``min_components`` positive
-    frequency bins are represented; the requested prefix is returned.
+    With ``max_frequency_rad_s``, the spectral grid depends only on duration and
+    cutoff, not the evaluation step. The FFT period is an integer multiple of
+    the requested duration so step-halved grids evaluate the same random-phase
+    trigonometric field. ``None`` retains the v0.1 Nyquist-limited definition
+    for the documented invariance comparison.
     """
     requested_n = round(duration_s / dt_s) + 1
-    fft_n = max(requested_n, 2 * (min_components + 1))
-    if fft_n % 2:
-        fft_n += 1
+    if max_frequency_rad_s is None:
+        fft_n = max(requested_n, 2 * (min_components + 1))
+        if fft_n % 2:
+            fft_n += 1
+    else:
+        if not np.isfinite(max_frequency_rad_s) or max_frequency_rad_s <= 0.0:
+            raise ValueError("max_frequency_rad_s must be positive and finite")
+        interval_count = requested_n - 1
+        minimum_period_multiplier = int(
+            np.ceil(2.0 * np.pi * min_components / (max_frequency_rad_s * duration_s))
+        )
+        fft_n = interval_count * max(1, minimum_period_multiplier)
     frequencies_hz = np.fft.rfftfreq(fft_n, d=dt_s)
     omega = 2.0 * np.pi * frequencies_hz
-    spectrum = jonswap_spectrum(omega, sea_state, gravity_m_s2)
+    if max_frequency_rad_s is None:
+        active = np.ones_like(omega, dtype=bool)
+    else:
+        active = omega <= max_frequency_rad_s * (1.0 + 1e-12)
+        if int(np.sum(active)) - 1 < min_components:
+            raise ValueError("fixed spectral grid did not reach min_components")
+    active_omega = omega[active]
+    spectrum = jonswap_spectrum(active_omega, sea_state, gravity_m_s2)
     delta_omega = 2.0 * np.pi / (fft_n * dt_s)
     amplitudes = np.sqrt(2.0 * spectrum * delta_omega)
     rng = np.random.default_rng(np.uint64(seed))
-    phases = rng.uniform(0.0, 2.0 * np.pi, size=omega.size)
+    phases = rng.uniform(0.0, 2.0 * np.pi, size=active_omega.size)
     phases[0] = 0.0
     amplitudes[0] = 0.0
-    amplitudes[-1] = 0.0
-    coefficients = 0.5 * fft_n * amplitudes * np.exp(1j * phases)
-    elevation = np.fft.irfft(coefficients, n=fft_n)
+    coefficients = np.zeros(omega.size, dtype=np.complex128)
+    coefficients[active] = 0.5 * fft_n * amplitudes * np.exp(1j * phases)
+    coefficients[-1] = 0.0
+    periodic_elevation = np.fft.irfft(coefficients, n=fft_n)
     wave_number = omega**2 / gravity_m_s2
     # A progressive component eta=a*cos(k*x-omega*t+theta) has
     # d(eta)/dx=-a*k*sin(k*x-omega*t+theta): a quadrature phase shift.
     slope_coefficients = -1j * coefficients * wave_number
-    slope = np.fft.irfft(slope_coefficients, n=fft_n)
+    periodic_slope = np.fft.irfft(slope_coefficients, n=fft_n)
+    elevation = np.concatenate((periodic_elevation, periodic_elevation[:1]))
+    slope = np.concatenate((periodic_slope, periodic_slope[:1]))
     time_s = np.arange(requested_n, dtype=np.float64) * dt_s
     return SeaRealization(
         time_s=time_s,
         elevation_m=np.asarray(elevation[:requested_n], dtype=np.float64),
         slope_rad=np.asarray(slope[:requested_n], dtype=np.float64),
-        frequencies_rad_s=omega,
+        frequencies_rad_s=active_omega,
         target_spectrum_m2_s=spectrum,
     )

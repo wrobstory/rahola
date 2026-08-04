@@ -61,6 +61,7 @@ class ForcingConfig:
     min_components: int = 200
     deterministic_amplitudes: bool = True
     gravity_m_s2: float = 9.80665
+    max_frequency_ratio: float | None = 4.0
 
     def __post_init__(self) -> None:
         _require_integer(self.min_components, "min_components")
@@ -68,10 +69,16 @@ class ForcingConfig:
             self.gravity_m_s2
         ):
             raise ValueError("forcing values must be finite")
+        if self.max_frequency_ratio is not None and not math.isfinite(
+            self.max_frequency_ratio
+        ):
+            raise ValueError("max_frequency_ratio must be finite when supplied")
         if self.effective_wave_slope < 0:
             raise ValueError("effective_wave_slope must be nonnegative")
         if self.gravity_m_s2 <= 0:
             raise ValueError("gravity_m_s2 must be positive")
+        if self.max_frequency_ratio is not None and self.max_frequency_ratio <= 0.0:
+            raise ValueError("max_frequency_ratio must be positive when supplied")
         if self.min_components < 200:
             raise ValueError("min_components must be at least 200")
         if not self.deterministic_amplitudes:

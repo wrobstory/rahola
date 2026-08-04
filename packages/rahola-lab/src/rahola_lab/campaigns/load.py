@@ -10,7 +10,6 @@ import numpy as np
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from rahola.config import SimulationConfig
 from rahola.dataset import SimulationDataset
 from rahola_lab.constants import SEED_BLOCK_START, SeedBlock
 from rahola_lab.evaluation.splits import ReserveBlockError, assert_seed_membership
@@ -76,7 +75,10 @@ def load_campaign_split(
             f"split row-count mismatch: expected {expected_total}, chunks declare {declared_total}"
         )
     expected_loaded = expected_total if limit is None else min(limit, expected_total)
-    expected_config_hash = SimulationConfig.from_dict(manifest["simulation"]).config_hash
+    config_payload = json.dumps(
+        manifest["simulation"], sort_keys=True, separators=(",", ":")
+    )
+    expected_config_hash = hashlib.sha256(config_payload.encode()).hexdigest()
     seeds: list[int] = []
     capsized: list[bool] = []
     cap_times: list[float] = []

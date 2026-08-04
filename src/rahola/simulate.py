@@ -65,6 +65,11 @@ def _forcing_for_seed(
             seed=_derived_seed(seed, segment_index, channel),
             min_components=config.forcing.min_components,
             gravity_m_s2=config.forcing.gravity_m_s2,
+            max_frequency_rad_s=(
+                None
+                if config.forcing.max_frequency_ratio is None
+                else config.forcing.max_frequency_ratio * config.omega_n_rad_s
+            ),
         )
         slope[start : end + 1] = realization.slope_rad
         elevation[start : end + 1] = realization.elevation_m

@@ -45,6 +45,7 @@ def test_ramp_requires_supported_parameter() -> None:
     [
         lambda: SeaState(hs_m=float("nan")),
         lambda: ParametricConfig(h0=float("nan")),
+        lambda: ForcingConfig(max_frequency_ratio=float("nan")),
         lambda: SimulationConfig(damping_ratio=float("nan")),
     ],
 )
@@ -56,6 +57,11 @@ def test_config_rejects_non_finite_values(factory) -> None:
 def test_duration_must_align_with_output_grid() -> None:
     with pytest.raises(ValueError, match="output intervals"):
         SimulationConfig(duration_s=1.1, output_rate_hz=3.0)
+
+
+def test_forcing_cutoff_ratio_must_be_positive() -> None:
+    with pytest.raises(ValueError, match="positive"):
+        ForcingConfig(max_frequency_ratio=0.0)
 
 
 @pytest.mark.parametrize(

@@ -14,7 +14,7 @@ from rahola.config import (
     SeaStateStep,
     SimulationConfig,
 )
-from rahola.simulate import simulate_batch, simulate_restarted_batch
+from rahola.simulate import _forcing_for_seed, simulate_batch, simulate_restarted_batch
 
 
 def _small_config(**changes: object) -> SimulationConfig:
@@ -151,3 +151,24 @@ def test_step_halving_convergence_statistics() -> None:
     fine_variance = np.nanmean(np.nanvar(fine_data.angle_rad, axis=1))
     assert coarse_variance == pytest.approx(fine_variance, rel=0.03)
     assert abs(np.mean(coarse_data.capsized) - np.mean(fine_data.capsized)) <= 0.05
+
+
+def test_fixed_cutoff_step_halving_evaluates_same_forcing_path() -> None:
+    coarse = _small_config(
+        duration_s=32.0,
+        integration_steps_per_period=40,
+        linear_restoring=True,
+    )
+    fine = replace(coarse, integration_steps_per_period=80)
+    coarse_steps = round(coarse.duration_s / coarse.integration_dt_s)
+    fine_steps = round(fine.duration_s / fine.integration_dt_s)
+    coarse_slope, _ = _forcing_for_seed(coarse, 91, 2 * coarse_steps, channel=0)
+    fine_slope, _ = _forcing_for_seed(fine, 91, 2 * fine_steps, channel=0)
+    np.testing.assert_allclose(coarse_slope, fine_slope[::2], rtol=0.0, atol=1e-12)
+
+    coarse_data = simulate_batch(coarse, [91])
+    fine_data = simulate_batch(fine, [91])
+    np.testing.assert_allclose(coarse_data.time_s, fine_data.time_s)
+    rms = np.sqrt(np.mean(fine_data.angle_rad[0] ** 2))
+    error = np.sqrt(np.mean((coarse_data.angle_rad[0] - fine_data.angle_rad[0]) ** 2))
+    assert error / rms < 2e-3
