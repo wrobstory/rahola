@@ -1,6 +1,6 @@
 # Rahola
 
-**Rising Tide Research · August 2026**
+**W. R. Story · August 2026**
 
 *On the warning of capsize from measured roll motion: a synthetic-data study*
 
