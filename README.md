@@ -12,14 +12,15 @@ Not approved for operational use aboard any vessel.
 The study asks whether the recent roll motion of a vessel contains enough information to warn of
 an approaching capsize at an acceptable false-alarm cost. A one-degree-of-freedom nonlinear roll
 model with three restoring-curve families was validated against analytic limits and used to
-generate 58,500 seeded trajectories under JONSWAP forcing. Five warning methods were evaluated
+generate a 58,500-trajectory reference record under JONSWAP forcing, followed by 13,200 versioned
+replacement trajectories after a numerical-resolution audit. Five warning methods were evaluated
 under a common protocol in which every operating threshold is selected on calibration data and
 evaluated once on test data: a small temporal convolutional network, classical variance and
 autocorrelation trend statistics, a generalized likelihood-ratio detector, a closed-form
 critical-roll-rate margin, and a phase-space neighbor-count score. Four findings are reported.
-(a) Ranking skill is present at every forcing bandwidth tested; the network's window AUC was 0.86
-to 0.92. (b) Within an established severe regime, the discrimination of every motion-only method
-was near chance, AUC 0.47 to 0.51. (c) Between 75 and 88 percent of nominally false alarm
+(a) Ranking skill is present at every forcing bandwidth tested; the primary network's window AUC
+was 0.88 to 0.91. (b) Within an established severe regime, no motion-only method exceeded an
+orientation-independent AUC of 0.556. (c) Between 75 and 88 percent of nominally false alarm
 episodes coincided with genuine critical wave groups that the vessel survived. (d) No method
 retained a 90 percent sensitivity operating point across held-out restoring families. An audit
 conducted during the study found that the operating points first reported had been selected on
@@ -49,7 +50,8 @@ separated from the experimental layer as follows.
 Installation and operating instructions are given in Appendix A. The complete numerical record is
 in [`RESULTS.md`](RESULTS.md), the campaign and provenance record in [`DATA.md`](DATA.md), and a
 narrative account of the program, including the audit, in
-[`PROJECT_SUMMARY.md`](PROJECT_SUMMARY.md).
+[`PROJECT_SUMMARY.md`](PROJECT_SUMMARY.md). The frozen v0.2 repair record is
+[`RESULTS_v02.md`](RESULTS_v02.md); v0.1 artifacts remain immutable historical evidence.
 
 ## 1. Introduction
 
@@ -162,8 +164,9 @@ $$
 
 in which the effective wave-slope coefficient $r$ is an input rather than a hull-derived quantity,
 following the established one-degree-of-freedom abstraction (Bulian and Francescutto 2004; IMO
-2008). The complete forcing record is synthesized once, by inverse FFT on the Runge–Kutta
-half-step grid, before integration begins. Step protocols synthesize each piecewise-stationary sea
+2008). The component set is defined on a fixed spectral grid with an upper cutoff of
+$40\omega_n$, independent of the integration step. The complete forcing record is then evaluated
+on the Runge–Kutta half-step grid before integration begins. Step protocols synthesize each piecewise-stationary sea
 independently; the state remains continuous across a declared environmental step, and the forcing
 need not.
 
@@ -256,10 +259,12 @@ two guarded reserve allocations, and the public loading utilities refuse both re
 complete campaign table, split counts, measured capsize rates, seed ranges, and manifest hashes
 are given in [`DATA.md`](DATA.md).
 
-Supervised examples are constructed only from information available at the scoring time.
-`CausalTransformer` standardizes and optionally detrends each sample using statistics fitted
-strictly before that sample, and a future-only leakage probe verifies the full feature path
-against a deliberately leaky control. Forecasting experiments use 120 seconds of history with 30-
+Supervised examples are constructed only from information available at the scoring time. Physics
+comparators use configured nondimensional units. Learned detectors use either one trend and scale
+fitted to the complete past-only scoring window or the historical cumulative-online transform;
+the former is primary, while the latter carries state from the full observed history. A
+future-only leakage probe verifies all three paths against a deliberately leaky control.
+Forecasting experiments use 120 seconds of history with 30-
 and 60-second outcome horizons; detector experiments use 60 natural periods of roll and roll-rate
 history, a 50-period capsize horizon, a five-period exclusion band, and a ten-second score stride.
 A positive window precedes capsize within the horizon. A negative window has a complete scored
@@ -275,7 +280,9 @@ emitted, while exposure, event counts, and labels stop at the last endpoint with
 outcome horizon. Three consecutive threshold crossings open an alarm episode at the confirming
 window; refractory and decorrelation rules prevent dense scores from being counted as repeated
 alarms. The reported quantities are episode sensitivity, false episodes per exposure hour, and
-lead time, each with exact binomial confidence intervals.
+lead time. Uncertainty resamples complete trajectories within campaigns and recomputes the full
+episode logic; exact binomial intervals are retained only for event-level capsize counts. These
+intervals condition on the calibration-selected policy frozen before test scoring.
 
 ### 5.2 Threshold selection
 
@@ -293,24 +300,46 @@ convention. Both reserve blocks are now expended. Their result artifacts are ret
 as historical records and are so labeled; they do not constitute prospective validation of the
 corrected methods.
 
+### 5.4 Information sets
+
+The methods do not all receive the same information. In particular, the danger margin and the
+engineered XGBoost baseline use the true configured vessel model; they are comparators, not
+motion-only detectors.
+
+| Method or feature | Motion window | Full motion history | Vessel configuration | Protocol clock | Sea state | Wave field | Realized future forcing |
+| --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| CNN, fixed-window primary | yes | no | no | no | no | no | no |
+| CNN, cumulative-online | yes | yes, through normalization | no | no | no | no | no |
+| Classical EWS, GLRT, neighbor score | yes | no | scale constants only | no | no | no | no |
+| Danger margin | endpoint state | no | yes; known-configuration physics comparator | no | no | no | no |
+| XGBoost engineered features | yes | mode dependent | yes; configuration-assisted features | no | no | no | no |
+| Protocol-clock comparator | no | no | no | yes | no | no | no |
+| C1/C2 restart comparators | endpoint or filtered state | C2 filtering only | yes | ramp state only | yes | no | independent replacement future |
+| D4 evaluator | detector dependent | detector dependent | detector dependent | no | yes | evaluator only | evaluator reconstruction only |
+
+No warning method observes the realized future forcing. D4's reconstructed wave field is used
+only after scoring to characterize events, and the C1/C2 rollouts replace—not reveal—the realized
+future.
+
 ## 6. Findings
 
 | Question | Result | Assessment |
 | --- | --- | --- |
-| Stationary conformal calibration | mean absolute coverage error 0.75 percentage points (E1) | implementation behaves as intended |
+| Stationary conformal calibration | regenerated LSTM mean absolute coverage error 0.89 percentage points (E1_v02) | implementation behaves as intended |
 | Online adaptation after an abrupt sea-state step | ACI, DtACI, and recent-score recalibration each missed the joint rolling-coverage and alarm-cost criteria | not attained under this shift |
-| Best pooled operating point | network: 92.36% sensitivity at 15.548 false episodes/h; classical statistics: 100% (near-always-on) at 21.391/h | the network lowers pooled alarm cost |
-| Threshold transfer across families | the network missed 90% test sensitivity in all three held-out-family rotations | no all-family operating point established |
-| Effect of forcing bandwidth | window AUC 0.862–0.920 at every bandwidth; broadband episode-cost improvement 8.6% against a predeclared 10% criterion | ranking survives; operating-cost claim inconclusive |
+| Best pooled operating point | fixed-window network: 91.00% sensitivity at 13.409 false episodes/h; cumulative-online network: 93.83% at 16.451/h; classical statistics: 100% (near-always-on) at 21.391/h | the primary network lowers pooled alarm cost |
+| Threshold transfer across families | fixed-window missed 90% on biased; cumulative-online missed it on softening and biased | no all-family operating point established |
+| Effect of forcing bandwidth | primary network window AUC 0.883–0.913 at every bandwidth | ranking survives; operating-cost claim remains inconclusive |
 | Character of false alarms | 75–88% of false episodes overlapped evaluator-defined critical wave groups | descriptive; no matched null was tested |
-| Discrimination inside the severe regime | AUC 0.474–0.509 for every motion-only method | near chance after regime entry |
-| State-inference and transfer probes | an exact-state restart comparator reached AUC 0.851, an engineered-feature gradient-boosting model 0.762, and the network 0.627 on one balanced window set; a protocol-time comparator also exceeded the network | headroom exists and lies in state inference; comparisons remain confounded by protocol time |
+| Discrimination inside the severe regime | no motion-only method exceeded orientation-independent AUC 0.556 after a full 60-period post-step wash-in | near chance after regime entry; preregistered prediction retained |
+| State-inference and transfer probes | exact-state restart AUC 0.850; fixed-window/cumulative XGBoost 0.723/0.768; fixed-window/cumulative CNN 0.652/0.622; protocol clock 0.656 | architecture comparisons remain confounded by protocol time and unequal information sets |
 
 Two qualifications attach to the final row. The restart comparators replace the realized forcing,
 and since the seaway is temporally correlated, the motion history carries information about the
 near future that such comparators cannot represent; they are therefore reference points, not
-ceilings. The filtered-state comparator was additionally limited by its particle filter, which
-proved weaker than a roll-period feature at inferring stiffness.
+ceilings. Common future-forcing seeds reduce C1/C2 Monte Carlo noise but do not equalize their
+information. The filtered-state comparator reached AUC 0.486 and remained limited by its particle
+filter.
 
 Taken as a whole, the results indicate that motion history carries usable information about the
 slowly varying stability state, and near-chance information about the timing of the terminal wave
@@ -333,8 +362,8 @@ no operational or safety claim.
 ## 8. Conclusions and recommendations
 
 Three conclusions are considered established within the scope of the model: motion history ranks
-capsize risk well above chance at every forcing bandwidth tested; no motion-only method examined
-here discriminates event timing within an established severe regime; and the majority of false
+capsize risk well above chance at every forcing bandwidth tested; after a complete post-step
+wash-in, no motion-only method examined here exceeds orientation-independent AUC 0.556; and the majority of false
 alarm episodes coincide with genuine critical wave-group encounters. One negative conclusion is
 equally definite: no method examined here produced an operating threshold that transfers across
 restoring families at the required sensitivity.

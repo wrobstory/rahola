@@ -115,3 +115,36 @@ and updating those anchors before the replacement data can be treated as the new
 The generator writes deterministic Parquet shards, chunk manifests and the top-level manifests used
 above. On this machine the final per-campaign timings sum to 94.480 seconds; filesystem and first-run
 JAX compilation differences may change wall time without changing content.
+
+## v0.2 selective data addendum — August 2026
+
+The v0.1 reference tree is immutable. A fixed spectral cutoff audit triggered three replacement
+bandwidth campaigns, and the established-regime test required one longer step campaign. These
+13,200 trajectories live under `data/reference_v02/`; loaders route only the affected v0.2
+experiments to them.
+
+| Campaign | Trajectories | Duration | Capsize fraction | Manifest SHA-256 prefix |
+| --- | ---: | ---: | ---: | --- |
+| `softening_bandwidth_gamma_7_v02` | 2,400 | 600 s | 42.375% | `f51c794fd6df` |
+| `softening_bandwidth_gamma_15_v02` | 2,400 | 600 s | 43.542% | `286c24c894b7` |
+| `softening_bandwidth_gamma_30_v02` | 2,400 | 600 s | 42.125% | `2d30254a5038` |
+| `softening_step_v02` | 6,000 | 900 s | 62.900% | `218219a9643a` |
+
+The step campaign transitions at 300 seconds and retains the historical train/calibration/test
+counts of 2,000/1,000/3,000. Its corresponding capsize fractions are 62.45%, 62.00%, and 63.50%.
+The full-history D5 endpoint must lie from 540 through 700 seconds: 60 natural periods of history
+begin entirely after the step, and the 50-period outcome horizon remains complete.
+
+`packages/rahola-lab/src/rahola_lab/campaigns/reference_checksums_v02.json` anchors these manifests.
+The earlier ratio-4 cutoff stress data remain a local audit under
+`data/reference_v02_ratio4_sensitivity/`; they are not reference data and no result loader selects
+them. Regenerate only the declared v0.2 configurations:
+
+```bash
+uv run rahola-lab generate --config packages/rahola-lab/src/rahola_lab/campaigns/configs/softening_bandwidth_gamma_7.yaml --out data/reference_v02
+uv run rahola-lab generate --config packages/rahola-lab/src/rahola_lab/campaigns/configs/softening_bandwidth_gamma_15.yaml --out data/reference_v02
+uv run rahola-lab generate --config packages/rahola-lab/src/rahola_lab/campaigns/configs/softening_bandwidth_gamma_30.yaml --out data/reference_v02
+uv run rahola-lab generate --config packages/rahola-lab/src/rahola_lab/campaigns/configs/softening_step_v02.yaml --out data/reference_v02
+```
+
+No reserve or reserve-2 data were opened or regenerated for v0.2.
