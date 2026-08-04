@@ -635,3 +635,157 @@ and uses the configured restoring model, but no wave, encounter, future-forcing,
 information. The implementation follows the paper's ROM decomposition and exponential-tail
 argument. It does not implement the Motion Perturbation Method from Sections 3.2–3.5, because that
 method resimulates future waves and falls outside online operation.
+
+## 2026-08-04 results
+
+Calibration selected `q = 0.75`, prior strength `a0 = 10`, and full causal history. The 900- and
+1,800-second candidates coincide with full history on the 600-second U1a records. This choice
+exposes the experiment's central failure: the three-exceedance rule requires at least 12 retained
+crossings at `q = 0.75`, so four test campaigns emitted no rate at all and the two softening
+campaigns emitted only sparsely. The selection rule was followed as written; no post-test repair or
+alternative control was substituted.
+
+### U1a — CI capture and reliability
+
+The headline criterion failed with **0 of 6** campaign-level captures, against the predeclared
+target of at least 5. The pooled reliability diagram's bin-count-weighted mean absolute error was
+0.030784. That modest pooled number is not evidence of calibration: low average event prevalence
+allows a near-zero predictor to score well while missing every campaign count.
+
+| Test campaign | Realized capsizes | Predicted count [95% interval] | Valid emissions | Capture |
+| --- | ---: | ---: | ---: | :---: |
+| softening stationary | 95 | 5.590 [4.704, 6.697] | 584 | no |
+| softening evaluation | 95 | 1.859 [1.457, 2.410] | 364 | no |
+| parametric stationary | 79 | 0.000 [0.000, 0.000] | 0 | no |
+| parametric evaluation | 50 | 0.000 [0.000, 0.000] | 0 | no |
+| biased stationary | 138 | 0.000 [0.000, 0.000] | 0 | no |
+| biased evaluation | 92 | 0.000 [0.000, 0.000] | 0 | no |
+
+The terminal retained-crossing side diagnostic was balanced where emissions existed: 664 positive
+and 635 negative crossings for softening stationary, and 459 positive and 465 negative crossings
+for softening evaluation. The other campaigns had no terminal retained sample under the frozen
+tail rule. The adaptive-threshold sensitivity hit 8.703 and 8.481 declustered crossings per 30
+minutes in the two softening campaigns, but reached only 0.441–5.184 in the other four and produced
+zero valid predicted counts everywhere. It therefore does not rescue the primary result.
+
+The diagnostic GPD fit, never used in `lambda_hat`, had shape -0.1034 and scale 0.1651 above
+`w = 0.7730` from 3,590 calibration exceedances. On softening-stationary calibration data, the
+paper-style component composition gave a predicted-count interval [294.270, 387.958], versus
+[6.744, 9.134] from U1's primary parametric bootstrap. The 91.298-count width difference is
+secondary to the much larger location disagreement, which reflects different pooled-component and
+online-emission constructions.
+
+![U1a reliability diagram](results/u1a_reliability_u1.png)
+
+### U1b — nonstationary tracking
+
+All three 600-second ramp records are shorter than every finite candidate window, so the reported
+rows coincide. The numerical lag is 0 seconds for full history, 900 seconds, and 1,800 seconds in
+each family, but the estimator path is flat at zero and the lag is **not estimable**. The meaningful
+statistics are the negative biases: -2.092/h for softening (95% trajectory-bootstrap interval
+[-2.266, -1.931]), -1.042/h for parametric [-1.156, -0.920], and -0.899/h for biased
+[-1.010, -0.792].
+
+For the 600-second sea-state step, the cross-correlation optimizer reached its +120-second search
+boundary and settling was never attained; bias was -2.834/h [-2.996, -2.674]. The 900-second v0.2
+step likewise never settled, reached a +120-second point lag with interval [50, 120] seconds, and
+had bias -3.096/h [-3.283, -2.905]. The longer campaign supplies a fully post-step segment, but it
+does not supply a successful established-regime estimate.
+
+With 600-second records and a 300-second step, no fully post-step trailing window of 30 minutes
+exists; U1b reports transient tracking only and makes no established-regime claim.
+
+![U1b tracking and step response](results/u1b_tracking_u1.png)
+
+### U1c — detector framing
+
+U1c is unevaluable. Its one permitted test read reached the trajectory-block alarm interval, where
+all bootstrap replicates were non-finite under the sparse frozen score stream. The harness raised
+`bootstrap statistic produced no finite replicates`; no operating point, D1 AUC, D5 AUC, or 0.58
+leakage verdict was recorded. The implementation now serializes this sparse case explicitly, but
+the test blocks were not reread. This is a process failure, not a near-chance result.
+
+### U1d — baselines and kill
+
+U1d completed its numerical pass but failed before durable publication because a NumPy boolean in
+the result payload was not JSON serializable. The implementation now converts NumPy booleans, but
+the spent test blocks were not reread and the in-memory comparisons were not reconstructed.
+Therefore the kill is **unevaluable**, not passed or failed.
+
+The predeclared text was: “If the full decomposition does not outperform both rolling variance and
+declustered upcrossing rate alone on campaign-level CI captures and on the bin-count-weighted mean
+absolute reliability error, then the split-time decomposition adds nothing online beyond its
+components — report that negative as the result and stop tuning.” U1a's zero captures are strongly
+negative evidence, but they do not supply the missing baseline comparison required to fire this
+specific kill.
+
+### U1e — causal period fusion
+
+The single U1e variant estimated the equilibrium-upcrossing period from causal history, formed
+`kappa_hat = (T_n / T_hat)^2`, and recomputed the piecewise critical growth rate at each detected
+crossing. Both fixed and adaptive variants emitted zero rates on all ramp tests. Their tracking-lag
+deltas were 0 seconds because both paths were flat; these are not estimable tracking improvements.
+Both variants captured 0 of 3 ramp counts and had reliability error 0.334667, so the capture delta
+and reliability-error delta were both zero.
+
+### Interpretation and information set
+
+Belenky and Weems' roll/rate independence assumptions are cleanest in beam seas. Rahola is a
+beam-seas benchmark by construction, so U1 tests this estimator where that theory is strongest.
+The negative result cannot be assigned to stern-quartering dependence or stability variation in
+waves.
+
+`lambda_hat` is a known-configuration estimator. It consumes dimensional roll and roll rate and
+uses the true configured restoring model for the GZ-maximum levels and critical rates. It receives
+no sea state, wave field, encounter information, protocol clock, or realized future forcing. U1e
+is the first limited step toward estimating one configured quantity from motion. The estimator
+makes no claim about event timing; its intended claim was calibrated conditional rate estimation,
+and U1a rejected that claim under the frozen controls. All rates and intervals remain conditional
+on the calibration-selected controls.
+
+| Method | Motion history | Vessel configuration | Wave or encounter input | Claimed output |
+| --- | :---: | :---: | :---: | --- |
+| `lambda_hat` U1 primary | yes, causal | yes, true restoring model | no | conditional capsize rate with interval |
+| `lambda_hat` U1e | yes, causal | yes, except online stiffness multiplier | no | ramp sensitivity diagnostic |
+
+### Departures and judgments
+
+- Sections 3.2–3.5: U1 uses the ROM closed-form critical rate and omits the Motion Perturbation
+  Method, future wave replay, and 3-/6-DOF engineering-fidelity simulation. Those methods are not
+  online under U1's information set.
+- Section 4.3: the brief's phrase “previously retained crossing” was clarified using the paper's
+  chainwise cluster construction: consecutive crossings extend a cluster, and its maximum is
+  retained.
+- Section 4.7: U1 replaces the paper's goodness-of-fit or prediction-error tail-threshold selection
+  with the predeclared empirical quantiles and adds a Gamma-rate prior for small-sample shrinkage.
+  Thresholds at or above normalized severity 1 are clipped below 1 and flagged.
+- Section 5.2: the primary interval uses the predeclared Poisson/binomial/Gamma parametric bootstrap
+  rather than component-boundary composition. The calibration-only comparison above reports the
+  difference once.
+- The reliability probability is `1 - exp(-integrated rate)`; missing pre-emission exposure
+  contributes zero; integration is causal left-rectangle; interval draws update every 60 seconds
+  and carry across intervening 10-second emissions.
+- U1b uses a Gaussian hazard kernel of 7.5 configured natural periods, searches lag over ±30
+  periods, and defines 10% sustained agreement as settling. A flat estimator makes lag
+  unidentifiable even when the optimizer returns a numeric boundary or zero.
+- U1d's rolling-variance baseline averages causal rolling variances per trajectory before applying
+  the calibration-fitted isotonic map. Its failed artifact means this judgment produced no result.
+- U1e uses positive-going crossings of the fitted equilibrium to estimate period and does not tune
+  or clip `kappa_hat`.
+
+### Reproduce
+
+The successful artifacts were produced from committed runner `9091b7a`; sparse-result hardening was
+committed afterward without test reruns.
+
+```bash
+uv run python -m rahola_lab.experiments.u1a
+uv run python -m rahola_lab.experiments.u1b
+uv run python -m rahola_lab.experiments.u1c
+uv run python -m rahola_lab.experiments.u1d
+uv run python -m rahola_lab.experiments.u1e
+```
+
+U1a, U1b, and U1e produced `_u1` artifacts. U1c and U1d produced provenance-bound failure
+artifacts after their test reads were spent. No reserve or reserve-2 block was read. No historical
+result artifact, `docs/paper/` file, or `docs/rahola-explainer.html` was modified.

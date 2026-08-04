@@ -1,0 +1,18 @@
+{
+  "_artifact_sha256": "a51c69c93a682e3351bfbb6410a5fb1dd00a1b280393a30a9911f93aec1a4749",
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "schema_version": 1,
+    "source_sha256": "fdc9649a59a348d6d633ced849bc8f1c1cce808f0515f7ae220ab26a5f2db7df",
+    "upstream_artifacts": {
+      "u1a_u1": "7a0ddc4618f74a9017097e79831eb76e62332762bcafc38bd8e859d578caf045"
+    }
+  },
+  "error": "NumPy boolean was not JSON serializable",
+  "experiment": "U1d",
+  "failed_stage": "artifact serialization after numerical evaluation",
+  "kill_criterion": "unevaluable because the computed payload was not durably recorded",
+  "rerun": "forbidden by the one-read test discipline",
+  "status": "failed",
+  "test_read_spent": true
+}

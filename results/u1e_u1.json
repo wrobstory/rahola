@@ -1,0 +1,200 @@
+{
+  "_artifact_sha256": "f0fb3bba05bd61934aa4063bc36c6aec71c4ea18ab7d8cf8425f4f3342286efb",
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "schema_version": 1,
+    "source_sha256": "fdc9649a59a348d6d633ced849bc8f1c1cce808f0515f7ae220ab26a5f2db7df",
+    "upstream_artifacts": {
+      "u1a_u1": "7a0ddc4618f74a9017097e79831eb76e62332762bcafc38bd8e859d578caf045"
+    }
+  },
+  "campaigns": {
+    "biased_ramp": {
+      "adaptive": {
+        "bias_per_hour": -0.8987946637203829,
+        "bias_trajectory_bootstrap_interval": [
+          -1.010499274722696,
+          -0.791562835697477
+        ],
+        "captures_realized_count": false,
+        "flagged_emission_count": 0,
+        "predicted_capsize_count": 0.0,
+        "predicted_count_interval": [
+          0.0,
+          0.0
+        ],
+        "realized_capsize_count": 237,
+        "terminal_side_split": {
+          "negative": 0,
+          "positive": 0
+        },
+        "tracking_lag_s": 0.0,
+        "tracking_lag_trajectory_bootstrap_interval": [
+          0.0,
+          0.0
+        ],
+        "trajectory_bootstrap_replicates": 1000,
+        "trajectory_bootstrap_seed": 20260804,
+        "trajectory_count": 1000,
+        "valid_emission_count": 0
+      },
+      "fixed": {
+        "bias_per_hour": -0.8987946637203829,
+        "bias_trajectory_bootstrap_interval": [
+          -1.010499274722696,
+          -0.791562835697477
+        ],
+        "captures_realized_count": false,
+        "flagged_emission_count": 0,
+        "predicted_capsize_count": 0.0,
+        "predicted_count_interval": [
+          0.0,
+          0.0
+        ],
+        "realized_capsize_count": 237,
+        "terminal_side_split": {
+          "negative": 0,
+          "positive": 0
+        },
+        "tracking_lag_s": 0.0,
+        "tracking_lag_trajectory_bootstrap_interval": [
+          0.0,
+          0.0
+        ],
+        "trajectory_bootstrap_replicates": 1000,
+        "trajectory_bootstrap_seed": 20260804,
+        "trajectory_count": 1000,
+        "valid_emission_count": 0
+      },
+      "tracking_lag_delta_s": 0.0
+    },
+    "parametric_ramp": {
+      "adaptive": {
+        "bias_per_hour": -1.041981825879583,
+        "bias_trajectory_bootstrap_interval": [
+          -1.1563545775314974,
+          -0.920112085074803
+        ],
+        "captures_realized_count": false,
+        "flagged_emission_count": 0,
+        "predicted_capsize_count": 0.0,
+        "predicted_count_interval": [
+          0.0,
+          0.0
+        ],
+        "realized_capsize_count": 277,
+        "terminal_side_split": {
+          "negative": 0,
+          "positive": 0
+        },
+        "tracking_lag_s": 0.0,
+        "tracking_lag_trajectory_bootstrap_interval": [
+          0.0,
+          0.0
+        ],
+        "trajectory_bootstrap_replicates": 1000,
+        "trajectory_bootstrap_seed": 20260804,
+        "trajectory_count": 1000,
+        "valid_emission_count": 0
+      },
+      "fixed": {
+        "bias_per_hour": -1.041981825879583,
+        "bias_trajectory_bootstrap_interval": [
+          -1.1563545775314974,
+          -0.920112085074803
+        ],
+        "captures_realized_count": false,
+        "flagged_emission_count": 0,
+        "predicted_capsize_count": 0.0,
+        "predicted_count_interval": [
+          0.0,
+          0.0
+        ],
+        "realized_capsize_count": 277,
+        "terminal_side_split": {
+          "negative": 0,
+          "positive": 0
+        },
+        "tracking_lag_s": 0.0,
+        "tracking_lag_trajectory_bootstrap_interval": [
+          0.0,
+          0.0
+        ],
+        "trajectory_bootstrap_replicates": 1000,
+        "trajectory_bootstrap_seed": 20260804,
+        "trajectory_count": 1000,
+        "valid_emission_count": 0
+      },
+      "tracking_lag_delta_s": 0.0
+    },
+    "softening_ramp": {
+      "adaptive": {
+        "bias_per_hour": -2.092398372034263,
+        "bias_trajectory_bootstrap_interval": [
+          -2.265728658540866,
+          -1.9311067836921598
+        ],
+        "captures_realized_count": false,
+        "flagged_emission_count": 0,
+        "predicted_capsize_count": 0.0,
+        "predicted_count_interval": [
+          0.0,
+          0.0
+        ],
+        "realized_capsize_count": 490,
+        "terminal_side_split": {
+          "negative": 0,
+          "positive": 0
+        },
+        "tracking_lag_s": 0.0,
+        "tracking_lag_trajectory_bootstrap_interval": [
+          0.0,
+          0.0
+        ],
+        "trajectory_bootstrap_replicates": 1000,
+        "trajectory_bootstrap_seed": 20260804,
+        "trajectory_count": 1000,
+        "valid_emission_count": 0
+      },
+      "fixed": {
+        "bias_per_hour": -2.092398372034263,
+        "bias_trajectory_bootstrap_interval": [
+          -2.265728658540866,
+          -1.9311067836921598
+        ],
+        "captures_realized_count": false,
+        "flagged_emission_count": 0,
+        "predicted_capsize_count": 0.0,
+        "predicted_count_interval": [
+          0.0,
+          0.0
+        ],
+        "realized_capsize_count": 490,
+        "terminal_side_split": {
+          "negative": 0,
+          "positive": 0
+        },
+        "tracking_lag_s": 0.0,
+        "tracking_lag_trajectory_bootstrap_interval": [
+          0.0,
+          0.0
+        ],
+        "trajectory_bootstrap_replicates": 1000,
+        "trajectory_bootstrap_seed": 20260804,
+        "trajectory_count": 1000,
+        "valid_emission_count": 0
+      },
+      "tracking_lag_delta_s": 0.0
+    }
+  },
+  "experiment": "U1e",
+  "ramp_calibration": {
+    "adaptive_capture_count": 0,
+    "adaptive_reliability_weighted_mean_absolute_error": 0.33466666666666667,
+    "capture_count_delta": 0,
+    "fixed_capture_count": 0,
+    "fixed_reliability_weighted_mean_absolute_error": 0.33466666666666667,
+    "reliability_error_delta": 0.0
+  },
+  "variant": "mean causal equilibrium-upcrossing period; kappa_hat=(T_n/T_hat)^2; piecewise critical growth rate recomputed at each detected crossing"
+}

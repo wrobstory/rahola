@@ -1,0 +1,189 @@
+{
+  "_artifact_sha256": "ca68028b69103a3ba1a1b826bf4f6db54bc3331ab34a27b21ce6f9bb0b89f85c",
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "schema_version": 1,
+    "source_sha256": "fdc9649a59a348d6d633ced849bc8f1c1cce808f0515f7ae220ab26a5f2db7df",
+    "upstream_artifacts": {
+      "u1a_u1": "7a0ddc4618f74a9017097e79831eb76e62332762bcafc38bd8e859d578caf045"
+    }
+  },
+  "experiment": "U1b",
+  "figure": "u1b_tracking_u1.png",
+  "geometry_caveat": "With 600-second records and a 300-second step, no fully post-step trailing window of 30 minutes exists; U1b reports transient tracking only and makes no established-regime claim.",
+  "ramps": {
+    "biased_ramp": {
+      "1800_s": {
+        "bias_per_hour": -0.8987946637203829,
+        "bias_trajectory_bootstrap_interval": [
+          -1.010499274722696,
+          -0.791562835697477
+        ],
+        "tracking_lag_s": 0.0,
+        "tracking_lag_trajectory_bootstrap_interval": [
+          0.0,
+          0.0
+        ],
+        "trajectory_bootstrap_replicates": 1000,
+        "trajectory_bootstrap_seed": 20260804
+      },
+      "900_s": {
+        "bias_per_hour": -0.8987946637203829,
+        "bias_trajectory_bootstrap_interval": [
+          -1.010499274722696,
+          -0.791562835697477
+        ],
+        "tracking_lag_s": 0.0,
+        "tracking_lag_trajectory_bootstrap_interval": [
+          0.0,
+          0.0
+        ],
+        "trajectory_bootstrap_replicates": 1000,
+        "trajectory_bootstrap_seed": 20260804
+      },
+      "full_history": {
+        "bias_per_hour": -0.8987946637203829,
+        "bias_trajectory_bootstrap_interval": [
+          -1.010499274722696,
+          -0.791562835697477
+        ],
+        "tracking_lag_s": 0.0,
+        "tracking_lag_trajectory_bootstrap_interval": [
+          0.0,
+          0.0
+        ],
+        "trajectory_bootstrap_replicates": 1000,
+        "trajectory_bootstrap_seed": 20260804
+      }
+    },
+    "parametric_ramp": {
+      "1800_s": {
+        "bias_per_hour": -1.041981825879583,
+        "bias_trajectory_bootstrap_interval": [
+          -1.1563545775314974,
+          -0.920112085074803
+        ],
+        "tracking_lag_s": 0.0,
+        "tracking_lag_trajectory_bootstrap_interval": [
+          0.0,
+          0.0
+        ],
+        "trajectory_bootstrap_replicates": 1000,
+        "trajectory_bootstrap_seed": 20260804
+      },
+      "900_s": {
+        "bias_per_hour": -1.041981825879583,
+        "bias_trajectory_bootstrap_interval": [
+          -1.1563545775314974,
+          -0.920112085074803
+        ],
+        "tracking_lag_s": 0.0,
+        "tracking_lag_trajectory_bootstrap_interval": [
+          0.0,
+          0.0
+        ],
+        "trajectory_bootstrap_replicates": 1000,
+        "trajectory_bootstrap_seed": 20260804
+      },
+      "full_history": {
+        "bias_per_hour": -1.041981825879583,
+        "bias_trajectory_bootstrap_interval": [
+          -1.1563545775314974,
+          -0.920112085074803
+        ],
+        "tracking_lag_s": 0.0,
+        "tracking_lag_trajectory_bootstrap_interval": [
+          0.0,
+          0.0
+        ],
+        "trajectory_bootstrap_replicates": 1000,
+        "trajectory_bootstrap_seed": 20260804
+      }
+    },
+    "softening_ramp": {
+      "1800_s": {
+        "bias_per_hour": -2.092398372034263,
+        "bias_trajectory_bootstrap_interval": [
+          -2.265728658540866,
+          -1.9311067836921598
+        ],
+        "tracking_lag_s": 0.0,
+        "tracking_lag_trajectory_bootstrap_interval": [
+          0.0,
+          0.0
+        ],
+        "trajectory_bootstrap_replicates": 1000,
+        "trajectory_bootstrap_seed": 20260804
+      },
+      "900_s": {
+        "bias_per_hour": -2.092398372034263,
+        "bias_trajectory_bootstrap_interval": [
+          -2.265728658540866,
+          -1.9311067836921598
+        ],
+        "tracking_lag_s": 0.0,
+        "tracking_lag_trajectory_bootstrap_interval": [
+          0.0,
+          0.0
+        ],
+        "trajectory_bootstrap_replicates": 1000,
+        "trajectory_bootstrap_seed": 20260804
+      },
+      "full_history": {
+        "bias_per_hour": -2.092398372034263,
+        "bias_trajectory_bootstrap_interval": [
+          -2.265728658540866,
+          -1.9311067836921598
+        ],
+        "tracking_lag_s": 0.0,
+        "tracking_lag_trajectory_bootstrap_interval": [
+          0.0,
+          0.0
+        ],
+        "trajectory_bootstrap_replicates": 1000,
+        "trajectory_bootstrap_seed": 20260804
+      }
+    }
+  },
+  "selected_controls": {
+    "prior_strength": 10.0,
+    "tail_quantile": 0.75,
+    "trailing_window_s": null
+  },
+  "steps": {
+    "softening_step": {
+      "bias_per_hour": -2.8337620605872136,
+      "bias_trajectory_bootstrap_interval": [
+        -2.995801959989039,
+        -2.6735779616564033
+      ],
+      "fully_post_step_segment_reported": false,
+      "settling_time_s": null,
+      "tracking_lag_s": 120.0,
+      "tracking_lag_trajectory_bootstrap_interval": [
+        120.0,
+        120.0
+      ],
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "transition_s": 300.0
+    },
+    "softening_step_v02": {
+      "bias_per_hour": -3.0959283848965584,
+      "bias_trajectory_bootstrap_interval": [
+        -3.282899677729135,
+        -2.9048102022893714
+      ],
+      "fully_post_step_segment_reported": true,
+      "settling_time_s": null,
+      "tracking_lag_s": 120.0,
+      "tracking_lag_trajectory_bootstrap_interval": [
+        50.0,
+        120.0
+      ],
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "transition_s": 300.0
+    }
+  }
+}

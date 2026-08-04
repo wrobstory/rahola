@@ -1,0 +1,2252 @@
+{
+  "_artifact_sha256": "7a0ddc4618f74a9017097e79831eb76e62332762bcafc38bd8e859d578caf045",
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "schema_version": 1,
+    "source_sha256": "fdc9649a59a348d6d633ced849bc8f1c1cce808f0515f7ae220ab26a5f2db7df",
+    "upstream_artifacts": {}
+  },
+  "adaptive_threshold_sensitivity": {
+    "biased_evaluation": {
+      "captures_realized_count": false,
+      "declustered_crossings_per_30_minutes": 1.998,
+      "flagged_emission_count": 0,
+      "predicted_capsize_count": 0.0,
+      "predicted_count_interval": [
+        0.0,
+        0.0
+      ],
+      "realized_capsize_count": 92,
+      "target_lower": 7.0,
+      "target_upper": 10.0,
+      "terminal_side_split": {
+        "negative": 0,
+        "positive": 0
+      },
+      "threshold_interpolation_fraction": 0.0,
+      "trajectory_count": 5000,
+      "valid_emission_count": 0
+    },
+    "biased_stationary": {
+      "captures_realized_count": false,
+      "declustered_crossings_per_30_minutes": 5.184,
+      "flagged_emission_count": 0,
+      "predicted_capsize_count": 0.0,
+      "predicted_count_interval": [
+        0.0,
+        0.0
+      ],
+      "realized_capsize_count": 138,
+      "target_lower": 7.0,
+      "target_upper": 10.0,
+      "terminal_side_split": {
+        "negative": 0,
+        "positive": 0
+      },
+      "threshold_interpolation_fraction": 0.0,
+      "trajectory_count": 1000,
+      "valid_emission_count": 0
+    },
+    "parametric_evaluation": {
+      "captures_realized_count": false,
+      "declustered_crossings_per_30_minutes": 0.44099999999999995,
+      "flagged_emission_count": 0,
+      "predicted_capsize_count": 0.0,
+      "predicted_count_interval": [
+        0.0,
+        0.0
+      ],
+      "realized_capsize_count": 50,
+      "target_lower": 7.0,
+      "target_upper": 10.0,
+      "terminal_side_split": {
+        "negative": 0,
+        "positive": 0
+      },
+      "threshold_interpolation_fraction": 0.0,
+      "trajectory_count": 5000,
+      "valid_emission_count": 0
+    },
+    "parametric_stationary": {
+      "captures_realized_count": false,
+      "declustered_crossings_per_30_minutes": 2.115,
+      "flagged_emission_count": 0,
+      "predicted_capsize_count": 0.0,
+      "predicted_count_interval": [
+        0.0,
+        0.0
+      ],
+      "realized_capsize_count": 79,
+      "target_lower": 7.0,
+      "target_upper": 10.0,
+      "terminal_side_split": {
+        "negative": 0,
+        "positive": 0
+      },
+      "threshold_interpolation_fraction": 0.0,
+      "trajectory_count": 1000,
+      "valid_emission_count": 0
+    },
+    "softening_evaluation": {
+      "captures_realized_count": false,
+      "declustered_crossings_per_30_minutes": 8.481,
+      "flagged_emission_count": 0,
+      "predicted_capsize_count": 0.0,
+      "predicted_count_interval": [
+        0.0,
+        0.0
+      ],
+      "realized_capsize_count": 95,
+      "target_lower": 7.0,
+      "target_upper": 10.0,
+      "terminal_side_split": {
+        "negative": 0,
+        "positive": 0
+      },
+      "threshold_interpolation_fraction": 0.25,
+      "trajectory_count": 5000,
+      "valid_emission_count": 0
+    },
+    "softening_stationary": {
+      "captures_realized_count": false,
+      "declustered_crossings_per_30_minutes": 8.703,
+      "flagged_emission_count": 0,
+      "predicted_capsize_count": 0.0,
+      "predicted_count_interval": [
+        0.0,
+        0.0
+      ],
+      "realized_capsize_count": 95,
+      "target_lower": 7.0,
+      "target_upper": 10.0,
+      "terminal_side_split": {
+        "negative": 0,
+        "positive": 0
+      },
+      "threshold_interpolation_fraction": 0.35000000000000003,
+      "trajectory_count": 1000,
+      "valid_emission_count": 0
+    }
+  },
+  "calibration_prior_mean_rates": {
+    "0.5": {
+      "biased": 3.4418923256558918,
+      "parametric": 5.742012582594337,
+      "softening": 5.100733781893631
+    },
+    "0.75": {
+      "biased": 4.364046678152915,
+      "parametric": 7.0002008149699355,
+      "softening": 7.407398153180525
+    }
+  },
+  "calibration_selection": [
+    {
+      "campaign_captures": 0,
+      "campaigns": {
+        "biased_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 20,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "biased_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 122,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 7,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 87,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "softening_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 54.1501815629672,
+          "predicted_count_interval": [
+            50.93593244502732,
+            60.240444904097686
+          ],
+          "realized_capsize_count": 25,
+          "terminal_side_split": {
+            "negative": 2117,
+            "positive": 2035
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 5396
+        },
+        "softening_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 7,
+          "predicted_capsize_count": 139.0298767771811,
+          "predicted_count_interval": [
+            133.0854213703783,
+            151.53174556282607
+          ],
+          "realized_capsize_count": 71,
+          "terminal_side_split": {
+            "negative": 2857,
+            "positive": 2918
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 8579
+        }
+      },
+      "candidate_index": 0,
+      "equivalent_due_to_600_s_record_length": false,
+      "prior_strength": 2.0,
+      "reliability_weighted_mean_absolute_error": 0.07917070337214521,
+      "tail_quantile": 0.5,
+      "trailing_window_s": null
+    },
+    {
+      "campaign_captures": 0,
+      "campaigns": {
+        "biased_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 20,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "biased_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 122,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 7,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 87,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "softening_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 54.1501815629672,
+          "predicted_count_interval": [
+            50.93593244502732,
+            60.240444904097686
+          ],
+          "realized_capsize_count": 25,
+          "terminal_side_split": {
+            "negative": 2117,
+            "positive": 2035
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 5396
+        },
+        "softening_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 7,
+          "predicted_capsize_count": 139.0298767771811,
+          "predicted_count_interval": [
+            133.0854213703783,
+            151.53174556282607
+          ],
+          "realized_capsize_count": 71,
+          "terminal_side_split": {
+            "negative": 2857,
+            "positive": 2918
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 8579
+        }
+      },
+      "candidate_index": 1,
+      "equivalent_due_to_600_s_record_length": true,
+      "prior_strength": 2.0,
+      "reliability_weighted_mean_absolute_error": 0.07917070337214521,
+      "tail_quantile": 0.5,
+      "trailing_window_s": 1800.0
+    },
+    {
+      "campaign_captures": 0,
+      "campaigns": {
+        "biased_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 20,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "biased_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 122,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 7,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 87,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "softening_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 54.1501815629672,
+          "predicted_count_interval": [
+            50.93593244502732,
+            60.240444904097686
+          ],
+          "realized_capsize_count": 25,
+          "terminal_side_split": {
+            "negative": 2117,
+            "positive": 2035
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 5396
+        },
+        "softening_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 7,
+          "predicted_capsize_count": 139.0298767771811,
+          "predicted_count_interval": [
+            133.0854213703783,
+            151.53174556282607
+          ],
+          "realized_capsize_count": 71,
+          "terminal_side_split": {
+            "negative": 2857,
+            "positive": 2918
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 8579
+        }
+      },
+      "candidate_index": 2,
+      "equivalent_due_to_600_s_record_length": true,
+      "prior_strength": 2.0,
+      "reliability_weighted_mean_absolute_error": 0.07917070337214521,
+      "tail_quantile": 0.5,
+      "trailing_window_s": 900.0
+    },
+    {
+      "campaign_captures": 0,
+      "campaigns": {
+        "biased_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 20,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "biased_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 122,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 7,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 87,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "softening_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 49.168594804419726,
+          "predicted_count_interval": [
+            46.62250952957001,
+            53.72450648478292
+          ],
+          "realized_capsize_count": 25,
+          "terminal_side_split": {
+            "negative": 2117,
+            "positive": 2035
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 5396
+        },
+        "softening_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 7,
+          "predicted_capsize_count": 129.3194877599517,
+          "predicted_count_interval": [
+            124.20420642654514,
+            138.7933352890375
+          ],
+          "realized_capsize_count": 71,
+          "terminal_side_split": {
+            "negative": 2857,
+            "positive": 2918
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 8579
+        }
+      },
+      "candidate_index": 3,
+      "equivalent_due_to_600_s_record_length": false,
+      "prior_strength": 5.0,
+      "reliability_weighted_mean_absolute_error": 0.07728231507349093,
+      "tail_quantile": 0.5,
+      "trailing_window_s": null
+    },
+    {
+      "campaign_captures": 0,
+      "campaigns": {
+        "biased_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 20,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "biased_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 122,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 7,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 87,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "softening_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 49.168594804419726,
+          "predicted_count_interval": [
+            46.62250952957001,
+            53.72450648478292
+          ],
+          "realized_capsize_count": 25,
+          "terminal_side_split": {
+            "negative": 2117,
+            "positive": 2035
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 5396
+        },
+        "softening_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 7,
+          "predicted_capsize_count": 129.3194877599517,
+          "predicted_count_interval": [
+            124.20420642654514,
+            138.7933352890375
+          ],
+          "realized_capsize_count": 71,
+          "terminal_side_split": {
+            "negative": 2857,
+            "positive": 2918
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 8579
+        }
+      },
+      "candidate_index": 4,
+      "equivalent_due_to_600_s_record_length": true,
+      "prior_strength": 5.0,
+      "reliability_weighted_mean_absolute_error": 0.07728231507349093,
+      "tail_quantile": 0.5,
+      "trailing_window_s": 1800.0
+    },
+    {
+      "campaign_captures": 0,
+      "campaigns": {
+        "biased_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 20,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "biased_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 122,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 7,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 87,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "softening_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 49.168594804419726,
+          "predicted_count_interval": [
+            46.62250952957001,
+            53.72450648478292
+          ],
+          "realized_capsize_count": 25,
+          "terminal_side_split": {
+            "negative": 2117,
+            "positive": 2035
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 5396
+        },
+        "softening_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 7,
+          "predicted_capsize_count": 129.3194877599517,
+          "predicted_count_interval": [
+            124.20420642654514,
+            138.7933352890375
+          ],
+          "realized_capsize_count": 71,
+          "terminal_side_split": {
+            "negative": 2857,
+            "positive": 2918
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 8579
+        }
+      },
+      "candidate_index": 5,
+      "equivalent_due_to_600_s_record_length": true,
+      "prior_strength": 5.0,
+      "reliability_weighted_mean_absolute_error": 0.07728231507349093,
+      "tail_quantile": 0.5,
+      "trailing_window_s": 900.0
+    },
+    {
+      "campaign_captures": 0,
+      "campaigns": {
+        "biased_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 20,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "biased_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 122,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 7,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 87,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "softening_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 45.79847517133978,
+          "predicted_count_interval": [
+            43.802089269751555,
+            49.933105260102124
+          ],
+          "realized_capsize_count": 25,
+          "terminal_side_split": {
+            "negative": 2117,
+            "positive": 2035
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 5396
+        },
+        "softening_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 7,
+          "predicted_capsize_count": 122.32309396520122,
+          "predicted_count_interval": [
+            117.70642471487588,
+            130.7394706495062
+          ],
+          "realized_capsize_count": 71,
+          "terminal_side_split": {
+            "negative": 2857,
+            "positive": 2918
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 8579
+        }
+      },
+      "candidate_index": 6,
+      "equivalent_due_to_600_s_record_length": false,
+      "prior_strength": 10.0,
+      "reliability_weighted_mean_absolute_error": 0.0758660540574757,
+      "tail_quantile": 0.5,
+      "trailing_window_s": null
+    },
+    {
+      "campaign_captures": 0,
+      "campaigns": {
+        "biased_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 20,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "biased_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 122,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 7,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 87,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "softening_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 45.79847517133978,
+          "predicted_count_interval": [
+            43.802089269751555,
+            49.933105260102124
+          ],
+          "realized_capsize_count": 25,
+          "terminal_side_split": {
+            "negative": 2117,
+            "positive": 2035
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 5396
+        },
+        "softening_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 7,
+          "predicted_capsize_count": 122.32309396520122,
+          "predicted_count_interval": [
+            117.70642471487588,
+            130.7394706495062
+          ],
+          "realized_capsize_count": 71,
+          "terminal_side_split": {
+            "negative": 2857,
+            "positive": 2918
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 8579
+        }
+      },
+      "candidate_index": 7,
+      "equivalent_due_to_600_s_record_length": true,
+      "prior_strength": 10.0,
+      "reliability_weighted_mean_absolute_error": 0.0758660540574757,
+      "tail_quantile": 0.5,
+      "trailing_window_s": 1800.0
+    },
+    {
+      "campaign_captures": 0,
+      "campaigns": {
+        "biased_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 20,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "biased_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 122,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 7,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 87,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "softening_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 45.79847517133978,
+          "predicted_count_interval": [
+            43.802089269751555,
+            49.933105260102124
+          ],
+          "realized_capsize_count": 25,
+          "terminal_side_split": {
+            "negative": 2117,
+            "positive": 2035
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 5396
+        },
+        "softening_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 7,
+          "predicted_capsize_count": 122.32309396520122,
+          "predicted_count_interval": [
+            117.70642471487588,
+            130.7394706495062
+          ],
+          "realized_capsize_count": 71,
+          "terminal_side_split": {
+            "negative": 2857,
+            "positive": 2918
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 8579
+        }
+      },
+      "candidate_index": 8,
+      "equivalent_due_to_600_s_record_length": true,
+      "prior_strength": 10.0,
+      "reliability_weighted_mean_absolute_error": 0.0758660540574757,
+      "tail_quantile": 0.5,
+      "trailing_window_s": 900.0
+    },
+    {
+      "campaign_captures": 0,
+      "campaigns": {
+        "biased_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 20,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "biased_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 122,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 7,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 87,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "softening_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.291416248192148,
+          "predicted_count_interval": [
+            0.11501906740125503,
+            0.6742782657382664
+          ],
+          "realized_capsize_count": 25,
+          "terminal_side_split": {
+            "negative": 90,
+            "positive": 105
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 66
+        },
+        "softening_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 7,
+          "predicted_capsize_count": 8.2400348590599,
+          "predicted_count_interval": [
+            6.915645546087818,
+            9.98404872368073
+          ],
+          "realized_capsize_count": 71,
+          "terminal_side_split": {
+            "negative": 735,
+            "positive": 671
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 643
+        }
+      },
+      "candidate_index": 9,
+      "equivalent_due_to_600_s_record_length": false,
+      "prior_strength": 2.0,
+      "reliability_weighted_mean_absolute_error": 0.0562973290300584,
+      "tail_quantile": 0.75,
+      "trailing_window_s": null
+    },
+    {
+      "campaign_captures": 0,
+      "campaigns": {
+        "biased_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 20,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "biased_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 122,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 7,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 87,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "softening_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.291416248192148,
+          "predicted_count_interval": [
+            0.11501906740125503,
+            0.6742782657382664
+          ],
+          "realized_capsize_count": 25,
+          "terminal_side_split": {
+            "negative": 90,
+            "positive": 105
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 66
+        },
+        "softening_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 7,
+          "predicted_capsize_count": 8.2400348590599,
+          "predicted_count_interval": [
+            6.915645546087818,
+            9.98404872368073
+          ],
+          "realized_capsize_count": 71,
+          "terminal_side_split": {
+            "negative": 735,
+            "positive": 671
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 643
+        }
+      },
+      "candidate_index": 10,
+      "equivalent_due_to_600_s_record_length": true,
+      "prior_strength": 2.0,
+      "reliability_weighted_mean_absolute_error": 0.0562973290300584,
+      "tail_quantile": 0.75,
+      "trailing_window_s": 1800.0
+    },
+    {
+      "campaign_captures": 0,
+      "campaigns": {
+        "biased_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 20,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "biased_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 122,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 7,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 87,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "softening_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.291416248192148,
+          "predicted_count_interval": [
+            0.11501906740125503,
+            0.6742782657382664
+          ],
+          "realized_capsize_count": 25,
+          "terminal_side_split": {
+            "negative": 90,
+            "positive": 105
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 66
+        },
+        "softening_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 7,
+          "predicted_capsize_count": 8.2400348590599,
+          "predicted_count_interval": [
+            6.915645546087818,
+            9.98404872368073
+          ],
+          "realized_capsize_count": 71,
+          "terminal_side_split": {
+            "negative": 735,
+            "positive": 671
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 643
+        }
+      },
+      "candidate_index": 11,
+      "equivalent_due_to_600_s_record_length": true,
+      "prior_strength": 2.0,
+      "reliability_weighted_mean_absolute_error": 0.0562973290300584,
+      "tail_quantile": 0.75,
+      "trailing_window_s": 900.0
+    },
+    {
+      "campaign_captures": 0,
+      "campaigns": {
+        "biased_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 20,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "biased_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 122,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 7,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 87,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "softening_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.25059977416314133,
+          "predicted_count_interval": [
+            0.11171366314451434,
+            0.5537888125219146
+          ],
+          "realized_capsize_count": 25,
+          "terminal_side_split": {
+            "negative": 90,
+            "positive": 105
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 66
+        },
+        "softening_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 7,
+          "predicted_capsize_count": 7.9538437824924895,
+          "predicted_count_interval": [
+            6.868866061900618,
+            9.54527890681625
+          ],
+          "realized_capsize_count": 71,
+          "terminal_side_split": {
+            "negative": 735,
+            "positive": 671
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 643
+        }
+      },
+      "candidate_index": 12,
+      "equivalent_due_to_600_s_record_length": false,
+      "prior_strength": 5.0,
+      "reliability_weighted_mean_absolute_error": 0.056250486088727826,
+      "tail_quantile": 0.75,
+      "trailing_window_s": null
+    },
+    {
+      "campaign_captures": 0,
+      "campaigns": {
+        "biased_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 20,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "biased_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 122,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 7,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 87,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "softening_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.25059977416314133,
+          "predicted_count_interval": [
+            0.11171366314451434,
+            0.5537888125219146
+          ],
+          "realized_capsize_count": 25,
+          "terminal_side_split": {
+            "negative": 90,
+            "positive": 105
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 66
+        },
+        "softening_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 7,
+          "predicted_capsize_count": 7.9538437824924895,
+          "predicted_count_interval": [
+            6.868866061900618,
+            9.54527890681625
+          ],
+          "realized_capsize_count": 71,
+          "terminal_side_split": {
+            "negative": 735,
+            "positive": 671
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 643
+        }
+      },
+      "candidate_index": 13,
+      "equivalent_due_to_600_s_record_length": true,
+      "prior_strength": 5.0,
+      "reliability_weighted_mean_absolute_error": 0.056250486088727826,
+      "tail_quantile": 0.75,
+      "trailing_window_s": 1800.0
+    },
+    {
+      "campaign_captures": 0,
+      "campaigns": {
+        "biased_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 20,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "biased_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 122,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 7,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 87,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "softening_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.25059977416314133,
+          "predicted_count_interval": [
+            0.11171366314451434,
+            0.5537888125219146
+          ],
+          "realized_capsize_count": 25,
+          "terminal_side_split": {
+            "negative": 90,
+            "positive": 105
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 66
+        },
+        "softening_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 7,
+          "predicted_capsize_count": 7.9538437824924895,
+          "predicted_count_interval": [
+            6.868866061900618,
+            9.54527890681625
+          ],
+          "realized_capsize_count": 71,
+          "terminal_side_split": {
+            "negative": 735,
+            "positive": 671
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 643
+        }
+      },
+      "candidate_index": 14,
+      "equivalent_due_to_600_s_record_length": true,
+      "prior_strength": 5.0,
+      "reliability_weighted_mean_absolute_error": 0.056250486088727826,
+      "tail_quantile": 0.75,
+      "trailing_window_s": 900.0
+    },
+    {
+      "campaign_captures": 0,
+      "campaigns": {
+        "biased_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 20,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "biased_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 122,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 7,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 87,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "softening_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.22588084595340566,
+          "predicted_count_interval": [
+            0.11697912643878985,
+            0.41974082551384373
+          ],
+          "realized_capsize_count": 25,
+          "terminal_side_split": {
+            "negative": 90,
+            "positive": 105
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 66
+        },
+        "softening_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 7,
+          "predicted_capsize_count": 7.733226113513727,
+          "predicted_count_interval": [
+            6.743736000629032,
+            9.133655820031493
+          ],
+          "realized_capsize_count": 71,
+          "terminal_side_split": {
+            "negative": 735,
+            "positive": 671
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 643
+        }
+      },
+      "candidate_index": 15,
+      "equivalent_due_to_600_s_record_length": false,
+      "prior_strength": 10.0,
+      "reliability_weighted_mean_absolute_error": 0.056213611283107354,
+      "tail_quantile": 0.75,
+      "trailing_window_s": null
+    },
+    {
+      "campaign_captures": 0,
+      "campaigns": {
+        "biased_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 20,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "biased_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 122,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 7,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 87,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "softening_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.22588084595340566,
+          "predicted_count_interval": [
+            0.11697912643878985,
+            0.41974082551384373
+          ],
+          "realized_capsize_count": 25,
+          "terminal_side_split": {
+            "negative": 90,
+            "positive": 105
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 66
+        },
+        "softening_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 7,
+          "predicted_capsize_count": 7.733226113513727,
+          "predicted_count_interval": [
+            6.743736000629032,
+            9.133655820031493
+          ],
+          "realized_capsize_count": 71,
+          "terminal_side_split": {
+            "negative": 735,
+            "positive": 671
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 643
+        }
+      },
+      "candidate_index": 16,
+      "equivalent_due_to_600_s_record_length": true,
+      "prior_strength": 10.0,
+      "reliability_weighted_mean_absolute_error": 0.056213611283107354,
+      "tail_quantile": 0.75,
+      "trailing_window_s": 1800.0
+    },
+    {
+      "campaign_captures": 0,
+      "campaigns": {
+        "biased_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 20,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "biased_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 122,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 7,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "parametric_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.0,
+          "predicted_count_interval": [
+            0.0,
+            0.0
+          ],
+          "realized_capsize_count": 87,
+          "terminal_side_split": {
+            "negative": 0,
+            "positive": 0
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 0
+        },
+        "softening_evaluation": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 0,
+          "predicted_capsize_count": 0.22588084595340566,
+          "predicted_count_interval": [
+            0.11697912643878985,
+            0.41974082551384373
+          ],
+          "realized_capsize_count": 25,
+          "terminal_side_split": {
+            "negative": 90,
+            "positive": 105
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 66
+        },
+        "softening_stationary": {
+          "captures_realized_count": false,
+          "flagged_emission_count": 7,
+          "predicted_capsize_count": 7.733226113513727,
+          "predicted_count_interval": [
+            6.743736000629032,
+            9.133655820031493
+          ],
+          "realized_capsize_count": 71,
+          "terminal_side_split": {
+            "negative": 735,
+            "positive": 671
+          },
+          "trajectory_count": 1000,
+          "valid_emission_count": 643
+        }
+      },
+      "candidate_index": 17,
+      "equivalent_due_to_600_s_record_length": true,
+      "prior_strength": 10.0,
+      "reliability_weighted_mean_absolute_error": 0.056213611283107354,
+      "tail_quantile": 0.75,
+      "trailing_window_s": 900.0
+    }
+  ],
+  "campaign_capture_count": 0,
+  "capture_target": 5,
+  "component_interval_methods_note": {
+    "campaign": "softening_stationary",
+    "interval_width_difference_paper_minus_bootstrap": 91.29784532999012,
+    "note": "The paper interval composes binomial upcrossing and exponential-scale boundaries at square-root confidence; U1's primary interval resamples the composed rate.",
+    "paper_sqrt_confidence_predicted_count_interval": [
+      294.27024050345636,
+      387.95800565284895
+    ],
+    "parametric_bootstrap_predicted_count_interval": [
+      6.743736000629032,
+      9.133655820031493
+    ]
+  },
+  "criterion_met": false,
+  "experiment": "U1a",
+  "figure": "u1a_reliability_u1.png",
+  "gpd_diagnostic": {
+    "exceedance_count": 3590,
+    "label": "diagnostic only; never used in lambda_hat",
+    "scale": 0.16508106147037102,
+    "shape": -0.10339456641099753,
+    "threshold_w": 0.7729747632127043
+  },
+  "interval_method": {
+    "campaign_count": "sum of independent per-trajectory draw vectors",
+    "per_emission": "parametric bootstrap"
+  },
+  "paper_departures": [
+    {
+      "departure": "uses the ROM closed-form critical rate; omits future-wave motion perturbation",
+      "section": "3.2-3.5"
+    },
+    {
+      "departure": "uses calibration-frozen empirical quantiles and Gamma shrinkage",
+      "section": "4.7"
+    },
+    {
+      "departure": "uses a parametric bootstrap instead of component-boundary composition",
+      "section": "5.2"
+    }
+  ],
+  "reliability": {
+    "bins": [
+      {
+        "bin": 1,
+        "count": 17828,
+        "mean_rate_per_hour": 0.0,
+        "predicted_capsize_fraction": 0.0,
+        "realized_capsize_fraction": 0.030738164684765538,
+        "realized_exact_interval": [
+          0.028253196214318436,
+          0.033377710640852
+        ]
+      },
+      {
+        "bin": 4,
+        "count": 172,
+        "mean_rate_per_hour": 0.25988306890936974,
+        "predicted_capsize_fraction": 0.04135147608376967,
+        "realized_capsize_fraction": 0.005813953488372093,
+        "realized_exact_interval": [
+          0.00014718572516637395,
+          0.031966041344967035
+        ]
+      }
+    ],
+    "edges_rate_per_hour": [
+      -5e-324,
+      0.0,
+      5e-324,
+      1e-323,
+      1.5e-323,
+      4.998801955707211
+    ],
+    "weighted_mean_absolute_error": 0.030784025215911576
+  },
+  "selected_controls": {
+    "prior_strength": 10.0,
+    "tail_quantile": 0.75,
+    "trailing_window_s": null
+  },
+  "test_campaigns": {
+    "biased_evaluation": {
+      "captures_realized_count": false,
+      "flagged_emission_count": 0,
+      "predicted_capsize_count": 0.0,
+      "predicted_count_interval": [
+        0.0,
+        0.0
+      ],
+      "realized_capsize_count": 92,
+      "terminal_side_split": {
+        "negative": 0,
+        "positive": 0
+      },
+      "trajectory_count": 5000,
+      "valid_emission_count": 0
+    },
+    "biased_stationary": {
+      "captures_realized_count": false,
+      "flagged_emission_count": 0,
+      "predicted_capsize_count": 0.0,
+      "predicted_count_interval": [
+        0.0,
+        0.0
+      ],
+      "realized_capsize_count": 138,
+      "terminal_side_split": {
+        "negative": 0,
+        "positive": 0
+      },
+      "trajectory_count": 1000,
+      "valid_emission_count": 0
+    },
+    "parametric_evaluation": {
+      "captures_realized_count": false,
+      "flagged_emission_count": 0,
+      "predicted_capsize_count": 0.0,
+      "predicted_count_interval": [
+        0.0,
+        0.0
+      ],
+      "realized_capsize_count": 50,
+      "terminal_side_split": {
+        "negative": 0,
+        "positive": 0
+      },
+      "trajectory_count": 5000,
+      "valid_emission_count": 0
+    },
+    "parametric_stationary": {
+      "captures_realized_count": false,
+      "flagged_emission_count": 0,
+      "predicted_capsize_count": 0.0,
+      "predicted_count_interval": [
+        0.0,
+        0.0
+      ],
+      "realized_capsize_count": 79,
+      "terminal_side_split": {
+        "negative": 0,
+        "positive": 0
+      },
+      "trajectory_count": 1000,
+      "valid_emission_count": 0
+    },
+    "softening_evaluation": {
+      "captures_realized_count": false,
+      "flagged_emission_count": 0,
+      "predicted_capsize_count": 1.8587993139517422,
+      "predicted_count_interval": [
+        1.4571313254416955,
+        2.4101474041774424
+      ],
+      "realized_capsize_count": 95,
+      "terminal_side_split": {
+        "negative": 465,
+        "positive": 459
+      },
+      "trajectory_count": 5000,
+      "valid_emission_count": 364
+    },
+    "softening_stationary": {
+      "captures_realized_count": false,
+      "flagged_emission_count": 0,
+      "predicted_capsize_count": 5.589739064225149,
+      "predicted_count_interval": [
+        4.703542763711255,
+        6.696637440643672
+      ],
+      "realized_capsize_count": 95,
+      "terminal_side_split": {
+        "negative": 635,
+        "positive": 664
+      },
+      "trajectory_count": 1000,
+      "valid_emission_count": 584
+    }
+  }
+}

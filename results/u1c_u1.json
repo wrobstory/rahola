@@ -1,0 +1,19 @@
+{
+  "_artifact_sha256": "5c2b92858ba228df9021f28e0e948aa64c2acaea585faa5c040fb9e5050b139f",
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "schema_version": 1,
+    "source_sha256": "fdc9649a59a348d6d633ced849bc8f1c1cce808f0515f7ae220ab26a5f2db7df",
+    "upstream_artifacts": {
+      "u1a_u1": "7a0ddc4618f74a9017097e79831eb76e62332762bcafc38bd8e859d578caf045"
+    }
+  },
+  "auc": "unevaluable",
+  "error": "bootstrap statistic produced no finite replicates",
+  "experiment": "U1c",
+  "failed_stage": "trajectory-block alarm interval",
+  "operating_point": "unevaluable",
+  "rerun": "forbidden by the one-read test discipline",
+  "status": "failed",
+  "test_read_spent": true
+}
