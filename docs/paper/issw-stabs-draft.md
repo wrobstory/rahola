@@ -1,0 +1,344 @@
+<!-- DRAFT v0.2 — ISSW / STAB&S submission. References verified against primary records
+     2026-08-03; remaining flags noted at the head of the reference list. -->
+
+# Motion-Only Capsize Warning on an Audited Synthetic Benchmark: Ranking Skill Without Threshold Transfer
+
+**W. R. Story**
+
+## Abstract
+
+Five real-time capsize warning methods, each consuming only measured roll and roll rate, were
+evaluated on a validated synthetic benchmark of 58,500 one-degree-of-freedom roll trajectories
+spanning three stability-failure archetypes: a temporal convolutional network, variance and
+autocorrelation trend statistics, a roll-power generalized likelihood-ratio test, the closed-form
+split-time critical-roll-rate margin used here for the first time as an online alarm statistic,
+and the phase-space neighbor-count score proposed in the author's 2009 thesis. The evaluation
+protocol selects every operating threshold on calibration data and spends the test data once; an
+audit conducted during the study found that the operating points first obtained had been selected
+on test outcomes, and quantifies the resulting optimism at roughly a factor of two and one half in
+false-episode rate. Under the corrected protocol, ranking skill from motion history is real and
+bandwidth-robust (network AUC 0.86 to 0.92 at every forcing bandwidth tested), but no method
+retained a 90 percent sensitivity operating point across held-out failure modes, every method
+scored near chance (AUC 0.47 to 0.51) at discriminating event timing inside an established severe
+regime, and 75 to 88 percent of nominally false alarms coincided with genuine critical wave-group
+encounters that the vessel survived. A further preregistered sequence operated the split-time
+upcrossing decomposition as an onboard rate estimator, in an online-estimated and an
+offline-calibrated form; both failed calibration in a localized way. Given the empirically
+measured probability that a threshold crossing is terminal, the decomposition reproduces
+realized counts within 3 in 71; the closed-form criticality model overestimates that probability
+by roughly a factor of four, and in 92 percent of capsizes the terminal crossing preceded the
+event by less than one ten-second emission interval. The results support a two-part description of the
+motion-only warning problem: the slowly varying stability state is observable, the terminal
+encounter is not, and the false-alarm rates that make such systems appear undeployable are
+substantially a property of outcome-based metrics rather than of the detectors.
+
+## 1. Introduction
+
+Interest in warning of capsize from onboard motion measurement is at least two decades old. The
+Lyapunov-exponent programme of the mid-2000s (McCue and Troesch 2004, 2006) sought a precursor
+of capsize in the divergence of measured trajectories; the author's
+thesis in that programme (Story 2009) found empirically that the useful signal lay not in
+estimated exponents but in the loss of phase-space neighbors, and reported a neighbor-count
+warning flag with encouraging lead times and an honestly documented false-alarm problem. The
+thread was not taken up. The signal-based detectors of Galeazzi et al. (2013, 2015) for
+parametric roll, with designed false-alarm probabilities and full-scale blind validation, remain
+the only fielded success of motion-based stability-failure detection, and the field's general
+machinery moved instead to offline probabilistic assessment (Belenky and Sevastianov 2007), of
+which the split-time method (Belenky, Weems and Lin 2016; Belenky et al. 2024) is the principal
+example, and to operational guidance derived from precomputed simulation under the
+second-generation intact stability criteria (Bačkalov et al. 2016; IMO 2020; Petacco and Gualeni
+2020; Shigunov 2023).
+
+The relationship of the present work to the split-time method deserves statement at the outset,
+since that method supplies both the strongest available machinery and the sharpest open question.
+Belenky et al. (2024) compute the probability of capsizing offline: the metric of danger, a
+critical roll rate at threshold upcrossings, is evaluated along simulated histories, its tail is
+extrapolated with a physics-informed exponential form, and the estimate is validated by
+confidence-interval capture against direct counting. Three transfers from that programme are
+attempted here. The metric itself is operated, to the author's knowledge for the first time, as a
+continuously evaluated onboard alarm statistic computed from measured state alone, and is
+benchmarked against learned and statistical competitors on equal terms. The statistical
+discipline of the split-time programme, declustering, interval estimates on every rate, and
+validation against direct counting, is transplanted to warning evaluation, where it is presently
+absent. And the boundary of the transfer is itself measured: the engineering-fidelity form of the
+metric requires re-simulation with the incident wave realization known, and the present results
+quantify operationally what that requirement conceals, namely that the information carried by the
+future waves is absent from measured motion precisely where event timing is decided.
+
+The present study returns to the motion-only question with tools that did not exist in 2009 and
+with an evaluation protocol designed against the failure modes that make warning research easy to
+overstate. A warning method may rank dangerous intervals well yet possess no usable threshold; a
+threshold may fail to transfer across failure modes or sea states; apparent skill may arise from
+protocol time, truncated outcome windows, or the use of future data during normalization; and,
+because capsizes are rare, an aggregate score conceals all of these. Each failure mode is tested
+separately here. The study also reports, deliberately, an audit of its own methodology: the
+operating points first obtained were later found to have been selected on test outcomes, an error
+the author believes is widespread in the published literature on learned motion prediction, and
+the corrected results quantify its size.
+
+Three questions are addressed. First, does motion history rank capsize risk under forcing broad
+enough that classical critical-slowing-down indicators fail? Second, do the resulting operating
+thresholds transfer across stability-failure modes at fixed sensitivity? Third, what do the false
+alarms of such systems consist of?
+
+## 2. The synthetic benchmark
+
+The benchmark is a one-degree-of-freedom nonlinear roll model, validated against analytic limits,
+generating seeded trajectories under JONSWAP forcing (Hasselmann et al. 1973). Three restoring
+families represent failure archetypes: softening restoring (dead-ship escape), time-varying
+stiffness (parametric roll), and biased restoring with asymmetric escape angles (damage, steady
+heel), in the scope of established one-degree-of-freedom roll comparisons (Bulian and
+Francescutto 2004, 2011). Following-sea failure modes, broaching foremost (Umeda et al. 2016),
+are outside the benchmark's scope, a limitation the transfer results of Section 5 should be read
+against. Forcing is synthesized spectrally with deterministic amplitudes and
+seeded random phases (Shinozuka and Deodatis 1991); integration is fixed-step Runge-Kutta at no
+fewer than 40 steps per natural period; capsize is an absorbing state and post-event samples are
+excluded from every window.
+
+Validation gates precede all warning experiments: recovered significant wave height within 2
+percent; linear-limit response variance within 6 percent of the spectral calculation; the
+principal Mathieu boundary within 10 percent of the averaging result; and the simulated harmonic
+capsize boundary at or above the heteroclinic Melnikov threshold (Falzarano, Shaw and Troesch
+1992) with the correct frequency shape, the bound being treated as a necessary condition only. No
+validation test is skipped in the acceptance run.
+
+The reference data comprise 58,500 trajectories of 600 seconds at a four-second natural period:
+stationary campaigns per family, stiffness-ramp campaigns representing slow stability erosion,
+one sea-state step campaign, rare-event evaluation campaigns at 0.95 to 2.0 percent capsize
+rates, and five forcing-bandwidth campaigns in which JONSWAP peak enhancement is varied from 1.0
+to 30 with terminal ramp severity retuned per bandwidth so that outcome rates remain in a common
+band; the last decision prevents severity from acting as a hidden bandwidth axis. Disjoint seed
+blocks separate training, calibration, test, and guarded holdout data.
+
+Supervised windows use 60 natural periods of causally normalized roll and roll-rate history, a
+50-period outcome horizon, and an exclusion band for near misses; a future-only leakage probe
+verifies the entire feature path against a deliberately leaky control. The label discipline
+responds directly to critiques of early-warning-signal studies in other fields (Boettiger and
+Hastings 2012; Dakos et al. 2012).
+
+## 3. Five warning methods
+
+All five methods consume identical windows and emit a scalar score which is thresholded into
+alarm episodes (three consecutive crossings to open; refractory closure). No method receives wave
+elevation, spectrum, family identity, or sea-state input.
+
+(a) A temporal convolutional network of 2,969 parameters trained on the horizon labels, in the
+spirit of learned early-warning classifiers (Bury et al. 2021); neural roll prediction has
+in-community precedent (Míguez González et al. 2023). (b) Rolling variance and lag-one
+autocorrelation with Kendall trend statistics, the classical critical-slowing-down indicators
+(Dakos et al. 2012). (c) A roll-power adaptation of the double-Weibull generalized
+likelihood-ratio detector of Galeazzi et al. (2013, 2015). (d) The split-time critical
+roll rate (Belenky et al. 2024), computed in closed form from the known restoring parameters and
+the measured state, with the separatrix line extrapolated between threshold crossings; to the
+author's knowledge this quantity has not previously been operated as a continuously evaluated
+online alarm statistic, and it functions here as a zero-training physics baseline. (e) The
+neighbor-count score of Story (2009), reimplemented faithfully in the (roll, roll-rate) plane
+under strictly causal normalization, with the thesis's fixed flag retained as one point on a full
+operating curve; phase-space identification of dangerous ship states has since been developed
+independently in the Spyrou school (Kontolefas and Spyrou 2020).
+
+## 4. Evaluation protocol and the audit
+
+Metrics are episode sensitivity, false episodes per exposure hour, and lead time, with exact
+binomial confidence intervals; exposure ends at capsize; an episode overlapping the pre-capsize
+horizon is event-associated. All operating controls are selected on calibration data, frozen, and
+evaluated once on test data.
+
+The protocol was not followed from the outset, and the failure is reported as a result. The
+study's first operating points were obtained by scanning test-set metrics for the lowest
+false-episode rate at 90 percent sensitivity or better, which is threshold selection on test
+outcomes. For the network on the pooled rare-event campaigns, the test-selected report was 6.3
+false episodes per hour; the calibration-frozen value for the same detector on the same data is
+15.5 per hour at 92.4 percent sensitivity. A factor of approximately 2.5 in reported alarm cost
+was therefore attributable to the selection procedure rather than the detector, at a sensitivity
+target of 90 percent and capsize prevalences of 1 to 2 percent. One guarded holdout evaluation
+was additionally invalidated by threshold selection on the holdout labels, and its artifacts are
+retained as historical records only. The corrected protocol is enforced by the test suite rather
+than by convention. The authors suggest that reported operating points in the learned
+motion-prediction literature should be read with this mechanism in mind wherever threshold
+provenance is not stated.
+
+## 5. Results
+
+**Ranking under bandwidth (D3).** The network's window AUC was 0.862 to 0.920 at every peak
+enhancement from 30 down to 1.0, while the classical trend indicators collapsed on ramped
+campaigns. Ranking skill from motion history survives broadband forcing. The predeclared
+operating-cost criterion at the broadband end (a 10 percent false-episode improvement) was missed
+at 8.6 percent, and the operating-cost claim is reported as inconclusive: ranking skill and a
+deployable threshold are different assets.
+
+**Pooled operating points (D1).** At calibration-frozen thresholds on the pooled rare-event
+campaigns, the network attained 92.4 percent sensitivity at 15.5 false episodes per hour; the
+classical indicators reached 100 percent sensitivity only at a near-always-on threshold costing
+21.4 per hour; the physics margin and the 2009 neighbor score occupied the same
+high-sensitivity, high-cost region. No method produced an operating point that a master would
+tolerate.
+
+**Threshold transfer (D2).** With each restoring family held out in turn, the network missed the
+90 percent test-sensitivity target in all three rotations. Two architecture probes intended to
+repair transfer, a gray-box network with a physical latent head and a few-failure adaptation of a
+pretrained sequence model, failed their predeclared criteria under calibration-fixed thresholds.
+No all-family operating point was established by any method.
+
+**Within-regime discrimination (D5).** On the post-transition segment of the sea-state step
+campaign, every method scored AUC 0.474 to 0.509 at ranking imminent-capsize windows against
+surviving windows. Inside an established severe regime, motion-only scores carried no usable
+information about which encounter would be terminal.
+
+**The character of false alarms (D4).** Between 75 and 88 percent of nominally false episodes
+coincided with critical wave-group encounters, defined by an envelope criterion on the known
+synthetic seaway in the spirit of the critical-wave-groups literature (Themelis and Spyrou 2007;
+Anastopoulos et al. 2016), that the vessel survived. The figure is descriptive, since no matched null was
+tested and groups are common in a narrow-band sea; its qualitative content is that outcome-based
+false-positive accounting charges the detectors for hazard exposure the vessel happened to
+survive, the base-rate structure anticipated in Boettiger and Hastings (2012).
+
+**Reference comparators.** Restarting ensembles of independent futures from the exact simulated
+state yielded AUC 0.851 on a design-balanced window set, against 0.762 for gradient boosting on
+engineered features (of which an estimated roll period, in effect a stiffness gauge, is the most
+informative) and 0.627 for the network on the same windows; a protocol-time comparator also
+exceeded the network. Two qualifications apply: the restart comparators replace the realized
+forcing and are therefore reference points rather than bounds, since the temporally correlated
+seaway leaves encounter information in the motion history; and part of the network's advantage on
+natural test populations evidently derived from population structure rather than state
+inference. The headroom that exists lies in state inference, and simple tools claimed it first.
+
+**The split-time rate estimator (U1, H1).** Three preregistered experiments operated the
+paper's ROM decomposition — capsize rate as upcrossing rate times the probability an upcrossing
+goes critical — as a continuously updated onboard estimate, each evaluated once on fresh test
+data by the split-time program's own confidence-interval-capture standard. The
+online-estimated form failed its capture criterion, and a predeclared comparison found the
+upcrossing rate alone more reliable than the full decomposition, so the corresponding kill
+criterion fired. A measured attribution then localized the error: with the empirical
+terminal-crossing probability substituted for the modeled one, the decomposition predicted 68
+events against 71 realized, while the closed-form criticality model (the unforced
+piecewise-linear critical roll rate with an exponential tail) overpredicted by roughly a factor
+of four; a motion-derived estimate of the forced correction made the error larger, not smaller.
+A final hybrid, with the conditional calibrated offline from design-stage data and multiplied
+onboard by the measured crossing rate, also failed its capture and transfer criteria. A timing
+audit supplied the mechanism: in 92 percent of heralded capsizes (19 exceptions in 240) no
+emission interval separated the terminal crossing from the capsize, so the severity information
+the conditional carries becomes available only after the event has begun. Two methodological
+qualifications attach: fresh test slices of 30 to 60 expected events realized counts 21 to 37
+percent from expectation, and the capture intervals carried parameter uncertainty without
+realization noise, so the capture criterion on slices of this size is severe even for a
+correctly calibrated estimator; the reliability errors (0.040 for the hybrid and the rate-only
+map against 0.242 for a variance-based map) are the fairer calibration comparison. All
+verdicts were preregistered and stand as recorded.
+
+A companion study of conformalized forecast intervals on the same benchmark (following Romano,
+Patterson and Candès 2019; Gibbs and Candès 2021) found stationary marginal coverage accurate to
+0.75 percentage points in the mean, while every online adaptation scheme tested failed a
+predeclared joint rolling-coverage and alarm-cost criterion through the sea-state step. Those
+results are reported in the project record and not further discussed here.
+
+## 6. Discussion
+
+The results organize into a two-clock description. The slowly varying stability state, the
+eroding restoring that determines whether the vessel is in danger, is observable from motion
+history: ranking skill survives every forcing bandwidth, and the most informative engineered
+feature is in effect an online stiffness estimate, a quantity this community has long extracted
+from the roll period (Terada et al. 2016; Míguez González et al. 2017). The terminal encounter, the particular wave group that
+converts vulnerability into capsize, is not observable from motion history once the severe regime
+is established; the within-regime result is chance-level for learned, classical, and physical
+scores alike, consistent with the stochastic-Melnikov view that a deterministic separatrix loses
+its predictive meaning under random forcing (Frey and Simiu 1993). The practical reading is that motion-only systems should be understood, and
+evaluated, as vulnerability monitors rather than event predictors, a role compatible with the
+operational measures framework of the second-generation criteria (IMO 2020) rather than with an
+alarm bell.
+
+Read against the split-time programme, the results locate both the value and the limit of
+operating its metric onboard. As a zero-training detector the closed-form critical roll rate was
+sensitivity-dominant and cost-competitive with every learned alternative, which is at once a
+tribute to the physics and a caution against claims for learned detectors that have not faced it
+as a baseline. Its one systematic failure, degradation on stability-erosion campaigns where the
+assumed restoring becomes stale, identifies the missing component for operational use: online
+estimation of the current restoring state, whose feasibility the comparator results demonstrate,
+the roll period alone recovering most of the available headroom. The within-regime chance result
+then explains, in information terms, why the engineering-fidelity metric must re-simulate with
+the waves known: what the motion perturbation method obtains from the realized future is not
+present in the measured past. The U1 and H1 experiments made that boundary quantitative from
+inside the method itself. The rate factor of the decomposition, an observable of the slowly
+varying stability state, survives as a usable vulnerability measure; the severity factor, which
+would time the event, is in 92 percent of capsizes not available until the event has begun. The
+two-clock description of Section 6 is therefore not an external criticism of the split-time
+programme but a property its own decomposition exhibits when operated online: the observable
+factor works, and the unobservable factor is precisely the one the offline method recovers by
+re-simulating the future.
+
+The false-alarm finding bears on how such monitors should be judged. If three quarters or more of
+false episodes are honest responses to genuine hazard exposure, then false episodes per hour,
+computed against outcomes, systematically understates the value of the warning and overstates the
+cost. Metrics conditioned on hazard exposure, and alarm policies whose budgets are conditioned on
+regime, appear to the author a more productive direction than further detector refinement.
+
+Finally, the audit deserves a place in the discussion rather than an apology. The evaluation
+stack that produced the leaked operating points had predeclared kill criteria, confidence
+intervals on every rate, frozen data splits, and guarded holdouts, and it still admitted a factor
+of 2.5 of optimism through threshold provenance. The mechanism is not exotic and is not confined
+to this study. The community's evaluation practice for learned warning methods would benefit from
+treating threshold provenance as a reportable property of every operating point.
+
+## 7. Conclusions
+
+On a validated synthetic benchmark spanning three stability-failure archetypes, motion-only
+warning methods rank capsize risk well above chance at every forcing bandwidth tested, fail to
+transfer operating thresholds across failure modes, and discriminate event timing at chance
+inside an established severe regime; the majority of their false alarms coincide with real
+critical wave-group encounters. A test-selected evaluation had earlier made the leading detector
+appear two and one half times cheaper in false alarms than it is. The split-time experiments
+sharpen the same conclusion from inside the method: the upcrossing rate survives as a simple,
+usable vulnerability measure, while the severity term that would time the event arrives, in 92
+percent of capsizes, after the event has begun. Further progress on the timing
+question appears to require information about the incident wave field rather than refinement of
+motion-only architectures; shipboard sea-state estimation is an established literature (Nielsen
+2017), and the benchmark, with its frozen splits and audited protocol, is suited to that study
+without modification.
+
+## Acknowledgments
+
+The benchmark code, campaign definitions, and the complete numerical record, including the
+pre-audit results retained as historical artifacts, are available from the author.
+
+## References
+
+<!-- Verified against primary records 2026-08-03. Remaining flags: Themelis & Spyrou end page
+     (181-204 vs -206); Nielsen (2017) details from secondary sources; McCue & Troesch (2006)
+     and Shinozuka & Deodatis DOI strings to be re-checked at submission. -->
+
+- Anastopoulos, P. A., and Spyrou, K. J. (2019). Evaluation of the critical wave groups method in calculating the probability of ship capsize in beam seas. *Ocean Engineering* 187, 106213.
+- Anastopoulos, P. A., Spyrou, K. J., Bassler, C. C., and Belenky, V. (2016). Towards an improved critical wave groups method for the probabilistic assessment of large ship motions in irregular seas. *Probabilistic Engineering Mechanics* 44, 18–27.
+- Bačkalov, I., Bulian, G., Rosén, A., Shigunov, V., and Themelis, N. (2016). Improvement of ship stability and safety in intact condition through operational measures: challenges and opportunities. *Ocean Engineering* 120, 353–361.
+- Belenky, V. L., and Sevastianov, N. B. (2007). *Stability and Safety of Ships: Risk of Capsizing*, 2nd ed. SNAME, Jersey City.
+- Belenky, V., Weems, K., and Lin, W.-M. (2016). Split-time method for estimation of probability of capsizing caused by pure loss of stability. *Ocean Engineering* 122, 333–343.
+- Belenky, V., Weems, K. M., Lin, W.-M., Pipiras, V., and Sapsis, T. P. (2024). Estimation of probability of capsizing with split-time method. *Ocean Engineering* 292, 116452.
+- Boettiger, C., and Hastings, A. (2012). Early warning signals and the prosecutor's fallacy. *Proceedings of the Royal Society B* 279(1748), 4734–4739.
+- Bulian, G., and Francescutto, A. (2004). A simplified modular approach for the prediction of the roll motion due to the combined action of wind and waves. *Proc. IMechE Part M: Journal of Engineering for the Maritime Environment* 218(3), 189–212.
+- Bulian, G., and Francescutto, A. (2011). Effect of roll modelling in beam waves under multi-frequency excitation. *Ocean Engineering* 38(13), 1448–1463.
+- Bury, T. M., Sujith, R. I., Pavithran, I., Scheffer, M., Lenton, T. M., Anand, M., and Bauch, C. T. (2021). Deep learning for early warning signals of tipping points. *PNAS* 118(39), e2106140118.
+- Dakos, V., Carpenter, S. R., Brock, W. A., Ellison, A. M., Guttal, V., Ives, A. R., Kéfi, S., Livina, V., Seekell, D. A., van Nes, E. H., and Scheffer, M. (2012). Methods for detecting early warnings of critical transitions in time series illustrated using simulated ecological data. *PLoS ONE* 7(7), e41010.
+- Falzarano, J. M., Shaw, S. W., and Troesch, A. W. (1992). Application of global methods for analyzing dynamical systems to ship rolling motion and capsizing. *International Journal of Bifurcation and Chaos* 2(1), 101–115.
+- Frey, M., and Simiu, E. (1993). Noise-induced chaos and phase space flux. *Physica D* 63(3–4), 321–340.
+- Galeazzi, R., Blanke, M., and Poulsen, N. K. (2013). Early detection of parametric roll resonance on container ships. *IEEE Transactions on Control Systems Technology* 21(2), 489–503.
+- Galeazzi, R., Blanke, M., Falkenberg, T., Poulsen, N. K., Violaris, N., Storhaug, G., and Huss, M. (2015). Parametric roll resonance monitoring using signal-based detection. *Ocean Engineering* 109, 355–371.
+- Gibbs, I., and Candès, E. J. (2021). Adaptive conformal inference under distribution shift. *Advances in Neural Information Processing Systems* 34, 1660–1672.
+- Hasselmann, K., et al. (1973). Measurements of wind-wave growth and swell decay during the Joint North Sea Wave Project (JONSWAP). *Ergänzungsheft zur Deutschen Hydrographischen Zeitschrift*, Reihe A(8°), Nr. 12.
+- IMO (2020). *Interim Guidelines on the Second Generation Intact Stability Criteria*. MSC.1/Circ.1627, International Maritime Organization, London.
+- Kontolefas, I., and Spyrou, K. J. (2020). Probability of ship high-runs from phase-space data. *Journal of Ship Research* 64(1), 81–97.
+- McCue, L. S., and Troesch, A. W. (2004). Use of Lyapunov exponents to predict chaotic vessel motions. *Proceedings of the 7th International Ship Stability Workshop*, Shanghai.
+- McCue, L. S., and Troesch, A. W. (2006). A combined numerical–empirical method to calculate finite-time Lyapunov exponents from experimental time series with application to vessel capsizing. *Ocean Engineering* 33(13), 1796–1813.
+- Míguez González, M., Bulian, G., Santiago Caamaño, L., and Díaz Casás, V. (2017). Towards real-time identification of initial stability from ship roll motion analysis. *Proceedings of the 16th International Ship Stability Workshop*, Belgrade, 221–229.
+- Míguez González, M., Díaz Casás, V., López Peña, F., and Pérez Rojas, L. (2023). On the application of artificial neural networks for the real time prediction of parametric roll resonance. In Spyrou, K. J., et al. (eds.), *Contemporary Ideas on Ship Stability: From Dynamics to Criteria*, Springer, 335–349.
+- Nayfeh, A. H., and Mook, D. T. (1979). *Nonlinear Oscillations*. Wiley-Interscience, New York.
+- Nielsen, U. D. (2017). A concise account of techniques available for shipboard sea state estimation. *Ocean Engineering* 129, 352–362.
+- Petacco, N., and Gualeni, P. (2020). IMO second generation intact stability criteria: general overview and focus on operational measures. *Journal of Marine Science and Engineering* 8(7), 494.
+- Rahola, J. (1939). *The Judging of the Stability of Ships and the Determination of the Minimum Amount of Stability — Especially Considering the Vessels Navigating Finnish Waters*. Doctoral thesis, Technical University of Finland, Helsinki.
+- Romano, Y., Patterson, E., and Candès, E. J. (2019). Conformalized quantile regression. *Advances in Neural Information Processing Systems* 32, 3538–3548.
+- Shigunov, V. (2023). Intact stability operational measures: criteria, standards and examples. *Ocean Engineering* 279, 114446.
+- Shinozuka, M., and Deodatis, G. (1991). Simulation of stochastic processes by spectral representation. *Applied Mechanics Reviews* 44(4), 191–204.
+- Silva, K. M., and Maki, K. J. (2024). Implementation of the critical wave groups method with computational fluid dynamics and neural networks. *Ocean Engineering* 292, 116468.
+- Story, W. R. (2009). *Application of Lyapunov Exponents to Strange Attractors and Intact & Damaged Ship Stability*. M.S. thesis, Aerospace and Ocean Engineering, Virginia Polytechnic Institute and State University, Blacksburg.
+- Terada, D., Tamashima, M., Nakao, I., and Matsuda, A. (2016). Estimation of the metacentric height by using onboard monitoring roll data based on time series analysis. *Proceedings of the 15th International Ship Stability Workshop*, Stockholm, 209–215.
+- Themelis, N., and Spyrou, K. J. (2007). Probabilistic assessment of ship stability. *SNAME Transactions* 115, 181–204.
+- Umeda, N., Usada, S., Mizumoto, K., and Matsuda, A. (2016). Broaching probability for a ship in irregular stern-quartering waves: theoretical prediction and experimental validation. *Journal of Marine Science and Technology* 21(1), 23–37.
+- Weems, K., Belenky, V., Campbell, B., and Pipiras, V. (2023). Statistical validation of the split-time method with volume-based numerical simulation. In Spyrou, K. J., Belenky, V. L., Katayama, T., Bačkalov, I., and Francescutto, A. (eds.), *Contemporary Ideas on Ship Stability: From Dynamics to Criteria*, Springer, Cham, 225–243.

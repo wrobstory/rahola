@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Capsize, From First Principles</title>
+<style>
+  :root{
+    --bg:#f5efdf; --bg2:#efe7d2; --panel:#f5efdf; --panel2:#ede4cc;
+    --ink:#262019; --ink2:#52493c; --ink3:#837763;
+    --blue:#262019; --green:#262019; --yellow:#6e6250; --red:#9e2f27; --purple:#52493c;
+    --line:#c3b697;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:16.5px/1.6 "Iowan Old Style",Palatino,"Palatino Linotype","Book Antiqua",Georgia,serif;}
+  main{max-width:720px;margin:0 auto;padding:0 20px 120px;counter-reset:eqn}
+  h1{font-size:1.7rem;line-height:1.3;margin:.4em 0 .3em;font-weight:600;letter-spacing:.12em;
+    text-transform:uppercase;text-align:center}
+  h2{font-size:1.05rem;margin:3em 0 .8em;font-weight:700;letter-spacing:.09em;
+    text-transform:uppercase;text-align:center}
+  h3{font-size:1rem;margin:1.8em 0 .4em;color:var(--ink);font-style:italic;font-weight:600}
+  h2 .no{font-weight:700;margin-right:.6em}
+  h2 .no::after{content:"."}
+  p{margin:.85em 0;text-align:justify;hyphens:auto}
+  .lead{font-style:italic;color:var(--ink2);text-align:justify}
+  a{color:var(--ink);text-decoration-color:var(--ink3)}
+  em{color:var(--ink)}
+  .k-ship,.k-sea,.k-state,.k-alarm{color:var(--ink);font-weight:600;letter-spacing:.02em}
+  .k-cap{color:var(--red);font-weight:600}
+  nav{position:sticky;top:0;z-index:50;background:var(--bg);
+    border-bottom:1px solid var(--ink2)}
+  nav .in{max-width:980px;margin:0 auto;display:flex;gap:2px;overflow-x:auto;padding:0 12px;justify-content:safe center}
+  nav a{color:var(--ink3);text-decoration:none;font-size:.72rem;padding:9px 8px;white-space:nowrap;
+    letter-spacing:.06em;text-transform:uppercase;border-bottom:2px solid transparent}
+  nav a:hover{color:var(--ink)}
+  nav a.on{color:var(--ink);border-bottom-color:var(--red)}
+  #pbar{position:fixed;top:0;left:0;height:2px;background:var(--red);z-index:60;width:0}
+  header.hero{padding:56px 0 8px}
+  .masthead{text-align:center;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink2);border-top:3px double var(--ink);border-bottom:1px solid var(--ink);
+    padding:8px 0;margin-bottom:26px}
+  .authorline{text-align:center;font-variant-caps:small-caps;letter-spacing:.08em;font-size:1.02rem;margin:.2em 0 0}
+  .affil{text-align:center;font-style:italic;font-size:.9rem;color:var(--ink2);margin:.15em 0}
+  .dateline{text-align:center;font-size:.82rem;color:var(--ink3);margin:.6em 0 1.6em}
+  .sub{color:var(--ink2);font-size:1rem;text-align:center;font-style:italic}
+  .abstract{font-size:.9rem;margin:1.4em 2.2em;text-align:justify;hyphens:auto}
+  .abstract .abshead{font-variant-caps:small-caps;letter-spacing:.06em}
+  .note{background:transparent;border:none;border-left:2px solid var(--ink3);
+    border-radius:0;padding:2px 0 2px 16px;font-size:.88rem;font-style:italic;color:var(--ink2);margin:1.2em 1em}
+  .note.warn{border-left-color:var(--red)}
+  .note.good{border-left-color:var(--ink)}
+  figure.viz{margin:2em -30px;background:var(--panel);border-top:1px solid var(--ink2);
+    border-bottom:1px solid var(--ink2);border-left:none;border-right:none;
+    border-radius:0;padding:16px 10px 12px}
+  @media(max-width:820px){figure.viz{margin:2em -8px}}
+  figure.viz canvas{width:100%;display:block}
+  figcaption{font-size:.84rem;color:var(--ink2);margin-top:10px;line-height:1.5;text-align:justify;hyphens:auto}
+  figcaption b{color:var(--ink);font-variant-caps:small-caps;letter-spacing:.03em;font-weight:600}
+  .ctl{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;margin:10px 2px 4px;
+    font-size:.8rem;font-style:italic;color:var(--ink2)}
+  .ctl label{display:flex;align-items:center;gap:9px;white-space:nowrap}
+  .ctl input[type=range]{width:150px;accent-color:var(--red)}
+  .ctl output{font-variant-numeric:tabular-nums;font-style:normal;color:var(--ink);min-width:3.6em}
+  .ctl .btn{background:var(--bg);border:1px solid var(--ink2);color:var(--ink);
+    border-radius:0;padding:3px 12px;cursor:pointer;font-size:.78rem;font-family:inherit;
+    letter-spacing:.05em;text-transform:uppercase}
+  .ctl .btn.on{color:var(--bg);background:var(--ink);border-color:var(--ink)}
+  .eq{font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:1.18rem;
+    text-align:center;margin:1.4em 0;line-height:1.9;letter-spacing:.2px;
+    position:relative;counter-increment:eqn}
+  .eq::after{content:"(" counter(eqn) ")";position:absolute;right:0;top:50%;
+    transform:translateY(-50%);font-style:normal;font-size:.85rem;color:var(--ink2)}
+  .eq .rm{font-style:normal}
+  .eq sub,.eq sup{font-size:.62em}
+  .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 3px;line-height:1.3;position:relative;top:-0.08em}
+  .eq .frac>span{display:block;padding:0 5px;text-align:center}
+  .eq .frac>span:last-child{border-top:1px solid var(--ink)}
+  .eq .sq{border-top:1px solid var(--ink);padding:1px 3px 0 1px}
+  .eq .sq::before{content:"√";font-style:normal;margin-right:1px}
+  .eq .big{font-size:1.5em;vertical-align:-.15em;font-style:normal}
+  .eq .t-ship,.eq .t-sea,.eq .t-alarm,.eq .t-state{color:var(--ink)}
+  .eq .t-cap{color:var(--red)}
+  .eq .lbl{display:block;font-family:inherit;font-style:normal;font-size:.72rem;color:var(--ink3);letter-spacing:0;margin-top:2px}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0;margin:1.6em 0;
+    border-top:2px solid var(--ink);border-bottom:1px solid var(--ink)}
+  .tile{background:transparent;border:none;border-right:1px solid var(--line);border-radius:0;padding:12px 14px}
+  .tile:last-child{border-right:none}
+  .tile .v{font-size:1.35rem;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:0}
+  .tile .l{font-size:.76rem;color:var(--ink2);margin-top:2px;line-height:1.45;text-align:left}
+  .tile.g .v,.tile.b .v,.tile.y .v,.tile.p .v{color:var(--ink)}
+  .tile.r .v{color:var(--red)}
+  table.cmp{border-collapse:collapse;width:100%;font-size:.88rem;margin:1.4em 0;
+    border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+  table.cmp th,table.cmp td{padding:7px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+  table.cmp tr:last-child td{border-bottom:none}
+  table.cmp th{color:var(--ink);font-weight:600;font-size:.76rem;text-transform:uppercase;
+    letter-spacing:.07em;border-bottom:1px solid var(--ink)}
+  table.cmp td:nth-child(n+3){font-variant-numeric:tabular-nums}
+  code{background:transparent;border-radius:0;padding:0 2px;font-size:.85em;color:var(--ink);
+    font-family:"Courier New",Courier,monospace}
+  hr.sep{border:none;border-top:1px solid var(--line);margin:3.2em 0}
+  footer{color:var(--ink2);font-size:.82rem;border-top:3px double var(--ink);margin-top:80px;padding-top:16px;
+    font-style:italic;text-align:justify}
+</style>
+</head>
+<body>
+<div id="pbar"></div>
+<nav><div class="in">
+  <a href="#s0">0 · What a wave is</a>
+  <a href="#s1">1 · A ship is a well</a>
+  <a href="#s2">2 · The sea is random</a>
+  <a href="#s3">3 · Capsize is escape</a>
+  <a href="#s4">4 · Two clocks</a>
+  <a href="#s5">5 · Motion → alarm</a>
+  <a href="#s6">6 · Five detectors</a>
+  <a href="#s7">7 · What we measured</a>
+  <a href="#s8">8 · The leakage lesson</a>
+  <a href="#s9">9 · Where information ends</a>
+</div></nav>
+<main>
+
+<header class="hero">
+  <h1>Capsize, From First Principles</h1>
+  <p class="sub">Why the sea makes wave groups, why groups capsize ships, and what roll motion
+  can and cannot tell you before it happens — the <code>rahola</code> project, illustrated.</p>
+  <p class="abstract">Every figure below except the last one runs live in your browser. The wave
+  figure animates the exact deep-water dispersion relation; the roll figures integrate the same
+  nondimensional equation the library integrates, with the library's own conventions. The plates
+  use two inks: black for the ship, the sea, and the warnings, told apart by line weight and
+  dash; <span class="k-cap">red for danger</span> — escape angles, capsize, and one statistical
+  trap.</p>
+</header>
+
+<h2 id="s0"><span class="no">0</span>What a wave is</h2>
+<p class="lead">Before the ship, the sea. One fact about deep water drives everything in this
+story: long waves outrun short ones.</p>
+<p>A water wave is gravity arguing with inertia. Depress the surface; gravity pushes it back; the
+overshoot travels. In water deeper than a wavelength, the strength of that restoring tug depends
+on the wavelength itself, so each wavelength settles its argument at its own speed:</p>
+<div class="eq">
+  ω² <span class="rm">=</span> gk,
+  <span class="rm">so</span>&nbsp;
+  c <span class="rm">=</span> <span class="sq">g/k</span>
+  <span class="lbl">dispersion: long waves travel fast, short waves travel slow — the one law this
+  page keeps collecting interest on</span></div>
+<p>Dispersion has a consequence you can watch. Add two wave trains of nearly equal wavelength and
+they beat: packets of large crests separated by lulls. Now track a packet instead of a crest. The
+crests move at c, but the packet moves at dω/dk, and for ω² = gk the derivative gives exactly
+c/2. Crests are born at the back of a group, sweep forward through it, and die at the front:</p>
+
+<figure class="viz" id="fig-disp">
+  <canvas height="300"></canvas>
+  <div class="ctl">
+    <label>wavelength spread <input type="range" min="0.06" max="0.30" step="0.005" value="0.14" data-k="dk"><output></output></label>
+    <button class="btn" data-k="play">animate</button>
+    <span id="disp-readout" style="color:var(--ink2)"></span>
+  </div>
+  <figcaption><b>Fig 0 — dispersion makes groups.</b> Two deep-water wave trains of nearby
+  wavelength, summed, with speeds computed from the exact dispersion relation. The thin marker
+  rides one crest at the phase speed; the <span style="color:var(--red)">red marker</span> rides
+  the group envelope at exactly half that speed. Widen the wavelength spread and the groups
+  shorten. A wave group is not folklore; it is dispersion doing arithmetic.</figcaption>
+</figure>
+
+<p>Hold on to that red marker. Groups carry the sea's energy, they arrive as discrete events, and
+by §4 they will turn out to be the clock that decides the <em>moment</em> of capsize — the one
+clock no measurement aboard the ship can read.</p>
+
+<h2 id="s1"><span class="no">1</span>A ship is a ball in a well</h2>
+<p class="lead">The righting-arm curve is the wall of a valley, and the ship is a ball rolling in
+it. The picture is old; the point is what the valley's rim does when stability erodes.</p>
+<p>Write roll as one degree of freedom. Scale the angle by the angle of vanishing stability
+φ<sub>v</sub> (so <i>x</i> = ±1 is the cliff edge) and time by the natural frequency. The whole
+family of ships this project studies obeys one equation:</p>
+<div class="eq">
+  <span class="t-ship">x″ + 2ζx′ + q·x′|x′|</span> +
+  <span class="t-state">κ(τ)</span><span class="t-ship">(x − x³)</span>
+  <span class="rm">=</span> <span class="t-sea">f(τ)</span>
+  <span class="lbl"><span class="t-ship">the ship: inertia, damping, softening restoring</span> ·
+  <span class="t-state">κ — how much stiffness is left</span> ·
+  <span class="t-sea">f — what the sea is doing right now</span></span></div>
+<p>The restoring term <i>x</i> − <i>x</i>³ is the archetype of every GZ curve that ends: it rises,
+peaks (at <i>x</i> = 1/√3 — the GZ-max of this hull), and dies at the
+<span class="k-cap">escape angle</span>. Integrate it and you get the valley — with a rim of
+finite height. The rim is the <b>saddle</b>: past it, the restoring moment pushes the ship
+<em>over</em>, not back.</p>
+
+<figure class="viz" id="fig-well">
+  <canvas height="300"></canvas>
+  <div class="ctl">
+    <label>stiffness κ <input type="range" min="0.30" max="1.10" step="0.01" value="1.00" data-k="kap"><output></output></label>
+  </div>
+  <figcaption><b>Fig 1 — the restoring curve (left) and its potential well (right), computed from
+  the exact Family-1 formula.</b> Slide κ down — cargo shift, flooding, stability loss on a wave
+  crest — and watch the <span style="color:var(--red)">rim height</span> collapse like κ/4. The
+  well does not tilt as it weakens; it <em>shallows</em>. That distinction runs the whole page:
+  a weak ship looks upright right up until it isn't.</figcaption>
+</figure>
+
+<h2 id="s2"><span class="no">2</span>The sea is a random sum of cosines</h2>
+<p class="lead">An irregular seaway is a crowd of regular waves with random timing. This is
+physics, not convenience: to first order the surface equations are linear, so wave trains pass
+through one another unchanged, and any storm decomposes into independent components.</p>
+<p>All a storm can choose is how its energy spreads across frequency. That choice is the
+<b>spectrum</b>, and for wind seas the JONSWAP field program measured it: energy piles up near a
+peak frequency set by wind and fetch, with a sharp low-frequency front and a power-law tail. The
+peakedness γ measures how narrowly the energy crowds the peak, and §0 tells you what narrowness
+buys: components of nearly equal wavelength beat, so a peaked spectrum makes a <em>groupy</em>
+sea. Pick amplitudes from the spectrum, give every component an independent random phase, and
+add:</p>
+<div class="eq">
+  <span class="t-sea">f(τ) = <span class="big rm">Σ</span><sub>j</sub> A<sub>j</sub>
+  cos(ω<sub>j</sub>τ + θ<sub>j</sub>)</span>
+  <span class="lbl">amplitudes from the spectrum's energy; phases from a seeded random draw —
+  the seed <em>is</em> the sea state's identity</span></div>
+
+<figure class="viz" id="fig-sea">
+  <canvas height="340"></canvas>
+  <div class="ctl">
+    <label>peakedness γ <input type="range" min="1" max="7" step="0.1" value="3.3" data-k="gam"><output></output></label>
+    <label>severity <input type="range" min="0.05" max="0.30" step="0.005" value="0.16" data-k="sev"><output></output></label>
+    <button class="btn" data-k="seed">new phases</button>
+  </div>
+  <figcaption><b>Fig 2 — the JONSWAP spectrum (top) and one realization of the roll moment it
+  produces (bottom).</b> Raise γ and energy crowds toward one frequency: the sea becomes
+  <em>narrowband</em>, and the realization organizes into visible
+  <span style="color:var(--yellow)">wave groups</span> — packets of big waves with lulls between.
+  Hold that thought; groups are the villain <em>and</em> the alibi of §7.</figcaption>
+</figure>
+
+<p>One step remains between the sea and the ship: how a wave becomes a roll moment. In beam
+seas a hull tries to sit perpendicular to the local water surface, so to first order the forcing
+follows the <em>wave slope</em>, scaled by an effective wave-slope coefficient that stands in for
+hull geometry. And the ship answers selectively. Roll is the lightly damped motion — at the
+damping used here the resonant response is roughly ten times the static one — so the ship
+amplifies exactly the frequencies near its natural period and shrugs off the rest. That is why
+roll, alone among the six motions, owns this problem.</p>
+
+<h2 id="s3"><span class="no">3</span>Capsize is an escape, not a tip</h2>
+<p class="lead">Put §1 and §2 together and run it. Capsize is the moment the forced ball finds
+the rim.</p>
+<p>This is the exact simulation the library runs a hundred thousand times to build its datasets —
+here it runs once, in front of you. The state is absorbing: past the rim there is no coming back,
+and every sample after the event is deleted (a warning method must never train on ghosts).</p>
+
+<figure class="viz" id="fig-run">
+  <canvas height="300"></canvas>
+  <div class="ctl">
+    <label>severity <input type="range" min="0.08" max="0.30" step="0.005" value="0.19" data-k="sev"><output></output></label>
+    <label>stiffness κ <input type="range" min="0.40" max="1.10" step="0.01" value="0.80" data-k="kap"><output></output></label>
+    <button class="btn" data-k="seed">new sea</button>
+    <span id="run-readout" style="color:var(--ink2)"></span>
+  </div>
+  <figcaption><b>Fig 3 — one life of one ship, integrated live.</b> The
+  <span style="color:var(--blue)">roll trace</span> rides the sea between the
+  <span style="color:var(--red)">escape angles</span>. Most seas at this severity are survived.
+  Push severity up, or κ down, and note <em>how</em> failure arrives: not a slow lean — a
+  particular group of waves, then over. Same ship, new sea (new phases), completely different
+  fate. That randomness is the problem this project studies.</figcaption>
+</figure>
+
+<h2 id="s4"><span class="no">4</span>Two clocks: vulnerability and encounter</h2>
+<p class="lead">The project's central finding fits in one sentence: capsize runs on two clocks,
+and motion history can read only one of them.</p>
+<p>The <span class="k-state">slow clock</span> is the well itself — κ eroding as cargo shifts,
+ice accretes, or a damaged compartment floods. It sets <em>whether</em> the ship is in danger
+and roughly <em>when</em> danger becomes acute. The <span class="k-sea">fast clock</span> is
+the arrival of a particular wave group. It sets the <em>instant</em>. Watch both clocks run in
+an ensemble — thirty ships, identical except for their private seas, while the well shallows
+under all of them:</p>
+
+<figure class="viz" id="fig-clocks">
+  <canvas height="380"></canvas>
+  <div class="ctl">
+    <label>final stiffness <input type="range" min="0.30" max="0.70" step="0.01" value="0.45" data-k="kend"><output></output></label>
+    <label>severity <input type="range" min="0.10" max="0.24" step="0.005" value="0.16" data-k="sev"><output></output></label>
+    <button class="btn" data-k="rerun">re-run ensemble</button>
+    <span id="clocks-readout" style="color:var(--ink2)"></span>
+  </div>
+  <figcaption><b>Fig 4 — thirty ships under one eroding κ(τ), integrated live.</b> Top: the
+  <span style="color:var(--purple)">stiffness ramp</span> every ship shares. Middle: each
+  <span style="color:var(--red)">capsize</span> as a dot at the moment it happened — one row per
+  ship. Bottom: the <span style="color:var(--green)">surviving fraction</span>. The dots cluster
+  where κ has eroded — the slow clock is legible. But <em>within</em> the cluster their exact
+  times scatter over many wave encounters: that residual scatter belongs to each ship's private
+  sea, and no amount of staring at the ramp will predict it. §7 measures both halves of this
+  picture.</figcaption>
+</figure>
+
+<h2 id="s5"><span class="no">5</span>From motion to alarm — the geometry of a margin</h2>
+<p class="lead">A warning score is a function of what you can measure: roll and roll rate. The
+best zero-training score is pure geometry — how fast is the ship allowed to be rolling,
+this far from the rim?</p>
+<p>Near the saddle, the boundary between "swings back" and "goes over" is a line in the phase
+plane: the saddle's <b>stable manifold</b>. The split-time school (Belenky and colleagues) wrote
+its slope down for the piecewise-linear well, and the answer is the project's physics baseline —
+the <b>danger margin</b>:</p>
+<div class="eq">
+  <span class="t-alarm">x′<sub>crit</sub>(x)</span> <span class="rm">=</span>
+  <span class="rm">[</span>ζ + <span class="sq">k₁κ + ζ²</span><span class="rm">]</span>
+  (1 − |x|)
+  <span class="lbl">the fastest outward roll rate the well can still forgive, at this heel —
+  measured state above the line means the current encounter is already terminal</span></div>
+
+<figure class="viz" id="fig-phase">
+  <canvas height="360"></canvas>
+  <div class="ctl">
+    <label>stiffness κ <input type="range" min="0.40" max="1.10" step="0.01" value="0.80" data-k="kap"><output></output></label>
+    <button class="btn" data-k="anim">ride one sea</button>
+    <span id="phase-readout" style="color:var(--ink2)"></span>
+  </div>
+  <figcaption><b>Fig 5 — the phase plane, live.</b> The
+  <span style="color:var(--red)">separatrix</span> (computed exactly: x′ = ±(1−x²)√(κ/2)) encloses
+  the safe region; the <span style="color:var(--green)">critical-rate line</span> is the margin
+  detector's alarm boundary near the right-hand saddle. Press <em>ride one sea</em> and the
+  <span style="color:var(--blue)">state</span> wanders the well under real forcing — the readout
+  is its live margin. Slide κ down and watch the safe region shrink while the ship's motion,
+  for a while, looks exactly the same. That "for a while" is the entire early-warning problem.</figcaption>
+</figure>
+
+<h2 id="s6"><span class="no">6</span>Five detectors, one harness</h2>
+<p class="lead">The project put five ways of reading motion behind one frozen evaluation: same
+windows, same causal normalization, same episode accounting, thresholds chosen on calibration
+data and spent exactly once on test.</p>
+<table class="cmp">
+  <tr><th>Detector</th><th>The idea in one line</th><th>Pooled test operating point*</th></tr>
+  <tr><td><span class="k-ship">Temporal CNN</span> (2,969 params)</td>
+      <td>learn the precursor shape from labeled windows</td><td>92.4% sens · 15.5 false ep/h</td></tr>
+  <tr><td>Classical EWS</td><td>variance and autocorrelation should rise near a bifurcation</td>
+      <td>100% sens · 21.4/h — near-always-on</td></tr>
+  <tr><td>Galeazzi GLRT</td><td>detect the parametric-roll power signature statistically</td>
+      <td>see RESULTS.md — strong only on its family</td></tr>
+  <tr><td><span class="k-alarm">Danger margin</span></td><td>the Fig-5 geometry, zero training</td>
+      <td>high sensitivity, always-on-adjacent threshold</td></tr>
+  <tr><td>Neighbor loss (2009)</td><td>alarm when the state enters phase space it has never
+      visited — the author's graduate thesis, reimplemented faithfully</td>
+      <td>the most <em>sensitive</em> score tested; the costliest false-episode rate</td></tr>
+</table>
+<p style="font-size:.85rem;color:var(--ink3)">* Corrected, calibration-frozen numbers from the
+audited record — see §8 for why the first published numbers were better and wrong.</p>
+<p>An <b>alarm episode</b> is not a sample — it is a sustained event: three consecutive
+threshold crossings open it, quiet closes it, and a refractory period stops one rough patch from
+counting as ten alarms. Sensitivity and false-episodes-per-hour are properties of the
+<em>threshold</em>, and choosing the threshold is a modeling act. Choose one yourself:</p>
+
+<figure class="viz" id="fig-alarm">
+  <canvas height="380"></canvas>
+  <div class="ctl">
+    <label>alarm threshold <input type="range" min="-1.1" max="0.1" step="0.01" value="-0.45" data-k="thr"><output></output></label>
+    <button class="btn" data-k="next">next ship</button>
+    <span id="alarm-readout" style="color:var(--ink2)"></span>
+  </div>
+  <figcaption><b>Fig 6 — the operating-point dilemma, live on a 24-ship ensemble.</b> Top: one
+  ship's <span style="color:var(--green)">danger-margin score</span> against your threshold;
+  confirmed <span style="color:var(--green)">episodes</span> shade the band, and a
+  <span style="color:var(--red)">capsize</span>, if it comes, is marked. Bottom: the whole
+  ensemble's sensitivity and false-episode rate at your threshold, recomputed live. Slide it:
+  every threshold that catches nearly all capsizes also alarms constantly. This trade-off is not
+  an implementation detail — in the corrected results it is the headline.</figcaption>
+</figure>
+
+<h2 id="s7"><span class="no">7</span>What the experiments established</h2>
+<p class="lead">Three findings survived every correction pass. Each is one of the clocks from §4,
+measured.</p>
+<div class="tiles">
+  <div class="tile b"><div class="v">0.86–0.92</div><div class="l">CNN ranking skill (AUC) across
+    every forcing bandwidth tested — the <b>slow clock is legible</b> in motion history</div></div>
+  <div class="tile r"><div class="v">0.47–0.51</div><div class="l">every detector's AUC
+    <em>inside</em> an established harsh regime (D5) — the <b>fast clock is not</b></div></div>
+  <div class="tile y"><div class="v">75–88%</div><div class="l">of nominally false episodes
+    coincided with genuine non-capsizing critical wave groups (D4)</div></div>
+  <div class="tile g"><div class="v">0.75 pp</div><div class="l">mean stationary conformal
+    coverage error (E1) — the calibration machinery itself behaves</div></div>
+</div>
+<p>Read the three big tiles together and the two-clock picture becomes quantitative.
+<b>Vulnerability is readable:</b> a small CNN ranks danger windows far above chance, at every
+bandwidth, and no baseline matches its pooled operating cost. <b>Encounter is not:</b> once the
+regime is established, predicting <em>which</em> roll becomes the last one is coin-flip territory
+for every motion-only method — learned, classical, or physical. And the alarms a warning system
+does raise are mostly <b>honest</b>: three quarters or more of "false" episodes flagged a real
+critical wave group that the ship happened to survive. An outcome-based false-positive rate
+charges the detector for the sea's mercy.</p>
+<p>Two conclusions did <em>not</em> survive: no detector's ≥90%-sensitivity threshold transferred
+across held-out failure families (D2 — the CNN included), and the bandwidth experiment's required
+operating-cost margin missed its predeclared 10% bar (8.6% — inconclusive, and reported as such).
+Ranking skill and a deployable threshold are different assets; this project kept ending up rich
+in the first and poor in the second.</p>
+
+<h2 id="s8"><span class="no">8</span>The leakage lesson — the audit's red pen</h2>
+<p class="lead">The first version of these results was better. It was also wrong, in a way almost
+every published paper in this field is wrong.</p>
+<p>The original harness swept thresholds and reported, for each detector, "the lowest false-alarm
+rate at ≥90% sensitivity <em>on the test set</em>." That sentence contains the bug: the threshold
+was <em>chosen using test outcomes</em>, then graded on the same outcomes. With rare events, the
+lucky threshold always exists. The corrected protocol chooses on calibration data, freezes, and
+spends the test set once. The same detector, on the same data:</p>
+<div class="tiles">
+  <div class="tile r"><div class="v">6.3 /h</div><div class="l">the CNN's false-episode rate as
+    first reported — threshold quietly selected on test</div></div>
+  <div class="tile g"><div class="v">15.5 /h</div><div class="l">the same detector,
+    calibration-frozen and spent once — the honest number</div></div>
+  <div class="tile b"><div class="v">138</div><div class="l">tests in the corrected stack —
+    threshold freezing is now enforced by code, not discipline</div></div>
+</div>
+<p>Feel the mechanism yourself. The toy below draws rare positive scores and common negative
+scores from fixed distributions — so the <em>true</em> cost of 90% sensitivity is known exactly —
+then plays both procedures hundreds of times:</p>
+
+<figure class="viz" id="fig-leak">
+  <canvas height="320"></canvas>
+  <div class="ctl">
+    <label>capsizes in test set <input type="range" min="10" max="120" step="5" value="30" data-k="np"><output></output></label>
+    <button class="btn" data-k="rerun">re-draw</button>
+    <span id="leak-readout" style="color:var(--ink2)"></span>
+  </div>
+  <figcaption><b>Fig 7 — a labeled statistical toy (the only non-live-physics figure on this
+  page).</b> Histogram of the false-positive rate each procedure <em>reports</em>, over hundreds
+  of resampled experiments: <span style="color:var(--red)">choose the threshold on test</span>
+  versus <span style="color:var(--green)">choose on calibration, evaluate frozen</span>; the
+  dashed line is the true cost. Test-selection is biased low <em>every time</em> — and the rarer
+  the event, the bigger the lie. Slide the count down toward realistic capsize rarity and watch
+  the red histogram walk away from the truth.</figcaption>
+</figure>
+<div class="note warn">The audit also cost the project both of its guarded holdout blocks — one
+spent legitimately, one spent with a threshold chosen on its own labels, which demoted that
+"winner" to a historical footnote. The repaired rule is now mechanical: a holdout run requires
+frozen, hashed thresholds and a clean tree, and refuses to run twice.</div>
+
+<h2 id="s9"><span class="no">9</span>Where the information ends — and what's next</h2>
+<p class="lead">The last experiment asked the sharpest question: is the CNN's ceiling an
+architecture problem or an information problem?</p>
+<p>Because the simulator's truth is knowable, the project could restart thousands of futures from
+the <em>exact</em> hidden state — perfect knowledge of the ship, no knowledge of the coming
+waves — and compare everything on one balanced window set:</p>
+<div class="tiles">
+  <div class="tile p"><div class="v">0.851</div><div class="l">AUC restarting from the exact
+    hidden state, futures independent — perfect ship-knowledge, no wave-knowledge</div></div>
+  <div class="tile y"><div class="v">0.762</div><div class="l">XGBoost on engineered features —
+    the roll <em>period</em> is a stiffness gauge, and boring tools read it well</div></div>
+  <div class="tile b"><div class="v">0.627</div><div class="l">the CNN on the same balanced
+    windows — much of its natural-population skill was prevalence structure</div></div>
+</div>
+<p>Two honest caveats made this comparison humbler and more interesting than planned. These are
+<em>restart comparators, not ceilings</em>: the sea has memory (§2's groups), so real motion
+history carries a preview of the next few waves that an independent-future restart deliberately
+throws away. And the filtered-state comparator underperformed for a mundane reason — its particle
+filter was weaker than a roll-period feature. What remains is still directional: there is real
+headroom above the CNN, it lives in <b>state inference</b>, and the cheapest tools claimed it
+first.</p>
+<table class="cmp">
+  <tr><th>Claim</th><th>Status</th><th>Where you met it</th></tr>
+  <tr><td>Vulnerability (the slow clock) is readable from motion alone</td><td>established, all bandwidths</td><td>§4, §7</td></tr>
+  <tr><td>Encounter timing (the fast clock) is not, within-regime</td><td>established (chance-level, all detectors)</td><td>§4, §7</td></tr>
+  <tr><td>Most "false" alarms flag real hazard the ship survived</td><td>established, descriptive (75–88%)</td><td>§6, §7</td></tr>
+  <tr><td>A deployable cross-family threshold</td><td>not achieved by any method tested</td><td>§7</td></tr>
+  <tr><td>Test-selected operating points inflate results field-wide</td><td>demonstrated on this project's own numbers</td><td>§8</td></tr>
+  <tr><td>Next live hypothesis: one upwave measurement breaks the D5 ceiling</td><td>designed, staged as an information ladder — not yet run</td><td>—</td></tr>
+</table>
+<p>The forward path follows the information, not the architecture: the fast clock is invisible
+from onboard motion because the deciding waves have not arrived yet. The funded next hypothesis
+puts one cheap sensor <em>upwave</em> — a rangefinder's single spot, or a scout vessel's motion —
+and asks whether one advanced scalar is enough. Either answer closes the question this project
+was built to ask.</p>
+
+<footer>
+  <p>Built for Rob · companion piece to <i>Wave Resistance, From First Principles</i>. Figure 0
+  animates the exact deep-water dispersion relation; Figures 1–6 integrate the library's
+  nondimensional roll equation live (RK4, ≥40 steps/period, precomputed spectral forcing,
+  absorbing capsize, ζ=0.05, q=0.02); Figure 7 is a statistical toy with known ground truth. Every quantitative claim (0.86–0.92, 0.47–0.51, 75–88%, 92.4%/15.5,
+  6.3→15.5, 0.851/0.762/0.627, 138 tests) is from the post-audit record in
+  <code>RESULTS.md</code>/<code>PROJECT_SUMMARY.md</code>. Rahola is research software, not a
+  vessel-operational safety system.</p>
+</footer>
+</main>
+
+<script>
+"use strict";
+/* ---------- deferred boot ---------- */
+const FIGS=[];
+function defer(f){FIGS.push(f);}
+const $=(s,el=document)=>el.querySelector(s);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const C={bg:'#f5efdf',bg2:'#ede4cc',grid:'#cfc2a4',ink:'#262019',ink2:'#52493c',ink3:'#837763',
+  blue:'#262019',green:'#262019',yellow:'#6e6250',red:'#9e2f27',purple:'#52493c'};
+function setupCanvas(fig){
+  const cv=$('canvas',fig),dpr=window.devicePixelRatio||1;
+  const H=+cv.getAttribute('height');
+  cv.style.display='block';cv.style.width='100%';cv.style.height=H+'px';
+  const r=cv.getBoundingClientRect();
+  const W=Math.max(1,Math.round(r.width));
+  cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);
+  const ctx=cv.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {cv,ctx,W,H};
+}
+const fmt=v=>Math.abs(v)>=100?v.toFixed(0):Math.abs(v)>=1?v.toFixed(2).replace(/\.?0+$/,''):v.toFixed(3).replace(/0+$/,'').replace(/\.$/,'');
+function sliders(fig,onChange){
+  const st={};
+  fig.querySelectorAll('input[type=range]').forEach(inp=>{
+    const out=inp.parentElement.querySelector('output');
+    const upd=()=>{st[inp.dataset.k]=+inp.value;if(out)out.textContent=fmt(+inp.value);onChange&&onChange(st);};
+    inp.addEventListener('input',upd);st[inp.dataset.k]=+inp.value;if(out)out.textContent=fmt(+inp.value);
+  });
+  return st;
+}
+function label(ctx,txt,x,y,col=C.ink3,al='left',fs=11.5){
+  ctx.font=fs+'px -apple-system,sans-serif';ctx.textAlign=al;
+  const w=ctx.measureText(txt).width;
+  const x0=al==='right'?x-w:al==='center'?x-w/2:x;
+  ctx.fillStyle='rgba(245,239,223,0.85)';ctx.fillRect(x0-4,y-fs,w+8,fs+5);
+  ctx.fillStyle=col;ctx.fillText(txt,x,y);}
+function onVisible(el,start,stop){
+  new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting?start():stop&&stop()),{threshold:.05}).observe(el);
+}
+
+/* ---------- the real mathematics (library conventions, nondimensional) ---------- */
+const ZETA=0.05, QD=0.02, K1=(1/Math.sqrt(3))/(1-1/Math.sqrt(3)); // piecewise repeller slope
+const TAU2S=4/(2*Math.PI);              // seconds per nondim time unit at Tn = 4 s
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}}
+function jshape(w,wp,gam){
+  if(w<=0)return 0;
+  const sig=w<=wp?0.07:0.09;
+  const pk=Math.exp(-0.5*Math.pow((w-wp)/(sig*wp),2));
+  return Math.pow(w,-5)*Math.exp(-1.25*Math.pow(wp/w,4))*Math.pow(gam,pk);
+}
+// forcing on the RK4 half-step grid: sum of NC cosines, RMS-normalized to `sev`
+function makeForcing(seed,sev,gam,T,dt){
+  const NC=110,wp=0.9,w0=0.15,w1=3.4,dw=(w1-w0)/NC;
+  const rng=mulberry32(seed);
+  const ws=[],As=[],ths=[];let m0=0;
+  for(let j=0;j<NC;j++){const w=w0+(j+0.5)*dw;const S=jshape(w,wp,gam);ws.push(w);As.push(S);m0+=S*dw;ths.push(rng()*2*Math.PI);}
+  for(let j=0;j<NC;j++)As[j]=sev*Math.sqrt(2*As[j]*dw/m0);
+  const n=Math.round(T/dt),nh=2*n+1,f=new Float64Array(nh);
+  for(let i=0;i<nh;i++){const t=i*dt/2;let s=0;for(let j=0;j<NC;j++)s+=As[j]*Math.cos(ws[j]*t+ths[j]);f[i]=s;}
+  return f;
+}
+// RK4 with half-grid forcing and stiffness records; absorbing at |x| >= 1
+function integrate(x0,v0,f,kap,dt){
+  const n=(f.length-1)/2,X=new Float64Array(n+1),V=new Float64Array(n+1);
+  let x=x0,v=v0,capIdx=-1;X[0]=x0;V[0]=v0;
+  const rhs=(x,v,fo,k)=>fo-2*ZETA*v-QD*v*Math.abs(v)-k*(x-x*x*x);
+  for(let i=0;i<n;i++){
+    if(capIdx>=0){X[i+1]=NaN;V[i+1]=NaN;continue;}
+    const f0=f[2*i],fm=f[2*i+1],f1=f[2*i+2];
+    const k0=kap[2*i],km=kap[2*i+1],k1=kap[2*i+2];
+    const a1v=rhs(x,v,f0,k0);
+    const x2=x+0.5*dt*v,v2=v+0.5*dt*a1v,a2v=rhs(x2,v2,fm,km);
+    const x3=x+0.5*dt*v2,v3=v+0.5*dt*a2v,a3v=rhs(x3,v3,fm,km);
+    const x4=x+dt*v3,v4=v+dt*a3v,a4v=rhs(x4,v4,f1,k1);
+    x=x+dt*(v+2*v2+2*v3+v4)/6;
+    v=v+dt*(a1v+2*a2v+2*a3v+a4v)/6;
+    if(Math.abs(x)>=1){capIdx=i+1;X[i+1]=x>0?1:-1;V[i+1]=v;}
+    else{X[i+1]=x;V[i+1]=v;}
+  }
+  return {X,V,capIdx};
+}
+const constKap=(k,T,dt)=>{const nh=2*Math.round(T/dt)+1,a=new Float64Array(nh);a.fill(k);return a;};
+const rampKap=(k0,k1,T,dt)=>{const nh=2*Math.round(T/dt)+1,a=new Float64Array(nh);for(let i=0;i<nh;i++)a[i]=k0+(k1-k0)*(i/(nh-1));return a;};
+const marginLam=k=>ZETA+Math.sqrt(K1*k+ZETA*ZETA);
+const marginScore=(x,v,k)=>{const s=x>=0?1:-1;return s*v-marginLam(k)*(1-Math.abs(x));};
+
+/* ---------- Fig 1: restoring + well ---------- */
+defer(function(){
+  const fig=$('#fig-well');if(!fig)return;
+  const {ctx,W,H}=setupCanvas(fig);
+  const st=sliders(fig,draw);
+  function panel(x0,w){return {x0,w};}
+  function draw(){
+    const k=st.kap;
+    ctx.fillStyle=C.bg;ctx.fillRect(0,0,W,H);
+    const pw=(W-60)/2,pl=panel(20,pw),pr=panel(40+pw,pw);
+    const mx=x=>pl.x0+(x+1.5)/3*pl.w, my=y=>H*0.52-y*H*0.9;
+    // left: restoring R = κ(x−x³)
+    ctx.strokeStyle=C.grid;ctx.beginPath();ctx.moveTo(pl.x0,my(0));ctx.lineTo(pl.x0+pl.w,my(0));ctx.stroke();
+    ctx.strokeStyle=C.red;ctx.setLineDash([3,4]);
+    [[1],[-1]].forEach(([e])=>{ctx.beginPath();ctx.moveTo(mx(e),18);ctx.lineTo(mx(e),H-30);ctx.stroke();});
+    ctx.setLineDash([]);
+    ctx.strokeStyle=C.blue;ctx.lineWidth=2;ctx.beginPath();
+    for(let i=0;i<=140;i++){const x=-1.5+3*i/140,R=k*(x-x*x*x);
+      i?ctx.lineTo(mx(x),my(R*0.55)):ctx.moveTo(mx(x),my(R*0.55));}
+    ctx.stroke();ctx.lineWidth=1;
+    const xm=1/Math.sqrt(3);
+    ctx.fillStyle=C.yellow;ctx.beginPath();ctx.arc(mx(xm),my(k*(xm-xm**3)*0.55),4,0,7);ctx.fill();
+    label(ctx,'restoring  κ(x − x³)',pl.x0+8,30,C.blue);
+    label(ctx,'GZ max',mx(xm)+6,my(k*(xm-xm**3)*0.55)-8,C.yellow);
+    label(ctx,'escape',mx(1),H-16,C.red,'center');
+    // right: potential U = κ(x²/2 − x⁴/4)
+    const mx2=x=>pr.x0+(x+1.5)/3*pr.w, my2=u=>H*0.78-u*H*1.9;
+    ctx.strokeStyle=C.grid;ctx.beginPath();ctx.moveTo(pr.x0,my2(0));ctx.lineTo(pr.x0+pr.w,my2(0));ctx.stroke();
+    const U=x=>k*(x*x/2-x*x*x*x/4);
+    // rim line
+    ctx.strokeStyle=C.red;ctx.setLineDash([3,4]);ctx.beginPath();ctx.moveTo(pr.x0,my2(k/4));ctx.lineTo(pr.x0+pr.w,my2(k/4));ctx.stroke();ctx.setLineDash([]);
+    ctx.strokeStyle=C.blue;ctx.lineWidth=2;ctx.beginPath();
+    for(let i=0;i<=140;i++){const x=-1.5+3*i/140;
+      i?ctx.lineTo(mx2(x),my2(U(x))):ctx.moveTo(mx2(x),my2(U(x)));}
+    ctx.stroke();ctx.lineWidth=1;
+    ctx.fillStyle=C.blue;ctx.beginPath();ctx.arc(mx2(0),my2(0)-6,6,0,7);ctx.fill();
+    label(ctx,'the well  U(x)',pr.x0+8,30,C.blue);
+    label(ctx,'rim height κ/4 = '+fmt(k/4),pr.x0+pr.w-8,my2(k/4)-8,C.red,'right');
+    label(ctx,'saddle',mx2(1)+2,my2(k/4)+18,C.red);
+  }
+  draw();
+});
+
+/* ---------- Fig 2: spectrum + realization ---------- */
+defer(function(){
+  const fig=$('#fig-sea');if(!fig)return;
+  const {ctx,W,H}=setupCanvas(fig);
+  let seed=7;
+  $('.btn[data-k=seed]',fig).addEventListener('click',()=>{seed=(seed*16807+11)%2147483647;draw();});
+  const st=sliders(fig,draw);
+  function draw(){
+    const gam=st.gam,sev=st.sev;
+    ctx.fillStyle=C.bg;ctx.fillRect(0,0,W,H);
+    const h1=H*0.42,h2=H-h1-26;
+    // spectrum
+    const wp=0.9,w1=3.2;let mx=0;const S=[];
+    for(let i=0;i<=200;i++){const w=0.05+(w1-0.05)*i/200;const v=jshape(w,wp,gam);S.push([w,v]);mx=Math.max(mx,v);}
+    ctx.strokeStyle=C.yellow;ctx.lineWidth=2;ctx.beginPath();
+    S.forEach(([w,v],i)=>{const px=30+(w/w1)*(W-50),py=h1-8-(v/mx)*(h1-30);
+      i?ctx.lineTo(px,py):ctx.moveTo(px,py);});
+    ctx.stroke();ctx.lineWidth=1;
+    ctx.strokeStyle=C.grid;ctx.beginPath();ctx.moveTo(30,h1-8);ctx.lineTo(W-20,h1-8);ctx.stroke();
+    label(ctx,'S(ω) — energy by frequency, γ = '+fmt(gam),36,24,C.yellow);
+    label(ctx,'ω/ωn = 1 (resonance)',30+(1/w1)*(W-50),h1-14,C.ink3,'center');
+    // realization
+    const T=180,dt=0.15,f=makeForcing(seed,sev,gam,T,dt);
+    const y0=h1+18+h2/2,n=(f.length-1)/2;
+    ctx.strokeStyle=C.grid;ctx.beginPath();ctx.moveTo(30,y0);ctx.lineTo(W-20,y0);ctx.stroke();
+    ctx.strokeStyle=C.yellow;ctx.beginPath();
+    for(let i=0;i<=n;i++){const px=30+i/n*(W-50),py=y0-f[2*i]/(sev*3.4)*(h2/2);
+      i?ctx.lineTo(px,py):ctx.moveTo(px,py);}
+    ctx.stroke();
+    label(ctx,'one realization f(τ) — same spectrum, seeded phases',36,h1+34,C.yellow);
+  }
+  draw();
+});
+
+/* ---------- Fig 3: one life ---------- */
+defer(function(){
+  const fig=$('#fig-run');if(!fig)return;
+  const {ctx,W,H}=setupCanvas(fig);
+  let seed=3;
+  $('.btn[data-k=seed]',fig).addEventListener('click',()=>{seed=(seed*48271+7)%2147483647;draw();});
+  const st=sliders(fig,draw);
+  function draw(){
+    const T=380,dt=0.15;
+    const f=makeForcing(seed,st.sev,3.3,T,dt);
+    const r=integrate(0,0,f,constKap(st.kap,T,dt),dt);
+    ctx.fillStyle=C.bg;ctx.fillRect(0,0,W,H);
+    const y0=H*0.5,sc=H*0.34;
+    ctx.strokeStyle=C.grid;ctx.beginPath();ctx.moveTo(24,y0);ctx.lineTo(W-16,y0);ctx.stroke();
+    ctx.strokeStyle=C.red;ctx.setLineDash([4,5]);
+    [1,-1].forEach(s=>{ctx.beginPath();ctx.moveTo(24,y0-s*sc);ctx.lineTo(W-16,y0-s*sc);ctx.stroke();});
+    ctx.setLineDash([]);
+    const n=r.X.length-1;
+    ctx.strokeStyle=C.blue;ctx.lineWidth=1.8;ctx.beginPath();let started=false;
+    for(let i=0;i<=n;i++){if(Number.isNaN(r.X[i]))break;
+      const px=24+i/n*(W-40),py=y0-r.X[i]*sc;
+      started?ctx.lineTo(px,py):ctx.moveTo(px,py);started=true;}
+    ctx.stroke();ctx.lineWidth=1;
+    label(ctx,'+escape',W-20,y0-sc-6,C.red,'right');
+    label(ctx,'−escape',W-20,y0+sc-6,C.red,'right');
+    label(ctx,'roll x(τ)',30,26,C.blue);
+    const ro=$('#run-readout');
+    if(r.capIdx>=0){
+      const px=24+r.capIdx/n*(W-40);
+      ctx.fillStyle=C.red;ctx.beginPath();ctx.arc(px,y0-r.X[r.capIdx]*sc,5,0,7);ctx.fill();
+      label(ctx,'capsize',px,y0-r.X[r.capIdx]*sc-10,C.red,'center');
+      ro.textContent='capsized at τ = '+fmt(r.capIdx*dt)+'  (≈ '+fmt(r.capIdx*dt*TAU2S)+' s)';
+    } else ro.textContent='survived '+fmt(T*TAU2S)+' s of this sea';
+  }
+  draw();
+});
+
+/* ---------- Fig 4: two clocks ensemble ---------- */
+defer(function(){
+  const fig=$('#fig-clocks');if(!fig)return;
+  const {ctx,W,H}=setupCanvas(fig);
+  let base=101;
+  $('.btn[data-k=rerun]',fig).addEventListener('click',()=>{base+=137;draw();});
+  const st=sliders(fig,draw);
+  function draw(){
+    const N=30,T=600,dt=0.15,kend=st.kend,sev=st.sev;
+    const kap=rampKap(1.0,kend,T,dt);
+    const caps=[];let nc=0;
+    for(let s=0;s<N;s++){
+      const f=makeForcing(base+s*31,sev,3.3,T,dt);
+      const r=integrate(0,0,f,kap,dt);
+      caps.push(r.capIdx*dt);if(r.capIdx>=0)nc++;
+    }
+    ctx.fillStyle=C.bg;ctx.fillRect(0,0,W,H);
+    const x0=30,x1=W-20,tx=t=>x0+t/T*(x1-x0);
+    // top: kappa ramp
+    const kY=v=>26+(1.05-v)/0.8*54;
+    ctx.strokeStyle=C.purple;ctx.lineWidth=2;ctx.setLineDash([7,4]);ctx.beginPath();
+    ctx.moveTo(tx(0),kY(1.0));ctx.lineTo(tx(T),kY(kend));ctx.stroke();ctx.setLineDash([]);ctx.lineWidth=1;
+    label(ctx,'κ(τ): 1.00 → '+fmt(kend),x0+6,22,C.purple);
+    // middle: capsize strip
+    const sy0=100,sh=H-100-96;
+    ctx.strokeStyle=C.grid;ctx.strokeRect(x0,sy0,x1-x0,sh);
+    caps.forEach((tc,i)=>{
+      const py=sy0+6+(i/(N-1))*(sh-12);
+      if(tc>=0){ctx.fillStyle=C.red;ctx.beginPath();ctx.arc(tx(tc),py,3.4,0,7);ctx.fill();}
+      else{ctx.fillStyle=C.ink3;ctx.fillRect(x1-6,py-1,4,2);}
+    });
+    label(ctx,'each row: one ship — dot = its capsize moment',x0+6,sy0+16,C.ink2);
+    // bottom: survival
+    const by0=H-84,bh=58;
+    ctx.strokeStyle=C.grid;ctx.beginPath();ctx.moveTo(x0,by0+bh);ctx.lineTo(x1,by0+bh);ctx.stroke();
+    const times=caps.filter(t=>t>=0).sort((a,b)=>a-b);
+    ctx.strokeStyle=C.green;ctx.lineWidth=2;ctx.beginPath();
+    let alive=N;ctx.moveTo(x0,by0+bh-(alive/N)*bh);
+    times.forEach(t=>{ctx.lineTo(tx(t),by0+bh-(alive/N)*bh);alive--;ctx.lineTo(tx(t),by0+bh-(alive/N)*bh);});
+    ctx.lineTo(x1,by0+bh-(alive/N)*bh);ctx.stroke();ctx.lineWidth=1;
+    label(ctx,'surviving fraction',x0+6,by0+14,C.green);
+    const med=times.length?times[Math.floor(times.length/2)]:null;
+    $('#clocks-readout').textContent=nc+'/'+N+' capsized'+(med?(' · median at τ='+fmt(med)+', κ≈'+fmt(1.0+(kend-1.0)*med/T)):'');
+  }
+  draw();
+});
+
+/* ---------- Fig 5: phase plane + margin ---------- */
+defer(function(){
+  const fig=$('#fig-phase');if(!fig)return;
+  const {ctx,W,H}=setupCanvas(fig);
+  let anim=null,traj=null,ti=0;
+  const st=sliders(fig,()=>{traj=null;draw();});
+  const btn=$('.btn[data-k=anim]',fig);
+  btn.addEventListener('click',()=>{
+    if(anim){cancelAnimationFrame(anim);anim=null;btn.classList.remove('on');draw();return;}
+    const T=500,dt=0.15,f=makeForcing(77,0.17,3.3,T,dt);
+    traj=integrate(0,0,f,constKap(st.kap,T,dt),dt);ti=0;btn.classList.add('on');step();
+  });
+  function step(){
+    ti+=2;
+    if(!traj||ti>=traj.X.length||Number.isNaN(traj.X[ti])){btn.classList.remove('on');anim=null;draw(true);return;}
+    draw();anim=requestAnimationFrame(step);
+  }
+  const mx=x=>W/2+x*(W/2-30)/1.6, my=v=>H/2-v*(H/2-24)/1.1;
+  function draw(ended){
+    const k=st.kap;
+    ctx.fillStyle=C.bg;ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle=C.grid;ctx.beginPath();ctx.moveTo(20,my(0));ctx.lineTo(W-20,my(0));ctx.stroke();
+    ctx.beginPath();ctx.moveTo(mx(0),16);ctx.lineTo(mx(0),H-16);ctx.stroke();
+    // separatrix: v = ±(1−x²)√(κ/2)
+    const a=Math.sqrt(k/2);
+    ctx.strokeStyle=C.red;ctx.lineWidth=2;
+    [1,-1].forEach(s=>{ctx.beginPath();
+      for(let i=0;i<=160;i++){const x=-1.25+2.5*i/160,v=s*(1-x*x)*a;
+        i?ctx.lineTo(mx(x),my(v)):ctx.moveTo(mx(x),my(v));}
+      ctx.stroke();});
+    ctx.lineWidth=1;
+    // saddles
+    [[1,0],[-1,0]].forEach(([x,v])=>{ctx.fillStyle=C.red;ctx.beginPath();ctx.arc(mx(x),my(v),4,0,7);ctx.fill();});
+    // critical-rate line near right saddle: v = λ(1−x)
+    const lam=marginLam(k);
+    ctx.strokeStyle=C.green;ctx.setLineDash([5,4]);ctx.lineWidth=2;ctx.beginPath();
+    for(let i=0;i<=60;i++){const x=0.1+0.95*i/60,v=lam*(1-x);
+      i?ctx.lineTo(mx(x),my(v)):ctx.moveTo(mx(x),my(v));}
+    ctx.stroke();ctx.setLineDash([]);ctx.lineWidth=1;
+    label(ctx,'separatrix — the last safe orbit',mx(-1.15),my(-a*0.55),C.red);
+    label(ctx,'critical rate line',mx(0.16),my(lam*0.86)-6,C.green);
+    label(ctx,'saddle',mx(1)+8,my(0)-8,C.red);
+    // trajectory
+    if(traj){
+      ctx.strokeStyle=C.blue;ctx.globalAlpha=0.75;ctx.beginPath();let s0=false;
+      const end=Math.min(ti,traj.X.length-1);
+      for(let i=Math.max(0,end-500);i<=end;i++){
+        if(Number.isNaN(traj.X[i]))break;
+        s0?ctx.lineTo(mx(traj.X[i]),my(traj.V[i])):ctx.moveTo(mx(traj.X[i]),my(traj.V[i]));s0=true;}
+      ctx.stroke();ctx.globalAlpha=1;
+      const i=Math.min(end,traj.capIdx>=0?traj.capIdx:end);
+      if(!Number.isNaN(traj.X[i])){
+        ctx.fillStyle=traj.capIdx>=0&&i>=traj.capIdx?C.red:C.blue;
+        ctx.beginPath();ctx.arc(mx(traj.X[i]),my(traj.V[i]),5,0,7);ctx.fill();
+        $('#phase-readout').textContent='margin = '+fmt(-marginScore(traj.X[i],traj.V[i],st.kap))+(ended&&traj.capIdx>=0?'  → capsized':'');
+      }
+    }
+  }
+  draw();
+});
+
+/* ---------- Fig 6: alarm explorer ---------- */
+defer(function(){
+  const fig=$('#fig-alarm');if(!fig)return;
+  const {ctx,W,H}=setupCanvas(fig);
+  const N=24,T=450,dt=0.15,STRIDE=14,HOR=40/dt; // horizon 40 tau in samples
+  const ships=[];
+  for(let s=0;s<N;s++){
+    const f=makeForcing(500+s*13,0.185,3.3,T,dt);
+    const kap=constKap(0.72,T,dt);
+    const r=integrate(0,0,f,kap,dt);
+    const sc=[],ts=[];
+    for(let i=0;i<r.X.length;i+=STRIDE){
+      if(Number.isNaN(r.X[i]))break;
+      sc.push(marginScore(r.X[i],r.V[i],0.72));ts.push(i);
+    }
+    ships.push({sc,ts,cap:r.capIdx});
+  }
+  let cur=ships.findIndex(s=>s.cap>=0);if(cur<0)cur=0;
+  $('.btn[data-k=next]',fig).addEventListener('click',()=>{cur=(cur+1)%N;draw();});
+  const st=sliders(fig,draw);
+  function episodes(sh,thr){
+    const eps=[];let run=0,start=-1,open=-1,quiet=0,last=-1;
+    for(let j=0;j<sh.sc.length;j++){
+      const flag=sh.sc[j]>=thr;
+      if(open<0){
+        if(flag){if(run===0)start=j;run++;if(run>=3){open=start;last=j;}}
+        else run=0;
+      } else {
+        if(flag){last=j;quiet=0;}
+        else{quiet++;if(quiet>=3){eps.push([open,last]);open=-1;run=0;quiet=0;}}
+      }
+    }
+    if(open>=0)eps.push([open,last]);
+    return eps;
+  }
+  function draw(){
+    const thr=st.thr;
+    ctx.fillStyle=C.bg;ctx.fillRect(0,0,W,H);
+    const sh=ships[cur];
+    const x0=30,x1=W-20,ph=H-118;
+    const tx=j=>x0+sh.ts[j]/( T/dt)*(x1-x0);
+    const sy=v=>30+ph-((v+1.3)/1.6)*(ph-10);
+    // episode bands
+    const eps=episodes(sh,thr);
+    eps.forEach(([a,b])=>{ctx.fillStyle='rgba(38,32,25,0.10)';
+      ctx.fillRect(tx(a),26,Math.max(3,tx(b)-tx(a)),ph+8);});
+    // threshold
+    ctx.strokeStyle=C.ink3;ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(x0,sy(thr));ctx.lineTo(x1,sy(thr));ctx.stroke();ctx.setLineDash([]);
+    // score
+    ctx.strokeStyle=C.green;ctx.lineWidth=1.8;ctx.beginPath();
+    sh.sc.forEach((v,j)=>{j?ctx.lineTo(tx(j),sy(v)):ctx.moveTo(tx(j),sy(v));});
+    ctx.stroke();ctx.lineWidth=1;
+    if(sh.cap>=0){
+      const px=x0+sh.cap/(T/dt)*(x1-x0);
+      ctx.fillStyle=C.red;ctx.beginPath();ctx.arc(px,32,5,0,7);ctx.fill();
+      label(ctx,'capsize',px,26,C.red,'center');
+    }
+    label(ctx,'ship '+(cur+1)+'/'+N+(sh.cap>=0?' (capsizes)':' (survives)'),x0+6,22,C.ink2);
+    label(ctx,'danger-margin score · threshold '+fmt(thr),x0+6,44,C.green);
+    // ensemble metrics
+    let det=0,ncap=0,fe=0,expo=0;
+    ships.forEach(s2=>{
+      const e2=episodes(s2,thr);
+      const capT=s2.cap>=0?s2.cap:-1;
+      if(capT>=0){ncap++;
+        const hit=e2.some(([a,b])=>s2.ts[a]<capT&&s2.ts[b]>=capT-HOR);
+        if(hit)det++;
+        fe+=e2.filter(([a,b])=>!(s2.ts[a]<capT&&s2.ts[b]>=capT-HOR)).length;
+        expo+=capT*dt;
+      } else {fe+=e2.length;expo+=T;}
+    });
+    const hrs=expo*TAU2S/3600;
+    const sens=ncap?det/ncap:0;
+    const bar=H-64;
+    ctx.fillStyle=C.bg2;ctx.fillRect(x0,bar,x1-x0,44);
+    label(ctx,'ensemble at this threshold:',x0+8,bar+17,C.ink2);
+    label(ctx,'sensitivity '+(100*sens).toFixed(0)+'%  ('+det+'/'+ncap+' capsizes caught)',x0+8,bar+36,C.ink,'left',12.5);
+    label(ctx,'false episodes: '+fe+'  ≈ '+fmt(fe/Math.max(hrs,1e-9))+' per hour',x1-8,bar+36,C.ink,'right',12.5);
+    $('#alarm-readout').textContent='';
+  }
+  draw();
+});
+
+/* ---------- Fig 7: leakage toy ---------- */
+defer(function(){
+  const fig=$('#fig-leak');if(!fig)return;
+  const {ctx,W,H}=setupCanvas(fig);
+  let base=11;
+  $('.btn[data-k=rerun]',fig).addEventListener('click',()=>{base+=7;draw();});
+  const st=sliders(fig,draw);
+  const NNEG=400,MU=2.0,M=400;
+  const gauss=rng=>{let u=0,v=0;while(u===0)u=rng();while(v===0)v=rng();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);};
+  const TRUE_THR=MU-1.2816,TRUE_FPR=1-normCdf(TRUE_THR);
+  function normCdf(z){const t=1/(1+0.2316419*Math.abs(z));
+    const d=0.3989423*Math.exp(-z*z/2);
+    let p=d*t*(0.3193815+t*(-0.3565638+t*(1.781478+t*(-1.821256+t*1.330274))));
+    return z>0?1-p:p;}
+  function pickThr(neg,pos){
+    // lowest threshold achieving >=90% sensitivity, then min FPR = that threshold's FPR
+    const ps=[...pos].sort((a,b)=>a-b);
+    const thr=ps[Math.max(0,Math.floor(0.1*ps.length)-0)]; // 90% of pos above ~ 10th pct
+    return thr;
+  }
+  function fpr(neg,thr){return neg.filter(v=>v>=thr).length/neg.length;}
+  function draw(){
+    const NP=Math.round(st.np);
+    const rng=mulberry32(base*99991+NP);
+    const repA=[],repB=[];
+    for(let m=0;m<M;m++){
+      const negT=[],posT=[],negC=[],posC=[];
+      for(let i=0;i<NNEG;i++){negT.push(gauss(rng));negC.push(gauss(rng));}
+      for(let i=0;i<NP;i++){posT.push(MU+gauss(rng));posC.push(MU+gauss(rng));}
+      repA.push(fpr(negT,pickThr(negT,posT)));          // chosen on test, reported on test
+      repB.push(fpr(negT,pickThr(negC,posC)));          // frozen on calibration, spent on test
+    }
+    ctx.fillStyle=C.bg;ctx.fillRect(0,0,W,H);
+    const x0=40,x1=W-24,fmax=0.6;
+    const fx=f=>x0+clamp(f,0,fmax)/fmax*(x1-x0);
+    const NB=36,hA=new Array(NB).fill(0),hB=new Array(NB).fill(0);
+    repA.forEach(f=>hA[clamp(Math.floor(f/fmax*NB),0,NB-1)]++);
+    repB.forEach(f=>hB[clamp(Math.floor(f/fmax*NB),0,NB-1)]++);
+    const hm=Math.max(...hA,...hB);
+    const base0=H-46;
+    for(let b=0;b<NB;b++){
+      const bx=x0+b/NB*(x1-x0),bw=(x1-x0)/NB-2;
+      ctx.fillStyle='rgba(158,47,39,0.55)';
+      ctx.fillRect(bx,base0-hA[b]/hm*(H-92),bw,hA[b]/hm*(H-92));
+      ctx.fillStyle='rgba(38,32,25,0.35)';
+      ctx.fillRect(bx,base0-hB[b]/hm*(H-92),bw,hB[b]/hm*(H-92));
+    }
+    ctx.strokeStyle=C.grid;ctx.beginPath();ctx.moveTo(x0,base0);ctx.lineTo(x1,base0);ctx.stroke();
+    ctx.strokeStyle=C.ink;ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(fx(TRUE_FPR),34);ctx.lineTo(fx(TRUE_FPR),base0);ctx.stroke();ctx.setLineDash([]);
+    label(ctx,'true cost of 90% sensitivity',fx(TRUE_FPR),28,C.ink,'center');
+    label(ctx,'threshold chosen on test',x0+6,50,C.red);
+    label(ctx,'frozen on calibration',x0+6,70,C.green);
+    label(ctx,'reported false-positive rate →',x1,base0+18,C.ink3,'right');
+    const mA=repA.reduce((a,b)=>a+b,0)/M,mB=repB.reduce((a,b)=>a+b,0)/M;
+    $('#leak-readout').textContent='mean reported: '+(100*mA).toFixed(1)+'% (test-picked) vs '
+      +(100*mB).toFixed(1)+'% (frozen) · truth '+(100*TRUE_FPR).toFixed(1)+'%';
+  }
+  draw();
+});
+
+/* ---------- Fig 0: dispersion makes groups ---------- */
+defer(function(){
+  const fig=$('#fig-disp');if(!fig)return;
+  const {ctx,W,H}=setupCanvas(fig);
+  const L=20*Math.PI,NP=460;
+  let t=0,anim=null;
+  const st=sliders(fig,()=>{t=0;draw();});
+  const btn=$('.btn[data-k=play]',fig);
+  btn.addEventListener('click',()=>{
+    if(anim){cancelAnimationFrame(anim);anim=null;btn.classList.remove('on');return;}
+    btn.classList.add('on');step();
+  });
+  function step(){t+=0.22;draw();anim=requestAnimationFrame(step);}
+  function draw(){
+    const d=st.dk,k1=1-d/2,k2=1+d/2;
+    const w1=Math.sqrt(k1),w2=Math.sqrt(k2);
+    const cp=((w1+w2)/2)/1.0, cg=(w2-w1)/(k2-k1);   // exact pair speeds from dispersion
+    if(cg*t>L){t=0;}
+    ctx.fillStyle=C.bg;ctx.fillRect(0,0,W,H);
+    const y0=H*0.52,sc=H*0.30;
+    const mx=x=>24+x/L*(W-44);
+    ctx.strokeStyle=C.grid;ctx.beginPath();ctx.moveTo(24,y0);ctx.lineTo(W-20,y0);ctx.stroke();
+    const eta=x=>Math.cos(k1*x-w1*t)+Math.cos(k2*x-w2*t);
+    const env=x=>2*Math.abs(Math.cos(0.5*(k2-k1)*x-0.5*(w2-w1)*t));
+    ctx.strokeStyle=C.ink3;ctx.setLineDash([4,4]);
+    [1,-1].forEach(s=>{ctx.beginPath();
+      for(let i=0;i<=NP;i++){const x=L*i/NP,py=y0-s*env(x)/2*sc;
+        i?ctx.lineTo(mx(x),py):ctx.moveTo(mx(x),py);}
+      ctx.stroke();});
+    ctx.setLineDash([]);
+    ctx.strokeStyle=C.ink;ctx.lineWidth=1.8;ctx.beginPath();
+    for(let i=0;i<=NP;i++){const x=L*i/NP,py=y0-eta(x)/2*sc;
+      i?ctx.lineTo(mx(x),py):ctx.moveTo(mx(x),py);}
+    ctx.stroke();ctx.lineWidth=1;
+    const xp=(cp*t)%L, xg=cg*t;
+    ctx.strokeStyle=C.ink;ctx.lineWidth=1.6;ctx.beginPath();
+    ctx.arc(mx(xp),y0-eta(xp)/2*sc,4.5,0,7);ctx.stroke();ctx.lineWidth=1;
+    ctx.fillStyle=C.red;ctx.beginPath();ctx.arc(mx(xg),y0-env(xg)/2*sc-7,4.5,0,7);ctx.fill();
+    label(ctx,'one crest, speed c',mx(xp),y0-sc-16,C.ink2,'center');
+    label(ctx,'the group, speed c/2',mx(xg),y0+sc+18,C.red,'center');
+    $('#disp-readout').textContent='group speed / crest speed = '+(cg/cp).toFixed(3);
+  }
+  draw();
+});
+
+/* ---------- boot, nav, progress ---------- */
+let booted=false;
+function boot(){if(booted)return;booted=true;FIGS.forEach(f=>{try{f();}catch(e){console.error(e);}});}
+function armBoot(){
+  // A hidden pane has no layout and no animation frames; wait for visibility.
+  if(document.hidden){document.addEventListener('visibilitychange',function onV(){
+    if(!document.hidden){document.removeEventListener('visibilitychange',onV);requestAnimationFrame(boot);}
+  });}
+  else requestAnimationFrame(boot);
+}
+if(document.readyState==='complete'||document.readyState==='interactive')armBoot();
+else document.addEventListener('DOMContentLoaded',armBoot);
+addEventListener('scroll',()=>{
+  const h=document.documentElement;
+  $('#pbar').style.width=(100*h.scrollTop/(h.scrollHeight-h.clientHeight))+'%';
+  let cur=null;
+  document.querySelectorAll('main h2[id]').forEach(s=>{if(s.getBoundingClientRect().top<120)cur=s.id;});
+  document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+cur));
+},{passive:true});
+</script>
+</body>
+</html>
