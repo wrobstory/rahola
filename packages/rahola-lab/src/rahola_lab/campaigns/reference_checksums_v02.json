@@ -1,13 +1,6 @@
 {
-  "biased_ramp_v02": "32101de2bee9e1a15a2cf9e6c6b16a6e7eac503a69d558e2ca967553558b8866",
-  "parametric_ramp_v02": "d1f1fb5bb326a6d2343ed7100be28abb91a079526d9f1e3eab673291026706f7",
-  "parametric_stationary_v02": "129c19b7766ad78c273e2c43950e48d142f24ece1b0e2818297f2628aefa17c7",
-  "softening_bandwidth_gamma_1_v02": "c62df5960c4abb440c65df3a36c85a77fca2cd20ca62f3bb9361a4b05433f679",
-  "softening_bandwidth_gamma_15_v02": "ebc86d507e36f5ac56875f7494467f68f1e6a404f94beca0366951e62bd0a7f2",
-  "softening_bandwidth_gamma_30_v02": "1156088bc45932237bd4c8e6c974f01c88b8701ace55186ffe7dd23b9ed680d2",
-  "softening_bandwidth_gamma_3_3_v02": "ee11c4cef6bb3bbe0ae665fbd400f309b9e74d564783caeae442e1b5a10d123d",
-  "softening_bandwidth_gamma_7_v02": "1820c9299006740622d6efaaf302ceeb2b73b937074aeba18fb740683c5240e2",
-  "softening_ramp_v02": "8c3b80b69204b5992bf6e7637d5c3c9a5cd6f35d1bd254ab9ca2d4b6e842e3fb",
-  "softening_stationary_v02": "2a3bd6e38731a70d5a99a053c80acdca76ce551df0d1bd95022daa37307eff33",
-  "softening_step_v02": "98c278a8e7015292a10fc68a4fdada84340e53122660960b56327d00ffdb32e5"
+  "softening_bandwidth_gamma_15_v02": "286c24c894b713e02ad00c518bb6de46322fb5050b0ecf7864a08bb7ff57829c",
+  "softening_bandwidth_gamma_30_v02": "2d30254a503899700153bd00ca94d8cd76b5babdc1dbb3e19d5603dbf934c96d",
+  "softening_bandwidth_gamma_7_v02": "f51c794fd6df5b890bfc78c877b20ee59212c78ef80cfc2983f4ddea229422c7",
+  "softening_step_v02": "218219a9643a3f5ea3ed239025f40f85e5791daa31abca592fd9bdc6030b5f85"
 }
