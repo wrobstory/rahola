@@ -69,9 +69,9 @@ Rahola changes one physical mechanism at a time:
 
 | Family | Restoring / bias | Intended archetype | Principal sweep range |
 | --- | --- | --- | --- |
-| 1: softening | $R=\omega_n^2(\phi-\phi^3/\phi_v^2)$ | dead ship / pure-loss escape | $\zeta=0.01\ldots0.10$, $r=0.01\ldots0.15$ |
-| 2: parametric | $`R=\omega_n^2[1+h(t)](\phi-\phi^3/\phi_v^2)`$ | parametric roll | $h_0=0\ldots0.4$, $\omega_e/\omega_n=1.5\ldots2.5$ |
-| 3: biased | Family 1 plus constant nondimensional moment $b$ | damage / steady heel | $b=-0.3\ldots0.3$, side-specific escape angles |
+| 1: softening | $`R=\omega_n^2(\phi-\phi^3/\phi_v^2)`$ | dead ship / pure-loss escape | $`\zeta=0.01\ldots0.10`$, $`r=0.01\ldots0.15`$ |
+| 2: parametric | $`R=\omega_n^2[1+h(t)](\phi-\phi^3/\phi_v^2)`$ | parametric roll | $`h_0=0\ldots0.4`$, $`\omega_e/\omega_n=1.5\ldots2.5`$ |
+| 3: biased | Family 1 plus constant nondimensional moment $`b`$ | damage / steady heel | $`b=-0.3\ldots0.3`$, side-specific escape angles |
 
 Family 1 supplies the minimal escape problem. Family 2 modulates stiffness either deterministically,
 $h=h_0\cos(\omega_e t)$, or with an independent narrow-band process. Family 3 adds steady bias and
@@ -241,9 +241,9 @@ control.
 The forecasting experiments use 120 seconds of history and 30- or 60-second outcome horizons. The
 detector experiments use 60 natural periods of roll and roll-rate history, a 50-period capsize
 horizon, a five-period exclusion band, and a ten-second score stride. A positive window precedes
-capsize within the horizon; a negative window has a complete event-free horizon plus the exclusion
-band. A negative window places capsize beyond the horizon plus exclusion band. Ambiguous and
-record-end-truncated windows are discarded for both outcomes.
+capsize within the horizon. A negative window has a complete scored horizon with no capsize within
+the horizon plus a five-period exclusion band. Ambiguous and record-end-truncated windows are
+discarded for both outcomes.
 
 Operational inference remains separate from supervised evaluation. It emits every causal
 pre-capsize score, while exposure, event counts, and labels stop at the last endpoint with a
@@ -306,7 +306,7 @@ The corrected development record supports the following claims:
 | --- | --- | --- |
 | Does stationary conformal calibration work? | Mean absolute coverage error across E1 was 0.75 percentage points. | The basic forecast and calibration implementation behaves as intended. |
 | Does adaptation repair an abrupt sea-state shift? | ACI, DtACI, and recent-score recalibration missed the joint rolling-coverage and alarm-cost criteria. | Marginal conformal machinery did not yield a satisfactory online alarm under this shift. |
-| Which detector has the best pooled operating point? | The CNN reached 92.36% sensitivity at 15.548 false episodes/h; classical EWS reached 100% at 21.391/h. | The CNN lowers pooled alarm cost, with lower sensitivity. |
+| Which detector has the best pooled operating point? | The CNN reached 92.36% sensitivity at 15.548 false episodes/h; classical EWS reached 100% (near-always-on) at 21.391/h. | The CNN lowers pooled alarm cost, with lower sensitivity. |
 | Does that threshold transfer across failure families? | The CNN missed 90% test sensitivity in all three D2 rotations. | No all-family operating point was established. |
 | Does bandwidth destroy ranking skill? | CNN AUC remained 0.862–0.920, but its broadband FPR improvement was only 8.6%. | D3 is inconclusive under its predeclared 10% materiality rule. |
 | Are false alarms simply critical-wave encounters? | 75–88% overlapped evaluator-defined groups. | The overlap is descriptive because groups are common and no matched null was tested. |
@@ -379,9 +379,10 @@ JAX owns the backend choice, so selecting a GPU does not change the model code.
   time scale $\omega_n$ is kept fixed during that trajectory.
 - `simulate_restarted_batch` starts independent futures from per-trajectory roll,
   rate, stiffness, drift, and deterministic-parametric phase offsets; it is the
-  validated core extension used by the Prototype #3 restart comparators. Because
-  those futures discard the realized forcing phase, they are not Bayes-optimal
-  motion-history ceilings.
+  validated core extension used by the Prototype #3 restart comparators. The
+  synthesized forcing is temporally correlated, so motion history carries
+  encounter-preview information that independent-future restarts discard. The
+  restart scores are therefore not Bayes-optimal motion-history ceilings.
 - Stochastic parametric modulation uses an independently phased JONSWAP
   elevation record, RMS-normalized to `stochastic_std`.
 - Capsize time is zero for an initially escaped state; otherwise it is the first RK4 endpoint beyond
