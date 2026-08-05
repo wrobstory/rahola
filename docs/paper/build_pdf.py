@@ -14,6 +14,7 @@ PREAMBLE = r"""\documentclass[11pt]{article}
 \usepackage[T1]{fontenc}
 \usepackage{microtype}
 \usepackage[hidelinks]{hyperref}
+\usepackage{graphicx}
 \usepackage{parskip}
 \setlength{\parskip}{6pt}
 \usepackage{titlesec}
@@ -76,7 +77,14 @@ def convert(md: str) -> str:
     in_refs = False
     while i < len(lines):
         line = lines[i]
-        if line.startswith("$$"):
+        m_img = re.match(r"^!\[(.*)\]\((.*)\)\s*$", line)
+        if m_img:
+            cap, path = m_img.groups()
+            width = "0.72\\linewidth" if "fig_audit" in path else "\\linewidth"
+            out.append("\\begin{figure}[t]\\centering"
+                       f"\\includegraphics[width={width}]{{{path}}}"
+                       "\\caption{" + inline(cap) + "}\\end{figure}")
+        elif line.startswith("$$"):
             block = []
             i += 1
             while i < len(lines) and not lines[i].startswith("$$"):

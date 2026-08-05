@@ -5,6 +5,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{microtype}
 \usepackage[hidelinks]{hyperref}
+\usepackage{graphicx}
 \usepackage{parskip}
 \setlength{\parskip}{6pt}
 \usepackage{titlesec}
@@ -108,9 +109,9 @@ alarms of such systems consist of?
 
 \section{The synthetic benchmark}
 
-The benchmark is the simplest ship that can capsize: a one-degree-of-freedom nonlinear roll
-model, validated against analytic limits, generating seeded trajectories under JONSWAP forcing
-(Hasselmann et al. 1973). Three restoring
+The benchmark is the simplest ship that can capsize (Figure 1): a one-degree-of-freedom
+nonlinear roll model, validated against analytic limits, generating seeded trajectories under
+JONSWAP forcing (Hasselmann et al. 1973). Three restoring
 families represent failure archetypes: softening restoring (dead-ship escape), time-varying
 stiffness (parametric roll), and biased restoring with asymmetric escape angles (damage, steady
 heel), in the scope of established one-degree-of-freedom roll comparisons (Bulian and
@@ -141,6 +142,8 @@ Supervised windows use 60 natural periods of causally normalized roll and roll-r
 verifies the entire feature path against a deliberately leaky control. The label discipline
 responds directly to critiques of early-warning-signal studies in other fields (Boettiger and
 Hastings 2012; Dakos et al. 2012).
+
+\begin{figure}[t]\centering\includegraphics[width=\linewidth]{figs/fig_model.png}\caption{The benchmark. (a) The three restoring families: the softening curve with its escape angles (dashed red), the constant bias moment that shifts the biased family's equilibria, and the parametric family's stiffness modulation envelope (dotted). (b) Two 600-second lives of the same ship in the same sea state, different seeded seas: the capsizing life ends during a wave group in its first minute, while its twin survives larger excursions for the full record. The encounter, not the general severity, decides the moment.}\end{figure}
 
 \section{Five warning methods}
 
@@ -180,9 +183,11 @@ was therefore attributable to the selection procedure rather than the detector, 
 target of 90 percent and capsize prevalences of 1 to 2 percent. One guarded holdout evaluation
 was additionally invalidated by threshold selection on the holdout labels, and its artifacts are
 retained as historical records only. The corrected protocol is enforced by the test suite rather
-than by convention. The authors suggest that reported operating points in the learned
+than by convention (Figure 2). We suggest that reported operating points in the learned
 motion-prediction literature should be read with this mechanism in mind wherever threshold
 provenance is not stated.
+
+\begin{figure}[t]\centering\includegraphics[width=0.72\linewidth]{figs/fig_audit.png}\caption{The audit's effect. The same detector on the same data, with only the provenance of the operating threshold changed: selecting the threshold on test outcomes understated the false-alarm cost by a factor of approximately 2.5.}\end{figure}
 
 \section{Results}
 
@@ -191,14 +196,18 @@ enhancement from 30 down to 1.0, while the classical trend indicators collapsed 
 campaigns. Ranking skill from motion history survives broadband forcing. The predeclared
 operating-cost criterion at the broadband end (a 10 percent false-episode improvement) was missed
 at 8.6 percent, and the operating-cost claim is reported as inconclusive: ranking skill and a
-deployable threshold are different assets.
+deployable threshold are different assets (Figure 3).
+
+\begin{figure}[t]\centering\includegraphics[width=\linewidth]{../../results/d3_bandwidth_skill_v02.png}\caption{Ranking survives bandwidth. Window AUC on the five forcing-bandwidth campaigns, corrected record: the network variants hold 0.86 to 0.92 from narrow-band forcing down to fully broadband, while the classical indicators and physics scores sit at or below chance on these ramped campaigns --- the fixed-window scoring that is honest about information also strips the trends those baselines rely on.}\end{figure}
 
 \textbf{Pooled operating points (D1).} At calibration-frozen thresholds on the pooled rare-event
 campaigns, the network attained 92.4 percent sensitivity at 15.5 false episodes per hour; the
 classical indicators reached 100 percent sensitivity only at a near-always-on threshold costing
 21.4 per hour; the physics margin and the 2009 neighbor score occupied the same
 high-sensitivity, high-cost region. No method produced an operating point that a master would
-tolerate.
+tolerate (Figure 4).
+
+\begin{figure}[t]\centering\includegraphics[width=\linewidth]{../../results/d1_operating_curves_v02.png}\caption{The pooled operating curves, corrected record: capsize sensitivity against declustered false episodes per exposure hour at calibration-frozen thresholds. The network variants dominate the low-cost region; every classical and physics score buys sensitivity only near the always-on corner. Even the best curve pays several false episodes per hour at 90 percent sensitivity.}\end{figure}
 
 \textbf{Threshold transfer (D2).} With each restoring family held out in turn, the network missed the
 90 percent test-sensitivity target in all three rotations. Two architecture probes intended to
@@ -250,7 +259,11 @@ percent from expectation, and the capture intervals carried parameter uncertaint
 realization noise, so the capture criterion on slices of this size is severe even for a
 correctly calibrated estimator; the reliability errors (0.040 for the hybrid and the rate-only
 map against 0.242 for a variance-based map) are the fairer calibration comparison. All
-verdicts were preregistered and stand as recorded.
+verdicts were preregistered and stand as recorded. Figure 5's middle panel shows the one
+encouraging pattern: the crossing rate alone, offline-mapped, tracks the diagonal --- the rate
+factor of the decomposition is the part that works.
+
+\begin{figure}[t]\centering\includegraphics[width=\linewidth]{../../results/h1_reliability_h1.png}\caption{Reliability of the offline-calibrated hybrid and its comparators on fresh test data (H1): predicted capsize probability per bin against the realized fraction. The hybrid under-predicts throughout; the crossing-rate-only map tracks the diagonal; the variance map scatters. The observable factor of the split-time decomposition --- the crossing rate --- carries the calibration.}\end{figure}
 
 A companion study of conformalized forecast intervals on the same benchmark (following Romano,
 Patterson and Cand\\texttt{es 2019; Gibbs and Cand\}es 2021) found stationary marginal coverage accurate to
