@@ -1,11 +1,24 @@
-<!-- DRAFT v0.2 — ISSW / STAB&S submission. References verified against primary records
-     2026-08-03; remaining flags noted at the head of the reference list. -->
+\documentclass[11pt]{article}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{mathpazo}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\usepackage{parskip}
+\setlength{\parskip}{6pt}
+\usepackage{titlesec}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{}{0em}{}
+\begin{document}
 
-# Motion-Only Capsize Warning on an Audited Synthetic Benchmark: Ranking Skill Without Threshold Transfer
 
-**W. R. Story**
 
-## Abstract
+\begin{center}{\LARGE\bfseries Motion-Only Capsize Warning on an Audited Synthetic Benchmark: Ranking Skill Without Threshold Transfer}\end{center}
+
+\textbf{W. R. Story}
+
+\section*{Abstract}
 
 Can the measured roll motion of a ship warn of capsize soon enough to act, at a false-alarm
 cost a crew could accept? We study this question on a validated synthetic benchmark: a
@@ -31,16 +44,16 @@ threshold selection; every number reported here is the corrected value. The pict
 survives is simple: motion reveals the slowly building vulnerability, and only the sea knows
 the moment.
 
-*Keywords:* capsize, intact stability, real-time warning, split-time method, preregistered
+\emph{Keywords:} capsize, intact stability, real-time warning, split-time method, preregistered
 evaluation, synthetic benchmark.
 
-## 1. Introduction
+\section{Introduction}
 
 Begin from first principles. A ship in beam seas is a lightly damped nonlinear oscillator:
 waves push, the righting arm restores, and capsize is the escape of that oscillator over the
-rim of its potential well. Two different questions hide inside "can we warn?" One asks whether
-the well is becoming shallow — vulnerability, a slow process. The other asks when a particular
-group of waves will push the ship over — the encounter, a fast one. Every result in this paper
+rim of its potential well. Two different questions hide inside ``can we warn?'' One asks whether
+the well is becoming shallow --- vulnerability, a slow process. The other asks when a particular
+group of waves will push the ship over --- the encounter, a fast one. Every result in this paper
 answers one of those two questions, and the paper's central finding is that motion measurement
 answers only the first.
 
@@ -56,7 +69,7 @@ the only fielded success of motion-based stability-failure detection, and the fi
 machinery moved instead to offline probabilistic assessment (Belenky and Sevastianov 2007), of
 which the split-time method (Belenky, Weems and Lin 2016; Belenky et al. 2024) is the principal
 example, and to operational guidance derived from precomputed simulation under the
-second-generation intact stability criteria (Bačkalov et al. 2016; IMO 2020; Petacco and Gualeni
+second-generation intact stability criteria (Ba\v{c}kalov et al. 2016; IMO 2020; Petacco and Gualeni
 2020; Shigunov 2023).
 
 The relationship of the present work to the split-time method deserves statement at the outset,
@@ -93,7 +106,7 @@ enough that classical critical-slowing-down indicators fail? Second, do the resu
 thresholds transfer across stability-failure modes at fixed sensitivity? Third, what do the false
 alarms of such systems consist of?
 
-## 2. The synthetic benchmark
+\section{The synthetic benchmark}
 
 The benchmark is the simplest ship that can capsize: a one-degree-of-freedom nonlinear roll
 model, validated against analytic limits, generating seeded trajectories under JONSWAP forcing
@@ -129,7 +142,7 @@ verifies the entire feature path against a deliberately leaky control. The label
 responds directly to critiques of early-warning-signal studies in other fields (Boettiger and
 Hastings 2012; Dakos et al. 2012).
 
-## 3. Five warning methods
+\section{Five warning methods}
 
 All five methods consume identical windows and emit a scalar score which is thresholded into
 alarm episodes (three consecutive crossings to open; refractory closure). No method receives wave
@@ -137,7 +150,7 @@ elevation, spectrum, family identity, or sea-state input.
 
 (a) A temporal convolutional network of 2,969 parameters trained on the horizon labels, in the
 spirit of learned early-warning classifiers (Bury et al. 2021); neural roll prediction has
-in-community precedent (Míguez González et al. 2023). (b) Rolling variance and lag-one
+in-community precedent (M\'iguez Gonz\'alez et al. 2023). (b) Rolling variance and lag-one
 autocorrelation with Kendall trend statistics, the classical critical-slowing-down indicators
 (Dakos et al. 2012). (c) A roll-power adaptation of the double-Weibull generalized
 likelihood-ratio detector of Galeazzi et al. (2013, 2015). (d) The split-time critical
@@ -150,7 +163,7 @@ under strictly causal normalization, with the thesis's fixed flag retained as on
 operating curve; phase-space identification of dangerous ship states has since been developed
 independently in the Spyrou school (Kontolefas and Spyrou 2020).
 
-## 4. Evaluation protocol and the audit
+\section{Evaluation protocol and the audit}
 
 Metrics are episode sensitivity, false episodes per exposure hour, and lead time, with exact
 binomial confidence intervals; exposure ends at capsize; an episode overlapping the pre-capsize
@@ -171,34 +184,34 @@ than by convention. The authors suggest that reported operating points in the le
 motion-prediction literature should be read with this mechanism in mind wherever threshold
 provenance is not stated.
 
-## 5. Results
+\section{Results}
 
-**Ranking under bandwidth (D3).** The network's window AUC was 0.862 to 0.920 at every peak
+\textbf{Ranking under bandwidth (D3).} The network's window AUC was 0.862 to 0.920 at every peak
 enhancement from 30 down to 1.0, while the classical trend indicators collapsed on ramped
 campaigns. Ranking skill from motion history survives broadband forcing. The predeclared
 operating-cost criterion at the broadband end (a 10 percent false-episode improvement) was missed
 at 8.6 percent, and the operating-cost claim is reported as inconclusive: ranking skill and a
 deployable threshold are different assets.
 
-**Pooled operating points (D1).** At calibration-frozen thresholds on the pooled rare-event
+\textbf{Pooled operating points (D1).} At calibration-frozen thresholds on the pooled rare-event
 campaigns, the network attained 92.4 percent sensitivity at 15.5 false episodes per hour; the
 classical indicators reached 100 percent sensitivity only at a near-always-on threshold costing
 21.4 per hour; the physics margin and the 2009 neighbor score occupied the same
 high-sensitivity, high-cost region. No method produced an operating point that a master would
 tolerate.
 
-**Threshold transfer (D2).** With each restoring family held out in turn, the network missed the
+\textbf{Threshold transfer (D2).} With each restoring family held out in turn, the network missed the
 90 percent test-sensitivity target in all three rotations. Two architecture probes intended to
 repair transfer, a gray-box network with a physical latent head and a few-failure adaptation of a
 pretrained sequence model, failed their predeclared criteria under calibration-fixed thresholds.
 No all-family operating point was established by any method.
 
-**Within-regime discrimination (D5).** On the post-transition segment of the sea-state step
+\textbf{Within-regime discrimination (D5).} On the post-transition segment of the sea-state step
 campaign, every method scored AUC 0.474 to 0.509 at ranking imminent-capsize windows against
 surviving windows. Inside an established severe regime, motion-only scores carried no usable
 information about which encounter would be terminal.
 
-**The character of false alarms (D4).** Between 75 and 88 percent of nominally false episodes
+\textbf{The character of false alarms (D4).} Between 75 and 88 percent of nominally false episodes
 coincided with critical wave-group encounters, defined by an envelope criterion on the known
 synthetic seaway in the spirit of the critical-wave-groups literature (Themelis and Spyrou 2007;
 Anastopoulos et al. 2016), that the vessel survived. The figure is descriptive, since no matched null was
@@ -206,7 +219,7 @@ tested and groups are common in a narrow-band sea; its qualitative content is th
 false-positive accounting charges the detectors for hazard exposure the vessel happened to
 survive, the base-rate structure anticipated in Boettiger and Hastings (2012).
 
-**Reference comparators.** Restarting ensembles of independent futures from the exact simulated
+\textbf{Reference comparators.} Restarting ensembles of independent futures from the exact simulated
 state yielded AUC 0.851 on a design-balanced window set, against 0.762 for gradient boosting on
 engineered features (of which an estimated roll period, in effect a stiffness gauge, is the most
 informative) and 0.627 for the network on the same windows; a protocol-time comparator also
@@ -216,9 +229,9 @@ seaway leaves encounter information in the motion history; and part of the netwo
 natural test populations evidently derived from population structure rather than state
 inference. The headroom that exists lies in state inference, and simple tools claimed it first.
 
-**The split-time rate estimator (U1, H1).** Three preregistered experiments operated the
-paper's ROM decomposition — capsize rate as upcrossing rate times the probability an upcrossing
-goes critical — as a continuously updated onboard estimate, each evaluated once on fresh test
+\textbf{The split-time rate estimator (U1, H1).} Three preregistered experiments operated the
+paper's ROM decomposition --- capsize rate as upcrossing rate times the probability an upcrossing
+goes critical --- as a continuously updated onboard estimate, each evaluated once on fresh test
 data by the split-time program's own confidence-interval-capture standard. The
 online-estimated form failed its capture criterion, and a predeclared comparison found the
 upcrossing rate alone more reliable than the full decomposition, so the corresponding kill
@@ -240,18 +253,18 @@ map against 0.242 for a variance-based map) are the fairer calibration compariso
 verdicts were preregistered and stand as recorded.
 
 A companion study of conformalized forecast intervals on the same benchmark (following Romano,
-Patterson and Candès 2019; Gibbs and Candès 2021) found stationary marginal coverage accurate to
+Patterson and Cand\\texttt{es 2019; Gibbs and Cand\}es 2021) found stationary marginal coverage accurate to
 0.75 percentage points in the mean, while every online adaptation scheme tested failed a
 predeclared joint rolling-coverage and alarm-cost criterion through the sea-state step. Those
 results are reported in the project record and not further discussed here.
 
-## 6. Discussion
+\section{Discussion}
 
 The results organize into a two-clock description. The slowly varying stability state, the
 eroding restoring that determines whether the vessel is in danger, is observable from motion
 history: ranking skill survives every forcing bandwidth, and the most informative engineered
 feature is in effect an online stiffness estimate, a quantity this community has long extracted
-from the roll period (Terada et al. 2016; Míguez González et al. 2017). The terminal encounter, the particular wave group that
+from the roll period (Terada et al. 2016; M\'iguez Gonz\'alez et al. 2017). The terminal encounter, the particular wave group that
 converts vulnerability into capsize, is not observable from motion history once the severe regime
 is established; the within-regime result is chance-level for learned, classical, and physical
 scores alike, consistent with the stochastic-Melnikov view that a deterministic separatrix loses
@@ -292,7 +305,7 @@ of 2.5 of optimism through threshold provenance. The mechanism is not exotic and
 to this study. The community's evaluation practice for learned warning methods would benefit from
 treating threshold provenance as a reportable property of every operating point.
 
-## 7. Conclusions
+\section{Conclusions}
 
 On a validated synthetic benchmark spanning three stability-failure archetypes, motion-only
 warning methods rank capsize risk well above chance at every forcing bandwidth tested, fail to
@@ -308,50 +321,50 @@ motion-only architectures; shipboard sea-state estimation is an established lite
 2017), and the benchmark, with its frozen splits and audited protocol, is suited to that study
 without modification.
 
-## Acknowledgments
+\section*{Acknowledgments}
 
 The benchmark code, campaign definitions, and the complete numerical record, including the
 pre-audit results retained as historical artifacts, are available from the author.
 
-## References
+\section*{References}
 
-<!-- Verified against primary records 2026-08-03. Remaining flags: Themelis & Spyrou end page
-     (181-204 vs -206); Nielsen (2017) details from secondary sources; McCue & Troesch (2006)
-     and Shinozuka & Deodatis DOI strings to be re-checked at submission. -->
 
-- Anastopoulos, P. A., and Spyrou, K. J. (2019). Evaluation of the critical wave groups method in calculating the probability of ship capsize in beam seas. *Ocean Engineering* 187, 106213.
-- Anastopoulos, P. A., Spyrou, K. J., Bassler, C. C., and Belenky, V. (2016). Towards an improved critical wave groups method for the probabilistic assessment of large ship motions in irregular seas. *Probabilistic Engineering Mechanics* 44, 18–27.
-- Bačkalov, I., Bulian, G., Rosén, A., Shigunov, V., and Themelis, N. (2016). Improvement of ship stability and safety in intact condition through operational measures: challenges and opportunities. *Ocean Engineering* 120, 353–361.
-- Belenky, V. L., and Sevastianov, N. B. (2007). *Stability and Safety of Ships: Risk of Capsizing*, 2nd ed. SNAME, Jersey City.
-- Belenky, V., Weems, K., and Lin, W.-M. (2016). Split-time method for estimation of probability of capsizing caused by pure loss of stability. *Ocean Engineering* 122, 333–343.
-- Belenky, V., Weems, K. M., Lin, W.-M., Pipiras, V., and Sapsis, T. P. (2024). Estimation of probability of capsizing with split-time method. *Ocean Engineering* 292, 116452.
-- Boettiger, C., and Hastings, A. (2012). Early warning signals and the prosecutor's fallacy. *Proceedings of the Royal Society B* 279(1748), 4734–4739.
-- Bulian, G., and Francescutto, A. (2004). A simplified modular approach for the prediction of the roll motion due to the combined action of wind and waves. *Proc. IMechE Part M: Journal of Engineering for the Maritime Environment* 218(3), 189–212.
-- Bulian, G., and Francescutto, A. (2011). Effect of roll modelling in beam waves under multi-frequency excitation. *Ocean Engineering* 38(13), 1448–1463.
-- Bury, T. M., Sujith, R. I., Pavithran, I., Scheffer, M., Lenton, T. M., Anand, M., and Bauch, C. T. (2021). Deep learning for early warning signals of tipping points. *PNAS* 118(39), e2106140118.
-- Dakos, V., Carpenter, S. R., Brock, W. A., Ellison, A. M., Guttal, V., Ives, A. R., Kéfi, S., Livina, V., Seekell, D. A., van Nes, E. H., and Scheffer, M. (2012). Methods for detecting early warnings of critical transitions in time series illustrated using simulated ecological data. *PLoS ONE* 7(7), e41010.
-- Falzarano, J. M., Shaw, S. W., and Troesch, A. W. (1992). Application of global methods for analyzing dynamical systems to ship rolling motion and capsizing. *International Journal of Bifurcation and Chaos* 2(1), 101–115.
-- Frey, M., and Simiu, E. (1993). Noise-induced chaos and phase space flux. *Physica D* 63(3–4), 321–340.
-- Galeazzi, R., Blanke, M., and Poulsen, N. K. (2013). Early detection of parametric roll resonance on container ships. *IEEE Transactions on Control Systems Technology* 21(2), 489–503.
-- Galeazzi, R., Blanke, M., Falkenberg, T., Poulsen, N. K., Violaris, N., Storhaug, G., and Huss, M. (2015). Parametric roll resonance monitoring using signal-based detection. *Ocean Engineering* 109, 355–371.
-- Gibbs, I., and Candès, E. J. (2021). Adaptive conformal inference under distribution shift. *Advances in Neural Information Processing Systems* 34, 1660–1672.
-- Hasselmann, K., et al. (1973). Measurements of wind-wave growth and swell decay during the Joint North Sea Wave Project (JONSWAP). *Ergänzungsheft zur Deutschen Hydrographischen Zeitschrift*, Reihe A(8°), Nr. 12.
-- IMO (2020). *Interim Guidelines on the Second Generation Intact Stability Criteria*. MSC.1/Circ.1627, International Maritime Organization, London.
-- Kontolefas, I., and Spyrou, K. J. (2020). Probability of ship high-runs from phase-space data. *Journal of Ship Research* 64(1), 81–97.
-- McCue, L. S., and Troesch, A. W. (2004). Use of Lyapunov exponents to predict chaotic vessel motions. *Proceedings of the 7th International Ship Stability Workshop*, Shanghai.
-- McCue, L. S., and Troesch, A. W. (2006). A combined numerical–empirical method to calculate finite-time Lyapunov exponents from experimental time series with application to vessel capsizing. *Ocean Engineering* 33(13), 1796–1813.
-- Míguez González, M., Bulian, G., Santiago Caamaño, L., and Díaz Casás, V. (2017). Towards real-time identification of initial stability from ship roll motion analysis. *Proceedings of the 16th International Ship Stability Workshop*, Belgrade, 221–229.
-- Míguez González, M., Díaz Casás, V., López Peña, F., and Pérez Rojas, L. (2023). On the application of artificial neural networks for the real time prediction of parametric roll resonance. In Spyrou, K. J., et al. (eds.), *Contemporary Ideas on Ship Stability: From Dynamics to Criteria*, Springer, 335–349.
-- Nayfeh, A. H., and Mook, D. T. (1979). *Nonlinear Oscillations*. Wiley-Interscience, New York.
-- Nielsen, U. D. (2017). A concise account of techniques available for shipboard sea state estimation. *Ocean Engineering* 129, 352–362.
-- Petacco, N., and Gualeni, P. (2020). IMO second generation intact stability criteria: general overview and focus on operational measures. *Journal of Marine Science and Engineering* 8(7), 494.
-- Rahola, J. (1939). *The Judging of the Stability of Ships and the Determination of the Minimum Amount of Stability — Especially Considering the Vessels Navigating Finnish Waters*. Doctoral thesis, Technical University of Finland, Helsinki.
-- Romano, Y., Patterson, E., and Candès, E. J. (2019). Conformalized quantile regression. *Advances in Neural Information Processing Systems* 32, 3538–3548.
-- Shigunov, V. (2023). Intact stability operational measures: criteria, standards and examples. *Ocean Engineering* 279, 114446.
-- Shinozuka, M., and Deodatis, G. (1991). Simulation of stochastic processes by spectral representation. *Applied Mechanics Reviews* 44(4), 191–204.
-- Silva, K. M., and Maki, K. J. (2024). Implementation of the critical wave groups method with computational fluid dynamics and neural networks. *Ocean Engineering* 292, 116468.
-- Story, W. R. (2009). *Application of Lyapunov Exponents to Strange Attractors and Intact & Damaged Ship Stability*. M.S. thesis, Aerospace and Ocean Engineering, Virginia Polytechnic Institute and State University, Blacksburg.
-- Terada, D., Tamashima, M., Nakao, I., and Matsuda, A. (2016). Estimation of the metacentric height by using onboard monitoring roll data based on time series analysis. *Proceedings of the 15th International Ship Stability Workshop*, Stockholm, 209–215.
-- Themelis, N., and Spyrou, K. J. (2007). Probabilistic assessment of ship stability. *SNAME Transactions* 115, 181–204.
-- Umeda, N., Usada, S., Mizumoto, K., and Matsuda, A. (2016). Broaching probability for a ship in irregular stern-quartering waves: theoretical prediction and experimental validation. *Journal of Marine Science and Technology* 21(1), 23–37.
-- Weems, K., Belenky, V., Campbell, B., and Pipiras, V. (2023). Statistical validation of the split-time method with volume-based numerical simulation. In Spyrou, K. J., Belenky, V. L., Katayama, T., Bačkalov, I., and Francescutto, A. (eds.), *Contemporary Ideas on Ship Stability: From Dynamics to Criteria*, Springer, Cham, 225–243.
+
+\hangindent=1.5em\hangafter=1\noindent Anastopoulos, P. A., and Spyrou, K. J. (2019). Evaluation of the critical wave groups method in calculating the probability of ship capsize in beam seas. \emph{Ocean Engineering} 187, 106213.\par
+\hangindent=1.5em\hangafter=1\noindent Anastopoulos, P. A., Spyrou, K. J., Bassler, C. C., and Belenky, V. (2016). Towards an improved critical wave groups method for the probabilistic assessment of large ship motions in irregular seas. \emph{Probabilistic Engineering Mechanics} 44, 18--27.\par
+\hangindent=1.5em\hangafter=1\noindent Ba\v{c}kalov, I., Bulian, G., Ros\'en, A., Shigunov, V., and Themelis, N. (2016). Improvement of ship stability and safety in intact condition through operational measures: challenges and opportunities. \emph{Ocean Engineering} 120, 353--361.\par
+\hangindent=1.5em\hangafter=1\noindent Belenky, V. L., and Sevastianov, N. B. (2007). \emph{Stability and Safety of Ships: Risk of Capsizing}, 2nd ed. SNAME, Jersey City.\par
+\hangindent=1.5em\hangafter=1\noindent Belenky, V., Weems, K., and Lin, W.-M. (2016). Split-time method for estimation of probability of capsizing caused by pure loss of stability. \emph{Ocean Engineering} 122, 333--343.\par
+\hangindent=1.5em\hangafter=1\noindent Belenky, V., Weems, K. M., Lin, W.-M., Pipiras, V., and Sapsis, T. P. (2024). Estimation of probability of capsizing with split-time method. \emph{Ocean Engineering} 292, 116452.\par
+\hangindent=1.5em\hangafter=1\noindent Boettiger, C., and Hastings, A. (2012). Early warning signals and the prosecutor's fallacy. \emph{Proceedings of the Royal Society B} 279(1748), 4734--4739.\par
+\hangindent=1.5em\hangafter=1\noindent Bulian, G., and Francescutto, A. (2004). A simplified modular approach for the prediction of the roll motion due to the combined action of wind and waves. \emph{Proc. IMechE Part M: Journal of Engineering for the Maritime Environment} 218(3), 189--212.\par
+\hangindent=1.5em\hangafter=1\noindent Bulian, G., and Francescutto, A. (2011). Effect of roll modelling in beam waves under multi-frequency excitation. \emph{Ocean Engineering} 38(13), 1448--1463.\par
+\hangindent=1.5em\hangafter=1\noindent Bury, T. M., Sujith, R. I., Pavithran, I., Scheffer, M., Lenton, T. M., Anand, M., and Bauch, C. T. (2021). Deep learning for early warning signals of tipping points. \emph{PNAS} 118(39), e2106140118.\par
+\hangindent=1.5em\hangafter=1\noindent Dakos, V., Carpenter, S. R., Brock, W. A., Ellison, A. M., Guttal, V., Ives, A. R., K\'efi, S., Livina, V., Seekell, D. A., van Nes, E. H., and Scheffer, M. (2012). Methods for detecting early warnings of critical transitions in time series illustrated using simulated ecological data. \emph{PLoS ONE} 7(7), e41010.\par
+\hangindent=1.5em\hangafter=1\noindent Falzarano, J. M., Shaw, S. W., and Troesch, A. W. (1992). Application of global methods for analyzing dynamical systems to ship rolling motion and capsizing. \emph{International Journal of Bifurcation and Chaos} 2(1), 101--115.\par
+\hangindent=1.5em\hangafter=1\noindent Frey, M., and Simiu, E. (1993). Noise-induced chaos and phase space flux. \emph{Physica D} 63(3--4), 321--340.\par
+\hangindent=1.5em\hangafter=1\noindent Galeazzi, R., Blanke, M., and Poulsen, N. K. (2013). Early detection of parametric roll resonance on container ships. \emph{IEEE Transactions on Control Systems Technology} 21(2), 489--503.\par
+\hangindent=1.5em\hangafter=1\noindent Galeazzi, R., Blanke, M., Falkenberg, T., Poulsen, N. K., Violaris, N., Storhaug, G., and Huss, M. (2015). Parametric roll resonance monitoring using signal-based detection. \emph{Ocean Engineering} 109, 355--371.\par
+\hangindent=1.5em\hangafter=1\noindent Gibbs, I., and Cand\`es, E. J. (2021). Adaptive conformal inference under distribution shift. \emph{Advances in Neural Information Processing Systems} 34, 1660--1672.\par
+\hangindent=1.5em\hangafter=1\noindent Hasselmann, K., et al. (1973). Measurements of wind-wave growth and swell decay during the Joint North Sea Wave Project (JONSWAP). \emph{Erg\"anzungsheft zur Deutschen Hydrographischen Zeitschrift}, Reihe A(8\textdegree{}), Nr. 12.\par
+\hangindent=1.5em\hangafter=1\noindent IMO (2020). \emph{Interim Guidelines on the Second Generation Intact Stability Criteria}. MSC.1/Circ.1627, International Maritime Organization, London.\par
+\hangindent=1.5em\hangafter=1\noindent Kontolefas, I., and Spyrou, K. J. (2020). Probability of ship high-runs from phase-space data. \emph{Journal of Ship Research} 64(1), 81--97.\par
+\hangindent=1.5em\hangafter=1\noindent McCue, L. S., and Troesch, A. W. (2004). Use of Lyapunov exponents to predict chaotic vessel motions. \emph{Proceedings of the 7th International Ship Stability Workshop}, Shanghai.\par
+\hangindent=1.5em\hangafter=1\noindent McCue, L. S., and Troesch, A. W. (2006). A combined numerical--empirical method to calculate finite-time Lyapunov exponents from experimental time series with application to vessel capsizing. \emph{Ocean Engineering} 33(13), 1796--1813.\par
+\hangindent=1.5em\hangafter=1\noindent M\'iguez Gonz\'alez, M., Bulian, G., Santiago Caama\~no, L., and D\'iaz Cas\'as, V. (2017). Towards real-time identification of initial stability from ship roll motion analysis. \emph{Proceedings of the 16th International Ship Stability Workshop}, Belgrade, 221--229.\par
+\hangindent=1.5em\hangafter=1\noindent M\'iguez Gonz\'alez, M., D\'iaz Cas\'as, V., L\'opez Pe\~na, F., and P\'erez Rojas, L. (2023). On the application of artificial neural networks for the real time prediction of parametric roll resonance. In Spyrou, K. J., et al. (eds.), \emph{Contemporary Ideas on Ship Stability: From Dynamics to Criteria}, Springer, 335--349.\par
+\hangindent=1.5em\hangafter=1\noindent Nayfeh, A. H., and Mook, D. T. (1979). \emph{Nonlinear Oscillations}. Wiley-Interscience, New York.\par
+\hangindent=1.5em\hangafter=1\noindent Nielsen, U. D. (2017). A concise account of techniques available for shipboard sea state estimation. \emph{Ocean Engineering} 129, 352--362.\par
+\hangindent=1.5em\hangafter=1\noindent Petacco, N., and Gualeni, P. (2020). IMO second generation intact stability criteria: general overview and focus on operational measures. \emph{Journal of Marine Science and Engineering} 8(7), 494.\par
+\hangindent=1.5em\hangafter=1\noindent Rahola, J. (1939). \emph{The Judging of the Stability of Ships and the Determination of the Minimum Amount of Stability --- Especially Considering the Vessels Navigating Finnish Waters}. Doctoral thesis, Technical University of Finland, Helsinki.\par
+\hangindent=1.5em\hangafter=1\noindent Romano, Y., Patterson, E., and Cand\`es, E. J. (2019). Conformalized quantile regression. \emph{Advances in Neural Information Processing Systems} 32, 3538--3548.\par
+\hangindent=1.5em\hangafter=1\noindent Shigunov, V. (2023). Intact stability operational measures: criteria, standards and examples. \emph{Ocean Engineering} 279, 114446.\par
+\hangindent=1.5em\hangafter=1\noindent Shinozuka, M., and Deodatis, G. (1991). Simulation of stochastic processes by spectral representation. \emph{Applied Mechanics Reviews} 44(4), 191--204.\par
+\hangindent=1.5em\hangafter=1\noindent Silva, K. M., and Maki, K. J. (2024). Implementation of the critical wave groups method with computational fluid dynamics and neural networks. \emph{Ocean Engineering} 292, 116468.\par
+\hangindent=1.5em\hangafter=1\noindent Story, W. R. (2009). \emph{Application of Lyapunov Exponents to Strange Attractors and Intact \& Damaged Ship Stability}. M.S. thesis, Aerospace and Ocean Engineering, Virginia Polytechnic Institute and State University, Blacksburg.\par
+\hangindent=1.5em\hangafter=1\noindent Terada, D., Tamashima, M., Nakao, I., and Matsuda, A. (2016). Estimation of the metacentric height by using onboard monitoring roll data based on time series analysis. \emph{Proceedings of the 15th International Ship Stability Workshop}, Stockholm, 209--215.\par
+\hangindent=1.5em\hangafter=1\noindent Themelis, N., and Spyrou, K. J. (2007). Probabilistic assessment of ship stability. \emph{SNAME Transactions} 115, 181--204.\par
+\hangindent=1.5em\hangafter=1\noindent Umeda, N., Usada, S., Mizumoto, K., and Matsuda, A. (2016). Broaching probability for a ship in irregular stern-quartering waves: theoretical prediction and experimental validation. \emph{Journal of Marine Science and Technology} 21(1), 23--37.\par
+\hangindent=1.5em\hangafter=1\noindent Weems, K., Belenky, V., Campbell, B., and Pipiras, V. (2023). Statistical validation of the split-time method with volume-based numerical simulation. In Spyrou, K. J., Belenky, V. L., Katayama, T., Ba\v{c}kalov, I., and Francescutto, A. (eds.), \emph{Contemporary Ideas on Ship Stability: From Dynamics to Criteria}, Springer, Cham, 225--243.\par
+
+\end{document}
