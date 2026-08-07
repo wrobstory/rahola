@@ -14,7 +14,7 @@ import numpy as np
 from rahola.dataset import SimulationDataset
 from rahola_lab.campaigns import load_campaign_split
 from rahola_lab.constants import DETECTOR_MATCHED_SENSITIVITY, SeedBlock
-from rahola_lab.experiments.common import FAMILIES, write_result
+from rahola_lab.experiments.common import FAMILIES, load_result, write_result
 from rahola_lab.experiments.detector_common import (
     bootstrap_point_payload,
     bootstrap_window_auc,
@@ -339,7 +339,12 @@ def run_f1a(f1_root: Path, output_root: Path, calibration: dict[str, object]) ->
             )
         ),
     }
-    write_result(output_root, "f1a_timing_f1", payload)
+    write_result(
+        output_root,
+        "f1a_timing_f1",
+        payload,
+        upstream_results={"f1_calibration_f1": load_result(output_root, "f1_calibration_f1")},
+    )
     return payload
 
 
@@ -407,7 +412,7 @@ def run_f1b(
             if passes and name != "S1_margin":
                 qualifiers.append(f"{setting}/{name}")
         scored[setting] = scores
-    d1 = json.loads((output_root / "d1_operating_curves_v02.json").read_text(encoding="utf-8"))
+    d1 = load_result(output_root, "d1_operating_curves_v02")
     payload: dict[str, object] = {
         "experiment": "F1b vulnerability value",
         "methods": methods,
@@ -416,7 +421,15 @@ def run_f1b(
             "danger_margin"
         ],
     }
-    write_result(output_root, "f1b_value_f1", payload)
+    write_result(
+        output_root,
+        "f1b_value_f1",
+        payload,
+        upstream_results={
+            "f1_calibration_f1": load_result(output_root, "f1_calibration_f1"),
+            "d1_operating_curves_v02": d1,
+        },
+    )
     return payload, scored
 
 
@@ -433,7 +446,12 @@ def run_f1c(
             "reason": "No causal F1b statistic met the predeclared improvement rule.",
             "rotations": {},
         }
-        write_result(output_root, "f1c_transfer_f1", payload)
+        write_result(
+            output_root,
+            "f1c_transfer_f1",
+            payload,
+            upstream_results={"f1b_value_f1": load_result(output_root, "f1b_value_f1")},
+        )
         return payload
     datasets = _fresh_evaluation(f1_root)
     rotations: dict[str, object] = {}
@@ -460,7 +478,12 @@ def run_f1c(
             del rollout
             gc.collect()
     payload = {"experiment": "F1c transfer", "status": "run", "rotations": rotations}
-    write_result(output_root, "f1c_transfer_f1", payload)
+    write_result(
+        output_root,
+        "f1c_transfer_f1",
+        payload,
+        upstream_results={"f1b_value_f1": load_result(output_root, "f1b_value_f1")},
+    )
     return payload
 
 
