@@ -29,8 +29,9 @@ Five warning methods compete under one protocol in which every operating thresho
 calibration data and spent once on test data: a small convolutional network, classical variance
 and autocorrelation trend statistics, a likelihood-ratio detector, a closed-form
 critical-roll-rate margin, and a phase-space neighbor-count score. Four findings emerge.
-(a) Ranking skill is real at every forcing bandwidth tested; the network separates dangerous
-from ordinary intervals with window AUC 0.86 to 0.92. (b) Inside an established severe regime,
+(a) Ranking skill is real at every forcing bandwidth tested; the fixed-window primary network
+separates dangerous from ordinary intervals with window AUC 0.883 to 0.913. (b) Inside an
+established severe regime,
 no method predicts which encounter will be fatal; all score near chance. (c) Most nominally
 false alarms, 75 to 88 percent, coincide with genuine critical wave groups that the vessel
 survived. (d) No method's threshold transfers across failure modes at fixed sensitivity. We
@@ -168,17 +169,18 @@ independently in the Spyrou school (Kontolefas and Spyrou 2020).
 
 \section{Evaluation protocol and the audit}
 
-Metrics are episode sensitivity, false episodes per exposure hour, and lead time, with exact
-binomial confidence intervals; exposure ends at capsize; an episode overlapping the pre-capsize
-horizon is event-associated. All operating controls are selected on calibration data, frozen, and
-evaluated once on test data.
+Metrics are episode sensitivity, false episodes per exposure hour, and lead time, with
+trajectory-block bootstrap intervals and fixed campaign weights; exposure ends at capsize; an
+episode overlapping the pre-capsize horizon is event-associated. All operating controls are
+selected on calibration data, frozen, and evaluated once on test data.
 
 The protocol was not followed from the outset, and the failure is reported as a result. The
 study's first operating points were obtained by scanning test-set metrics for the lowest
 false-episode rate at 90 percent sensitivity or better, which is threshold selection on test
 outcomes. For the network on the pooled rare-event campaigns, the test-selected report was 6.3
-false episodes per hour; the calibration-frozen value for the same detector on the same data is
-15.5 per hour at 92.4 percent sensitivity. A factor of approximately 2.5 in reported alarm cost
+false episodes per hour; the superseded pre-v0.2 calibration-frozen value for the same detector on
+the same data was 15.5 per hour at 92.4 percent sensitivity. A factor of approximately 2.5 in
+reported alarm cost
 was therefore attributable to the selection procedure rather than the detector, at a sensitivity
 target of 90 percent and capsize prevalences of 1 to 2 percent. One guarded holdout evaluation
 was additionally invalidated by threshold selection on the holdout labels, and its artifacts are
@@ -191,34 +193,35 @@ provenance is not stated.
 
 \section{Results}
 
-\textbf{Ranking under bandwidth (D3).} The network's window AUC was 0.862 to 0.920 at every peak
-enhancement from 30 down to 1.0, while the classical trend indicators collapsed on ramped
+\textbf{Ranking under bandwidth (D3).} The fixed-window primary network's window AUC was 0.883 to
+0.913 at every peak enhancement from 30 down to 1.0, while the classical trend indicators collapsed on ramped
 campaigns. Ranking skill from motion history survives broadband forcing. The predeclared
 operating-cost criterion at the broadband end (a 10 percent false-episode improvement) was missed
-at 8.6 percent, and the operating-cost claim is reported as inconclusive: ranking skill and a
-deployable threshold are different assets (Figure 3).
+at 7.6 percent (14.061442 versus 15.212539 false episodes per hour), and the operating-cost claim
+is reported as inconclusive: ranking skill and a deployable threshold are different assets
+(Figure 3).
 
-\begin{figure}[t]\centering\includegraphics[width=\linewidth]{../../results/d3_bandwidth_skill_v02.png}\caption{Ranking survives bandwidth. Window AUC on the five forcing-bandwidth campaigns, corrected record: the network variants hold 0.86 to 0.92 from narrow-band forcing down to fully broadband, while the classical indicators and physics scores sit at or below chance on these ramped campaigns --- the fixed-window scoring that is honest about information also strips the trends those baselines rely on.}\end{figure}
+\begin{figure}[t]\centering\includegraphics[width=\linewidth]{../../results/d3_bandwidth_skill_v02.png}\caption{Ranking survives bandwidth. Window AUC on the five forcing-bandwidth campaigns, corrected record: the fixed-window primary network holds 0.883 to 0.913 from narrow-band forcing down to fully broadband, while the classical indicators and physics scores sit at or below chance on these ramped campaigns --- the fixed-window scoring that is honest about information also strips the trends those baselines rely on.}\end{figure}
 
 \textbf{Pooled operating points (D1).} At calibration-frozen thresholds on the pooled rare-event
-campaigns, the network attained 92.4 percent sensitivity at 15.5 false episodes per hour; the
-classical indicators reached 100 percent sensitivity only at a near-always-on threshold costing
+campaigns, the fixed-window primary network attained 91.00 percent sensitivity at 13.409 false
+episodes per hour; the classical indicators reached 100 percent sensitivity only at a
+near-always-on threshold costing
 21.4 per hour; the physics margin and the 2009 neighbor score occupied the same
 high-sensitivity, high-cost region. No method produced an operating point that a master would
 tolerate (Figure 4).
 
 \begin{figure}[t]\centering\includegraphics[width=\linewidth]{../../results/d1_operating_curves_v02.png}\caption{The pooled operating curves, corrected record: capsize sensitivity against declustered false episodes per exposure hour at calibration-frozen thresholds. The network variants dominate the low-cost region; every classical and physics score buys sensitivity only near the always-on corner. Even the best curve pays several false episodes per hour at 90 percent sensitivity.}\end{figure}
 
-\textbf{Threshold transfer (D2).} With each restoring family held out in turn, the network missed the
-90 percent test-sensitivity target in all three rotations. Two architecture probes intended to
-repair transfer, a gray-box network with a physical latent head and a few-failure adaptation of a
-pretrained sequence model, failed their predeclared criteria under calibration-fixed thresholds.
-No all-family operating point was established by any method.
+\textbf{Threshold transfer (D2).} The fixed-window CNN reached 99.15 percent, 90.83 percent, and
+76.21 percent test sensitivity across the softening, parametric, and biased holdouts. Two
+rotations met 90 percent, but only near always-on alarm cost; the biased holdout failed. No
+deployable transfer was established.
 
-\textbf{Within-regime discrimination (D5).} On the post-transition segment of the sea-state step
-campaign, every method scored AUC 0.474 to 0.509 at ranking imminent-capsize windows against
-surviving windows. Inside an established severe regime, motion-only scores carried no usable
-information about which encounter would be terminal.
+\textbf{Within-regime discrimination (D5).} After the full wash-in, the fixed-window CNN's
+orientation-independent AUC was 0.556, below the 0.58 trigger; cumulative-online CNN reached
+0.538 and classical scores remained near chance. Motion-only scores carried no usable information
+about which encounter would be terminal inside the established severe regime.
 
 \textbf{The character of false alarms (D4).} Between 75 and 88 percent of nominally false episodes
 coincided with critical wave-group encounters, defined by an envelope criterion on the known
@@ -228,15 +231,14 @@ tested and groups are common in a narrow-band sea; its qualitative content is th
 false-positive accounting charges the detectors for hazard exposure the vessel happened to
 survive, the base-rate structure anticipated in Boettiger and Hastings (2012).
 
-\textbf{Reference comparators.} Restarting ensembles of independent futures from the exact simulated
-state yielded AUC 0.851 on a design-balanced window set, against 0.762 for gradient boosting on
-engineered features (of which an estimated roll period, in effect a stiffness gauge, is the most
-informative) and 0.627 for the network on the same windows; a protocol-time comparator also
-exceeded the network. Two qualifications apply: the restart comparators replace the realized
-forcing and are therefore reference points rather than bounds, since the temporally correlated
-seaway leaves encounter information in the motion history; and part of the network's advantage on
-natural test populations evidently derived from population structure rather than state
-inference. The headroom that exists lies in state inference, and simple tools claimed it first.
+\textbf{Reference comparators.} On the v0.2 design-balanced window set, the exact-state independent-
+future restart reached AUC 0.850, fixed-window XGBoost 0.723, and fixed-window CNN 0.652; a
+protocol-time comparator also exceeded the network. Two qualifications apply: the restart
+comparators replace the realized forcing and are therefore reference points rather than bounds,
+since the temporally correlated seaway leaves encounter information in the motion history; and
+part of the network's advantage on natural test populations evidently derived from population
+structure rather than state inference. The headroom that exists lies in state inference, and
+simple tools claimed it first.
 
 \textbf{The split-time rate estimator (U1, H1).} Three preregistered experiments operated the
 paper's ROM decomposition --- capsize rate as upcrossing rate times the probability an upcrossing
@@ -257,8 +259,8 @@ the conditional carries becomes available only after the event has begun. Two me
 qualifications attach: fresh test slices of 30 to 60 expected events realized counts 21 to 37
 percent from expectation, and the capture intervals carried parameter uncertainty without
 realization noise, so the capture criterion on slices of this size is severe even for a
-correctly calibrated estimator; the reliability errors (0.040 for the hybrid and the rate-only
-map against 0.242 for a variance-based map) are the fairer calibration comparison. All
+correctly calibrated estimator; the reliability errors (0.039848 for the hybrid, 0.042806 for the
+rate-only map, and 0.242303 for a variance-based map) are the fairer calibration comparison. All
 verdicts were preregistered and stand as recorded. Figure 5's middle panel shows the one
 encouraging pattern: the crossing rate alone, offline-mapped, tracks the diagonal --- the rate
 factor of the decomposition is the part that works.
@@ -266,7 +268,7 @@ factor of the decomposition is the part that works.
 \begin{figure}[t]\centering\includegraphics[width=\linewidth]{../../results/h1_reliability_h1.png}\caption{Reliability of the offline-calibrated hybrid and its comparators on fresh test data (H1): predicted capsize probability per bin against the realized fraction. The hybrid under-predicts throughout; the crossing-rate-only map tracks the diagonal; the variance map scatters. The observable factor of the split-time decomposition --- the crossing rate --- carries the calibration.}\end{figure}
 
 A companion study of conformalized forecast intervals on the same benchmark (following Romano,
-Patterson and Cand\\texttt{es 2019; Gibbs and Cand\}es 2021) found stationary marginal coverage accurate to
+Patterson and Cand\`es 2019; Gibbs and Cand\`es 2021) found stationary marginal coverage accurate to
 0.75 percentage points in the mean, while every online adaptation scheme tested failed a
 predeclared joint rolling-coverage and alarm-cost criterion through the sea-state step. Those
 results are reported in the project record and not further discussed here.

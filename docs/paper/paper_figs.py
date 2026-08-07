@@ -81,7 +81,7 @@ bars = ax.barh([1, 0], vals, height=0.55, color=[RED, INK])
 for y, v in zip([1, 0], vals):
     ax.text(v + 0.3, y, f"{v:.1f} / h", va="center", fontsize=9)
 ax.set_yticks([1, 0], labels, fontsize=8)
-ax.set_xlabel("false episodes per exposure hour, same detector, same data")
+ax.set_xlabel("false episodes per exposure hour")
 ax.set_xlim(0, 19)
 ax.spines[["top", "right"]].set_visible(False)
 fig.tight_layout()
