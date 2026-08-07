@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import math
 from dataclasses import replace
 
+import jax
 import numpy as np
 import pytest
 
@@ -15,6 +17,7 @@ from rahola.config import (
     SeaStateStep,
     SimulationConfig,
 )
+from rahola.dynamics import integrate_rk4_batch
 from rahola.simulate import (
     _forcing_for_seed,
     simulate_batch,
@@ -84,6 +87,35 @@ def test_tangent_rollout_reproduces_base_trajectory_bitwise() -> None:
     assert np.array_equal(base.angle_rad, tangent.angle_rad, equal_nan=True)
     assert np.array_equal(base.rate_rad_s, tangent.rate_rad_s, equal_nan=True)
     assert np.array_equal(base.t_capsize_s, tangent.t_capsize_s, equal_nan=True)
+
+
+def test_biased_dynamics_retains_phase_information_under_reversed_forcing() -> None:
+    dt_tau = 0.02
+    duration_tau = 20.0
+    tau_half = np.arange(round(duration_tau / dt_tau) * 2 + 1) * (0.5 * dt_tau)
+    forcing = 0.25 * np.cos(0.7 * tau_half)[None, :]
+    forcing = np.concatenate((forcing, -forcing), axis=0)
+    zeros = np.zeros_like(forcing)
+    stiffness = np.ones_like(forcing)
+    states, cap_steps = integrate_rk4_batch(
+        jax.device_put(forcing),
+        jax.device_put(zeros),
+        jax.device_put(stiffness),
+        dt_tau,
+        jax.device_put(np.zeros((2, 2), dtype=np.float64)),
+        0.12,
+        0.0,
+        0.1,
+        0.0,
+        2.0,
+        0.5,
+        family_code=2,
+        linear_restoring=True,
+    )
+    angles = np.asarray(states)[:, :, 0]
+    assert np.all(np.asarray(cap_steps) < 0)
+    assert angles[0, -1] > angles[1, -1] + 0.2
+    assert not np.allclose(angles[0], -angles[1], atol=1e-3)
 
 
 def test_output_grid_honors_requested_rate_and_duration() -> None:
@@ -193,6 +225,7 @@ def test_restart_ensemble_matches_full_run_segment_statistics() -> None:
 
 @pytest.mark.slow
 def test_step_halving_convergence_statistics() -> None:
+    """Aggregate stochastic check for a coarse/fine fixed-path result, not RK order."""
     coarse = _small_config(duration_s=256.0, integration_steps_per_period=40, output_rate_hz=1)
     fine = replace(coarse, integration_steps_per_period=80)
     seeds = range(32)
@@ -202,6 +235,65 @@ def test_step_halving_convergence_statistics() -> None:
     fine_variance = np.nanmean(np.nanvar(fine_data.angle_rad, axis=1))
     assert coarse_variance == pytest.approx(fine_variance, rel=0.03)
     assert abs(np.mean(coarse_data.capsized) - np.mean(fine_data.capsized)) <= 0.05
+
+
+def test_linear_harmonic_forcing_converges_at_fourth_order_asymptotically() -> None:
+    damping = 0.12
+    amplitude = 0.3
+    frequency = 0.7
+    duration_tau = 8.0 * math.pi
+    damped_frequency = math.sqrt(1.0 - damping**2)
+    transfer = 1.0 / (1.0 - frequency**2 + 2j * damping * frequency)
+    particular_initial = amplitude * transfer
+    initial_velocity = (1j * frequency * particular_initial).real
+    homogeneous_cosine = -particular_initial.real
+    homogeneous_sine = (-initial_velocity + damping * homogeneous_cosine) / damped_frequency
+
+    particular_final = amplitude * transfer * np.exp(1j * frequency * duration_tau)
+    cosine = math.cos(damped_frequency * duration_tau)
+    sine = math.sin(damped_frequency * duration_tau)
+    decay = math.exp(-damping * duration_tau)
+    exact = np.array(
+        [
+            particular_final.real
+            + decay * (homogeneous_cosine * cosine + homogeneous_sine * sine),
+            (1j * frequency * particular_final).real
+            + decay
+            * (
+                (-damping * homogeneous_cosine + damped_frequency * homogeneous_sine)
+                * cosine
+                + (-damping * homogeneous_sine - damped_frequency * homogeneous_cosine)
+                * sine
+            ),
+        ]
+    )
+
+    errors = []
+    for steps in (16, 32, 64, 128, 256):
+        dt_tau = duration_tau / steps
+        tau_half = np.arange(2 * steps + 1, dtype=np.float64) * (0.5 * dt_tau)
+        forcing = (amplitude * np.cos(frequency * tau_half))[None, :]
+        zeros = np.zeros_like(forcing)
+        stiffness = np.ones_like(forcing)
+        states, _ = integrate_rk4_batch(
+            jax.device_put(forcing),
+            jax.device_put(zeros),
+            jax.device_put(stiffness),
+            dt_tau,
+            jax.device_put(np.zeros((1, 2), dtype=np.float64)),
+            damping,
+            0.0,
+            0.0,
+            0.0,
+            2.0,
+            2.0,
+            family_code=0,
+            linear_restoring=True,
+        )
+        errors.append(np.linalg.norm(np.asarray(states)[0, -1] - exact))
+
+    observed_order = np.log2(np.asarray(errors[:-1]) / np.asarray(errors[1:]))
+    assert np.all(observed_order[-2:] >= 3.5)
 
 
 def test_fixed_cutoff_step_halving_evaluates_same_forcing_path() -> None:

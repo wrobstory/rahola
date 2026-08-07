@@ -39,3 +39,26 @@ def test_same_seed_is_bitwise_reproducible() -> None:
     second = synthesize_jonswap(**kwargs)
     assert np.array_equal(first.elevation_m, second.elevation_m)
     assert np.array_equal(first.slope_rad, second.slope_rad)
+
+
+def test_deep_water_slope_fourier_coefficients_have_expected_magnitude_and_sign() -> None:
+    gravity = 9.80665
+    dt_s = 0.25
+    realization = synthesize_jonswap(
+        SeaState(),
+        duration_s=512.0,
+        dt_s=dt_s,
+        seed=91,
+        min_components=4,
+        max_frequency_rad_s=5.0,
+    )
+    sample_count = len(realization.elevation_m) - 1
+    omega = 2.0 * np.pi * np.fft.rfftfreq(sample_count, d=dt_s)
+    elevation_coefficients = np.fft.rfft(realization.elevation_m[:-1])
+    slope_coefficients = np.fft.rfft(realization.slope_rad[:-1])
+    active = (omega > 0.0) & (omega < 5.0 * (1.0 - 1e-12))
+    np.testing.assert_allclose(
+        realization.frequencies_rad_s, omega[: len(realization.frequencies_rad_s)]
+    )
+    expected = -1j * elevation_coefficients[active] * omega[active] ** 2 / gravity
+    np.testing.assert_allclose(slope_coefficients[active], expected, rtol=1e-11, atol=1e-11)

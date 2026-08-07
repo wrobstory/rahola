@@ -59,23 +59,25 @@ class CausalTransformer:
         def prior_sum(terms: FloatArray) -> FloatArray:
             return np.concatenate((np.zeros(1, dtype=np.float64), np.cumsum(terms[:-1])))
 
-        sum_y = prior_sum(current)
-        sum_y2 = prior_sum(current * current)
-        sum_t = prior_sum(index)
-        sum_t2 = prior_sum(index * index)
-        sum_ty = prior_sum(index * current)
+        offset = current[0]
+        centered = current - offset
+        sum_centered = prior_sum(centered)
+        sum_centered2 = prior_sum(centered * centered)
+        sum_index_centered = prior_sum(index * centered)
         safe_count = np.maximum(count, 1.0)
-        mean = sum_y / safe_count
+        centered_mean = sum_centered / safe_count
+        mean = offset + centered_mean
         if self.detrend:
-            denominator = count * sum_t2 - sum_t**2
-            slope = (count * sum_ty - sum_t * sum_y) / np.maximum(
-                denominator, self.epsilon
-            )
-            prediction = (sum_y - slope * sum_t) / safe_count + slope * index
+            time_mean = (count - 1.0) / 2.0
+            denominator = count * (count**2 - 1.0) / 12.0
+            covariance = sum_index_centered - time_mean * sum_centered
+            slope = covariance / np.maximum(denominator, self.epsilon)
+            prediction = offset + centered_mean + slope * (index - time_mean)
         else:
             prediction = mean
         variance = np.maximum(
-            (sum_y2 - count * mean**2) / np.maximum(count - 1.0, 1.0),
+            (sum_centered2 - sum_centered * centered_mean)
+            / np.maximum(count - 1.0, 1.0),
             0.0,
         )
         scale = np.maximum(np.sqrt(variance), self.epsilon)

@@ -94,35 +94,25 @@ def test_future_only_leakage_probe_has_teeth() -> None:
     assert min(leaky_auc, 1.0 - leaky_auc) < 0.05
 
 
-def test_vectorized_causal_transformer_is_bitwise_equivalent_to_reference() -> None:
+def test_vectorized_causal_transformer_matches_independent_prefix_reference() -> None:
     def reference(values: np.ndarray, *, detrend: bool, epsilon: float = 1e-12) -> np.ndarray:
-        result = np.zeros_like(values)
-        sum_y = sum_y2 = sum_t = sum_t2 = sum_ty = 0.0
-        for index, value in enumerate(values):
-            count = index
-            if not np.isfinite(value):
-                result[index:] = np.nan
-                break
-            if count < 2:
-                residual, scale = 0.0, 1.0
+        result = np.full_like(values, np.nan)
+        stop = np.flatnonzero(~np.isfinite(values))
+        stop = int(stop[0]) if len(stop) else len(values)
+        for index in range(stop):
+            prior = values[:index]
+            if len(prior) < 2:
+                result[index] = 0.0
+                continue
+            if detrend:
+                time = np.arange(index, dtype=np.float64)
+                design = np.column_stack((np.ones(index), time))
+                intercept, slope = np.linalg.lstsq(design, prior, rcond=None)[0]
+                prediction = intercept + slope * index
             else:
-                mean = sum_y / count
-                if detrend:
-                    denominator = count * sum_t2 - sum_t**2
-                    slope = (count * sum_ty - sum_t * sum_y) / max(denominator, epsilon)
-                    intercept = (sum_y - slope * sum_t) / count
-                    prediction = intercept + slope * index
-                else:
-                    prediction = mean
-                variance = max((sum_y2 - count * mean**2) / (count - 1), 0.0)
-                scale = max(np.sqrt(variance), epsilon)
-                residual = value - prediction
-            result[index] = residual / scale
-            sum_y += value
-            sum_y2 += value * value
-            sum_t += index
-            sum_t2 += index * index
-            sum_ty += index * value
+                prediction = np.mean(prior)
+            scale = max(float(np.std(prior, ddof=1)), epsilon)
+            result[index] = (values[index] - prediction) / scale
         return result
 
     rng = np.random.default_rng(812)
@@ -136,4 +126,17 @@ def test_vectorized_causal_transformer_is_bitwise_equivalent_to_reference() -> N
         for values in corpus:
             expected = reference(values, detrend=detrend)
             actual = CausalTransformer(detrend=detrend).transform(values)
-            assert np.array_equal(actual, expected, equal_nan=True)
+            np.testing.assert_allclose(actual, expected, rtol=1e-12, atol=1e-12, equal_nan=True)
+
+
+@pytest.mark.parametrize("detrend", [False, True])
+@pytest.mark.parametrize("offset", [1e6, 1e8])
+def test_causal_transformer_is_translation_invariant_for_finite_shifted_signals(
+    detrend: bool, offset: float
+) -> None:
+    index = np.arange(257, dtype=np.float64)
+    signal = 40.0 * np.sin(index / 9.0) + 0.8 * index
+    baseline = CausalTransformer(detrend=detrend).transform(signal)
+    shifted = CausalTransformer(detrend=detrend).transform(signal + offset)
+    np.testing.assert_allclose(shifted, baseline, rtol=3e-9, atol=3e-9, equal_nan=True)
+    assert np.max(np.abs(shifted[16:])) > 0.1

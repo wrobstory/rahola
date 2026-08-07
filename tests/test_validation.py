@@ -5,6 +5,7 @@ import math
 import numpy as np
 import pytest
 
+import rahola.validation as validation
 from rahola.config import ForcingConfig, SeaState, SimulationConfig
 from rahola.simulate import simulate_batch
 from rahola.spectrum import jonswap_spectrum
@@ -69,6 +70,47 @@ def test_melnikov_closed_form_matches_orbit_quadrature() -> None:
         analytic = melnikov_heteroclinic_threshold(0.02, frequency)
         numerical = numerical_melnikov_threshold(0.02, frequency)
         assert numerical == pytest.approx(analytic, rel=1e-5)
+
+
+@pytest.mark.parametrize("frequency", [float("nan"), float("inf"), 0.0, -1.0])
+def test_melnikov_rejects_invalid_frequency(frequency: float) -> None:
+    with pytest.raises(ValueError, match="frequency_ratio"):
+        melnikov_heteroclinic_threshold(0.02, frequency)
+
+
+def test_melnikov_reports_unrepresentable_finite_frequency() -> None:
+    with pytest.raises(ValueError, match="representable"):
+        melnikov_heteroclinic_threshold(0.02, 1_000.0)
+
+
+@pytest.mark.parametrize("damping", [float("nan"), float("inf"), -0.01])
+def test_capsize_boundary_rejects_invalid_damping(damping: float) -> None:
+    with pytest.raises(ValueError, match="damping_ratio"):
+        find_harmonic_capsize_boundary(1.0, damping)
+
+
+@pytest.mark.parametrize("frequency", [float("nan"), float("inf"), 0.0, -1.0])
+def test_capsize_boundary_rejects_invalid_frequency(frequency: float) -> None:
+    with pytest.raises(ValueError, match="frequency_ratio"):
+        find_harmonic_capsize_boundary(frequency, 0.02)
+
+
+@pytest.mark.parametrize("tolerance", [float("nan"), 1.0, 0.0, -1e-3])
+def test_capsize_boundary_rejects_non_refining_tolerance(tolerance: float) -> None:
+    with pytest.raises(ValueError, match="relative_tolerance"):
+        find_harmonic_capsize_boundary(1.0, 0.02, relative_tolerance=tolerance)
+
+
+def test_capsize_boundary_bounds_unresolvable_tolerance(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(
+        validation,
+        "harmonic_capsize_fraction",
+        lambda amplitude, *_args, **_kwargs: float(amplitude >= 0.1),
+    )
+    with pytest.raises(RuntimeError, match=r"stagnated|iteration bound"):
+        validation.find_harmonic_capsize_boundary(
+            1.0, 0.02, phases=1, relative_tolerance=1e-300
+        )
 
 
 @pytest.mark.slow

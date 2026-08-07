@@ -9,12 +9,18 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 import yaml
-from rahola_lab.campaigns import load_campaign_definition, load_campaign_split
+from rahola_lab.campaigns import (
+    CampaignDefinition,
+    generate_campaign,
+    load_campaign_definition,
+    load_campaign_split,
+)
+from rahola_lab.campaigns.definition import SplitDefinition
 from rahola_lab.campaigns.load import _contained_path
 from rahola_lab.constants import EWS_HORIZON_PERIODS, EWS_WINDOW_PERIODS, SeedBlock
 from rahola_lab.evaluation import ReserveBlockError
 
-from rahola.config import SimulationConfig
+from rahola.config import ForcingConfig, SimulationConfig
 from rahola.dataset import SimulationDataset
 from rahola.storage import write_dataset
 
@@ -111,6 +117,38 @@ def test_frozen_campaign_grid_and_duration_budget() -> None:
             split.block not in {SeedBlock.RESERVE, SeedBlock.RESERVE2}
             for split in definition.splits
         )
+
+
+def test_tiny_campaign_regeneration_is_byte_deterministic(tmp_path: Path) -> None:
+    definition = CampaignDefinition(
+        name="tiny-regeneration",
+        role="test_fixture",
+        rationale="small deterministic regeneration check",
+        simulation=SimulationConfig(
+            duration_s=1.0,
+            natural_period_s=1.0,
+            output_rate_hz=1.0,
+            forcing=ForcingConfig(effective_wave_slope=0.0),
+        ),
+        splits=(SplitDefinition(block=SeedBlock.TRAIN, count=2, offset=0),),
+    )
+    first = generate_campaign(definition, tmp_path / "first", chunk_size=2)
+    second = generate_campaign(definition, tmp_path / "second", chunk_size=2)
+    first_files = sorted(
+        path.relative_to(first.manifest_path.parent)
+        for path in first.manifest_path.parent.rglob("*")
+        if path.is_file()
+    )
+    second_files = sorted(
+        path.relative_to(second.manifest_path.parent)
+        for path in second.manifest_path.parent.rglob("*")
+        if path.is_file()
+    )
+    assert first_files == second_files
+    for relative in first_files:
+        assert (first.manifest_path.parent / relative).read_bytes() == (
+            second.manifest_path.parent / relative
+        ).read_bytes()
 
 
 def test_campaign_counts_match_frozen_size_ranges() -> None:

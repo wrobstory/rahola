@@ -167,6 +167,23 @@ on the Runge–Kutta half-step grid before integration begins. Step protocols sy
 independently; the state remains continuous across a declared environmental step, and the forcing
 need not.
 
+### 2.2.1 Equation-level provenance ledger
+
+The following records separate equations verified from this repository from external
+equation-level provenance. The checkout contains bibliography entries but no scanned or
+version-pinned copies of the cited books and papers; where a page or equation number cannot be
+verified locally, it is explicitly marked unavailable.
+
+| Component | Repository-local equation and transformation chain | Primary-source status |
+| --- | --- | --- |
+| JONSWAP | `src/rahola/spectrum.py` evaluates $S_\eta=\alpha g^2\omega^{-5}\exp[-1.25(\omega_p/\omega)^4]\gamma^{\exp[-(\omega-\omega_p)^2/(2\sigma^2\omega_p^2)]}$, then normalizes $\int S_\eta\,d\omega$ to $H_s^2/16$, sets $A_j=\sqrt{2S_j\Delta\omega}$, and maps amplitudes/phases through the inverse FFT to $\eta(t)$. | Hasselmann et al. (1973) is a bibliography pointer only in this checkout; source version, page, and equation number are unavailable locally. |
+| Deep-water slope | From the linear deep-water dispersion relation $\omega^2=gk$, $k=\omega^2/g$. For $\eta_j=A_j\cos(kx-\omega t+\theta_j)$, evaluation at the fixed location $x=0$ gives $\partial_x\eta_j=-A_jk\sin(-\omega t+\theta_j)$, or $C_{\alpha,j}=-ik_jC_{\eta,j}$. The code then applies $m=\omega_n^2r\alpha$ and $f=m/(\phi_v\omega_n^2)=r\alpha/\phi_v$. | Dean and Dalrymple (1991) is cited, but edition/page/equation evidence is unavailable locally. The effective $r$ is a configured abstraction, not a sourced hull transfer function. |
+| Mathieu | The normalized local model is $x''+2\zeta x'+[1+h_0\cos(2\tau)]x=0$ and the retained first-order exact-tuning boundary is $h_{0,c}=4\zeta$; `mathieu_growth_rate` integrates the same half-step forcing and estimates the envelope exponent. | Nayfeh and Mook (1979) is a bibliography pointer only; source version, page, and equation number are unavailable locally. |
+| Melnikov | For $x''+2\zeta x'+x-x^3=F\cos(\Omega\tau)$ and $x_h=\tanh(\tau/\sqrt2)$, the local derivation uses $\int x_h'^2d\tau=2\sqrt2/3$ and $\left|\int x_h'\cos(\Omega\tau)d\tau\right|=\pi\sqrt2\Omega/\sinh(\pi\Omega/\sqrt2)$, yielding $F_M=4\zeta\sinh(\pi\Omega/\sqrt2)/(3\pi\Omega)$. The code compares this closed form with quadrature and uses it only as a necessary lower bound for a phase sweep. | Falzarano, Shaw, and Troesch (1992) is cited for application context; edition/page/equation evidence is unavailable locally. The displayed formula is independently derived and tested in `tests/test_validation.py`. |
+
+This ledger is implementation provenance, not a claim that the reduced-order model or its
+effective wave-slope coefficient is externally validated.
+
 ### 2.3 Modeling decisions
 
 The following decisions bound the scope of the model. (a) Phases are the only stochastic degrees
@@ -221,11 +238,11 @@ bound is not treated as a sufficient capsize condition.
 
 | Physics component | Acceptance test | Criterion |
 | --- | --- | --- |
-| JONSWAP and FFT realization | `test_jonswap_spectral_fidelity_and_significant_height` | recovered $H_s$ within 2%; log-PSD correlation above 0.95; band energy within 12% |
+| JONSWAP and FFT realization | `test_jonswap_spectral_fidelity_and_significant_height`; `test_deep_water_slope_fourier_coefficients_have_expected_magnitude_and_sign` | recovered $H_s$ within 2%; log-PSD correlation above 0.95; band energy within 12%; $C_\alpha/C_\eta=-i\omega^2/g$ |
 | Linear forcing and response | `test_linear_limit_variance_matches_spectral_response` | ensemble variance within 6% |
 | Parametric stiffness | `test_mathieu_principal_tongue_boundary` | growth sign brackets $4\zeta$; boundary within 10% |
 | Softening separatrix | Melnikov quadrature and capsize-boundary tests | closed form within $10^{-5}$ of quadrature; simulated boundary above the prediction, with correlated shape and a narrowing low-damping gap |
-| Integration and forcing | `test_step_halving_convergence_statistics` | variance within 3%; capsize-rate change at most 0.05 |
+| Integration and forcing | `test_step_halving_convergence_statistics`; `test_linear_harmonic_forcing_converges_at_fourth_order_asymptotically` | aggregate coarse/fine variance within 3% and capsize-rate change at most 0.05; observed order at least 3.5 on the two finest refinements |
 | Seed propagation | spectrum and batch determinism tests | bitwise equality |
 | Causal normalization | `test_future_only_leakage_probe_has_teeth` | causal AUC within 0.08 of 0.5; leaky control near perfect |
 | Parquet and manifest writer | `test_same_inputs_produce_byte_identical_dataset` | every emitted byte equal |
