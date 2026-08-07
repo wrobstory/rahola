@@ -8,6 +8,79 @@ from rahola.config import SeaState
 from rahola.spectrum import jonswap_spectrum, synthesize_jonswap
 
 
+def _reference_sigma(scaled_frequency: np.ndarray) -> np.ndarray:
+    return np.where(scaled_frequency <= 1.0, 0.07, 0.09)
+
+
+def _reference_jonswap(omega_rad_s: np.ndarray, sea_state: SeaState) -> np.ndarray:
+    """Independent dimensionless-form JONSWAP evaluator for the production oracle."""
+    omega = np.asarray(omega_rad_s, dtype=np.float64)
+    peak_frequency = 2.0 * np.pi / sea_state.tp_s
+    scaled_frequency = np.divide(
+        omega,
+        peak_frequency,
+        out=np.ones_like(omega),
+        where=omega > 0.0,
+    )
+    spread = _reference_sigma(scaled_frequency)
+    peak_enhancement = np.exp(
+        -0.5 * ((scaled_frequency - 1.0) / spread) ** 2
+    )
+    base = (
+        (9.80665 / peak_frequency) ** 2
+        * np.exp(-1.25 / scaled_frequency**4)
+        * np.exp(np.log(sea_state.gamma) * peak_enhancement)
+        / scaled_frequency**5
+    )
+    shape = np.where(omega > 0.0, base, 0.0)
+    return shape * (sea_state.hs_m**2 / 16.0) / np.trapezoid(shape, omega)
+
+
+def _reference_shape(omega_rad_s: np.ndarray, sea_state: SeaState) -> np.ndarray:
+    """Unnormalized reference shape used for the hand-checked constants below."""
+    omega = np.asarray(omega_rad_s, dtype=np.float64)
+    peak_frequency = 2.0 * np.pi / sea_state.tp_s
+    scaled_frequency = omega / peak_frequency
+    spread = _reference_sigma(scaled_frequency)
+    peak_enhancement = np.exp(-0.5 * ((scaled_frequency - 1.0) / spread) ** 2)
+    return (
+        scaled_frequency**-5
+        * np.exp(-1.25 / scaled_frequency**4)
+        * np.exp(np.log(sea_state.gamma) * peak_enhancement)
+    )
+
+
+def test_jonswap_matches_independent_formula_oracle() -> None:
+    sea_state = SeaState(hs_m=4.0, tp_s=10.0, gamma=3.3)
+    omega_p = 2.0 * np.pi / sea_state.tp_s
+    omega = np.unique(
+        np.concatenate(
+            (
+                np.geomspace(0.05 * omega_p, 20.0 * omega_p, 2048),
+                omega_p * np.array([0.99, 1.0, 1.01]),
+            )
+        )
+    )
+    np.testing.assert_allclose(
+        jonswap_spectrum(omega, sea_state),
+        _reference_jonswap(omega, sea_state),
+        rtol=5e-13,
+        atol=1e-14,
+    )
+
+    # Hand checks for the independent formula: S(omega_p)/S(2 omega_p),
+    # sigma at the inclusive peak break, and the fitted far-tail log slope.
+    assert _reference_shape(np.array([omega_p]), sea_state)[0] / _reference_shape(
+        np.array([2.0 * omega_p]), sea_state
+    )[0] == pytest.approx(32.71335391913758, rel=1e-13)
+    assert _reference_sigma(np.array([1.0]))[0] == pytest.approx(0.07)
+    assert _reference_sigma(np.array([np.nextafter(1.0, np.inf)]))[0] == pytest.approx(0.09)
+    tail = np.geomspace(20.0 * omega_p, 40.0 * omega_p, 100)
+    tail_slope = np.polyfit(np.log(tail), np.log(_reference_shape(tail, sea_state)), 1)[0]
+    # Fixed log-spaced 20 omega_p to 40 omega_p fit from the reference curve.
+    assert tail_slope == pytest.approx(-4.999990544763571, abs=1e-12)
+
+
 @pytest.mark.slow
 def test_jonswap_spectral_fidelity_and_significant_height() -> None:
     sea_state = SeaState(hs_m=4.0, tp_s=10.0, gamma=3.3)

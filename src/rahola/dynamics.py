@@ -10,6 +10,32 @@ jax.config.update("jax_enable_x64", True)
 import jax.numpy as jnp  # noqa: E402
 
 
+def local_tangent_jacobian(
+    state: jax.Array,
+    modulation: jax.Array,
+    stiffness: jax.Array,
+    damping_ratio: float,
+    quadratic_damping: float,
+    quintic: float,
+    *,
+    family_code: int,
+    linear_restoring: bool,
+) -> jax.Array:
+    """Return the analytic Jacobian of the nondimensional state equation."""
+    x, velocity = state[0], state[1]
+    restoring_slope = 1.0 if linear_restoring else 1.0 - 3.0 * x**2 + 5.0 * quintic * x**4
+    multiplier = 1.0 + modulation if family_code == 1 else 1.0
+    return jnp.array(
+        [
+            [0.0, 1.0],
+            [
+                -stiffness * multiplier * restoring_slope,
+                -2.0 * damping_ratio - 2.0 * quadratic_damping * jnp.abs(velocity),
+            ],
+        ]
+    )
+
+
 @partial(jax.jit, static_argnames=("family_code", "linear_restoring"))
 def integrate_rk4_batch(
     forcing_half: jax.Array,
@@ -141,19 +167,15 @@ def integrate_tangent_rk4_batch(
             return jnp.stack((velocity, acceleration))
 
         def jacobian(state: jax.Array, h: jax.Array, stiffness: jax.Array) -> jax.Array:
-            x, velocity = state[0], state[1]
-            restoring_slope = (
-                1.0 if linear_restoring else 1.0 - 3.0 * x**2 + 5.0 * quintic * x**4
-            )
-            multiplier = 1.0 + h if family_code == 1 else 1.0
-            return jnp.array(
-                [
-                    [0.0, 1.0],
-                    [
-                        -stiffness * multiplier * restoring_slope,
-                        -2.0 * damping_ratio - 2.0 * quadratic_damping * jnp.abs(velocity),
-                    ],
-                ]
+            return local_tangent_jacobian(
+                state,
+                h,
+                stiffness,
+                damping_ratio,
+                quadratic_damping,
+                quintic,
+                family_code=family_code,
+                linear_restoring=linear_restoring,
             )
 
         n_steps = (forcing.shape[0] - 1) // 2

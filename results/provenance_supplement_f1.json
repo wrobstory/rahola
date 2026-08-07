@@ -1,0 +1,48 @@
+{
+  "_manifest_sha256": "55ae741ccb2e205cff2d1637fd86b5cc5579053fdfc4ef3bb35156879eb0b79f",
+  "dependency_dag": [
+    {
+      "downstream": "f1a_timing_f1.json",
+      "downstream_byte_sha256": "840fbbd442c7abda2d4b3791f87defc1282f2858e364f7f4207387a1a1094c20",
+      "downstream_artifact_sha256": "97e8f044bf30cb0c3aef30ccfffbbca1ec576d8ba88dd199643e9ed59dcaeded",
+      "upstream": "f1_calibration_f1.json",
+      "upstream_artifact_sha256": "ec2ace06974836261d8705a3432ab13079119c2569f94349424d71db1bdd19b7"
+    },
+    {
+      "downstream": "f1b_value_f1.json",
+      "downstream_byte_sha256": "8d641d94913299e9291b41aa6a1dcdd3140e7af75687e328e2e24db6d31b68ef",
+      "downstream_artifact_sha256": "67d5b4bb01a5f5764fbd7a782898be35616c5c9612e086cb16223914fead669e",
+      "upstream": "f1_calibration_f1.json",
+      "upstream_artifact_sha256": "ec2ace06974836261d8705a3432ab13079119c2569f94349424d71db1bdd19b7"
+    },
+    {
+      "downstream": "f1b_value_f1.json",
+      "downstream_byte_sha256": "8d641d94913299e9291b41aa6a1dcdd3140e7af75687e328e2e24db6d31b68ef",
+      "downstream_artifact_sha256": "67d5b4bb01a5f5764fbd7a782898be35616c5c9612e086cb16223914fead669e",
+      "upstream": "d1_operating_curves_v02.json",
+      "upstream_artifact_sha256": "586414882985d4fe00d31b9d801be3c615c73c617b82118e2baa6da5ea7eeaf5"
+    },
+    {
+      "downstream": "f1c_transfer_f1.json",
+      "downstream_byte_sha256": "a5df6abff2997399b2ade9f30fba1515c54b043ceb99f802135ed14ddd0f9168",
+      "downstream_artifact_sha256": "85c9b2427518cd321dea94bb9d505f5ca4e87f357bbba7def25c2a2e41982e0d",
+      "upstream": "f1b_value_f1.json",
+      "upstream_artifact_sha256": "67d5b4bb01a5f5764fbd7a782898be35616c5c9612e086cb16223914fead669e"
+    }
+  ],
+  "experiment": "F1",
+  "frozen_f1_artifacts_byte_sha256": {
+    "f1_calibration_f1.json": "cb0ffcf7116d192287c2db350b3fb9221ed5eb667383a197cc5a6d31726552a9",
+    "f1a_timing_f1.json": "840fbbd442c7abda2d4b3791f87defc1282f2858e364f7f4207387a1a1094c20",
+    "f1b_value_f1.json": "8d641d94913299e9291b41aa6a1dcdd3140e7af75687e328e2e24db6d31b68ef",
+    "f1c_transfer_f1.json": "a5df6abff2997399b2ade9f30fba1515c54b043ceb99f802135ed14ddd0f9168"
+  },
+  "frozen_f1_artifacts_untouched": true,
+  "frozen_f1_internal_artifact_sha256": {
+    "f1_calibration_f1.json": "ec2ace06974836261d8705a3432ab13079119c2569f94349424d71db1bdd19b7",
+    "f1a_timing_f1.json": "97e8f044bf30cb0c3aef30ccfffbbca1ec576d8ba88dd199643e9ed59dcaeded",
+    "f1b_value_f1.json": "67d5b4bb01a5f5764fbd7a782898be35616c5c9612e086cb16223914fead669e",
+    "f1c_transfer_f1.json": "85c9b2427518cd321dea94bb9d505f5ca4e87f357bbba7def25c2a2e41982e0d"
+  },
+  "supplement_version": 1
+}

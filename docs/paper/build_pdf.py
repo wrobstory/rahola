@@ -37,6 +37,7 @@ UNICODE_MAP = {
 }
 
 SPECIALS = {"&": r"\&", "%": r"\%", "#": r"\#", "_": r"\_", "$": r"\$"}
+_E_GRAVE_PLACEHOLDER = "\x00RAHOLAGRAVEE\x00"
 
 
 def esc(text: str) -> str:
@@ -49,6 +50,7 @@ def esc(text: str) -> str:
 
 def inline(text: str) -> str:
     """Convert one line of markdown prose to LaTeX."""
+    text = text.replace("\u00e8", _E_GRAVE_PLACEHOLDER)
     for k, v in UNICODE_MAP.items():
         text = text.replace(k, v)
     text = re.sub(r'"([^"]+)"', r"``\1''", text)
@@ -66,7 +68,7 @@ def inline(text: str) -> str:
             p = re.sub(r"(?<![\w\\])\*([^*]+)\*", r"\\emph{\1}", p)
             p = re.sub(r"`([^`]+)`", r"\\texttt{\1}", p)
             parts[i] = p
-    return "".join(parts)
+    return "".join(parts).replace(_E_GRAVE_PLACEHOLDER, UNICODE_MAP["\u00e8"])
 
 
 def convert(md: str) -> str:
@@ -122,6 +124,11 @@ def convert(md: str) -> str:
     return "\n".join(out)
 
 
-TEX.write_text(convert(SRC.read_text()))
-subprocess.run(["tectonic", str(TEX)], check=True)
-print("built", TEX.with_suffix(".pdf"))
+def build() -> None:
+    TEX.write_text(convert(SRC.read_text()))
+    subprocess.run(["tectonic", str(TEX)], check=True)
+    print("built", TEX.with_suffix(".pdf"))
+
+
+if __name__ == "__main__":
+    build()

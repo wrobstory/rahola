@@ -8,16 +8,18 @@
 ## Abstract
 
 Can the measured roll motion of a ship warn of capsize soon enough to act, at a false-alarm
-cost a crew could accept? We study this question on a validated synthetic benchmark: a
+cost a crew could accept? We study this question on a synthetic benchmark validated against
+analytic limits and internal numerical checks; external ship-level validity is out of scope: a
 one-degree-of-freedom nonlinear roll model, three restoring-curve families representing
 distinct ways a ship loses stability, and 58,500 seeded trajectories under JONSWAP forcing.
 Five warning methods compete under one protocol in which every operating threshold is chosen on
 calibration data and spent once on test data: a small convolutional network, classical variance
 and autocorrelation trend statistics, a likelihood-ratio detector, a closed-form
 critical-roll-rate margin, and a phase-space neighbor-count score. Four findings emerge.
-(a) Ranking skill is real at every forcing bandwidth tested; the network separates dangerous
-from ordinary intervals with window AUC 0.86 to 0.92. (b) Inside an established severe regime,
-no method predicts which encounter will be fatal; all score near chance. (c) Most nominally
+(a) Ranking skill is real at every forcing bandwidth tested; the fixed-window primary network
+separates dangerous from ordinary intervals with window AUC 0.883 to 0.913. (b) Inside an
+established severe regime, no tested motion-only statistic predicts which encounter will be fatal;
+all score near chance. (c) Most nominally
 false alarms, 75 to 88 percent, coincide with genuine critical wave groups that the vessel
 survived. (d) No method's threshold transfers across failure modes at fixed sensitivity. We
 then operate the split-time upcrossing decomposition as an onboard rate estimator, in online
@@ -154,17 +156,18 @@ independently in the Spyrou school (Kontolefas and Spyrou 2020).
 
 ## 4. Evaluation protocol and the audit
 
-Metrics are episode sensitivity, false episodes per exposure hour, and lead time, with exact
-binomial confidence intervals; exposure ends at capsize; an episode overlapping the pre-capsize
-horizon is event-associated. All operating controls are selected on calibration data, frozen, and
-evaluated once on test data.
+Metrics are episode sensitivity, false episodes per exposure hour, and lead time, with
+trajectory-block bootstrap intervals and fixed campaign weights; exposure ends at capsize; an
+episode overlapping the pre-capsize horizon is event-associated. All operating controls are
+selected on calibration data, frozen, and evaluated once on test data.
 
 The protocol was not followed from the outset, and the failure is reported as a result. The
 study's first operating points were obtained by scanning test-set metrics for the lowest
 false-episode rate at 90 percent sensitivity or better, which is threshold selection on test
 outcomes. For the network on the pooled rare-event campaigns, the test-selected report was 6.3
-false episodes per hour; the calibration-frozen value for the same detector on the same data is
-15.5 per hour at 92.4 percent sensitivity. A factor of approximately 2.5 in reported alarm cost
+false episodes per hour; the superseded pre-v0.2 calibration-frozen value for the same detector on
+the same data was 15.5 per hour at 92.4 percent sensitivity. A factor of approximately 2.5 in
+reported alarm cost
 was therefore attributable to the selection procedure rather than the detector, at a sensitivity
 target of 90 percent and capsize prevalences of 1 to 2 percent. One guarded holdout evaluation
 was additionally invalidated by threshold selection on the holdout labels, and its artifacts are
@@ -177,34 +180,41 @@ provenance is not stated.
 
 ## 5. Results
 
-**Ranking under bandwidth (D3).** The network's window AUC was 0.862 to 0.920 at every peak
-enhancement from 30 down to 1.0, while the classical trend indicators collapsed on ramped
+**Ranking under bandwidth (D3).** The fixed-window primary network's window AUC was 0.883 to
+0.913 at every peak enhancement from 30 down to 1.0, while the classical trend indicators collapsed on ramped
 campaigns. Ranking skill from motion history survives broadband forcing. The predeclared
 operating-cost criterion at the broadband end (a 10 percent false-episode improvement) was missed
-at 8.6 percent, and the operating-cost claim is reported as inconclusive: ranking skill and a
-deployable threshold are different assets (Figure 3).
+at 7.6 percent (14.061442 versus 15.212539 false episodes per hour), and the operating-cost claim
+is reported as inconclusive: ranking skill and a deployable threshold are different assets
+(Figure 3).
 
-![Ranking survives bandwidth. Window AUC on the five forcing-bandwidth campaigns, corrected record: the network variants hold 0.86 to 0.92 from narrow-band forcing down to fully broadband, while the classical indicators and physics scores sit at or below chance on these ramped campaigns — the fixed-window scoring that is honest about information also strips the trends those baselines rely on.](../../results/d3_bandwidth_skill_v02.png)
+![Ranking survives bandwidth. Window AUC on the five forcing-bandwidth campaigns, corrected record: the fixed-window primary network holds 0.883 to 0.913 from narrow-band forcing down to fully broadband, while the classical indicators and physics scores sit at or below chance on these ramped campaigns — the fixed-window scoring that is honest about information also strips the trends those baselines rely on.](../../results/d3_bandwidth_skill_v02.png)
 
 **Pooled operating points (D1).** At calibration-frozen thresholds on the pooled rare-event
-campaigns, the network attained 92.4 percent sensitivity at 15.5 false episodes per hour; the
-classical indicators reached 100 percent sensitivity only at a near-always-on threshold costing
+campaigns, the fixed-window primary network attained 91.00 percent sensitivity at 13.409 false
+episodes per hour; the classical indicators reached 100 percent sensitivity only at a
+near-always-on threshold costing
 21.4 per hour; the physics margin and the 2009 neighbor score occupied the same
 high-sensitivity, high-cost region. No method produced an operating point that a master would
 tolerate (Figure 4).
 
 ![The pooled operating curves, corrected record: capsize sensitivity against declustered false episodes per exposure hour at calibration-frozen thresholds. The network variants dominate the low-cost region; every classical and physics score buys sensitivity only near the always-on corner. Even the best curve pays several false episodes per hour at 90 percent sensitivity.](../../results/d1_operating_curves_v02.png)
 
-**Threshold transfer (D2).** With each restoring family held out in turn, the network missed the
-90 percent test-sensitivity target in all three rotations. Two architecture probes intended to
-repair transfer, a gray-box network with a physical latent head and a few-failure adaptation of a
-pretrained sequence model, failed their predeclared criteria under calibration-fixed thresholds.
-No all-family operating point was established by any method.
+**Threshold transfer (D2).** The fixed-window CNN reached 99.15 percent, 90.83 percent, and
+76.21 percent test sensitivity across the softening, parametric, and biased holdouts. Two
+rotations met 90 percent, but only near always-on alarm cost; the biased holdout failed. No
+deployable transfer was established.
 
-**Within-regime discrimination (D5).** On the post-transition segment of the sea-state step
-campaign, every method scored AUC 0.474 to 0.509 at ranking imminent-capsize windows against
-surviving windows. Inside an established severe regime, motion-only scores carried no usable
-information about which encounter would be terminal.
+**Within-regime discrimination (D5).** After the full wash-in, the fixed-window CNN's
+orientation-independent AUC was 0.556, below the 0.58 trigger; cumulative-online CNN reached
+0.538 and classical scores remained near chance. Motion-only scores carried no usable information
+about which encounter would be terminal inside the established severe regime.
+
+**Finite-time tangent result (F1).** The non-tangent level, rate, energy, and strain statistics
+remain scoped to their stated full F1a estimand. Conditional on windows whose trajectories
+survived through each tested finite-time tangent horizon, no finite-time tangent statistic
+exceeded chance. The latter is a descriptive result for the tested statistic family, not an
+information-theoretic bound; the labels-only censoring counts are recorded in the dated addendum.
 
 **The character of false alarms (D4).** Between 75 and 88 percent of nominally false episodes
 coincided with critical wave-group encounters, defined by an envelope criterion on the known
@@ -214,15 +224,14 @@ tested and groups are common in a narrow-band sea; its qualitative content is th
 false-positive accounting charges the detectors for hazard exposure the vessel happened to
 survive, the base-rate structure anticipated in Boettiger and Hastings (2012).
 
-**Reference comparators.** Restarting ensembles of independent futures from the exact simulated
-state yielded AUC 0.851 on a design-balanced window set, against 0.762 for gradient boosting on
-engineered features (of which an estimated roll period, in effect a stiffness gauge, is the most
-informative) and 0.627 for the network on the same windows; a protocol-time comparator also
-exceeded the network. Two qualifications apply: the restart comparators replace the realized
-forcing and are therefore reference points rather than bounds, since the temporally correlated
-seaway leaves encounter information in the motion history; and part of the network's advantage on
-natural test populations evidently derived from population structure rather than state
-inference. The headroom that exists lies in state inference, and simple tools claimed it first.
+**Reference comparators.** On the v0.2 design-balanced window set, the exact-state independent-
+future restart reached AUC 0.850, fixed-window XGBoost 0.723, and fixed-window CNN 0.652; a
+protocol-time comparator also exceeded the network. Two qualifications apply: the restart
+comparators replace the realized forcing and are therefore reference points rather than bounds,
+since the temporally correlated seaway leaves encounter information in the motion history; and
+part of the network's advantage on natural test populations evidently derived from population
+structure rather than state inference. The headroom that exists lies in state inference, and
+simple tools claimed it first.
 
 **The split-time rate estimator (U1, H1).** Three preregistered experiments operated the
 paper's ROM decomposition — capsize rate as upcrossing rate times the probability an upcrossing
@@ -243,8 +252,8 @@ the conditional carries becomes available only after the event has begun. Two me
 qualifications attach: fresh test slices of 30 to 60 expected events realized counts 21 to 37
 percent from expectation, and the capture intervals carried parameter uncertainty without
 realization noise, so the capture criterion on slices of this size is severe even for a
-correctly calibrated estimator; the reliability errors (0.040 for the hybrid and the rate-only
-map against 0.242 for a variance-based map) are the fairer calibration comparison. All
+correctly calibrated estimator; the reliability errors (0.039848 for the hybrid, 0.042806 for the
+rate-only map, and 0.242303 for a variance-based map) are the fairer calibration comparison. All
 verdicts were preregistered and stand as recorded. Figure 5's middle panel shows the one
 encouraging pattern: the crossing rate alone, offline-mapped, tracks the diagonal — the rate
 factor of the decomposition is the part that works.
@@ -263,11 +272,12 @@ The results organize into a two-clock description. The slowly varying stability 
 eroding restoring that determines whether the vessel is in danger, is observable from motion
 history: ranking skill survives every forcing bandwidth, and the most informative engineered
 feature is in effect an online stiffness estimate, a quantity this community has long extracted
-from the roll period (Terada et al. 2016; Míguez González et al. 2017). The terminal encounter, the particular wave group that
-converts vulnerability into capsize, is not observable from motion history once the severe regime
-is established; the within-regime result is chance-level for learned, classical, and physical
-scores alike, consistent with the stochastic-Melnikov view that a deterministic separatrix loses
-its predictive meaning under random forcing (Frey and Simiu 1993). The practical reading is that motion-only systems should be understood, and
+from the roll period (Terada et al. 2016; Míguez González et al. 2017). For the tested family of
+motion-only statistics, the terminal encounter, the particular wave group that converts
+vulnerability into capsize, was not recovered once the severe regime was established; the
+within-regime result is chance-level for learned, classical, and physical scores alike, consistent
+with the stochastic-Melnikov view that a deterministic separatrix loses its predictive meaning
+under random forcing (Frey and Simiu 1993). The practical reading is that motion-only systems should be understood, and
 evaluated, as vulnerability monitors rather than event predictors, a role compatible with the
 operational measures framework of the second-generation criteria (IMO 2020) rather than with an
 alarm bell.
@@ -280,16 +290,15 @@ as a baseline. Its one systematic failure, degradation on stability-erosion camp
 assumed restoring becomes stale, identifies the missing component for operational use: online
 estimation of the current restoring state, whose feasibility the comparator results demonstrate,
 the roll period alone recovering most of the available headroom. The within-regime chance result
-then explains, in information terms, why the engineering-fidelity metric must re-simulate with
-the waves known: what the motion perturbation method obtains from the realized future is not
-present in the measured past. The U1 and H1 experiments made that boundary quantitative from
+then explains why the engineering-fidelity metric must re-simulate with the waves known: the
+future-dependent quantity used by the motion perturbation method was not recovered by the tested
+motion-only statistics. The U1 and H1 experiments made that boundary quantitative from
 inside the method itself. The rate factor of the decomposition, an observable of the slowly
 varying stability state, survives as a usable vulnerability measure; the severity factor, which
-would time the event, is in 92 percent of capsizes not available until the event has begun. The
+would time the event, is in 92 percent of capsizes not emitted until the event has begun. The
 two-clock description of Section 6 is therefore not an external criticism of the split-time
-programme but a property its own decomposition exhibits when operated online: the observable
-factor works, and the unobservable factor is precisely the one the offline method recovers by
-re-simulating the future.
+programme but a property its own decomposition exhibits when operated online: the rate factor
+works, while the tested online severity factor requires future re-simulation.
 
 The false-alarm finding bears on how such monitors should be judged. If three quarters or more of
 false episodes are honest responses to genuine hazard exposure, then false episodes per hour,
@@ -306,8 +315,9 @@ treating threshold provenance as a reportable property of every operating point.
 
 ## 7. Conclusions
 
-On a validated synthetic benchmark spanning three stability-failure archetypes, motion-only
-warning methods rank capsize risk well above chance at every forcing bandwidth tested, fail to
+On a synthetic benchmark validated against analytic limits and internal numerical checks,
+spanning three stability-failure archetypes, motion-only warning methods rank capsize risk well
+above chance at every forcing bandwidth tested, fail to
 transfer operating thresholds across failure modes, and discriminate event timing at chance
 inside an established severe regime; the majority of their false alarms coincide with real
 critical wave-group encounters. A test-selected evaluation had earlier made the leading detector

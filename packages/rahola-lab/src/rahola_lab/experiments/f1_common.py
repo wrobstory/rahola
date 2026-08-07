@@ -324,12 +324,48 @@ def statistic_rows(
     return StatisticRows(trajectories, times, labels, features, scores)
 
 
+def directional_growth(normal: FloatArray, transition: FloatArray) -> float:
+    """Return ``||n_0^T Phi||``: growth into the initial escape direction.
+
+    This is the maximum achievable scalar growth into the row-vector escape direction. It is
+    intentionally different from standard initial-direction growth ``||Phi n_0||``.
+    """
+    return float(np.linalg.norm(np.asarray(normal) @ np.asarray(transition)))
+
+
+def _escape_normal(
+    fit: object,
+    config: SimulationConfig,
+    angle: float,
+    rate: float,
+) -> FloatArray:
+    displacement = angle - fit.equilibrium_angle_rad
+    positive_margin = (
+        fit.positive.growth_rate_s
+        * max(fit.positive.vanishing_distance_rad - displacement, 0.0)
+        - rate
+    )
+    negative_margin = (
+        fit.negative.growth_rate_s
+        * max(fit.negative.vanishing_distance_rad + displacement, 0.0)
+        + rate
+    )
+    growth = (
+        fit.positive.growth_rate_s
+        if positive_margin <= negative_margin
+        else fit.negative.growth_rate_s
+    )
+    normal = np.array([growth / config.omega_n_rad_s, 1.0])
+    return normal / np.linalg.norm(normal)
+
+
 def finite_time_score(
     rollout: TangentRollout,
     rows: StatisticRows,
     *,
     periods: int,
     escape_directed: bool,
+    normal_at_end: bool = False,
 ) -> FloatArray:
     config = SimulationConfig.from_dict(rollout.dataset.config)
     dt_s = float(np.median(np.diff(rollout.dataset.time_s)))
@@ -351,27 +387,14 @@ def finite_time_score(
         for local in rollout.transition_matrices[trajectory, start:end]:
             transition = local @ transition
         if escape_directed:
-            angle = rollout.dataset.angle_rad[trajectory, start]
-            rate = rollout.dataset.rate_rad_s[trajectory, start]
-            displacement = angle - fit.equilibrium_angle_rad
-            positive_margin = (
-                fit.positive.growth_rate_s
-                * max(fit.positive.vanishing_distance_rad - displacement, 0.0)
-                - rate
+            normal_index = end if normal_at_end else start
+            normal = _escape_normal(
+                fit,
+                config,
+                float(rollout.dataset.angle_rad[trajectory, normal_index]),
+                float(rollout.dataset.rate_rad_s[trajectory, normal_index]),
             )
-            negative_margin = (
-                fit.negative.growth_rate_s
-                * max(fit.negative.vanishing_distance_rad + displacement, 0.0)
-                + rate
-            )
-            growth = (
-                fit.positive.growth_rate_s
-                if positive_margin <= negative_margin
-                else fit.negative.growth_rate_s
-            )
-            normal = np.array([growth / config.omega_n_rad_s, 1.0])
-            normal /= np.linalg.norm(normal)
-            gain = np.linalg.norm(normal @ transition)
+            gain = directional_growth(normal, transition)
         else:
             gain = np.linalg.svd(transition, compute_uv=False)[0]
         values[row] = math.log(max(float(gain), np.finfo(float).tiny)) / duration_tau

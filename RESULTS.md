@@ -1280,10 +1280,11 @@ bootstrap interval. When raw AUC was below 0.5, the interval is the exact monoto
 | oracle/S7 escape-directed FTLE, T = 1 period — **acausal** | 0.501042 [0.493697, 0.508523] |
 | oracle/S7 instantaneous normal strain | 0.502816 [0.495758, 0.510064] |
 
-No statistic entered the `(0.58, 0.60]` leakage-audit band. Neither true oracle finite-time
-exponent reached 0.60, so the conditional 2009 estimator is skipped: the true quantity carries no
-timing information here, and any implementation defect in the historical estimator is immaterial
-to the thesis's negative timing conclusion — the ceiling was already at the floor.
+Among windows surviving through the tested tangent horizon, no statistic entered the `(0.58, 0.60]`
+leakage-audit band. Neither true oracle finite-time exponent reached 0.60 in that survivor
+population, so the conditional 2009 estimator is skipped: the true quantity carries no timing
+information here, and any implementation defect in the historical estimator is immaterial to the
+thesis's negative timing conclusion.
 
 ## F1b vulnerability value and F1c transfer
 
@@ -1322,8 +1323,9 @@ scoring a held-out-family rotation.
 
 ## Predictions and final program verdict
 
-1. “(i) generic and escape-directed FTLE will be weak on F1a in both settings” — **held**. The two
-   acausal oracle rows were 0.506516 and 0.501042.
+1. “(i) generic and escape-directed FTLE will be weak on F1a in both settings” — **held** among
+   windows surviving through each tested tangent horizon. The two acausal oracle rows were
+   0.506516 and 0.501042.
 2. “(ii) margin and energy closure may improve vulnerability estimation on F1b but will not
    identify the terminal encounter on F1a” — **held**. No closure statistic identified the F1a
    encounter, and the permitted possibility of F1b improvement did not materialize under the
@@ -1331,10 +1333,11 @@ scoring a held-out-family rotation.
 3. “(iii) no motion-only statistic will reach the 0.60 bar on F1a” — **held**. The maximum across
    every statistic and setting was 0.506731.
 
-Every preregistered prediction held. The program ends on a completed negative answer: neither the
-level, its causal rate, energy depletion, instantaneous normal strain, nor even the true acausal
-common-forcing finite-time exponents carry useful terminal-encounter timing information in the
-washed-in regime. Some rate features rank vulnerability only by paying the already-rejected
+Every preregistered prediction held. The program ends on a completed negative answer: the tested
+level, causal rate, energy depletion, and instantaneous normal strain did not identify the terminal
+encounter in the washed-in regime. Among windows surviving through each tested tangent horizon, the
+true acausal common-forcing finite-time exponents likewise carried no useful terminal-encounter
+timing information. Some rate features rank vulnerability only by paying the already-rejected
 always-alarming operating cost; none improves the program at matched sensitivity.
 
 ## F1 judgments, scope, and provenance
@@ -1358,3 +1361,70 @@ always-alarming operating cost; none improves the program at matched sensitivity
 `results/provenance_manifest_f1.json` binds the four `_f1` artifacts, exact F1 campaign manifests,
 predeclaration commit `ae986c2`, and data-anchor commit `a222999`. Neither reserve block was read.
 No r1/r2/H1 artifact, paper source, or explainer file was modified.
+
+## 2026-08-07 F1 scope correction (F-02)
+
+This dated correction note further scopes the original F1 addendum to the tested statistic family.
+For finite-time tangent statistics, the stated estimand is windows surviving through each tested
+tangent horizon, and no such statistic exceeded chance in that survivor population. The other F1
+statistics remain scoped to their stated estimands. No information-theoretic bound was computed,
+and none is claimed. The paper uses this scoped wording and does not treat the F1 result as a
+universal non-observability or ceiling result.
+
+## 2026-08-07 F1 tangent convention correction (F-04)
+
+The local transition maps are composed chronologically as `Phi = local @ transition`, with each
+stored output interval resetting `transition` to the identity. The implemented directional score is
+`||n_0^T Phi||`: the maximum achievable growth into the initial-state escape direction, not the
+standard initial-direction growth `||Phi n_0||`. A non-normal 2-by-2 fixture pins this row-vector
+convention, and a finite-difference fixture evaluates the analytic tangent Jacobian at nonzero
+state and velocity, including the `-2 q |v|` term.
+
+As a calibration-only diagnostic, the selected one-period escape-directed tangent score was
+computed on the v0.2 softening-step CALIBRATION split (9,692 scored rows). The final-time-normal
+variant `||n_T^T Phi||` produced the same raw AUC, so it did not change the orientation-independent
+diagnostic:
+
+| Variant | Raw AUC | Orientation-independent AUC |
+| --- | ---: | ---: |
+| Initial normal `n_0` (implemented) | 0.491983852674 | 0.508016147326 |
+| Final normal `n_T` (diagnostic) | 0.491983852674 | 0.508016147326 |
+| Final minus initial delta | +0.000000000000 | +0.000000000000 |
+
+This diagnostic read CALIBRATION data only; it did not reread or score any F1 TEST trajectory and
+did not alter the frozen selection or result artifacts.
+
+## 2026-08-07 F1 censoring predeclaration (F-05)
+
+Before computing the descriptive table below, we predeclare the following labels-only audit. For
+each tested finite-time tangent horizon of 1, 2, and 5 natural periods (4, 8, and 20 seconds in
+the anchored F1 configuration), the scored population is the existing F1 campaign's PHYSICAL,
+10-second-stride windows in the 540–700-second endpoint filter range, using the same detector
+window extraction and endpoint filters as F1. A window is excluded when its capsized trajectory
+has `t_capsize_s <= end_time_s + horizon_s`; uncapsized trajectories and capsize times outside
+the horizon are retained for this descriptive count. The table will report, separately for labels
+0 and 1, the number excluded and the minimum, 25th percentile, median, 75th percentile, and
+maximum time from the scored endpoint to capsize among excluded windows. An empty group will be
+reported as zero with no time-to-capsize distribution.
+
+This is a descriptive labels-only count of existing campaign rows. It does not fit a censoring
+model, alter the frozen F1 estimand or artifacts, recompute tangent scores, or rerun an experiment;
+the only permitted data access is reading the existing F1 campaign manifests and stored arrays.
+
+After that predeclaration, the existing F1 TEST campaign was read once for this labels-only count.
+The selected population contained 27,290 scored windows (19,202 label-0 and 8,088 label-1
+windows). Exclusion counts and time-to-capsize distributions are:
+
+| Horizon | Horizon (s) | Label | Excluded windows | Min (s) | Q25 (s) | Median (s) | Q75 (s) | Max (s) |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 1 period | 4 | 0 | 0 | — | — | — | — | — |
+| 1 period | 4 | 1 | 191 | 0.1 | 1.3 | 2.2 | 3.3 | 4.0 |
+| 2 periods | 8 | 0 | 0 | — | — | — | — | — |
+| 2 periods | 8 | 1 | 419 | 0.1 | 2.4 | 4.4 | 6.2 | 8.0 |
+| 5 periods | 20 | 0 | 0 | — | — | — | — | — |
+| 5 periods | 20 | 1 | 1,018 | 0.1 | 5.1 | 9.9 | 15.1 | 20.0 |
+
+The finite-T F1 estimand is therefore the population of windows whose trajectories survived
+through the tested tangent horizon. All F1 conclusion sentences about finite-T tangent results
+above are conditioned on that survivor population; this descriptive table does not change the
+other frozen F1 rows or any conclusion about them.
