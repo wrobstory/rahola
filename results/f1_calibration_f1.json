@@ -1,12 +1,12 @@
 {
-  "_artifact_sha256": "108cd3c3b0744c108ab4f0b793476e578e14e57ccf0ef33759072e3a9b61039d",
+  "_artifact_sha256": "ec2ace06974836261d8705a3432ab13079119c2569f94349424d71db1bdd19b7",
   "_provenance": {
     "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
     "reference_h1_anchor_sha256": "81491c11171c3516a461c1938a943b1af04fcf9859d5d6bd2cfe2c5ec8939f5b",
     "reference_u1r2_anchor_sha256": "2f68a4ce89ab90997c91bd98ca614bfe26b7fba923c69c6e439c865b4432cd5d",
     "reference_v02_anchor_sha256": "96fdcc7a93cd4b0a760750320cf41c7f1ce15d52708b2bfc8791c3b3a9d10dfd",
     "schema_version": 1,
-    "source_sha256": "35102ac1f4ad5fefa577eb5e42eb9b4ce0966eba4ab434d127e818f935db2296",
+    "source_sha256": "4ac93f1cf66bf8b59f29176462ddbad7ab1321064f3884e174ad7ec6c9b4adaa",
     "upstream_artifacts": {}
   },
   "conditional_arm_trigger": "If any S6/S7 oracle statistic shows F1a signal (>= 0.60), implement the thesis's motion-only estimator (Sano-Sawada-style local Jacobian from historical neighbors, thesis Chapter 3 conventions, causal normalization) and measure its fidelity against the true tangent quantity.",

@@ -1206,7 +1206,7 @@ explainer was modified.
 F1 is the program's final experiment. It reopens no U1 or H1 verdict, uses no reserve trajectory,
 and permits no model search after TEST access. The frozen calibration artifact is
 `results/f1_calibration_f1.json` with digest
-`108cd3c3b0744c108ab4f0b793476e578e14e57ccf0ef33759072e3a9b61039d`. No F1 TEST trajectory
+`ec2ace06974836261d8705a3432ab13079119c2569f94349424d71db1bdd19b7`. No F1 TEST trajectory
 exists at this point in history.
 
 ## 2026-08-06 predeclarations

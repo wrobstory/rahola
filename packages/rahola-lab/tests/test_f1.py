@@ -4,6 +4,7 @@ import json
 
 import numpy as np
 from rahola_lab.campaigns.f1 import F1_TEST_SLICES, verify_f1_test_slices
+from rahola_lab.campaigns.load import _REFERENCE_CHECKSUMS
 from rahola_lab.experiments.f1_common import fit_logistic
 
 
@@ -18,6 +19,7 @@ def test_f1_seed_slices_are_predeclared_and_disjoint(tmp_path) -> None:
     assert verification["pairwise_disjoint"]
     assert verification["declared_count"] == 9_400
     assert F1_TEST_SLICES["softening_step_v02"] == (3_000, 38_000)
+    assert set(f"{name}_f1" for name in F1_TEST_SLICES) <= _REFERENCE_CHECKSUMS.keys()
 
 
 def test_f1_logistic_fit_is_frozen_and_monotone_on_separable_example() -> None:
