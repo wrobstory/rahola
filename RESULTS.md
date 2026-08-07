@@ -1200,3 +1200,54 @@ implement the paper's perturbation-derived conditional or Motion Perturbation Me
 the source digest, all four reference anchors, and the exact predeclaration and data-anchor
 commits. Neither reserve block was read. No r1/r2 artifact, `rahola` core file, paper draft, or
 explainer was modified.
+
+# Experiment F1 addendum — margin closure, energy depletion, and tangent growth
+
+F1 is the program's final experiment. It reopens no U1 or H1 verdict, uses no reserve trajectory,
+and permits no model search after TEST access. The frozen calibration artifact is
+`results/f1_calibration_f1.json` with digest
+`108cd3c3b0744c108ab4f0b793476e578e14e57ccf0ef33759072e3a9b61039d`. No F1 TEST trajectory
+exists at this point in history.
+
+## 2026-08-06 predeclarations
+
+All statistics use D5/D1's 10-second endpoint cadence, 60-period causal history, 50-period outcome
+horizon, exclusion buffer, and trajectory-block bootstrap. F1a keeps only established post-step
+endpoints from 540 through 700 seconds. S1 is the unchanged two-sided danger-margin level. S2 uses
+one trailing natural-period difference of that margin. S3 uses epsilon `1e-12` and is reported
+only while the margin is closing. S4 computes the two side-specific saddle energies of the
+instantaneous nondimensional potential and uses the smaller reserve; in the biased family the two
+saddles remain distinct. Its force estimate is a one-sample causal motion residual, and depletion
+uses the stated power balance. S7 uses the outward normal of the side with the smaller fitted
+margin. No side is selected from the future outcome.
+
+The oracle setting uses true motion and the realized effective stiffness. The operational setting
+uses the same causal motion and nominal configured stiffness, with no wave, future, or protocol
+input. Both S5 logistic regressions have exactly two inputs and no hyperparameter grid. F1a fits
+them on the step TRAIN plus CALIBRATION blocks. F1b fits pooled stationary TRAIN plus evaluation
+CALIBRATION blocks. Any F1c S5 rotation refits while excluding the held-out family. Historical
+v0.1 stored motion is not mixed with current tangents: calibration re-integrates the declared
+TRAIN/CALIBRATION seeds under the current fixed-cutoff simulator.
+
+S6 and finite-T S7 are oracle-only and **acausal by construction everywhere they appear**. The
+calibration sweep was frozen at `{1, 2, 5}` natural periods, selecting the largest
+orientation-independent calibration AUC with the shortest T winning ties. Both generic and
+escape-directed FTLE selected one period. The generic candidate AUCs were 0.495779, 0.501863, and
+0.503922; the escape-directed candidates were 0.491984, 0.498547, and 0.506639.
+
+The F1a signal bar is orientation-independent AUC at least 0.60. A value in `(0.58, 0.60]`
+triggers a leakage audit before interpretation. F1b improves the program only when both the
+candidate and S1 retain at least 0.90 fresh sensitivity and the candidate's trajectory-bootstrap
+FPR upper bound is below S1's lower bound. Only a causal statistic passing that rule enters F1c.
+
+Preregistered predictions, verbatim: “(i) generic and escape-directed FTLE will be weak on F1a in
+both settings; (ii) margin and energy closure may improve vulnerability estimation on F1b but will
+not identify the terminal encounter on F1a; (iii) no motion-only statistic will reach the 0.60 bar
+on F1a.”
+
+Conditional arm, frozen verbatim: “If any S6/S7 oracle statistic shows F1a signal (≥ 0.60),
+implement the thesis's motion-only estimator (Sano–Sawada-style local Jacobian from historical
+neighbors, thesis Chapter 3 conventions, causal normalization) and measure its fidelity against
+the true tangent quantity. If no oracle FTLE shows signal, skip the arm and record the reason in
+RESULTS: the true quantity carries no timing information, so any 2009 implementation defect was
+immaterial to the thesis's conclusion — the ceiling was already at the floor.”

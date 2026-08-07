@@ -223,3 +223,22 @@ manifests. The one-shot materialization produced:
 Five of six campaigns realized at least 30 capsizes. `parametric_evaluation_h1` realized 24; this
 is a power shortfall in the frozen one-shot sample, not grounds to redraw it. Neither reserve block
 was opened or generated.
+
+## F1 fresh TEST slices — predeclared 2026-08-06
+
+F1 freezes 9,400 ordinary TEST seeds before materialization. The repository overlap check compares
+these half-open ranges with the v0.1, v0.2, U1-r2, and H1 top-level manifests and refuses an
+overlap or overwrite. The slices occupy only previously untouched gaps and do not use either
+reserve block. Expected counts use the measured fractions already recorded above; all four scored
+campaigns meet the expected-event floor of 30.
+
+| Base campaign | Count | Measured fraction | Expected capsizes | TEST offset | Absolute seed range |
+| --- | ---: | ---: | ---: | ---: | --- |
+| `softening_evaluation` | 1,500 | 2.000% | 30.00 | 1,000 | `[201000, 202500)` |
+| `parametric_evaluation` | 3,200 | 0.950% | 30.40 | 6,000 | `[206000, 209200)` |
+| `biased_evaluation` | 1,700 | 1.867% | 31.739 | 21,000 | `[221000, 222700)` |
+| `softening_step_v02` | 3,000 | 62.900% | 1,887.00 | 38,000 | `[238000, 241000)` |
+
+Generated campaign names append `_f1`. F1a uses only `softening_step_v02_f1`; F1b and any earned
+F1c rotations use the three evaluation slices. No F1 TEST trajectory exists at this point in
+history.

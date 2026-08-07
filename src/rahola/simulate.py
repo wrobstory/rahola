@@ -19,8 +19,8 @@ from rahola.config import (
     SeaState,
     SimulationConfig,
 )
-from rahola.dataset import SimulationDataset
-from rahola.dynamics import integrate_rk4_batch
+from rahola.dataset import SimulationDataset, TangentRollout
+from rahola.dynamics import integrate_rk4_batch, integrate_tangent_rk4_batch
 from rahola.spectrum import synthesize_jonswap
 
 _FAMILY_CODES = {Family.SOFTENING: 0, Family.PARAMETRIC: 1, Family.BIASED: 2}
@@ -122,7 +122,8 @@ def _simulate_batch(
     stiffness_multiplier: float | np.ndarray | None = None,
     stiffness_rate_per_s: float | np.ndarray | None = None,
     time_offset_s: float | np.ndarray | None = None,
-) -> SimulationDataset:
+    tangent: bool = False,
+) -> SimulationDataset | TangentRollout:
     seed_array = _validated_seeds(seeds)
     if seed_array.ndim != 1:
         raise ValueError("seeds must be a non-empty one-dimensional iterable")
@@ -212,7 +213,9 @@ def _simulate_batch(
             initial_rates / (config.escape_angle_rad * config.omega_n_rad_s),
         )
     )
-    states, cap_steps = integrate_rk4_batch(
+    output_stride = round((1.0 / config.output_rate_hz) / dt_s)
+    output_indices = np.arange(0, n_steps + 1, output_stride, dtype=np.int64)
+    kernel_args = (
         jax.device_put(forcing_half),
         jax.device_put(modulation_half),
         jax.device_put(stiffness_half),
@@ -224,17 +227,28 @@ def _simulate_batch(
         config.quintic_coefficient,
         1.0,
         config.negative_escape_rad / config.escape_angle_rad,
-        family_code=_FAMILY_CODES[config.family],
-        linear_restoring=config.linear_restoring,
     )
-    state_array = np.asarray(states)
+    transitions = None
+    if tangent:
+        states, transitions, cap_steps = integrate_tangent_rk4_batch(
+            *kernel_args,
+            family_code=_FAMILY_CODES[config.family],
+            linear_restoring=config.linear_restoring,
+            output_stride=output_stride,
+        )
+        state_array = np.asarray(states)
+    else:
+        states, cap_steps = integrate_rk4_batch(
+            *kernel_args,
+            family_code=_FAMILY_CODES[config.family],
+            linear_restoring=config.linear_restoring,
+        )
+        state_array = np.asarray(states)[:, output_indices]
     cap_step_array = np.asarray(cap_steps, dtype=np.int32)
 
-    output_stride = round((1.0 / config.output_rate_hz) / dt_s)
-    output_indices = np.arange(0, n_steps + 1, output_stride, dtype=np.int64)
     output_time = output_indices.astype(np.float64) * dt_s
-    angle = state_array[:, output_indices, 0] * config.escape_angle_rad
-    rate = state_array[:, output_indices, 1] * config.escape_angle_rad * config.omega_n_rad_s
+    angle = state_array[:, :, 0] * config.escape_angle_rad
+    rate = state_array[:, :, 1] * config.escape_angle_rad * config.omega_n_rad_s
     capsized = cap_step_array >= 0
     t_capsize = np.where(capsized, cap_step_array * dt_s, np.nan)
     for row, cap_time in enumerate(t_capsize):
@@ -268,7 +282,7 @@ def _simulate_batch(
         }
         for index, seed in enumerate(seed_array)
     )
-    return SimulationDataset(
+    dataset = SimulationDataset(
         time_s=output_time,
         angle_rad=angle,
         rate_rad_s=rate,
@@ -278,11 +292,30 @@ def _simulate_batch(
         metadata=metadata,
         config=config.to_dict(),
     )
+    if transitions is None:
+        return dataset
+    effective_stiffness = stiffness_half[:, 2 * output_indices]
+    if config.family == Family.PARAMETRIC:
+        effective_stiffness = effective_stiffness * (1.0 + modulation_half[:, 2 * output_indices])
+    return TangentRollout(
+        dataset=dataset,
+        transition_matrices=np.asarray(transitions),
+        effective_stiffness=effective_stiffness,
+    )
 
 
 def simulate_batch(config: SimulationConfig, seeds: Iterable[int]) -> SimulationDataset:
     """Simulate seeded trajectories with FFT forcing and a vmapped JAX RK4 kernel."""
-    return _simulate_batch(config, seeds)
+    result = _simulate_batch(config, seeds)
+    assert isinstance(result, SimulationDataset)
+    return result
+
+
+def simulate_tangent_batch(config: SimulationConfig, seeds: Iterable[int]) -> TangentRollout:
+    """Re-integrate seeded trajectories while propagating common-forcing tangents."""
+    result = _simulate_batch(config, seeds, tangent=True)
+    assert isinstance(result, TangentRollout)
+    return result
 
 
 def simulate_restarted_batch(
@@ -319,7 +352,7 @@ def simulate_restarted_batch(
         initial_angle_rad=0.0,
         initial_rate_rad_s=0.0,
     )
-    return _simulate_batch(
+    result = _simulate_batch(
         restart_config,
         seeds,
         initial_angle_rad=initial_angle_rad,
@@ -328,6 +361,8 @@ def simulate_restarted_batch(
         stiffness_rate_per_s=stiffness_rate_per_s,
         time_offset_s=time_offset_s,
     )
+    assert isinstance(result, SimulationDataset)
+    return result
 
 
 def with_steps_per_period(config: SimulationConfig, steps: int) -> SimulationConfig:

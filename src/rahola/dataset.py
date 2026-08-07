@@ -76,6 +76,27 @@ class SimulationDataset:
 
 
 @dataclass(frozen=True)
+class TangentRollout:
+    """A base trajectory plus nondimensional local state-transition matrices."""
+
+    dataset: SimulationDataset
+    transition_matrices: NDArray[np.float64]
+    effective_stiffness: NDArray[np.float64]
+
+    def __post_init__(self) -> None:
+        expected = (self.dataset.batch_size, len(self.dataset.time_s) - 1, 2, 2)
+        if self.transition_matrices.shape != expected:
+            raise ValueError(f"transition_matrices must have shape {expected}")
+        if not np.all(np.isfinite(self.transition_matrices)):
+            raise ValueError("transition_matrices must be finite")
+        stiffness_shape = (self.dataset.batch_size, len(self.dataset.time_s))
+        if self.effective_stiffness.shape != stiffness_shape:
+            raise ValueError(f"effective_stiffness must have shape {stiffness_shape}")
+        if not np.all(np.isfinite(self.effective_stiffness)):
+            raise ValueError("effective_stiffness must be finite")
+
+
+@dataclass(frozen=True)
 class WindowDataset:
     values: NDArray[np.float64]
     labels: NDArray[np.int8]

@@ -8,13 +8,19 @@ import pytest
 from rahola.config import (
     Family,
     ForcingConfig,
+    ParametricConfig,
     ProtocolConfig,
     ProtocolKind,
     SeaState,
     SeaStateStep,
     SimulationConfig,
 )
-from rahola.simulate import _forcing_for_seed, simulate_batch, simulate_restarted_batch
+from rahola.simulate import (
+    _forcing_for_seed,
+    simulate_batch,
+    simulate_restarted_batch,
+    simulate_tangent_batch,
+)
 
 
 def _small_config(**changes: object) -> SimulationConfig:
@@ -33,6 +39,51 @@ def test_batch_determinism_and_seed_separation() -> None:
     second = simulate_batch(config, [10, 11])
     assert np.array_equal(first.angle_rad, second.angle_rad, equal_nan=True)
     assert not np.array_equal(first.angle_rad[0], first.angle_rad[1])
+
+
+def _full_record_exponent(config: SimulationConfig) -> float:
+    rollout = simulate_tangent_batch(config, [10])
+    transition = np.eye(2)
+    for local in rollout.transition_matrices[0]:
+        transition = local @ transition
+    duration_tau = config.omega_n_rad_s * config.duration_s
+    return float(np.log(np.linalg.svd(transition, compute_uv=False)[0]) / duration_tau)
+
+
+def test_tangent_linear_oscillator_exponent_converges_to_negative_damping() -> None:
+    config = _small_config(
+        duration_s=400.0,
+        damping_ratio=0.05,
+        quadratic_damping=0.0,
+        linear_restoring=True,
+        forcing=ForcingConfig(effective_wave_slope=0.0),
+    )
+    assert _full_record_exponent(config) == pytest.approx(-config.damping_ratio, abs=2e-3)
+
+
+@pytest.mark.parametrize("h0, expected_sign", [(0.08, -1), (0.24, 1)])
+def test_tangent_mathieu_exponent_sign_matches_four_zeta_boundary(
+    h0: float, expected_sign: int
+) -> None:
+    config = _small_config(
+        family=Family.PARAMETRIC,
+        duration_s=400.0,
+        damping_ratio=0.04,
+        quadratic_damping=0.0,
+        linear_restoring=True,
+        forcing=ForcingConfig(effective_wave_slope=0.0),
+        parametric=ParametricConfig(h0=h0, excitation_ratio=2.0),
+    )
+    assert np.sign(_full_record_exponent(config)) == expected_sign
+
+
+def test_tangent_rollout_reproduces_base_trajectory_bitwise() -> None:
+    config = _small_config()
+    base = simulate_batch(config, [10, 11])
+    tangent = simulate_tangent_batch(config, [10, 11]).dataset
+    assert np.array_equal(base.angle_rad, tangent.angle_rad, equal_nan=True)
+    assert np.array_equal(base.rate_rad_s, tangent.rate_rad_s, equal_nan=True)
+    assert np.array_equal(base.t_capsize_s, tangent.t_capsize_s, equal_nan=True)
 
 
 def test_output_grid_honors_requested_rate_and_duration() -> None:

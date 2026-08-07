@@ -10,8 +10,8 @@ from rahola.config import (
     ProtocolKind,
     SimulationConfig,
 )
-from rahola.dataset import SimulationDataset
-from rahola.simulate import simulate_batch, simulate_restarted_batch
+from rahola.dataset import SimulationDataset, TangentRollout
+from rahola.simulate import simulate_batch, simulate_restarted_batch, simulate_tangent_batch
 
 __all__ = [
     "Family",
@@ -21,6 +21,8 @@ __all__ = [
     "ProtocolKind",
     "SimulationConfig",
     "SimulationDataset",
+    "TangentRollout",
     "simulate_batch",
     "simulate_restarted_batch",
+    "simulate_tangent_batch",
 ]

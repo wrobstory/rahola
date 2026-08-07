@@ -1,6 +1,13 @@
 """Reference campaign definitions, generation, and loading."""
 
 from rahola_lab.campaigns.definition import CampaignDefinition, load_campaign_definition
+from rahola_lab.campaigns.f1 import (
+    F1_EXPECTED_CAPSIZE_FRACTIONS,
+    F1_TEST_SLICES,
+    f1_definitions,
+    generate_f1_campaigns,
+    verify_f1_test_slices,
+)
 from rahola_lab.campaigns.generate import GenerationResult, generate_campaign
 from rahola_lab.campaigns.generate_v02 import generate_selected_v02, versioned_definitions
 from rahola_lab.campaigns.h1 import (
@@ -21,12 +28,16 @@ from rahola_lab.campaigns.u1r2 import (
 )
 
 __all__ = [
+    "F1_EXPECTED_CAPSIZE_FRACTIONS",
+    "F1_TEST_SLICES",
     "H1_MEASURED_CAPSIZE_FRACTIONS",
     "H1_TEST_SLICES",
     "U1R2_TEST_SLICES",
     "CampaignDefinition",
     "GenerationResult",
+    "f1_definitions",
     "generate_campaign",
+    "generate_f1_campaigns",
     "generate_h1_campaigns",
     "generate_selected_v02",
     "generate_u1r2_campaigns",
@@ -36,6 +47,7 @@ __all__ = [
     "load_campaign_split",
     "u1r2_definitions",
     "u1r2_name",
+    "verify_f1_test_slices",
     "verify_h1_test_slices",
     "verify_u1r2_test_slices",
     "versioned_definitions",

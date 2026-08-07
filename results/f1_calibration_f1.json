@@ -1,0 +1,1818 @@
+{
+  "_artifact_sha256": "108cd3c3b0744c108ab4f0b793476e578e14e57ccf0ef33759072e3a9b61039d",
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "reference_h1_anchor_sha256": "81491c11171c3516a461c1938a943b1af04fcf9859d5d6bd2cfe2c5ec8939f5b",
+    "reference_u1r2_anchor_sha256": "2f68a4ce89ab90997c91bd98ca614bfe26b7fba923c69c6e439c865b4432cd5d",
+    "reference_v02_anchor_sha256": "96fdcc7a93cd4b0a760750320cf41c7f1ce15d52708b2bfc8791c3b3a9d10dfd",
+    "schema_version": 1,
+    "source_sha256": "35102ac1f4ad5fefa577eb5e42eb9b4ce0966eba4ab434d127e818f935db2296",
+    "upstream_artifacts": {}
+  },
+  "conditional_arm_trigger": "If any S6/S7 oracle statistic shows F1a signal (>= 0.60), implement the thesis's motion-only estimator (Sano-Sawada-style local Jacobian from historical neighbors, thesis Chapter 3 conventions, causal normalization) and measure its fidelity against the true tangent quantity.",
+  "controls": {
+    "calibration_motion_policy": "Re-integrate the declared TRAIN/CALIBRATION seeds under the current fixed-cutoff simulator; v0.1 stored motion is not mixed with current F1 tangents.",
+    "f1a_signal_auc": 0.6,
+    "f1b_success": "candidate and S1 each retain at least 0.90 fresh sensitivity and the candidate bootstrap FPR upper bound is below S1's lower bound",
+    "f1b_target_sensitivity": 0.9,
+    "ftle_period_grid": [
+      1,
+      2,
+      5
+    ],
+    "ftle_selection": "maximum calibration orientation-independent AUC; shortest T wins ties",
+    "leakage_audit_interval": [
+      0.58,
+      0.6
+    ],
+    "margin_closure_difference_periods": 1,
+    "oracle_finite_time_statistics_are_acausal": true,
+    "time_to_closure_epsilon": 1e-12
+  },
+  "experiment": "F1 calibration and frozen policies",
+  "f1b_policies": {
+    "operational": {
+      "calibration_operating_points": {
+        "S1_margin": {
+          "alarm_opportunity_count": 50533,
+          "capsize_count": 26,
+          "detected_capsize_count": 24,
+          "exposure_hours": 132.17222222222222,
+          "false_episode_count": 2265,
+          "false_episodes_per_hour": 17.136732377789922,
+          "lead_time_quantiles_s": [
+            31.480000000000015,
+            141.60000000000002,
+            275.69
+          ],
+          "sensitivity": 0.9230769230769231,
+          "sensitivity_exact_capsize_event_interval": [
+            0.7486970833046261,
+            0.9905446089962873
+          ],
+          "threshold": -1.1371288493252547
+        },
+        "S2_margin_closure": {
+          "alarm_opportunity_count": 50533,
+          "capsize_count": 26,
+          "detected_capsize_count": 24,
+          "exposure_hours": 132.17222222222222,
+          "false_episode_count": 2868,
+          "false_episodes_per_hour": 21.69896179227439,
+          "lead_time_quantiles_s": [
+            32.26000000000002,
+            166.65,
+            277.79
+          ],
+          "sensitivity": 0.9230769230769231,
+          "sensitivity_exact_capsize_event_interval": [
+            0.7486970833046261,
+            0.9905446089962873
+          ],
+          "threshold": -0.022306230529796182
+        },
+        "S3_time_to_closure": {
+          "alarm_opportunity_count": 25293,
+          "capsize_count": 25,
+          "detected_capsize_count": 23,
+          "exposure_hours": 116.49166666666666,
+          "false_episode_count": 2218,
+          "false_episodes_per_hour": 19.039988554259963,
+          "lead_time_quantiles_s": [
+            24.58000000000001,
+            128.8,
+            262.94000000000005
+          ],
+          "sensitivity": 0.92,
+          "sensitivity_exact_capsize_event_interval": [
+            0.7396941578947858,
+            0.9901604099812025
+          ],
+          "threshold": -720.6672708754597
+        },
+        "S4_energy_depletion": {
+          "alarm_opportunity_count": 50533,
+          "capsize_count": 26,
+          "detected_capsize_count": 25,
+          "exposure_hours": 132.17222222222222,
+          "false_episode_count": 2952,
+          "false_episodes_per_hour": 22.33449623807322,
+          "lead_time_quantiles_s": [
+            24.660000000000014,
+            196.5,
+            278.3
+          ],
+          "sensitivity": 0.9615384615384616,
+          "sensitivity_exact_capsize_event_interval": [
+            0.8036303532374611,
+            0.9990267121066649
+          ],
+          "threshold": -0.005259066223747041
+        },
+        "S4_energy_reserve": {
+          "alarm_opportunity_count": 50533,
+          "capsize_count": 26,
+          "detected_capsize_count": 24,
+          "exposure_hours": 132.17222222222222,
+          "false_episode_count": 2197,
+          "false_episodes_per_hour": 16.622252112143247,
+          "lead_time_quantiles_s": [
+            18.950000000000003,
+            137.10000000000002,
+            275.69
+          ],
+          "sensitivity": 0.9230769230769231,
+          "sensitivity_exact_capsize_event_interval": [
+            0.7486970833046261,
+            0.9905446089962873
+          ],
+          "threshold": -0.24823068468759985
+        },
+        "S5_energy_level_rate": {
+          "alarm_opportunity_count": 50533,
+          "capsize_count": 26,
+          "detected_capsize_count": 24,
+          "exposure_hours": 132.17222222222222,
+          "false_episode_count": 2922,
+          "false_episodes_per_hour": 22.107519650287927,
+          "lead_time_quantiles_s": [
+            54.29000000000004,
+            182.65,
+            272.66
+          ],
+          "sensitivity": 0.9230769230769231,
+          "sensitivity_exact_capsize_event_interval": [
+            0.7486970833046261,
+            0.9905446089962873
+          ],
+          "threshold": 0.023375287292408488
+        },
+        "S5_margin_level_rate": {
+          "alarm_opportunity_count": 50533,
+          "capsize_count": 26,
+          "detected_capsize_count": 24,
+          "exposure_hours": 132.17222222222222,
+          "false_episode_count": 2948,
+          "false_episodes_per_hour": 22.304232693035182,
+          "lead_time_quantiles_s": [
+            49.04000000000005,
+            186.5,
+            277.79
+          ],
+          "sensitivity": 0.9230769230769231,
+          "sensitivity_exact_capsize_event_interval": [
+            0.7486970833046261,
+            0.9905446089962873
+          ],
+          "threshold": 0.023551079085913054
+        },
+        "S7_instantaneous_normal_strain": {
+          "alarm_opportunity_count": 50533,
+          "capsize_count": 26,
+          "detected_capsize_count": 24,
+          "exposure_hours": 132.17222222222222,
+          "false_episode_count": 2377,
+          "false_episodes_per_hour": 17.98411163885503,
+          "lead_time_quantiles_s": [
+            38.260000000000026,
+            137.10000000000002,
+            273.14000000000004
+          ],
+          "sensitivity": 0.9230769230769231,
+          "sensitivity_exact_capsize_event_interval": [
+            0.7486970833046261,
+            0.9905446089962873
+          ],
+          "threshold": -0.04014595889355312
+        }
+      },
+      "decorrelation_s": {
+        "S1_margin": 160.0,
+        "S2_margin_closure": 160.0,
+        "S3_time_to_closure": 110.0,
+        "S4_energy_depletion": 160.0,
+        "S4_energy_reserve": 160.0,
+        "S5_energy_level_rate": 160.0,
+        "S5_margin_level_rate": 160.0,
+        "S7_instantaneous_normal_strain": 160.0
+      },
+      "models": {
+        "energy": {
+          "coefficients": [
+            -0.09472310063496493,
+            0.05084515664556182
+          ],
+          "intercept": -3.651120004162874,
+          "mean": [
+            0.17455857611292092,
+            -0.022121600210045365
+          ],
+          "scale": [
+            0.0691788787100807,
+            0.05113758387315099
+          ]
+        },
+        "margin": {
+          "coefficients": [
+            -0.054275254994681006,
+            -0.05292749040675161
+          ],
+          "intercept": -3.6508744074760924,
+          "mean": [
+            0.9460576876475514,
+            -7.671207766814166e-06
+          ],
+          "scale": [
+            0.23700167638670658,
+            0.042746470936096535
+          ]
+        }
+      },
+      "thresholds": {
+        "S1_margin": -1.1371288493252547,
+        "S2_margin_closure": -0.022306230529796182,
+        "S3_time_to_closure": -720.6672708754597,
+        "S4_energy_depletion": -0.005259066223747041,
+        "S4_energy_reserve": -0.24823068468759985,
+        "S5_energy_level_rate": 0.023375287292408488,
+        "S5_margin_level_rate": 0.023551079085913054,
+        "S7_instantaneous_normal_strain": -0.04014595889355312
+      }
+    },
+    "oracle": {
+      "calibration_operating_points": {
+        "S1_margin": {
+          "alarm_opportunity_count": 50533,
+          "capsize_count": 26,
+          "detected_capsize_count": 24,
+          "exposure_hours": 132.17222222222222,
+          "false_episode_count": 2265,
+          "false_episodes_per_hour": 17.136732377789922,
+          "lead_time_quantiles_s": [
+            31.480000000000015,
+            141.60000000000002,
+            275.69
+          ],
+          "sensitivity": 0.9230769230769231,
+          "sensitivity_exact_capsize_event_interval": [
+            0.7486970833046261,
+            0.9905446089962873
+          ],
+          "threshold": -1.1371288493252547
+        },
+        "S2_margin_closure": {
+          "alarm_opportunity_count": 50533,
+          "capsize_count": 26,
+          "detected_capsize_count": 24,
+          "exposure_hours": 132.17222222222222,
+          "false_episode_count": 2868,
+          "false_episodes_per_hour": 21.69896179227439,
+          "lead_time_quantiles_s": [
+            32.26000000000002,
+            166.65,
+            277.79
+          ],
+          "sensitivity": 0.9230769230769231,
+          "sensitivity_exact_capsize_event_interval": [
+            0.7486970833046261,
+            0.9905446089962873
+          ],
+          "threshold": -0.022306230529796182
+        },
+        "S3_time_to_closure": {
+          "alarm_opportunity_count": 25293,
+          "capsize_count": 25,
+          "detected_capsize_count": 23,
+          "exposure_hours": 116.49166666666666,
+          "false_episode_count": 2218,
+          "false_episodes_per_hour": 19.039988554259963,
+          "lead_time_quantiles_s": [
+            24.58000000000001,
+            128.8,
+            262.94000000000005
+          ],
+          "sensitivity": 0.92,
+          "sensitivity_exact_capsize_event_interval": [
+            0.7396941578947858,
+            0.9901604099812025
+          ],
+          "threshold": -720.6672708754597
+        },
+        "S4_energy_depletion": {
+          "alarm_opportunity_count": 50533,
+          "capsize_count": 26,
+          "detected_capsize_count": 24,
+          "exposure_hours": 132.17222222222222,
+          "false_episode_count": 2771,
+          "false_episodes_per_hour": 20.96507082510193,
+          "lead_time_quantiles_s": [
+            55.550000000000054,
+            156.60000000000002,
+            275.69
+          ],
+          "sensitivity": 0.9230769230769231,
+          "sensitivity_exact_capsize_event_interval": [
+            0.7486970833046261,
+            0.9905446089962873
+          ],
+          "threshold": -0.01580583090177614
+        },
+        "S4_energy_reserve": {
+          "alarm_opportunity_count": 50533,
+          "capsize_count": 26,
+          "detected_capsize_count": 24,
+          "exposure_hours": 132.17222222222222,
+          "false_episode_count": 2677,
+          "false_episodes_per_hour": 20.253877516708,
+          "lead_time_quantiles_s": [
+            36.37000000000002,
+            154.4,
+            275.69
+          ],
+          "sensitivity": 0.9230769230769231,
+          "sensitivity_exact_capsize_event_interval": [
+            0.7486970833046261,
+            0.9905446089962873
+          ],
+          "threshold": -0.24282177131696367
+        },
+        "S5_energy_level_rate": {
+          "alarm_opportunity_count": 50533,
+          "capsize_count": 26,
+          "detected_capsize_count": 24,
+          "exposure_hours": 132.17222222222222,
+          "false_episode_count": 2669,
+          "false_episodes_per_hour": 20.19335042663192,
+          "lead_time_quantiles_s": [
+            25.820000000000018,
+            107.95000000000005,
+            272.66
+          ],
+          "sensitivity": 0.9230769230769231,
+          "sensitivity_exact_capsize_event_interval": [
+            0.7486970833046261,
+            0.9905446089962873
+          ],
+          "threshold": 0.02335093920316441
+        },
+        "S5_margin_level_rate": {
+          "alarm_opportunity_count": 50533,
+          "capsize_count": 26,
+          "detected_capsize_count": 24,
+          "exposure_hours": 132.17222222222222,
+          "false_episode_count": 2948,
+          "false_episodes_per_hour": 22.304232693035182,
+          "lead_time_quantiles_s": [
+            49.04000000000005,
+            186.5,
+            277.79
+          ],
+          "sensitivity": 0.9230769230769231,
+          "sensitivity_exact_capsize_event_interval": [
+            0.7486970833046261,
+            0.9905446089962873
+          ],
+          "threshold": 0.023551079085913054
+        },
+        "S7_instantaneous_normal_strain": {
+          "alarm_opportunity_count": 50533,
+          "capsize_count": 26,
+          "detected_capsize_count": 24,
+          "exposure_hours": 132.17222222222222,
+          "false_episode_count": 2707,
+          "false_episodes_per_hour": 20.480854104493297,
+          "lead_time_quantiles_s": [
+            36.37000000000002,
+            154.4,
+            271.12
+          ],
+          "sensitivity": 0.9230769230769231,
+          "sensitivity_exact_capsize_event_interval": [
+            0.7486970833046261,
+            0.9905446089962873
+          ],
+          "threshold": -0.03615484461469716
+        }
+      },
+      "decorrelation_s": {
+        "S1_margin": 160.0,
+        "S2_margin_closure": 160.0,
+        "S3_time_to_closure": 110.0,
+        "S4_energy_depletion": 160.0,
+        "S4_energy_reserve": 160.0,
+        "S5_energy_level_rate": 160.0,
+        "S5_margin_level_rate": 160.0,
+        "S7_instantaneous_normal_strain": 160.0
+      },
+      "models": {
+        "energy": {
+          "coefficients": [
+            -0.11168951349662255,
+            0.12846310238508094
+          ],
+          "intercept": -3.653714991202495,
+          "mean": [
+            0.17449413502745081,
+            -0.022634464172134692
+          ],
+          "scale": [
+            0.08551104753125267,
+            0.16326550329254935
+          ]
+        },
+        "margin": {
+          "coefficients": [
+            -0.054275254994681006,
+            -0.05292749040675161
+          ],
+          "intercept": -3.6508744074760924,
+          "mean": [
+            0.9460576876475514,
+            -7.671207766814166e-06
+          ],
+          "scale": [
+            0.23700167638670658,
+            0.042746470936096535
+          ]
+        }
+      },
+      "thresholds": {
+        "S1_margin": -1.1371288493252547,
+        "S2_margin_closure": -0.022306230529796182,
+        "S3_time_to_closure": -720.6672708754597,
+        "S4_energy_depletion": -0.01580583090177614,
+        "S4_energy_reserve": -0.24282177131696367,
+        "S5_energy_level_rate": 0.02335093920316441,
+        "S5_margin_level_rate": 0.023551079085913054,
+        "S7_instantaneous_normal_strain": -0.03615484461469716
+      }
+    }
+  },
+  "f1c_rotation_policies": {
+    "operational": {
+      "biased": {
+        "calibration_operating_points": {
+          "S1_margin": {
+            "alarm_opportunity_count": 33773,
+            "capsize_count": 20,
+            "detected_capsize_count": 18,
+            "exposure_hours": 88.33611111111111,
+            "false_episode_count": 1287,
+            "false_episodes_per_hour": 14.569353164994812,
+            "lead_time_quantiles_s": [
+              21.55,
+              132.20000000000005,
+              284.03000000000003
+            ],
+            "sensitivity": 0.9,
+            "sensitivity_exact_capsize_event_interval": [
+              0.6830172859809176,
+              0.9876514728297052
+            ],
+            "threshold": -1.1360972162112086
+          },
+          "S2_margin_closure": {
+            "alarm_opportunity_count": 33773,
+            "capsize_count": 20,
+            "detected_capsize_count": 18,
+            "exposure_hours": 88.33611111111111,
+            "false_episode_count": 1903,
+            "false_episodes_per_hour": 21.542718782428228,
+            "lead_time_quantiles_s": [
+              21.009999999999998,
+              166.65,
+              284.87
+            ],
+            "sensitivity": 0.9,
+            "sensitivity_exact_capsize_event_interval": [
+              0.6830172859809176,
+              0.9876514728297052
+            ],
+            "threshold": -0.022843916823475998
+          },
+          "S3_time_to_closure": {
+            "alarm_opportunity_count": 16960,
+            "capsize_count": 19,
+            "detected_capsize_count": 18,
+            "exposure_hours": 78.10555555555555,
+            "false_episode_count": 1371,
+            "false_episodes_per_hour": 17.55316878867629,
+            "lead_time_quantiles_s": [
+              18.550000000000004,
+              127.10000000000002,
+              264.61000000000007
+            ],
+            "sensitivity": 0.9473684210526315,
+            "sensitivity_exact_capsize_event_interval": [
+              0.7397193458047858,
+              0.9986683711958205
+            ],
+            "threshold": -1555.83856901724
+          },
+          "S4_energy_depletion": {
+            "alarm_opportunity_count": 33773,
+            "capsize_count": 20,
+            "detected_capsize_count": 19,
+            "exposure_hours": 88.33611111111111,
+            "false_episode_count": 1971,
+            "false_episodes_per_hour": 22.312505896041007,
+            "lead_time_quantiles_s": [
+              20.2,
+              196.5,
+              281.08
+            ],
+            "sensitivity": 0.95,
+            "sensitivity_exact_capsize_event_interval": [
+              0.7512672372279723,
+              0.9987349105020502
+            ],
+            "threshold": -0.0034888549486439997
+          },
+          "S4_energy_reserve": {
+            "alarm_opportunity_count": 33773,
+            "capsize_count": 20,
+            "detected_capsize_count": 18,
+            "exposure_hours": 88.33611111111111,
+            "false_episode_count": 1216,
+            "false_episodes_per_hour": 13.765604855193233,
+            "lead_time_quantiles_s": [
+              16.459999999999997,
+              121.65000000000003,
+              284.03000000000003
+            ],
+            "sensitivity": 0.9,
+            "sensitivity_exact_capsize_event_interval": [
+              0.6830172859809176,
+              0.9876514728297052
+            ],
+            "threshold": -0.24818550674353854
+          },
+          "S5_energy_level_rate": {
+            "alarm_opportunity_count": 33773,
+            "capsize_count": 20,
+            "detected_capsize_count": 18,
+            "exposure_hours": 88.33611111111111,
+            "false_episode_count": 1911,
+            "false_episodes_per_hour": 21.633281972265024,
+            "lead_time_quantiles_s": [
+              39.53000000000003,
+              163.50000000000003,
+              267.61000000000007
+            ],
+            "sensitivity": 0.9,
+            "sensitivity_exact_capsize_event_interval": [
+              0.6830172859809176,
+              0.9876514728297052
+            ],
+            "threshold": 0.023477952939682682
+          },
+          "S5_margin_level_rate": {
+            "alarm_opportunity_count": 33773,
+            "capsize_count": 20,
+            "detected_capsize_count": 18,
+            "exposure_hours": 88.33611111111111,
+            "false_episode_count": 1967,
+            "false_episodes_per_hour": 22.267224301122607,
+            "lead_time_quantiles_s": [
+              34.28000000000003,
+              171.65,
+              284.87
+            ],
+            "sensitivity": 0.9,
+            "sensitivity_exact_capsize_event_interval": [
+              0.6830172859809176,
+              0.9876514728297052
+            ],
+            "threshold": 0.022301550898798213
+          },
+          "S7_instantaneous_normal_strain": {
+            "alarm_opportunity_count": 33773,
+            "capsize_count": 20,
+            "detected_capsize_count": 18,
+            "exposure_hours": 88.33611111111111,
+            "false_episode_count": 1330,
+            "false_episodes_per_hour": 15.0561303103676,
+            "lead_time_quantiles_s": [
+              21.55,
+              122.20000000000005,
+              274.61000000000007
+            ],
+            "sensitivity": 0.9,
+            "sensitivity_exact_capsize_event_interval": [
+              0.6830172859809176,
+              0.9876514728297052
+            ],
+            "threshold": -0.03998294573171109
+          }
+        },
+        "decorrelation_s": {
+          "S1_margin": 160.0,
+          "S2_margin_closure": 160.0,
+          "S3_time_to_closure": 119.75239885454266,
+          "S4_energy_depletion": 160.0,
+          "S4_energy_reserve": 160.0,
+          "S5_energy_level_rate": 160.0,
+          "S5_margin_level_rate": 160.0,
+          "S7_instantaneous_normal_strain": 160.0
+        },
+        "models": {
+          "energy": {
+            "coefficients": [
+              -0.07779176393526578,
+              0.07408805870640235
+            ],
+            "intercept": -3.70369624888446,
+            "mean": [
+              0.21182198392207652,
+              -0.026316441323775887
+            ],
+            "scale": [
+              0.05241014981375277,
+              0.06012511587255086
+            ]
+          },
+          "margin": {
+            "coefficients": [
+              -0.048071063907095375,
+              -0.0695372102416472
+            ],
+            "intercept": -3.706510454506994,
+            "mean": [
+              0.9747613612858513,
+              9.958634832847264e-06
+            ],
+            "scale": [
+              0.2328251216046037,
+              0.045063155717631385
+            ]
+          }
+        },
+        "thresholds": {
+          "S1_margin": -1.1360972162112086,
+          "S2_margin_closure": -0.022843916823475998,
+          "S3_time_to_closure": -1555.83856901724,
+          "S4_energy_depletion": -0.0034888549486439997,
+          "S4_energy_reserve": -0.24818550674353854,
+          "S5_energy_level_rate": 0.023477952939682682,
+          "S5_margin_level_rate": 0.022301550898798213,
+          "S7_instantaneous_normal_strain": -0.03998294573171109
+        }
+      },
+      "parametric": {
+        "calibration_operating_points": {
+          "S1_margin": {
+            "alarm_opportunity_count": 33572,
+            "capsize_count": 17,
+            "detected_capsize_count": 16,
+            "exposure_hours": 87.80833333333334,
+            "false_episode_count": 1925,
+            "false_episodes_per_hour": 21.92274841036348,
+            "lead_time_quantiles_s": [
+              21.400000000000034,
+              188.65000000000003,
+              275.15000000000003
+            ],
+            "sensitivity": 0.9411764705882353,
+            "sensitivity_exact_capsize_event_interval": [
+              0.7131106033327793,
+              0.9985118256087334
+            ],
+            "threshold": -1.0702503749846808
+          },
+          "S2_margin_closure": {
+            "alarm_opportunity_count": 33572,
+            "capsize_count": 17,
+            "detected_capsize_count": 16,
+            "exposure_hours": 87.80833333333334,
+            "false_episode_count": 1900,
+            "false_episodes_per_hour": 21.63803739204707,
+            "lead_time_quantiles_s": [
+              33.95000000000002,
+              127.85000000000002,
+              285.6
+            ],
+            "sensitivity": 0.9411764705882353,
+            "sensitivity_exact_capsize_event_interval": [
+              0.7131106033327793,
+              0.9985118256087334
+            ],
+            "threshold": -0.024602579398899538
+          },
+          "S3_time_to_closure": {
+            "alarm_opportunity_count": 16643,
+            "capsize_count": 17,
+            "detected_capsize_count": 16,
+            "exposure_hours": 77.48333333333333,
+            "false_episode_count": 1649,
+            "false_episodes_per_hour": 21.281996128199612,
+            "lead_time_quantiles_s": [
+              17.950000000000017,
+              127.25000000000003,
+              260.15000000000003
+            ],
+            "sensitivity": 0.9411764705882353,
+            "sensitivity_exact_capsize_event_interval": [
+              0.7131106033327793,
+              0.9985118256087334
+            ],
+            "threshold": -71.16664311628381
+          },
+          "S4_energy_depletion": {
+            "alarm_opportunity_count": 33572,
+            "capsize_count": 17,
+            "detected_capsize_count": 16,
+            "exposure_hours": 87.80833333333334,
+            "false_episode_count": 1961,
+            "false_episodes_per_hour": 22.332732276739108,
+            "lead_time_quantiles_s": [
+              49.55000000000004,
+              194.60000000000002,
+              289.05
+            ],
+            "sensitivity": 0.9411764705882353,
+            "sensitivity_exact_capsize_event_interval": [
+              0.7131106033327793,
+              0.9985118256087334
+            ],
+            "threshold": -0.0052384111114108225
+          },
+          "S4_energy_reserve": {
+            "alarm_opportunity_count": 33572,
+            "capsize_count": 17,
+            "detected_capsize_count": 16,
+            "exposure_hours": 87.80833333333334,
+            "false_episode_count": 1951,
+            "false_episodes_per_hour": 22.218847869412546,
+            "lead_time_quantiles_s": [
+              36.70000000000002,
+              163.05000000000004,
+              274.05
+            ],
+            "sensitivity": 0.9411764705882353,
+            "sensitivity_exact_capsize_event_interval": [
+              0.7131106033327793,
+              0.9985118256087334
+            ],
+            "threshold": -0.22634533533810045
+          },
+          "S5_energy_level_rate": {
+            "alarm_opportunity_count": 33572,
+            "capsize_count": 17,
+            "detected_capsize_count": 17,
+            "exposure_hours": 87.80833333333334,
+            "false_episode_count": 1933,
+            "false_episodes_per_hour": 22.01385593622473,
+            "lead_time_quantiles_s": [
+              13.760000000000014,
+              107.70000000000005,
+              273.56
+            ],
+            "sensitivity": 1.0,
+            "sensitivity_exact_capsize_event_interval": [
+              0.8049356770309068,
+              1.0
+            ],
+            "threshold": 0.015925385232032935
+          },
+          "S5_margin_level_rate": {
+            "alarm_opportunity_count": 33572,
+            "capsize_count": 17,
+            "detected_capsize_count": 16,
+            "exposure_hours": 87.80833333333334,
+            "false_episode_count": 1808,
+            "false_episodes_per_hour": 20.590300844642687,
+            "lead_time_quantiles_s": [
+              13.950000000000017,
+              122.10000000000002,
+              272.70000000000005
+            ],
+            "sensitivity": 0.9411764705882353,
+            "sensitivity_exact_capsize_event_interval": [
+              0.7131106033327793,
+              0.9985118256087334
+            ],
+            "threshold": 0.02217919362091141
+          },
+          "S7_instantaneous_normal_strain": {
+            "alarm_opportunity_count": 33572,
+            "capsize_count": 17,
+            "detected_capsize_count": 16,
+            "exposure_hours": 87.80833333333334,
+            "false_episode_count": 1958,
+            "false_episodes_per_hour": 22.29856695454114,
+            "lead_time_quantiles_s": [
+              41.70000000000002,
+              137.25000000000003,
+              273.25
+            ],
+            "sensitivity": 0.9411764705882353,
+            "sensitivity_exact_capsize_event_interval": [
+              0.7131106033327793,
+              0.9985118256087334
+            ],
+            "threshold": -0.033934073934952035
+          }
+        },
+        "decorrelation_s": {
+          "S1_margin": 160.0,
+          "S2_margin_closure": 160.0,
+          "S3_time_to_closure": 116.2639559992384,
+          "S4_energy_depletion": 160.0,
+          "S4_energy_reserve": 160.0,
+          "S5_energy_level_rate": 160.0,
+          "S5_margin_level_rate": 160.0,
+          "S7_instantaneous_normal_strain": 160.0
+        },
+        "models": {
+          "energy": {
+            "coefficients": [
+              -0.23866330528458543,
+              0.10303530472115496
+            ],
+            "intercept": -3.7958302009656038,
+            "mean": [
+              0.13992739454463726,
+              -0.031255222446620844
+            ],
+            "scale": [
+              0.05812402268023215,
+              0.05962663476938148
+            ]
+          },
+          "margin": {
+            "coefficients": [
+              0.009716484920283536,
+              -0.06101245782547578
+            ],
+            "intercept": -3.770132349625087,
+            "mean": [
+              0.8609977434722389,
+              5.4306224822357316e-05
+            ],
+            "scale": [
+              0.2358382706430401,
+              0.050895876014009606
+            ]
+          }
+        },
+        "thresholds": {
+          "S1_margin": -1.0702503749846808,
+          "S2_margin_closure": -0.024602579398899538,
+          "S3_time_to_closure": -71.16664311628381,
+          "S4_energy_depletion": -0.0052384111114108225,
+          "S4_energy_reserve": -0.22634533533810045,
+          "S5_energy_level_rate": 0.015925385232032935,
+          "S5_margin_level_rate": 0.02217919362091141,
+          "S7_instantaneous_normal_strain": -0.033934073934952035
+        }
+      },
+      "softening": {
+        "calibration_operating_points": {
+          "S1_margin": {
+            "alarm_opportunity_count": 33721,
+            "capsize_count": 15,
+            "detected_capsize_count": 14,
+            "exposure_hours": 88.2,
+            "false_episode_count": 1326,
+            "false_episodes_per_hour": 15.034013605442176,
+            "lead_time_quantiles_s": [
+              31.480000000000008,
+              141.60000000000002,
+              234.24000000000004
+            ],
+            "sensitivity": 0.9333333333333333,
+            "sensitivity_exact_capsize_event_interval": [
+              0.6805154334216966,
+              0.9983135697586473
+            ],
+            "threshold": -1.1436341902889038
+          },
+          "S2_margin_closure": {
+            "alarm_opportunity_count": 33721,
+            "capsize_count": 15,
+            "detected_capsize_count": 14,
+            "exposure_hours": 88.2,
+            "false_episode_count": 1842,
+            "false_episodes_per_hour": 20.884353741496597,
+            "lead_time_quantiles_s": [
+              40.48000000000001,
+              165.4,
+              251.33000000000004
+            ],
+            "sensitivity": 0.9333333333333333,
+            "sensitivity_exact_capsize_event_interval": [
+              0.6805154334216966,
+              0.9983135697586473
+            ],
+            "threshold": -0.007566116253432481
+          },
+          "S3_time_to_closure": {
+            "alarm_opportunity_count": 16983,
+            "capsize_count": 14,
+            "detected_capsize_count": 13,
+            "exposure_hours": 77.39444444444445,
+            "false_episode_count": 1374,
+            "false_episodes_per_hour": 17.753212260426388,
+            "lead_time_quantiles_s": [
+              38.18000000000005,
+              136.70000000000005,
+              194.72000000000003
+            ],
+            "sensitivity": 0.9285714285714286,
+            "sensitivity_exact_capsize_event_interval": [
+              0.6613155100681788,
+              0.9981932193408746
+            ],
+            "threshold": -1605.8922420992194
+          },
+          "S4_energy_depletion": {
+            "alarm_opportunity_count": 33721,
+            "capsize_count": 15,
+            "detected_capsize_count": 14,
+            "exposure_hours": 88.2,
+            "false_episode_count": 1259,
+            "false_episodes_per_hour": 14.27437641723356,
+            "lead_time_quantiles_s": [
+              30.910000000000014,
+              127.55000000000004,
+              217.67000000000004
+            ],
+            "sensitivity": 0.9333333333333333,
+            "sensitivity_exact_capsize_event_interval": [
+              0.6805154334216966,
+              0.9983135697586473
+            ],
+            "threshold": 0.00033000435452442827
+          },
+          "S4_energy_reserve": {
+            "alarm_opportunity_count": 33721,
+            "capsize_count": 15,
+            "detected_capsize_count": 14,
+            "exposure_hours": 88.2,
+            "false_episode_count": 1341,
+            "false_episodes_per_hour": 15.204081632653061,
+            "lead_time_quantiles_s": [
+              38.26000000000002,
+              136.60000000000002,
+              247.89000000000004
+            ],
+            "sensitivity": 0.9333333333333333,
+            "sensitivity_exact_capsize_event_interval": [
+              0.6805154334216966,
+              0.9983135697586473
+            ],
+            "threshold": -0.2495809613629094
+          },
+          "S5_energy_level_rate": {
+            "alarm_opportunity_count": 33721,
+            "capsize_count": 15,
+            "detected_capsize_count": 14,
+            "exposure_hours": 88.2,
+            "false_episode_count": 1783,
+            "false_episodes_per_hour": 20.215419501133788,
+            "lead_time_quantiles_s": [
+              10.410000000000009,
+              149.50000000000003,
+              236.85000000000002
+            ],
+            "sensitivity": 0.9333333333333333,
+            "sensitivity_exact_capsize_event_interval": [
+              0.6805154334216966,
+              0.9983135697586473
+            ],
+            "threshold": 0.027590090168872112
+          },
+          "S5_margin_level_rate": {
+            "alarm_opportunity_count": 33721,
+            "capsize_count": 15,
+            "detected_capsize_count": 14,
+            "exposure_hours": 88.2,
+            "false_episode_count": 1959,
+            "false_episodes_per_hour": 22.210884353741495,
+            "lead_time_quantiles_s": [
+              56.88000000000003,
+              197.45000000000002,
+              251.69000000000005
+            ],
+            "sensitivity": 0.9333333333333333,
+            "sensitivity_exact_capsize_event_interval": [
+              0.6805154334216966,
+              0.9983135697586473
+            ],
+            "threshold": 0.02560539941067847
+          },
+          "S7_instantaneous_normal_strain": {
+            "alarm_opportunity_count": 33721,
+            "capsize_count": 15,
+            "detected_capsize_count": 14,
+            "exposure_hours": 88.2,
+            "false_episode_count": 1665,
+            "false_episodes_per_hour": 18.877551020408163,
+            "lead_time_quantiles_s": [
+              78.55000000000004,
+              137.35000000000002,
+              247.89000000000004
+            ],
+            "sensitivity": 0.9333333333333333,
+            "sensitivity_exact_capsize_event_interval": [
+              0.6805154334216966,
+              0.9983135697586473
+            ],
+            "threshold": -0.040199766769986434
+          }
+        },
+        "decorrelation_s": {
+          "S1_margin": 160.0,
+          "S2_margin_closure": 160.0,
+          "S3_time_to_closure": 100.0,
+          "S4_energy_depletion": 160.0,
+          "S4_energy_reserve": 160.0,
+          "S5_energy_level_rate": 160.0,
+          "S5_margin_level_rate": 160.0,
+          "S7_instantaneous_normal_strain": 160.0
+        },
+        "models": {
+          "energy": {
+            "coefficients": [
+              0.011020093954158598,
+              -0.1562212192278139
+            ],
+            "intercept": -3.5045257475358795,
+            "mean": [
+              0.1713804576843818,
+              -0.008815824431634721
+            ],
+            "scale": [
+              0.07508812970642893,
+              0.019862956577446876
+            ]
+          },
+          "margin": {
+            "coefficients": [
+              -0.16950146158379725,
+              -0.03272986959459498
+            ],
+            "intercept": -3.5080503226379567,
+            "mean": [
+              1.0016165156347565,
+              -8.703082011072676e-05
+            ],
+            "scale": [
+              0.2181496861326507,
+              0.029391516482770986
+            ]
+          }
+        },
+        "thresholds": {
+          "S1_margin": -1.1436341902889038,
+          "S2_margin_closure": -0.007566116253432481,
+          "S3_time_to_closure": -1605.8922420992194,
+          "S4_energy_depletion": 0.00033000435452442827,
+          "S4_energy_reserve": -0.2495809613629094,
+          "S5_energy_level_rate": 0.027590090168872112,
+          "S5_margin_level_rate": 0.02560539941067847,
+          "S7_instantaneous_normal_strain": -0.040199766769986434
+        }
+      }
+    },
+    "oracle": {
+      "biased": {
+        "calibration_operating_points": {
+          "S1_margin": {
+            "alarm_opportunity_count": 33773,
+            "capsize_count": 20,
+            "detected_capsize_count": 18,
+            "exposure_hours": 88.33611111111111,
+            "false_episode_count": 1287,
+            "false_episodes_per_hour": 14.569353164994812,
+            "lead_time_quantiles_s": [
+              21.55,
+              132.20000000000005,
+              284.03000000000003
+            ],
+            "sensitivity": 0.9,
+            "sensitivity_exact_capsize_event_interval": [
+              0.6830172859809176,
+              0.9876514728297052
+            ],
+            "threshold": -1.1360972162112086
+          },
+          "S2_margin_closure": {
+            "alarm_opportunity_count": 33773,
+            "capsize_count": 20,
+            "detected_capsize_count": 18,
+            "exposure_hours": 88.33611111111111,
+            "false_episode_count": 1903,
+            "false_episodes_per_hour": 21.542718782428228,
+            "lead_time_quantiles_s": [
+              21.009999999999998,
+              166.65,
+              284.87
+            ],
+            "sensitivity": 0.9,
+            "sensitivity_exact_capsize_event_interval": [
+              0.6830172859809176,
+              0.9876514728297052
+            ],
+            "threshold": -0.022843916823475998
+          },
+          "S3_time_to_closure": {
+            "alarm_opportunity_count": 16960,
+            "capsize_count": 19,
+            "detected_capsize_count": 18,
+            "exposure_hours": 78.10555555555555,
+            "false_episode_count": 1371,
+            "false_episodes_per_hour": 17.55316878867629,
+            "lead_time_quantiles_s": [
+              18.550000000000004,
+              127.10000000000002,
+              264.61000000000007
+            ],
+            "sensitivity": 0.9473684210526315,
+            "sensitivity_exact_capsize_event_interval": [
+              0.7397193458047858,
+              0.9986683711958205
+            ],
+            "threshold": -1555.83856901724
+          },
+          "S4_energy_depletion": {
+            "alarm_opportunity_count": 33773,
+            "capsize_count": 20,
+            "detected_capsize_count": 18,
+            "exposure_hours": 88.33611111111111,
+            "false_episode_count": 1783,
+            "false_episodes_per_hour": 20.184270934876263,
+            "lead_time_quantiles_s": [
+              25.530000000000026,
+              139.50000000000003,
+              284.03000000000003
+            ],
+            "sensitivity": 0.9,
+            "sensitivity_exact_capsize_event_interval": [
+              0.6830172859809176,
+              0.9876514728297052
+            ],
+            "threshold": -0.011485444923211937
+          },
+          "S4_energy_reserve": {
+            "alarm_opportunity_count": 33773,
+            "capsize_count": 20,
+            "detected_capsize_count": 18,
+            "exposure_hours": 88.33611111111111,
+            "false_episode_count": 1695,
+            "false_episodes_per_hour": 19.188075846671488,
+            "lead_time_quantiles_s": [
+              21.55,
+              135.25000000000003,
+              284.03000000000003
+            ],
+            "sensitivity": 0.9,
+            "sensitivity_exact_capsize_event_interval": [
+              0.6830172859809176,
+              0.9876514728297052
+            ],
+            "threshold": -0.24274544208850576
+          },
+          "S5_energy_level_rate": {
+            "alarm_opportunity_count": 33773,
+            "capsize_count": 20,
+            "detected_capsize_count": 19,
+            "exposure_hours": 88.33611111111111,
+            "false_episode_count": 1721,
+            "false_episodes_per_hour": 19.48240621364108,
+            "lead_time_quantiles_s": [
+              14.639999999999999,
+              107.70000000000005,
+              274.34000000000003
+            ],
+            "sensitivity": 0.95,
+            "sensitivity_exact_capsize_event_interval": [
+              0.7512672372279723,
+              0.9987349105020502
+            ],
+            "threshold": 0.0233471025242776
+          },
+          "S5_margin_level_rate": {
+            "alarm_opportunity_count": 33773,
+            "capsize_count": 20,
+            "detected_capsize_count": 18,
+            "exposure_hours": 88.33611111111111,
+            "false_episode_count": 1967,
+            "false_episodes_per_hour": 22.267224301122607,
+            "lead_time_quantiles_s": [
+              34.28000000000003,
+              171.65,
+              284.87
+            ],
+            "sensitivity": 0.9,
+            "sensitivity_exact_capsize_event_interval": [
+              0.6830172859809176,
+              0.9876514728297052
+            ],
+            "threshold": 0.022301550898798213
+          },
+          "S7_instantaneous_normal_strain": {
+            "alarm_opportunity_count": 33773,
+            "capsize_count": 20,
+            "detected_capsize_count": 18,
+            "exposure_hours": 88.33611111111111,
+            "false_episode_count": 1726,
+            "false_episodes_per_hour": 19.53900820728908,
+            "lead_time_quantiles_s": [
+              21.55,
+              135.25000000000003,
+              273.07
+            ],
+            "sensitivity": 0.9,
+            "sensitivity_exact_capsize_event_interval": [
+              0.6830172859809176,
+              0.9876514728297052
+            ],
+            "threshold": -0.036152847574108686
+          }
+        },
+        "decorrelation_s": {
+          "S1_margin": 160.0,
+          "S2_margin_closure": 160.0,
+          "S3_time_to_closure": 119.75239885454266,
+          "S4_energy_depletion": 160.0,
+          "S4_energy_reserve": 160.0,
+          "S5_energy_level_rate": 160.0,
+          "S5_margin_level_rate": 160.0,
+          "S7_instantaneous_normal_strain": 160.0
+        },
+        "models": {
+          "energy": {
+            "coefficients": [
+              -0.09306971765359599,
+              0.15000553574537026
+            ],
+            "intercept": -3.7074135110648743,
+            "mean": [
+              0.2117260811257573,
+              -0.027079697990495914
+            ],
+            "scale": [
+              0.08070843195655664,
+              0.19845957052696517
+            ]
+          },
+          "margin": {
+            "coefficients": [
+              -0.048071063907095375,
+              -0.0695372102416472
+            ],
+            "intercept": -3.706510454506994,
+            "mean": [
+              0.9747613612858513,
+              9.958634832847264e-06
+            ],
+            "scale": [
+              0.2328251216046037,
+              0.045063155717631385
+            ]
+          }
+        },
+        "thresholds": {
+          "S1_margin": -1.1360972162112086,
+          "S2_margin_closure": -0.022843916823475998,
+          "S3_time_to_closure": -1555.83856901724,
+          "S4_energy_depletion": -0.011485444923211937,
+          "S4_energy_reserve": -0.24274544208850576,
+          "S5_energy_level_rate": 0.0233471025242776,
+          "S5_margin_level_rate": 0.022301550898798213,
+          "S7_instantaneous_normal_strain": -0.036152847574108686
+        }
+      },
+      "parametric": {
+        "calibration_operating_points": {
+          "S1_margin": {
+            "alarm_opportunity_count": 33572,
+            "capsize_count": 17,
+            "detected_capsize_count": 16,
+            "exposure_hours": 87.80833333333334,
+            "false_episode_count": 1925,
+            "false_episodes_per_hour": 21.92274841036348,
+            "lead_time_quantiles_s": [
+              21.400000000000034,
+              188.65000000000003,
+              275.15000000000003
+            ],
+            "sensitivity": 0.9411764705882353,
+            "sensitivity_exact_capsize_event_interval": [
+              0.7131106033327793,
+              0.9985118256087334
+            ],
+            "threshold": -1.0702503749846808
+          },
+          "S2_margin_closure": {
+            "alarm_opportunity_count": 33572,
+            "capsize_count": 17,
+            "detected_capsize_count": 16,
+            "exposure_hours": 87.80833333333334,
+            "false_episode_count": 1900,
+            "false_episodes_per_hour": 21.63803739204707,
+            "lead_time_quantiles_s": [
+              33.95000000000002,
+              127.85000000000002,
+              285.6
+            ],
+            "sensitivity": 0.9411764705882353,
+            "sensitivity_exact_capsize_event_interval": [
+              0.7131106033327793,
+              0.9985118256087334
+            ],
+            "threshold": -0.024602579398899538
+          },
+          "S3_time_to_closure": {
+            "alarm_opportunity_count": 16643,
+            "capsize_count": 17,
+            "detected_capsize_count": 16,
+            "exposure_hours": 77.48333333333333,
+            "false_episode_count": 1649,
+            "false_episodes_per_hour": 21.281996128199612,
+            "lead_time_quantiles_s": [
+              17.950000000000017,
+              127.25000000000003,
+              260.15000000000003
+            ],
+            "sensitivity": 0.9411764705882353,
+            "sensitivity_exact_capsize_event_interval": [
+              0.7131106033327793,
+              0.9985118256087334
+            ],
+            "threshold": -71.16664311628381
+          },
+          "S4_energy_depletion": {
+            "alarm_opportunity_count": 33572,
+            "capsize_count": 17,
+            "detected_capsize_count": 16,
+            "exposure_hours": 87.80833333333334,
+            "false_episode_count": 1961,
+            "false_episodes_per_hour": 22.332732276739108,
+            "lead_time_quantiles_s": [
+              49.55000000000004,
+              194.60000000000002,
+              289.05
+            ],
+            "sensitivity": 0.9411764705882353,
+            "sensitivity_exact_capsize_event_interval": [
+              0.7131106033327793,
+              0.9985118256087334
+            ],
+            "threshold": -0.0052384111114108225
+          },
+          "S4_energy_reserve": {
+            "alarm_opportunity_count": 33572,
+            "capsize_count": 17,
+            "detected_capsize_count": 16,
+            "exposure_hours": 87.80833333333334,
+            "false_episode_count": 1951,
+            "false_episodes_per_hour": 22.218847869412546,
+            "lead_time_quantiles_s": [
+              36.70000000000002,
+              163.05000000000004,
+              274.05
+            ],
+            "sensitivity": 0.9411764705882353,
+            "sensitivity_exact_capsize_event_interval": [
+              0.7131106033327793,
+              0.9985118256087334
+            ],
+            "threshold": -0.22634533533810045
+          },
+          "S5_energy_level_rate": {
+            "alarm_opportunity_count": 33572,
+            "capsize_count": 17,
+            "detected_capsize_count": 17,
+            "exposure_hours": 87.80833333333334,
+            "false_episode_count": 1933,
+            "false_episodes_per_hour": 22.01385593622473,
+            "lead_time_quantiles_s": [
+              13.760000000000014,
+              107.70000000000005,
+              273.56
+            ],
+            "sensitivity": 1.0,
+            "sensitivity_exact_capsize_event_interval": [
+              0.8049356770309068,
+              1.0
+            ],
+            "threshold": 0.015925385232032935
+          },
+          "S5_margin_level_rate": {
+            "alarm_opportunity_count": 33572,
+            "capsize_count": 17,
+            "detected_capsize_count": 16,
+            "exposure_hours": 87.80833333333334,
+            "false_episode_count": 1808,
+            "false_episodes_per_hour": 20.590300844642687,
+            "lead_time_quantiles_s": [
+              13.950000000000017,
+              122.10000000000002,
+              272.70000000000005
+            ],
+            "sensitivity": 0.9411764705882353,
+            "sensitivity_exact_capsize_event_interval": [
+              0.7131106033327793,
+              0.9985118256087334
+            ],
+            "threshold": 0.02217919362091141
+          },
+          "S7_instantaneous_normal_strain": {
+            "alarm_opportunity_count": 33572,
+            "capsize_count": 17,
+            "detected_capsize_count": 16,
+            "exposure_hours": 87.80833333333334,
+            "false_episode_count": 1958,
+            "false_episodes_per_hour": 22.29856695454114,
+            "lead_time_quantiles_s": [
+              41.70000000000002,
+              137.25000000000003,
+              273.25
+            ],
+            "sensitivity": 0.9411764705882353,
+            "sensitivity_exact_capsize_event_interval": [
+              0.7131106033327793,
+              0.9985118256087334
+            ],
+            "threshold": -0.033934073934952035
+          }
+        },
+        "decorrelation_s": {
+          "S1_margin": 160.0,
+          "S2_margin_closure": 160.0,
+          "S3_time_to_closure": 116.2639559992384,
+          "S4_energy_depletion": 160.0,
+          "S4_energy_reserve": 160.0,
+          "S5_energy_level_rate": 160.0,
+          "S5_margin_level_rate": 160.0,
+          "S7_instantaneous_normal_strain": 160.0
+        },
+        "models": {
+          "energy": {
+            "coefficients": [
+              -0.23866330528458543,
+              0.10303530472115496
+            ],
+            "intercept": -3.7958302009656038,
+            "mean": [
+              0.13992739454463726,
+              -0.031255222446620844
+            ],
+            "scale": [
+              0.05812402268023215,
+              0.05962663476938148
+            ]
+          },
+          "margin": {
+            "coefficients": [
+              0.009716484920283536,
+              -0.06101245782547578
+            ],
+            "intercept": -3.770132349625087,
+            "mean": [
+              0.8609977434722389,
+              5.4306224822357316e-05
+            ],
+            "scale": [
+              0.2358382706430401,
+              0.050895876014009606
+            ]
+          }
+        },
+        "thresholds": {
+          "S1_margin": -1.0702503749846808,
+          "S2_margin_closure": -0.024602579398899538,
+          "S3_time_to_closure": -71.16664311628381,
+          "S4_energy_depletion": -0.0052384111114108225,
+          "S4_energy_reserve": -0.22634533533810045,
+          "S5_energy_level_rate": 0.015925385232032935,
+          "S5_margin_level_rate": 0.02217919362091141,
+          "S7_instantaneous_normal_strain": -0.033934073934952035
+        }
+      },
+      "softening": {
+        "calibration_operating_points": {
+          "S1_margin": {
+            "alarm_opportunity_count": 33721,
+            "capsize_count": 15,
+            "detected_capsize_count": 14,
+            "exposure_hours": 88.2,
+            "false_episode_count": 1326,
+            "false_episodes_per_hour": 15.034013605442176,
+            "lead_time_quantiles_s": [
+              31.480000000000008,
+              141.60000000000002,
+              234.24000000000004
+            ],
+            "sensitivity": 0.9333333333333333,
+            "sensitivity_exact_capsize_event_interval": [
+              0.6805154334216966,
+              0.9983135697586473
+            ],
+            "threshold": -1.1436341902889038
+          },
+          "S2_margin_closure": {
+            "alarm_opportunity_count": 33721,
+            "capsize_count": 15,
+            "detected_capsize_count": 14,
+            "exposure_hours": 88.2,
+            "false_episode_count": 1842,
+            "false_episodes_per_hour": 20.884353741496597,
+            "lead_time_quantiles_s": [
+              40.48000000000001,
+              165.4,
+              251.33000000000004
+            ],
+            "sensitivity": 0.9333333333333333,
+            "sensitivity_exact_capsize_event_interval": [
+              0.6805154334216966,
+              0.9983135697586473
+            ],
+            "threshold": -0.007566116253432481
+          },
+          "S3_time_to_closure": {
+            "alarm_opportunity_count": 16983,
+            "capsize_count": 14,
+            "detected_capsize_count": 13,
+            "exposure_hours": 77.39444444444445,
+            "false_episode_count": 1374,
+            "false_episodes_per_hour": 17.753212260426388,
+            "lead_time_quantiles_s": [
+              38.18000000000005,
+              136.70000000000005,
+              194.72000000000003
+            ],
+            "sensitivity": 0.9285714285714286,
+            "sensitivity_exact_capsize_event_interval": [
+              0.6613155100681788,
+              0.9981932193408746
+            ],
+            "threshold": -1605.8922420992194
+          },
+          "S4_energy_depletion": {
+            "alarm_opportunity_count": 33721,
+            "capsize_count": 15,
+            "detected_capsize_count": 14,
+            "exposure_hours": 88.2,
+            "false_episode_count": 1817,
+            "false_episodes_per_hour": 20.600907029478456,
+            "lead_time_quantiles_s": [
+              80.92000000000004,
+              169.4,
+              254.89000000000004
+            ],
+            "sensitivity": 0.9333333333333333,
+            "sensitivity_exact_capsize_event_interval": [
+              0.6805154334216966,
+              0.9983135697586473
+            ],
+            "threshold": -0.029626929408963647
+          },
+          "S4_energy_reserve": {
+            "alarm_opportunity_count": 33721,
+            "capsize_count": 15,
+            "detected_capsize_count": 14,
+            "exposure_hours": 88.2,
+            "false_episode_count": 1923,
+            "false_episodes_per_hour": 21.802721088435373,
+            "lead_time_quantiles_s": [
+              80.92000000000004,
+              185.35000000000002,
+              258.66
+            ],
+            "sensitivity": 0.9333333333333333,
+            "sensitivity_exact_capsize_event_interval": [
+              0.6805154334216966,
+              0.9983135697586473
+            ],
+            "threshold": -0.27909520578146985
+          },
+          "S5_energy_level_rate": {
+            "alarm_opportunity_count": 33721,
+            "capsize_count": 15,
+            "detected_capsize_count": 14,
+            "exposure_hours": 88.2,
+            "false_episode_count": 1794,
+            "false_episodes_per_hour": 20.34013605442177,
+            "lead_time_quantiles_s": [
+              72.35000000000005,
+              127.45000000000005,
+              233.89000000000001
+            ],
+            "sensitivity": 0.9333333333333333,
+            "sensitivity_exact_capsize_event_interval": [
+              0.6805154334216966,
+              0.9983135697586473
+            ],
+            "threshold": 0.027638480072905917
+          },
+          "S5_margin_level_rate": {
+            "alarm_opportunity_count": 33721,
+            "capsize_count": 15,
+            "detected_capsize_count": 14,
+            "exposure_hours": 88.2,
+            "false_episode_count": 1959,
+            "false_episodes_per_hour": 22.210884353741495,
+            "lead_time_quantiles_s": [
+              56.88000000000003,
+              197.45000000000002,
+              251.69000000000005
+            ],
+            "sensitivity": 0.9333333333333333,
+            "sensitivity_exact_capsize_event_interval": [
+              0.6805154334216966,
+              0.9983135697586473
+            ],
+            "threshold": 0.02560539941067847
+          },
+          "S7_instantaneous_normal_strain": {
+            "alarm_opportunity_count": 33721,
+            "capsize_count": 15,
+            "detected_capsize_count": 14,
+            "exposure_hours": 88.2,
+            "false_episode_count": 1918,
+            "false_episodes_per_hour": 21.746031746031747,
+            "lead_time_quantiles_s": [
+              80.92000000000004,
+              185.35000000000002,
+              258.66
+            ],
+            "sensitivity": 0.9333333333333333,
+            "sensitivity_exact_capsize_event_interval": [
+              0.6805154334216966,
+              0.9983135697586473
+            ],
+            "threshold": -0.09828772931331142
+          }
+        },
+        "decorrelation_s": {
+          "S1_margin": 160.0,
+          "S2_margin_closure": 160.0,
+          "S3_time_to_closure": 100.0,
+          "S4_energy_depletion": 160.0,
+          "S4_energy_reserve": 160.0,
+          "S5_energy_level_rate": 160.0,
+          "S5_margin_level_rate": 160.0,
+          "S7_instantaneous_normal_strain": 160.0
+        },
+        "models": {
+          "energy": {
+            "coefficients": [
+              -0.07388186750576753,
+              0.0869810357379166
+            ],
+            "intercept": -3.494327391703704,
+            "mean": [
+              0.17128372539925554,
+              -0.009585682708397261
+            ],
+            "scale": [
+              0.09710825065945573,
+              0.19105508082569259
+            ]
+          },
+          "margin": {
+            "coefficients": [
+              -0.16950146158379725,
+              -0.03272986959459498
+            ],
+            "intercept": -3.5080503226379567,
+            "mean": [
+              1.0016165156347565,
+              -8.703082011072676e-05
+            ],
+            "scale": [
+              0.2181496861326507,
+              0.029391516482770986
+            ]
+          }
+        },
+        "thresholds": {
+          "S1_margin": -1.1436341902889038,
+          "S2_margin_closure": -0.007566116253432481,
+          "S3_time_to_closure": -1605.8922420992194,
+          "S4_energy_depletion": -0.029626929408963647,
+          "S4_energy_reserve": -0.27909520578146985,
+          "S5_energy_level_rate": 0.027638480072905917,
+          "S5_margin_level_rate": 0.02560539941067847,
+          "S7_instantaneous_normal_strain": -0.09828772931331142
+        }
+      }
+    }
+  },
+  "ftle_selection": {
+    "S6_ftle": {
+      "candidates": [
+        {
+          "auc": 0.49577941305394085,
+          "orientation_independent_auc": 0.5042205869460592,
+          "periods": 1
+        },
+        {
+          "auc": 0.5018632527234759,
+          "orientation_independent_auc": 0.5018632527234759,
+          "periods": 2
+        },
+        {
+          "auc": 0.503922201677905,
+          "orientation_independent_auc": 0.503922201677905,
+          "periods": 5
+        }
+      ],
+      "selected_periods": 1
+    },
+    "S7_escape_directed_ftle": {
+      "candidates": [
+        {
+          "auc": 0.4919838526740154,
+          "orientation_independent_auc": 0.5080161473259845,
+          "periods": 1
+        },
+        {
+          "auc": 0.498546791820514,
+          "orientation_independent_auc": 0.501453208179486,
+          "periods": 2
+        },
+        {
+          "auc": 0.5066391674700612,
+          "orientation_independent_auc": 0.5066391674700612,
+          "periods": 5
+        }
+      ],
+      "selected_periods": 1
+    }
+  },
+  "predictions_preregistered_verbatim": [
+    "(i) generic and escape-directed FTLE will be weak on F1a in both settings;",
+    "(ii) margin and energy closure may improve vulnerability estimation on F1b but will not identify the terminal encounter on F1a;",
+    "(iii) no motion-only statistic will reach the 0.60 bar on F1a."
+  ],
+  "step_logistic_models": {
+    "operational": {
+      "energy": {
+        "coefficients": [
+          -0.0012142117236512984,
+          -0.013282138790055178
+        ],
+        "intercept": -0.8691430606894256,
+        "mean": [
+          0.1578187990866458,
+          -0.06797833846013311
+        ],
+        "scale": [
+          0.06985691171861358,
+          0.11230065120237508
+        ]
+      },
+      "margin": {
+        "coefficients": [
+          0.00941679428174297,
+          -0.013077524819997178
+        ],
+        "intercept": -0.869126480713714,
+        "mean": [
+          0.775476691192266,
+          -0.0013717259681571559
+        ],
+        "scale": [
+          0.2715192817699264,
+          0.07936930231016603
+        ]
+      }
+    },
+    "oracle": {
+      "energy": {
+        "coefficients": [
+          -0.0012142117236512984,
+          -0.013282138790055178
+        ],
+        "intercept": -0.8691430606894256,
+        "mean": [
+          0.1578187990866458,
+          -0.06797833846013311
+        ],
+        "scale": [
+          0.06985691171861358,
+          0.11230065120237508
+        ]
+      },
+      "margin": {
+        "coefficients": [
+          0.00941679428174297,
+          -0.013077524819997178
+        ],
+        "intercept": -0.869126480713714,
+        "mean": [
+          0.775476691192266,
+          -0.0013717259681571559
+        ],
+        "scale": [
+          0.2715192817699264,
+          0.07936930231016603
+        ]
+      }
+    }
+  }
+}
