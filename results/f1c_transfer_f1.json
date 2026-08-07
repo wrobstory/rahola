@@ -1,0 +1,16 @@
+{
+  "_artifact_sha256": "85c9b2427518cd321dea94bb9d505f5ca4e87f357bbba7def25c2a2e41982e0d",
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "reference_h1_anchor_sha256": "81491c11171c3516a461c1938a943b1af04fcf9859d5d6bd2cfe2c5ec8939f5b",
+    "reference_u1r2_anchor_sha256": "2f68a4ce89ab90997c91bd98ca614bfe26b7fba923c69c6e439c865b4432cd5d",
+    "reference_v02_anchor_sha256": "96fdcc7a93cd4b0a760750320cf41c7f1ce15d52708b2bfc8791c3b3a9d10dfd",
+    "schema_version": 1,
+    "source_sha256": "4ac93f1cf66bf8b59f29176462ddbad7ab1321064f3884e174ad7ec6c9b4adaa",
+    "upstream_artifacts": {}
+  },
+  "experiment": "F1c transfer",
+  "reason": "No causal F1b statistic met the predeclared improvement rule.",
+  "rotations": {},
+  "status": "skipped"
+}

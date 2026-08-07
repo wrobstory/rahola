@@ -1284,3 +1284,77 @@ No statistic entered the `(0.58, 0.60]` leakage-audit band. Neither true oracle 
 exponent reached 0.60, so the conditional 2009 estimator is skipped: the true quantity carries no
 timing information here, and any implementation defect in the historical estimator is immaterial
 to the thesis's negative timing conclusion — the ceiling was already at the floor.
+
+## F1b vulnerability value and F1c transfer
+
+F1b scored the three one-shot evaluation slices together, preserving campaign strata in the
+bootstrap. The pooled sample contained 79 capsizes; softening and parametric individually realized
+only 22 and 24, so their family-specific power shortfalls are retained. Each row gives fresh
+sensitivity and false episodes per exposure hour with 95% trajectory-block intervals.
+
+| Setting/statistic | Sensitivity [95% CI] | False episodes/h [95% CI] | Beats S1? |
+| --- | ---: | ---: | --- |
+| operational/S1 margin | 0.7895 [0.6805, 0.8889] | 14.4742 [14.2873, 14.6572] | baseline |
+| operational/S2 margin closure | 0.9298 [0.8545, 0.9836] | 22.0011 [21.9102, 22.0737] | no |
+| operational/S3 time to closure | 0.7600 [0.6382, 0.8724] | 15.8693 [15.6694, 16.0772] | no |
+| operational/S4 energy depletion | 0.9649 [0.9138, 1.0000] | 22.3333 [22.2871, 22.3728] | no |
+| operational/S4 energy reserve | 0.7895 [0.6818, 0.8889] | 13.7145 [13.5472, 13.8786] | no |
+| operational/S5 energy level + rate | 0.9649 [0.9122, 1.0000] | 22.0293 [21.9519, 22.1030] | no |
+| operational/S5 margin level + rate | 0.9825 [0.9423, 1.0000] | 22.3368 [22.2903, 22.3758] | no |
+| operational/S7 instantaneous normal strain | 0.7895 [0.6842, 0.8889] | 15.4601 [15.2548, 15.6576] | no |
+| oracle/S1 margin | 0.7895 [0.6805, 0.8889] | 14.4742 [14.2873, 14.6572] | baseline |
+| oracle/S2 margin closure | 0.9298 [0.8545, 0.9836] | 22.0011 [21.9102, 22.0737] | no |
+| oracle/S3 time to closure | 0.7600 [0.6382, 0.8724] | 15.8693 [15.6694, 16.0772] | no |
+| oracle/S4 energy depletion | 0.8772 [0.7843, 0.9500] | 19.9762 [19.8123, 20.1411] | no |
+| oracle/S4 energy reserve | 0.8772 [0.7794, 0.9508] | 18.8525 [18.6755, 19.0301] | no |
+| oracle/S5 energy level + rate | 0.8772 [0.7910, 0.9630] | 19.4497 [19.2681, 19.6313] | no |
+| oracle/S5 margin level + rate | 0.9825 [0.9423, 1.0000] | 22.3368 [22.2903, 22.3758] | no |
+| oracle/S7 instantaneous normal strain | 0.8772 [0.7857, 0.9565] | 19.3508 [19.1862, 19.5235] | no |
+
+S1 failed to retain the predeclared 0.90 fresh sensitivity, so no matched-sensitivity S1
+comparison was available. The rate statistics that did retain sensitivity cost roughly 22 false
+episodes per hour, well above S1's 14.47. Operational energy reserve reduced FPR to 13.71 but had
+the same 0.7895 sensitivity shortfall as S1. The immutable D1_v02 danger-margin record remains
+1.000 sensitivity and 21.3905 false episodes/h; F1 does not revise it.
+
+No causal statistic met the F1b improvement rule. F1c was therefore skipped without fitting or
+scoring a held-out-family rotation.
+
+## Predictions and final program verdict
+
+1. “(i) generic and escape-directed FTLE will be weak on F1a in both settings” — **held**. The two
+   acausal oracle rows were 0.506516 and 0.501042.
+2. “(ii) margin and energy closure may improve vulnerability estimation on F1b but will not
+   identify the terminal encounter on F1a” — **held**. No closure statistic identified the F1a
+   encounter, and the permitted possibility of F1b improvement did not materialize under the
+   frozen rule.
+3. “(iii) no motion-only statistic will reach the 0.60 bar on F1a” — **held**. The maximum across
+   every statistic and setting was 0.506731.
+
+Every preregistered prediction held. The program ends on a completed negative answer: neither the
+level, its causal rate, energy depletion, instantaneous normal strain, nor even the true acausal
+common-forcing finite-time exponents carry useful terminal-encounter timing information in the
+washed-in regime. Some rate features rank vulnerability only by paying the already-rejected
+always-alarming operating cost; none improves the program at matched sensitivity.
+
+## F1 judgments, scope, and provenance
+
+- Tangent propagation integrates the stated analytic Jacobian alongside the base RK4 state and
+  resets the local transition matrix to identity at each stored output interval. Finite-T maps are
+  ordered products of those local matrices. This avoids a numerically ill-conditioned full-record
+  fundamental matrix without changing the common-future-forcing definition.
+- The required tests cover convergence to `-zeta` for the unforced linear oscillator, the exponent
+  sign on both sides of the deterministic Mathieu `h = 4 zeta` boundary, and bitwise base-motion
+  reproduction. F1 additionally asserts bitwise identity when re-integrating each fresh dataset.
+- An oracle finite-T value is omitted when its future interval crosses the absorbing capsize time;
+  the frozen simulator does not define post-absorption dynamics. This exclusion was implemented
+  before TEST access and applies to both finite-T rows.
+- S3 retains only closing-margin endpoints. The operational setting substitutes nominal configured
+  stiffness for unavailable realized stiffness; no wave, future, or protocol-clock value enters.
+- The two evaluation power shortfalls, the algebraic orientation-interval transformation, the F1b
+  loss of matched S1 sensitivity, the conditional-estimator skip, and the F1c skip were all carried
+  forward without redraw, tuning, or a replacement estimand.
+
+`results/provenance_manifest_f1.json` binds the four `_f1` artifacts, exact F1 campaign manifests,
+predeclaration commit `ae986c2`, and data-anchor commit `a222999`. Neither reserve block was read.
+No r1/r2/H1 artifact, paper source, or explainer file was modified.

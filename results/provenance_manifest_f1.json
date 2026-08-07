@@ -1,0 +1,20 @@
+{
+  "_manifest_sha256": "3b8ae845ddb303650476c72ee13b156b5ffa5fb8f8011f9180646ea8856f2213",
+  "artifacts_sha256": {
+    "f1_calibration_f1.json": "cb0ffcf7116d192287c2db350b3fb9221ed5eb667383a197cc5a6d31726552a9",
+    "f1a_timing_f1.json": "840fbbd442c7abda2d4b3791f87defc1282f2858e364f7f4207387a1a1094c20",
+    "f1b_value_f1.json": "8d641d94913299e9291b41aa6a1dcdd3140e7af75687e328e2e24db6d31b68ef",
+    "f1c_transfer_f1.json": "a5df6abff2997399b2ade9f30fba1515c54b043ceb99f802135ed14ddd0f9168"
+  },
+  "campaign_manifests_sha256": {
+    "data/f1/biased_evaluation_f1/manifest.json": "98d93c43f4aeeee201a2e06c92964a3537b6a189f1c5df924f4b541731df33ed",
+    "data/f1/parametric_evaluation_f1/manifest.json": "d5875316152f4cd3da3d5089af91be4c60714a2e2056f25d7289b0a1528494f0",
+    "data/f1/softening_evaluation_f1/manifest.json": "6afce71925f0dd5f71c22689d2f3c19d3c28b3a4abfe8636350122f950ea7b00",
+    "data/f1/softening_step_v02_f1/manifest.json": "86ee208711895a61867dde42c1cb4bd380267a562dff04ee4c7fe2f8a8fb9e0e"
+  },
+  "data_anchor_commit": "a222999",
+  "experiment": "F1",
+  "head": "f0e98bd6e4b82c5e5d2c2734df8843cda570cce3",
+  "predeclaration_commit": "ae986c2",
+  "reserves_touched": false
+}
