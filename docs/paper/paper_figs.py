@@ -78,7 +78,7 @@ vals = [6.3, 15.5]
 labels = ["threshold selected\non test data (as first reported)",
           "threshold frozen on\ncalibration data (corrected)"]
 bars = ax.barh([1, 0], vals, height=0.55, color=[RED, INK])
-for y, v in zip([1, 0], vals):
+for y, v in zip([1, 0], vals, strict=True):
     ax.text(v + 0.3, y, f"{v:.1f} / h", va="center", fontsize=9)
 ax.set_yticks([1, 0], labels, fontsize=8)
 ax.set_xlabel("false episodes per exposure hour")
