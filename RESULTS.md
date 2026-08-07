@@ -1366,3 +1366,26 @@ claim is scoped to the tested statistic family: no tested level, rate, energy, s
 time tangent statistic exceeded chance on the stated F1 estimands. No information-theoretic bound
 was computed, and none is claimed. The paper uses this scoped wording and does not treat the F1
 result as a universal non-observability or ceiling result.
+
+## 2026-08-07 F1 tangent convention correction (F-04)
+
+The local transition maps are composed chronologically as `Phi = local @ transition`, with each
+stored output interval resetting `transition` to the identity. The implemented directional score is
+`||n_0^T Phi||`: the maximum achievable growth into the initial-state escape direction, not the
+standard initial-direction growth `||Phi n_0||`. A non-normal 2-by-2 fixture pins this row-vector
+convention, and a finite-difference fixture evaluates the analytic tangent Jacobian at nonzero
+state and velocity, including the `-2 q |v|` term.
+
+As a calibration-only diagnostic, the selected one-period escape-directed tangent score was
+computed on the v0.2 softening-step CALIBRATION split (9,692 scored rows). The final-time-normal
+variant `||n_T^T Phi||` produced the same raw AUC, so it did not change the orientation-independent
+diagnostic:
+
+| Variant | Raw AUC | Orientation-independent AUC |
+| --- | ---: | ---: |
+| Initial normal `n_0` (implemented) | 0.491983852674 | 0.508016147326 |
+| Final normal `n_T` (diagnostic) | 0.491983852674 | 0.508016147326 |
+| Final minus initial delta | +0.000000000000 | +0.000000000000 |
+
+This diagnostic read CALIBRATION data only; it did not reread or score any F1 TEST trajectory and
+did not alter the frozen selection or result artifacts.
