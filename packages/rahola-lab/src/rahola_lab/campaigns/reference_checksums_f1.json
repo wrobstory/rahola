@@ -1,0 +1,6 @@
+{
+  "biased_evaluation_f1": "98d93c43f4aeeee201a2e06c92964a3537b6a189f1c5df924f4b541731df33ed",
+  "parametric_evaluation_f1": "d5875316152f4cd3da3d5089af91be4c60714a2e2056f25d7289b0a1528494f0",
+  "softening_evaluation_f1": "6afce71925f0dd5f71c22689d2f3c19d3c28b3a4abfe8636350122f950ea7b00",
+  "softening_step_v02_f1": "86ee208711895a61867dde42c1cb4bd380267a562dff04ee4c7fe2f8a8fb9e0e"
+}

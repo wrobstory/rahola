@@ -240,5 +240,16 @@ campaigns meet the expected-event floor of 30.
 | `softening_step_v02` | 3,000 | 62.900% | 1,887.00 | 38,000 | `[238000, 241000)` |
 
 Generated campaign names append `_f1`. F1a uses only `softening_step_v02_f1`; F1b and any earned
-F1c rotations use the three evaluation slices. No F1 TEST trajectory exists at this point in
-history.
+F1c rotations use the three evaluation slices. The predeclaration commit was `ae986c2`. The
+one-shot materialization then produced:
+
+| Campaign | Capsizes | Capsize fraction | Manifest SHA-256 prefix |
+| --- | ---: | ---: | --- |
+| `softening_evaluation_f1` | 22 / 1,500 | 1.467% | `6afce71925f0` |
+| `parametric_evaluation_f1` | 24 / 3,200 | 0.750% | `d5875316152f` |
+| `biased_evaluation_f1` | 33 / 1,700 | 1.941% | `98d93c43f4ae` |
+| `softening_step_v02_f1` | 1,908 / 3,000 | 63.600% | `86ee20871189` |
+
+Softening and parametric evaluation realized fewer than 30 capsizes. They were neither redrawn nor
+supplemented; the pooled F1b campaign retains 79 events, while any earned family-specific F1c row
+must carry the corresponding power shortfall. Neither reserve block was opened or generated.
