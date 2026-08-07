@@ -1251,3 +1251,36 @@ neighbors, thesis Chapter 3 conventions, causal normalization) and measure its f
 the true tangent quantity. If no oracle FTLE shows signal, skip the arm and record the reason in
 RESULTS: the true quantity carries no timing information, so any 2009 implementation defect was
 immaterial to the thesis's conclusion — the ceiling was already at the floor.”
+
+## 2026-08-06 F1a one-shot result
+
+F1a ran once after predeclaration commit `ae986c2`, data-anchor commit `a222999`, and anchored-loader
+commit `f1afadd`. The table reports orientation-independent AUC and its 95% trajectory-block
+bootstrap interval. When raw AUC was below 0.5, the interval is the exact monotone transform
+`[1 - upper, 1 - lower]` of the completed raw-AUC replicates; no bootstrap was rerun.
+
+| Setting/statistic | Orientation-independent AUC [95% CI] |
+| --- | ---: |
+| operational/S1 margin | 0.504963 [0.497742, 0.512907] |
+| operational/S2 margin closure | 0.501025 [0.494095, 0.508043] |
+| operational/S3 time to closure | 0.501242 [0.490057, 0.511231] |
+| operational/S4 energy depletion | 0.504430 [0.496973, 0.512247] |
+| operational/S4 energy reserve | 0.505829 [0.498799, 0.513386] |
+| operational/S5 energy level + rate | 0.504132 [0.496424, 0.511833] |
+| operational/S5 margin level + rate | 0.506731 [0.499192, 0.514510] |
+| operational/S7 instantaneous normal strain | 0.502816 [0.495758, 0.510064] |
+| oracle/S1 margin | 0.504963 [0.497742, 0.512907] |
+| oracle/S2 margin closure | 0.501025 [0.494095, 0.508043] |
+| oracle/S3 time to closure | 0.501242 [0.490057, 0.511231] |
+| oracle/S4 energy depletion | 0.504430 [0.496973, 0.512247] |
+| oracle/S4 energy reserve | 0.505829 [0.498799, 0.513386] |
+| oracle/S5 energy level + rate | 0.504132 [0.496424, 0.511833] |
+| oracle/S5 margin level + rate | 0.506731 [0.499192, 0.514510] |
+| oracle/S6 FTLE, T = 1 period — **acausal** | 0.506516 [0.498862, 0.514075] |
+| oracle/S7 escape-directed FTLE, T = 1 period — **acausal** | 0.501042 [0.493697, 0.508523] |
+| oracle/S7 instantaneous normal strain | 0.502816 [0.495758, 0.510064] |
+
+No statistic entered the `(0.58, 0.60]` leakage-audit band. Neither true oracle finite-time
+exponent reached 0.60, so the conditional 2009 estimator is skipped: the true quantity carries no
+timing information here, and any implementation defect in the historical estimator is immaterial
+to the thesis's negative timing conclusion — the ceiling was already at the floor.

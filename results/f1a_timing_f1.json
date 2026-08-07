@@ -1,0 +1,336 @@
+{
+  "_artifact_sha256": "97e8f044bf30cb0c3aef30ccfffbbca1ec576d8ba88dd199643e9ed59dcaeded",
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "reference_h1_anchor_sha256": "81491c11171c3516a461c1938a943b1af04fcf9859d5d6bd2cfe2c5ec8939f5b",
+    "reference_u1r2_anchor_sha256": "2f68a4ce89ab90997c91bd98ca614bfe26b7fba923c69c6e439c865b4432cd5d",
+    "reference_v02_anchor_sha256": "96fdcc7a93cd4b0a760750320cf41c7f1ce15d52708b2bfc8791c3b3a9d10dfd",
+    "schema_version": 1,
+    "source_sha256": "4ac93f1cf66bf8b59f29176462ddbad7ab1321064f3884e174ad7ec6c9b4adaa",
+    "upstream_artifacts": {}
+  },
+  "conditional_arm_decision": "skip",
+  "conditional_arm_skip_reason": "No true oracle finite-time exponent reached 0.60; its timing-information ceiling was already at the floor.",
+  "conditional_arm_triggered_by": [],
+  "experiment": "F1a timing kill",
+  "leakage_audit_triggered": [],
+  "methods": {
+    "operational/S1_margin": {
+      "auc": 0.4950366044338235,
+      "auc_trajectory_bootstrap_interval": [
+        0.48709266357740516,
+        0.502258272178296
+      ],
+      "interval_conditioning": "conditional on the frozen scoring and sampling policy",
+      "orientation_independent_auc": 0.5049633955661765,
+      "orientation_independent_auc_trajectory_bootstrap_interval": [
+        0.497741727821704,
+        0.5129073364225949
+      ],
+      "setting": "operational",
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_bootstrap_valid_replicates": 1000
+    },
+    "operational/S2_margin_closure": {
+      "auc": 0.5010254608946418,
+      "auc_trajectory_bootstrap_interval": [
+        0.4940954483433229,
+        0.5080427104579769
+      ],
+      "interval_conditioning": "conditional on the frozen scoring and sampling policy",
+      "orientation_independent_auc": 0.5010254608946418,
+      "orientation_independent_auc_trajectory_bootstrap_interval": [
+        0.4940954483433229,
+        0.5080427104579769
+      ],
+      "setting": "operational",
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_bootstrap_valid_replicates": 1000
+    },
+    "operational/S3_time_to_closure": {
+      "auc": 0.49875757751764904,
+      "auc_trajectory_bootstrap_interval": [
+        0.4887689373914174,
+        0.5099425435492554
+      ],
+      "interval_conditioning": "conditional on the frozen scoring and sampling policy",
+      "orientation_independent_auc": 0.501242422482351,
+      "orientation_independent_auc_trajectory_bootstrap_interval": [
+        0.4900574564507446,
+        0.5112310626085825
+      ],
+      "setting": "operational",
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_bootstrap_valid_replicates": 1000
+    },
+    "operational/S4_energy_depletion": {
+      "auc": 0.5044295326144212,
+      "auc_trajectory_bootstrap_interval": [
+        0.4969725892681692,
+        0.5122466173278784
+      ],
+      "interval_conditioning": "conditional on the frozen scoring and sampling policy",
+      "orientation_independent_auc": 0.5044295326144212,
+      "orientation_independent_auc_trajectory_bootstrap_interval": [
+        0.4969725892681692,
+        0.5122466173278784
+      ],
+      "setting": "operational",
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_bootstrap_valid_replicates": 1000
+    },
+    "operational/S4_energy_reserve": {
+      "auc": 0.4941709444212815,
+      "auc_trajectory_bootstrap_interval": [
+        0.4866140769440836,
+        0.501201056143445
+      ],
+      "interval_conditioning": "conditional on the frozen scoring and sampling policy",
+      "orientation_independent_auc": 0.5058290555787185,
+      "orientation_independent_auc_trajectory_bootstrap_interval": [
+        0.498798943856555,
+        0.5133859230559163
+      ],
+      "setting": "operational",
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_bootstrap_valid_replicates": 1000
+    },
+    "operational/S5_energy_level_rate": {
+      "auc": 0.5041322481141977,
+      "auc_trajectory_bootstrap_interval": [
+        0.4964243906385753,
+        0.511832754798009
+      ],
+      "interval_conditioning": "conditional on the frozen scoring and sampling policy",
+      "orientation_independent_auc": 0.5041322481141977,
+      "orientation_independent_auc_trajectory_bootstrap_interval": [
+        0.4964243906385753,
+        0.511832754798009
+      ],
+      "setting": "operational",
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_bootstrap_valid_replicates": 1000
+    },
+    "operational/S5_margin_level_rate": {
+      "auc": 0.5067306769066979,
+      "auc_trajectory_bootstrap_interval": [
+        0.49919235944365326,
+        0.5145100540254021
+      ],
+      "interval_conditioning": "conditional on the frozen scoring and sampling policy",
+      "orientation_independent_auc": 0.5067306769066979,
+      "orientation_independent_auc_trajectory_bootstrap_interval": [
+        0.49919235944365326,
+        0.5145100540254021
+      ],
+      "setting": "operational",
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_bootstrap_valid_replicates": 1000
+    },
+    "operational/S7_instantaneous_normal_strain": {
+      "auc": 0.4971844704603903,
+      "auc_trajectory_bootstrap_interval": [
+        0.4899359771648663,
+        0.5042417585023291
+      ],
+      "interval_conditioning": "conditional on the frozen scoring and sampling policy",
+      "orientation_independent_auc": 0.5028155295396097,
+      "orientation_independent_auc_trajectory_bootstrap_interval": [
+        0.4957582414976709,
+        0.5100640228351336
+      ],
+      "setting": "operational",
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_bootstrap_valid_replicates": 1000
+    },
+    "oracle/S1_margin": {
+      "auc": 0.4950366044338235,
+      "auc_trajectory_bootstrap_interval": [
+        0.48709266357740516,
+        0.502258272178296
+      ],
+      "interval_conditioning": "conditional on the frozen scoring and sampling policy",
+      "orientation_independent_auc": 0.5049633955661765,
+      "orientation_independent_auc_trajectory_bootstrap_interval": [
+        0.497741727821704,
+        0.5129073364225949
+      ],
+      "setting": "oracle",
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_bootstrap_valid_replicates": 1000
+    },
+    "oracle/S2_margin_closure": {
+      "auc": 0.5010254608946418,
+      "auc_trajectory_bootstrap_interval": [
+        0.4940954483433229,
+        0.5080427104579769
+      ],
+      "interval_conditioning": "conditional on the frozen scoring and sampling policy",
+      "orientation_independent_auc": 0.5010254608946418,
+      "orientation_independent_auc_trajectory_bootstrap_interval": [
+        0.4940954483433229,
+        0.5080427104579769
+      ],
+      "setting": "oracle",
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_bootstrap_valid_replicates": 1000
+    },
+    "oracle/S3_time_to_closure": {
+      "auc": 0.49875757751764904,
+      "auc_trajectory_bootstrap_interval": [
+        0.4887689373914174,
+        0.5099425435492554
+      ],
+      "interval_conditioning": "conditional on the frozen scoring and sampling policy",
+      "orientation_independent_auc": 0.501242422482351,
+      "orientation_independent_auc_trajectory_bootstrap_interval": [
+        0.4900574564507446,
+        0.5112310626085825
+      ],
+      "setting": "oracle",
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_bootstrap_valid_replicates": 1000
+    },
+    "oracle/S4_energy_depletion": {
+      "auc": 0.5044295326144212,
+      "auc_trajectory_bootstrap_interval": [
+        0.4969725892681692,
+        0.5122466173278784
+      ],
+      "interval_conditioning": "conditional on the frozen scoring and sampling policy",
+      "orientation_independent_auc": 0.5044295326144212,
+      "orientation_independent_auc_trajectory_bootstrap_interval": [
+        0.4969725892681692,
+        0.5122466173278784
+      ],
+      "setting": "oracle",
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_bootstrap_valid_replicates": 1000
+    },
+    "oracle/S4_energy_reserve": {
+      "auc": 0.4941709444212815,
+      "auc_trajectory_bootstrap_interval": [
+        0.4866140769440836,
+        0.501201056143445
+      ],
+      "interval_conditioning": "conditional on the frozen scoring and sampling policy",
+      "orientation_independent_auc": 0.5058290555787185,
+      "orientation_independent_auc_trajectory_bootstrap_interval": [
+        0.498798943856555,
+        0.5133859230559163
+      ],
+      "setting": "oracle",
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_bootstrap_valid_replicates": 1000
+    },
+    "oracle/S5_energy_level_rate": {
+      "auc": 0.5041322481141977,
+      "auc_trajectory_bootstrap_interval": [
+        0.4964243906385753,
+        0.511832754798009
+      ],
+      "interval_conditioning": "conditional on the frozen scoring and sampling policy",
+      "orientation_independent_auc": 0.5041322481141977,
+      "orientation_independent_auc_trajectory_bootstrap_interval": [
+        0.4964243906385753,
+        0.511832754798009
+      ],
+      "setting": "oracle",
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_bootstrap_valid_replicates": 1000
+    },
+    "oracle/S5_margin_level_rate": {
+      "auc": 0.5067306769066979,
+      "auc_trajectory_bootstrap_interval": [
+        0.49919235944365326,
+        0.5145100540254021
+      ],
+      "interval_conditioning": "conditional on the frozen scoring and sampling policy",
+      "orientation_independent_auc": 0.5067306769066979,
+      "orientation_independent_auc_trajectory_bootstrap_interval": [
+        0.49919235944365326,
+        0.5145100540254021
+      ],
+      "setting": "oracle",
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_bootstrap_valid_replicates": 1000
+    },
+    "oracle/S6_ftle": {
+      "acausal": true,
+      "auc": 0.49348420095269663,
+      "auc_trajectory_bootstrap_interval": [
+        0.4859250174758945,
+        0.5011376923406123
+      ],
+      "interval_conditioning": "conditional on the frozen scoring and sampling policy",
+      "orientation_independent_auc": 0.5065157990473034,
+      "orientation_independent_auc_trajectory_bootstrap_interval": [
+        0.49886230765938766,
+        0.5140749825241056
+      ],
+      "periods": 1,
+      "setting": "oracle",
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_bootstrap_valid_replicates": 1000
+    },
+    "oracle/S7_escape_directed_ftle": {
+      "acausal": true,
+      "auc": 0.5010420197961472,
+      "auc_trajectory_bootstrap_interval": [
+        0.49369706858308965,
+        0.508522814272046
+      ],
+      "interval_conditioning": "conditional on the frozen scoring and sampling policy",
+      "orientation_independent_auc": 0.5010420197961472,
+      "orientation_independent_auc_trajectory_bootstrap_interval": [
+        0.49369706858308965,
+        0.508522814272046
+      ],
+      "periods": 1,
+      "setting": "oracle",
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_bootstrap_valid_replicates": 1000
+    },
+    "oracle/S7_instantaneous_normal_strain": {
+      "auc": 0.4971844704603903,
+      "auc_trajectory_bootstrap_interval": [
+        0.4899359771648663,
+        0.5042417585023291
+      ],
+      "interval_conditioning": "conditional on the frozen scoring and sampling policy",
+      "orientation_independent_auc": 0.5028155295396097,
+      "orientation_independent_auc_trajectory_bootstrap_interval": [
+        0.4957582414976709,
+        0.5100640228351336
+      ],
+      "setting": "oracle",
+      "trajectory_bootstrap_replicates": 1000,
+      "trajectory_bootstrap_seed": 20260804,
+      "trajectory_bootstrap_valid_replicates": 1000
+    }
+  },
+  "window_geometry": {
+    "first_endpoint_s": 540.0,
+    "history_periods": 60,
+    "horizon_periods": 50,
+    "last_endpoint_s": 700.0,
+    "stride_s": 10.0
+  }
+}
