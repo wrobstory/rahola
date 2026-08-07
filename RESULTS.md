@@ -1358,3 +1358,11 @@ always-alarming operating cost; none improves the program at matched sensitivity
 `results/provenance_manifest_f1.json` binds the four `_f1` artifacts, exact F1 campaign manifests,
 predeclaration commit `ae986c2`, and data-anchor commit `a222999`. Neither reserve block was read.
 No r1/r2/H1 artifact, paper source, or explainer file was modified.
+
+## 2026-08-07 F1 scope correction (F-02)
+
+This dated correction note leaves the original F1 addendum text above unchanged. Its negative
+claim is scoped to the tested statistic family: no tested level, rate, energy, strain, or finite-
+time tangent statistic exceeded chance on the stated F1 estimands. No information-theoretic bound
+was computed, and none is claimed. The paper uses this scoped wording and does not treat the F1
+result as a universal non-observability or ceiling result.

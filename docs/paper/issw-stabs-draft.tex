@@ -22,7 +22,8 @@
 \section*{Abstract}
 
 Can the measured roll motion of a ship warn of capsize soon enough to act, at a false-alarm
-cost a crew could accept? We study this question on a validated synthetic benchmark: a
+cost a crew could accept? We study this question on a synthetic benchmark validated against
+analytic limits and internal numerical checks; external ship-level validity is out of scope: a
 one-degree-of-freedom nonlinear roll model, three restoring-curve families representing
 distinct ways a ship loses stability, and 58,500 seeded trajectories under JONSWAP forcing.
 Five warning methods compete under one protocol in which every operating threshold is chosen on
@@ -31,8 +32,8 @@ and autocorrelation trend statistics, a likelihood-ratio detector, a closed-form
 critical-roll-rate margin, and a phase-space neighbor-count score. Four findings emerge.
 (a) Ranking skill is real at every forcing bandwidth tested; the fixed-window primary network
 separates dangerous from ordinary intervals with window AUC 0.883 to 0.913. (b) Inside an
-established severe regime,
-no method predicts which encounter will be fatal; all score near chance. (c) Most nominally
+established severe regime, no tested motion-only statistic predicts which encounter will be fatal;
+all score near chance. (c) Most nominally
 false alarms, 75 to 88 percent, coincide with genuine critical wave groups that the vessel
 survived. (d) No method's threshold transfers across failure modes at fixed sensitivity. We
 then operate the split-time upcrossing decomposition as an onboard rate estimator, in online
@@ -279,11 +280,12 @@ The results organize into a two-clock description. The slowly varying stability 
 eroding restoring that determines whether the vessel is in danger, is observable from motion
 history: ranking skill survives every forcing bandwidth, and the most informative engineered
 feature is in effect an online stiffness estimate, a quantity this community has long extracted
-from the roll period (Terada et al. 2016; M\'iguez Gonz\'alez et al. 2017). The terminal encounter, the particular wave group that
-converts vulnerability into capsize, is not observable from motion history once the severe regime
-is established; the within-regime result is chance-level for learned, classical, and physical
-scores alike, consistent with the stochastic-Melnikov view that a deterministic separatrix loses
-its predictive meaning under random forcing (Frey and Simiu 1993). The practical reading is that motion-only systems should be understood, and
+from the roll period (Terada et al. 2016; M\'iguez Gonz\'alez et al. 2017). For the tested family of
+motion-only statistics, the terminal encounter, the particular wave group that converts
+vulnerability into capsize, was not recovered once the severe regime was established; the
+within-regime result is chance-level for learned, classical, and physical scores alike, consistent
+with the stochastic-Melnikov view that a deterministic separatrix loses its predictive meaning
+under random forcing (Frey and Simiu 1993). The practical reading is that motion-only systems should be understood, and
 evaluated, as vulnerability monitors rather than event predictors, a role compatible with the
 operational measures framework of the second-generation criteria (IMO 2020) rather than with an
 alarm bell.
@@ -296,16 +298,15 @@ as a baseline. Its one systematic failure, degradation on stability-erosion camp
 assumed restoring becomes stale, identifies the missing component for operational use: online
 estimation of the current restoring state, whose feasibility the comparator results demonstrate,
 the roll period alone recovering most of the available headroom. The within-regime chance result
-then explains, in information terms, why the engineering-fidelity metric must re-simulate with
-the waves known: what the motion perturbation method obtains from the realized future is not
-present in the measured past. The U1 and H1 experiments made that boundary quantitative from
+then explains why the engineering-fidelity metric must re-simulate with the waves known: the
+future-dependent quantity used by the motion perturbation method was not recovered by the tested
+motion-only statistics. The U1 and H1 experiments made that boundary quantitative from
 inside the method itself. The rate factor of the decomposition, an observable of the slowly
 varying stability state, survives as a usable vulnerability measure; the severity factor, which
-would time the event, is in 92 percent of capsizes not available until the event has begun. The
+would time the event, is in 92 percent of capsizes not emitted until the event has begun. The
 two-clock description of Section 6 is therefore not an external criticism of the split-time
-programme but a property its own decomposition exhibits when operated online: the observable
-factor works, and the unobservable factor is precisely the one the offline method recovers by
-re-simulating the future.
+programme but a property its own decomposition exhibits when operated online: the rate factor
+works, while the tested online severity factor requires future re-simulation.
 
 The false-alarm finding bears on how such monitors should be judged. If three quarters or more of
 false episodes are honest responses to genuine hazard exposure, then false episodes per hour,
@@ -322,8 +323,9 @@ treating threshold provenance as a reportable property of every operating point.
 
 \section{Conclusions}
 
-On a validated synthetic benchmark spanning three stability-failure archetypes, motion-only
-warning methods rank capsize risk well above chance at every forcing bandwidth tested, fail to
+On a synthetic benchmark validated against analytic limits and internal numerical checks,
+spanning three stability-failure archetypes, motion-only warning methods rank capsize risk well
+above chance at every forcing bandwidth tested, fail to
 transfer operating thresholds across failure modes, and discriminate event timing at chance
 inside an established severe regime; the majority of their false alarms coincide with real
 critical wave-group encounters. A test-selected evaluation had earlier made the leading detector
