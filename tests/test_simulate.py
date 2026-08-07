@@ -7,10 +7,12 @@ import jax
 import numpy as np
 import pytest
 
+import rahola.simulate as simulate_module
 from rahola.config import (
     Family,
     ForcingConfig,
     ParametricConfig,
+    ParametricMode,
     ProtocolConfig,
     ProtocolKind,
     SeaState,
@@ -42,6 +44,32 @@ def test_batch_determinism_and_seed_separation() -> None:
     second = simulate_batch(config, [10, 11])
     assert np.array_equal(first.angle_rad, second.angle_rad, equal_nan=True)
     assert not np.array_equal(first.angle_rad[0], first.angle_rad[1])
+
+
+def test_stochastic_parametric_forcing_channels_are_independent(monkeypatch) -> None:
+    config = _small_config(
+        family=Family.PARAMETRIC,
+        parametric=ParametricConfig(mode=ParametricMode.STOCHASTIC),
+    )
+    original = simulate_module._forcing_for_seed
+    captured: dict[tuple[int, int], tuple[np.ndarray, np.ndarray]] = {}
+
+    def capture(config, seed, n_half_steps, channel):
+        forcing = original(config, seed, n_half_steps, channel)
+        captured[(seed, channel)] = forcing
+        return forcing
+
+    monkeypatch.setattr(simulate_module, "_forcing_for_seed", capture)
+    seeds = (10, 11, 12, 13)
+    simulate_batch(config, seeds)
+
+    correlations = []
+    for seed in seeds:
+        assert (seed, 0) in captured and (seed, 1) in captured
+        direct_slope, _ = captured[(seed, 0)]
+        _, modulation_elevation = captured[(seed, 1)]
+        correlations.append(np.corrcoef(direct_slope, modulation_elevation)[0, 1])
+    assert max(abs(correlation) for correlation in correlations) < 0.2
 
 
 def _full_record_exponent(config: SimulationConfig) -> float:
@@ -116,6 +144,29 @@ def test_biased_dynamics_retains_phase_information_under_reversed_forcing() -> N
     assert np.all(np.asarray(cap_steps) < 0)
     assert angles[0, -1] > angles[1, -1] + 0.2
     assert not np.allclose(angles[0], -angles[1], atol=1e-3)
+
+
+def test_capsize_step_is_one_based_in_stored_dataset_time() -> None:
+    config = _small_config(
+        duration_s=0.1,
+        output_rate_hz=20.0,
+        damping_ratio=0.0,
+        quadratic_damping=0.0,
+        linear_restoring=True,
+        forcing=ForcingConfig(effective_wave_slope=0.0),
+    )
+    dataset = simulate_restarted_batch(
+        config,
+        [10],
+        duration_s=0.1,
+        initial_angle_rad=0.8 * config.escape_angle_rad,
+        initial_rate_rad_s=3.0 * config.escape_angle_rad * config.omega_n_rad_s,
+    )
+    assert dataset.capsized[0]
+    assert dataset.time_s.tolist() == pytest.approx([0.0, 0.05, 0.1])
+    assert dataset.t_capsize_s[0] == pytest.approx(0.05)
+    assert np.isfinite(dataset.angle_rad[0, 1])
+    assert np.isnan(dataset.angle_rad[0, 2])
 
 
 def test_output_grid_honors_requested_rate_and_duration() -> None:
