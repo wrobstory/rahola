@@ -135,28 +135,35 @@ def test_deep_water_slope_fourier_coefficients_have_expected_magnitude_and_sign(
     np.testing.assert_allclose(slope_coefficients[active], expected, rtol=1e-11, atol=1e-11)
 
 
-def test_zero_upcrossing_rate_matches_rice_formula_predictive_interval() -> None:
-    """Permanent analytic crossing-rate oracle for the synthesized spectrum path."""
+def test_sampled_zero_upcrossing_rate_matches_gaussian_oracle() -> None:
+    """Permanent sampled crossing-rate oracle for the synthesized spectrum path."""
     sea_state = SeaState(hs_m=4.0, tp_s=4.0, gamma=3.3)
     duration_s = 256.0
-    counts = []
-    expected_rates = []
-    for seed in range(128):
+    dt_s = 0.05
+    first = synthesize_jonswap(
+        sea_state,
+        duration_s=duration_s,
+        dt_s=dt_s,
+        seed=0,
+        max_frequency_rad_s=20.0,
+    )
+    delta_omega = first.frequencies_rad_s[1]
+    energy = first.target_spectrum_m2_s * delta_omega
+    correlation = np.sum(energy * np.cos(first.frequencies_rad_s * dt_s)) / np.sum(energy)
+    expected_rate = np.arccos(np.clip(correlation, -1.0, 1.0)) / (2.0 * np.pi * dt_s)
+    values = first.elevation_m[:-1]
+    counts = [np.count_nonzero((values[:-1] < 0.0) & (values[1:] >= 0.0))]
+    for seed in range(1, 128):
         realization = synthesize_jonswap(
             sea_state,
             duration_s=duration_s,
-            dt_s=0.05,
+            dt_s=dt_s,
             seed=seed,
             max_frequency_rad_s=20.0,
         )
         values = realization.elevation_m[:-1]
         counts.append(np.count_nonzero((values[:-1] < 0.0) & (values[1:] >= 0.0)))
-        delta_omega = realization.frequencies_rad_s[1]
-        energy = realization.target_spectrum_m2_s * delta_omega
-        m0 = np.sum(energy)
-        m2 = np.sum(energy * realization.frequencies_rad_s**2)
-        expected_rates.append(np.sqrt(m2 / m0) / (2.0 * np.pi))
 
-    expected_count = float(np.mean(expected_rates)) * duration_s
+    expected_count = float(expected_rate) * duration_s
     standard_error = float(np.std(counts, ddof=1)) / np.sqrt(len(counts))
     assert np.mean(counts) == pytest.approx(expected_count, abs=3.5 * standard_error)

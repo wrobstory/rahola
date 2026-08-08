@@ -1,54 +1,66 @@
 {
-  "_artifact_sha256": "5ba34c0ce7e01fc9ba83eb1837059c113020a35c0dd3fa0b7ea7ef41090dee9a",
+  "_artifact_sha256": "90262529121b91ec47db48e274264391a659622afc7d2c79baf96cc788638da4",
   "_provenance": {
     "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
     "reference_h1_anchor_sha256": "81491c11171c3516a461c1938a943b1af04fcf9859d5d6bd2cfe2c5ec8939f5b",
     "reference_u1r2_anchor_sha256": "2f68a4ce89ab90997c91bd98ca614bfe26b7fba923c69c6e439c865b4432cd5d",
     "reference_v02_anchor_sha256": "96fdcc7a93cd4b0a760750320cf41c7f1ce15d52708b2bfc8791c3b3a9d10dfd",
     "schema_version": 1,
-    "source_sha256": "c5fbd56f9483d71473f670667afc0cefb19eadfc4bce0061bab6055f6e330ddf",
+    "source_sha256": "04e935fc7649b81c75123847579d4b5f6b6b8ac5e98259b061a37d0afbf6f21b",
     "upstream_artifacts": {
-      "w1_phase1_w1": "04d4966340866a739f56bccdffc9774f21d24cc0441badf2124a2fd73c9fc513",
-      "w1_phase2_w1": "08e3138070ca6bb2557b76852005e2168d07b09e50e9d57da1a53f6c9c0ad6c8"
+      "w1_phase1_w1": "a7e29274903a5463d87a15373f4b9a76a5cfdf6bf9b28ab485df7bff2e4b424e",
+      "w1_phase2_w1": "b9515347c7b0c3d18a4507e075b687f11200539876953296ec52505d30161a7b"
     }
   },
+  "corrected_diagnostics_passed": true,
   "decision_verbatim": "At least one preregistered Phase-1 gate failed materially on the production construction. Quantify exposed downstream statistics and regenerate only exposed campaigns under the extended-period construction on fresh ordinary TEST seeds as _w1 versions; frozen experiments remain untouched and are annotated for exposure only.",
   "experiment": "W1 Phase 3 decision",
   "exposure_assessment": [
     {
-      "diagnostic": "autocovariance envelope at the preregistered five-Tp initial-decay cutoff",
-      "affected_states": "gamma 3.3, 7, 15, and 30",
-      "downstream_exposure": "No boundary-recurrence exposure for D1/D5/F1 scored units: terminal recurrence begins no earlier than 563.9 s, beyond their 440 s maximum within-unit lag. The early excess is physical narrowband coherence and is unchanged by 8x/16x periods.",
+      "affected_states": [
+        "Hs=1, Tp=2, gamma=3.3",
+        "Hs=2, Tp=4, gamma=3.3",
+        "Hs=2, Tp=4, gamma=7",
+        "Hs=2, Tp=4, gamma=15",
+        "Hs=2, Tp=4, gamma=30",
+        "Hs=4, Tp=4, gamma=3.3"
+      ],
+      "diagnostic": "autocovariance envelope at the preregistered five-Tp cutoff",
+      "downstream_exposure": "Terminal recurrence begins no earlier than 563.9 s, beyond the 440 s D1/D5/F1 within-unit lag. Early excess is physical narrowband coherence and is unchanged by period extension.",
       "replacement_campaign": null
     },
     {
-      "diagnostic": "Rice mean for sampled elevation zero-upcrossings",
-      "affected_states": "Hs 1 m, Tp 2 s, gamma 3.3",
-      "downstream_exposure": "Any reported sampled elevation crossing rate for the parametric sea would inherit the 0.53% shortfall. No frozen headline reports that quantity directly; U1 lineage counts roll-angle crossings, not elevation crossings. The 8x/16x period arms do not remediate the fixed-0.05-s sampling discrepancy.",
+      "affected_states": [
+        "Hs=1, Tp=2, gamma=3.3"
+      ],
+      "diagnostic": "preregistered continuous-Rice comparison to sampled crossings",
+      "downstream_exposure": "The frozen gate compared a continuous-time rate with sampled sign changes. The exact sampled-Gaussian correction is up to 0.399% below Rice and passes the corrected mean gate; the former failure is not evidence of a defective spectrum, and no frozen headline reports elevation crossings.",
       "replacement_campaign": null
     },
     {
-      "diagnostic": "fixed-energy variance suppression",
       "affected_states": "all production states",
-      "downstream_exposure": "Campaign severity calibration remains conditional on the documented fixed-energy random-phase estimand. Suppression was preregistered as a characterization, not an additional gate; 16x periods restore suppression factors to 0.857--0.958 but do not contradict conditional frozen claims.",
+      "diagnostic": "fixed-amplitude variance suppression",
+      "downstream_exposure": "The committed passing rate is now labeled as containment of fixed-amplitude records inside an unconditional-Gaussian interval, not nominal coverage. Independent Gaussian-amplitude draws report empirical containment, while 16x fixed-amplitude suppression factors span 0.857--0.958.",
       "replacement_campaign": null
     },
     {
-      "diagnostic": "independent-phase step splice",
       "affected_states": "softening step, Hs 2 m to 5 m",
-      "downstream_exposure": "Boundary-local forcing has a much larger first difference, but D5/F1 scoring begins 240 s after the step and is not boundary-local. Frozen step records are annotated, not reopened.",
+      "diagnostic": "independent-phase step splice",
+      "downstream_exposure": "Distinct derived seed streams are executable audit checks. The independent splice has 16.05x the boundary jump of the continuous-phase ramp; D5/F1 scoring begins 240 s after the step.",
       "replacement_campaign": null
     }
   ],
   "frozen_artifacts_touched": [],
   "labeled_window_boundary_recurrence_exposure_verified": true,
+  "labeled_window_exposure_scope": "boundary recurrence only; early physical coherence is separate",
   "labeled_window_exposure_verified": true,
   "labeled_window_max_lag_s": 440.0,
   "minimum_terminal_recurrence_onset_s": 563.9,
+  "phase2_postregistration_audit_checks_passed": true,
   "production_passed": false,
   "regeneration": {
-    "status": "not run",
-    "reason": "No downstream frozen headline is exposed to a failure that the prescribed extended-period construction remediates; the only material construction sensitivity is the already-declared conditional variance estimand. Regenerating unrelated campaigns would violate the only-exposed rule."
+    "reason": "No frozen headline is exposed to a failure remediated by period extension; the sampled-Rice failure was an estimand mismatch and the early envelope excess is physical coherence. Regenerating unrelated campaigns would violate the only-exposed rule.",
+    "status": "not run"
   },
   "reserve_blocks_read": [],
   "supersession_table": []

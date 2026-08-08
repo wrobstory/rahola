@@ -153,11 +153,14 @@ plainly. Each record spans exactly one period of its discrete Fourier field, and
 spectral energy is fixed across seeds by construction. Every reported rate and probability is
 therefore conditional on a fixed-energy, random-phase, periodic discrete-spectrum realization
 rather than on unconditional draws from the JONSWAP process. The preregistered W1 audit in
-[`RESULTS.md`](RESULTS.md) measures self-repetition, Rice-formula crossing rates, and ensemble
-variability. It finds physical narrowband coherence and one sampled-rate discrepancy outside the
-frozen gates, while terminal recurrence begins beyond the D1/D5/F1 within-unit lag. The trade is
-treated by Shinozuka and Deodatis (1991). No fewer than 200 positive-frequency components are
-used. For a progressive Airy component in deep water, $k_j=\omega_j^2/g$, and spatial
+[`RESULTS.md`](RESULTS.md) measures self-repetition, crossing rates, and ensemble variability
+against an independently evaluated spectrum. Its frozen continuous-Rice comparison is explicitly
+retained as a preregistration failure, but the corrected sampled-Gaussian crossing oracle passes;
+Gaussian-amplitude shadow draws separately report empirical containment for the interval intended
+for the unconditional ensemble. Physical narrowband coherence remains above the frozen five-period limit, while terminal
+recurrence begins beyond the D1/D5/F1 within-unit lag. The trade is treated by Shinozuka and
+Deodatis (1991). No fewer than 200 positive-frequency components are used. For a progressive Airy
+component in deep water, $k_j=\omega_j^2/g$, and spatial
 differentiation places the slope in
 quadrature (Dean and Dalrymple 1991). The simplified excitation chain is
 
