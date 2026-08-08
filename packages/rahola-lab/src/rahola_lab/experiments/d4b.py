@@ -353,7 +353,10 @@ def spectral_distortion(
 
 
 def _nearest_center_group(
-    composite: CompositeRecord, sea_state: SeaState, source_seed: int
+    composite: CompositeRecord,
+    sea_state: SeaState,
+    source_seed: int,
+    target_center_index: int,
 ) -> DetectedGroup | None:
     selected = slice(composite.target_start_index, composite.target_stop_index)
     local_time = composite.time_s[selected] - composite.time_s[composite.target_start_index]
@@ -364,10 +367,9 @@ def _nearest_center_group(
         significant_height_m=sea_state.hs_m,
         peak_period_s=sea_state.tp_s,
     )
-    target_center = 0.5 * (len(local_time) - 1)
     if not groups:
         return None
-    return min(groups, key=lambda group: abs(group.center_index - target_center))
+    return min(groups, key=lambda group: abs(group.center_index - target_center_index))
 
 
 def run_c2(output_root: Path) -> dict[str, object]:
@@ -382,15 +384,16 @@ def run_c2(output_root: Path) -> dict[str, object]:
             np.asarray(row["waveform_elevation_m"], dtype=np.float64),
             np.asarray(row["waveform_slope_rad"], dtype=np.float64),
             int(row["waveform_group_start_index"]),
+            int(row["waveform_group_center_index"]),
         )
         for row in library["classes"]
     ]
     duration_s = float(controls["group_arrival_s"]) + max(
         (len(elevation) - group_start) * dt_s
-        for elevation, _, group_start in targets
+        for elevation, _, group_start, _ in targets
     ) + float(controls["tail_s"])
     target_parameters = []
-    for class_index, (elevation, _, group_start) in enumerate(targets):
+    for class_index, (elevation, _, _, group_center) in enumerate(targets):
         time = np.arange(len(elevation), dtype=np.float64) * dt_s
         groups = detect_groups(
             time,
@@ -402,7 +405,7 @@ def run_c2(output_root: Path) -> dict[str, object]:
         if not groups:
             raise ValueError(f"class {class_index} medoid waveform has no retained group")
         target_parameters.append(
-            min(groups, key=lambda group: abs(group.start_index - group_start))
+            min(groups, key=lambda group: abs(group.center_index - group_center))
         )
     rows = []
     for seed in range(180_000, 180_200):
@@ -414,7 +417,7 @@ def run_c2(output_root: Path) -> dict[str, object]:
             period_factor=int(reference["extended_period_factor"]),
             max_frequency_rad_s=40.0 * 2.0 * np.pi / 4.0,
         )
-        for class_index, (elevation, slope, group_start) in enumerate(targets):
+        for class_index, (elevation, slope, group_start, group_center) in enumerate(targets):
             composite = embed_group(
                 prelude,
                 elevation,
@@ -423,7 +426,7 @@ def run_c2(output_root: Path) -> dict[str, object]:
                 blend_half_width_s=float(controls["blend_half_width_s"]),
                 group_start_index=group_start,
             )
-            observed = _nearest_center_group(composite, sea_state, seed)
+            observed = _nearest_center_group(composite, sea_state, seed, group_center)
             target = target_parameters[class_index]
             rows.append(
                 {
@@ -564,6 +567,9 @@ def run_c1(output_root: Path) -> dict[str, object]:
                 "waveform_group_start_index": margin_samples,
                 "waveform_group_stop_index": margin_samples
                 + medoid.stop_index
+                - medoid.start_index,
+                "waveform_group_center_index": margin_samples
+                + medoid.center_index
                 - medoid.start_index,
                 "waveform_elevation_m": record.elevation_m[start:stop].tolist(),
                 "waveform_slope_rad": record.slope_rad[start:stop].tolist(),
