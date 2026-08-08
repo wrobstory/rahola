@@ -285,6 +285,7 @@ def embed_group(
     *,
     arrival_s: float,
     blend_half_width_s: float,
+    group_start_index: int | None = None,
     height_scale: float = 1.0,
 ) -> CompositeRecord:
     """Replace one target-sized interval through a two-sided raised-cosine crossfade."""
@@ -297,7 +298,11 @@ def embed_group(
     if not np.isfinite(height_scale) or height_scale <= 0.0:
         raise ValueError("height_scale must be positive and finite")
     dt_s = float(np.median(np.diff(prelude.time_s)))
-    target_start = round((arrival_s - 0.5 * (len(elevation) - 1) * dt_s) / dt_s)
+    if group_start_index is None:
+        group_start_index = (len(elevation) - 1) // 2
+    if not 0 <= group_start_index < len(elevation):
+        raise ValueError("group_start_index must lie inside the target waveform")
+    target_start = round(arrival_s / dt_s) - group_start_index
     target_stop = target_start + len(elevation)
     if target_start < 0 or target_stop > len(prelude.time_s):
         raise ValueError("target window must fit inside the prelude record")
@@ -372,20 +377,20 @@ def run_c2(output_root: Path) -> dict[str, object]:
     sea_state = SeaState(**reference["sea_state"])
     library = load_result(output_root, "d4b_group_library_d4b")
     dt_s = float(library["construction"]["dt_s"])
-    duration_s = (
-        float(controls["group_arrival_s"])
-        + 0.5 * float(controls["embedded_group_window_s"])
-        + float(controls["tail_s"])
-    )
     targets = [
         (
             np.asarray(row["waveform_elevation_m"], dtype=np.float64),
             np.asarray(row["waveform_slope_rad"], dtype=np.float64),
+            int(row["waveform_group_start_index"]),
         )
         for row in library["classes"]
     ]
+    duration_s = float(controls["group_arrival_s"]) + max(
+        (len(elevation) - group_start) * dt_s
+        for elevation, _, group_start in targets
+    ) + float(controls["tail_s"])
     target_parameters = []
-    for class_index, (elevation, _) in enumerate(targets):
+    for class_index, (elevation, _, group_start) in enumerate(targets):
         time = np.arange(len(elevation), dtype=np.float64) * dt_s
         groups = detect_groups(
             time,
@@ -396,8 +401,9 @@ def run_c2(output_root: Path) -> dict[str, object]:
         )
         if not groups:
             raise ValueError(f"class {class_index} medoid waveform has no retained group")
-        center = 0.5 * (len(time) - 1)
-        target_parameters.append(min(groups, key=lambda group: abs(group.center_index - center)))
+        target_parameters.append(
+            min(groups, key=lambda group: abs(group.start_index - group_start))
+        )
     rows = []
     for seed in range(180_000, 180_200):
         prelude = synthesize_extended_jonswap(
@@ -408,13 +414,14 @@ def run_c2(output_root: Path) -> dict[str, object]:
             period_factor=int(reference["extended_period_factor"]),
             max_frequency_rad_s=40.0 * 2.0 * np.pi / 4.0,
         )
-        for class_index, (elevation, slope) in enumerate(targets):
+        for class_index, (elevation, slope, group_start) in enumerate(targets):
             composite = embed_group(
                 prelude,
                 elevation,
                 slope,
                 arrival_s=float(controls["group_arrival_s"]),
                 blend_half_width_s=float(controls["blend_half_width_s"]),
+                group_start_index=group_start,
             )
             observed = _nearest_center_group(composite, sea_state, seed)
             target = target_parameters[class_index]
@@ -527,13 +534,12 @@ def run_c1(output_root: Path) -> dict[str, object]:
                 envelope_ordinates=int(controls["envelope_shape_ordinates"]),
             )
         )
-    window_samples = round(float(prereg["c2_embedding"]["embedded_group_window_s"]) / dt_s) + 1
-    half_window = window_samples // 2
+    margin_samples = round(float(prereg["c2_embedding"]["blend_half_width_s"]) / dt_s)
     groups = [
         group
         for group in groups
-        if group.center_index >= half_window
-        and group.center_index + half_window < len(records[group.source_seed].time_s)
+        if group.start_index >= margin_samples
+        and group.stop_index + margin_samples < len(records[group.source_seed].time_s)
     ]
     assignments, medoids, center, scale = cluster_groups(groups, int(controls["cluster_count"]))
     exposure_hours = len(records) * duration_s / 3600.0
@@ -542,8 +548,8 @@ def run_c1(output_root: Path) -> dict[str, object]:
         selected = np.flatnonzero(assignments == class_index)
         medoid = groups[int(medoid_index)]
         record = records[medoid.source_seed]
-        start = medoid.center_index - half_window
-        stop = start + window_samples
+        start = medoid.start_index - margin_samples
+        stop = medoid.stop_index + margin_samples + 1
         count = len(selected)
         classes.append(
             {
@@ -555,6 +561,10 @@ def run_c1(output_root: Path) -> dict[str, object]:
                 ),
                 "medoid": _group_payload(medoid),
                 "waveform_dt_s": dt_s,
+                "waveform_group_start_index": margin_samples,
+                "waveform_group_stop_index": margin_samples
+                + medoid.stop_index
+                - medoid.start_index,
                 "waveform_elevation_m": record.elevation_m[start:stop].tolist(),
                 "waveform_slope_rad": record.slope_rad[start:stop].tolist(),
             }

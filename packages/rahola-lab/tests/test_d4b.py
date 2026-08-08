@@ -48,6 +48,13 @@ def test_embedding_preserves_prefix_and_target_parameters() -> None:
     target_time = np.arange(0.0, 24.0 + dt_s, dt_s)
     envelope = 0.01 + 2.0 * np.exp(-0.5 * np.square((target_time - 12.0) / 5.0))
     target = envelope * np.cos(2.0 * np.pi * target_time / 4.0)
+    target_groups = detect_groups(
+        target_time,
+        target,
+        source_seed=1,
+        significant_height_m=4.0,
+        peak_period_s=4.0,
+    )
 
     composite = embed_group(
         prelude,
@@ -55,18 +62,12 @@ def test_embedding_preserves_prefix_and_target_parameters() -> None:
         np.zeros_like(target),
         arrival_s=50.0,
         blend_half_width_s=4.0,
+        group_start_index=target_groups[0].start_index,
     )
 
     np.testing.assert_array_equal(
         composite.elevation_m[: composite.blend_start_index],
         prelude.elevation_m[: composite.blend_start_index],
-    )
-    target_groups = detect_groups(
-        target_time,
-        target,
-        source_seed=1,
-        significant_height_m=4.0,
-        peak_period_s=4.0,
     )
     embedded_window = composite.elevation_m[
         composite.target_start_index : composite.target_stop_index
