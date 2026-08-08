@@ -1428,3 +1428,25 @@ The finite-T F1 estimand is therefore the population of windows whose trajectori
 through the tested tangent horizon. All F1 conclusion sentences about finite-T tangent results
 above are conditioned on that survivor population; this descriptive table does not change the
 other frozen F1 rows or any conclusion about them.
+
+# 2026-08-07 documentation notes (ISSW 2025 proceedings review)
+
+Four clarifications; no result value changes and no reopened experiment.
+
+1. D4 is renamed in current documentation to **high-envelope group coincidence**. The term
+   "critical wave groups" is reserved for the probability-weighted, encounter-conditioned
+   method of Themelis and Spyrou; the present D4 statistic is a coincidence proxy without a
+   matched null.
+2. The synthetic sea ensemble uses deterministic spectral amplitudes, seeded random phases, and
+   a finite periodic FFT realization spanning exactly one field period per record. Full-record
+   energy is fixed across seeds by construction; all reported rates are conditional on that
+   fixed-energy, random-phase ensemble. A preregistered wave-field audit (W1) will test
+   self-repetition, Rice-formula crossing rates, and ensemble variability before any wave-group
+   statistic is treated as settled.
+3. F1 rejected instantaneous and one-cycle level, rate, energy-depletion, normal-strain, and
+   finite-time tangent statistics for within-regime timing. It did not test persistent
+   destabilizing-work episode statistics (accumulated multi-cycle reserve depletion and
+   run-length forms); that gap is noted, not asserted either way.
+4. U1, U1-r2, and H1 remain frozen negative evidence. Their parameterizations are not to be
+   reopened; structurally different estimators (encounter-conditioned methods) are the
+   sanctioned continuation.
