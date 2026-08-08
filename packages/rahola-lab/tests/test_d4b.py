@@ -6,6 +6,9 @@ from pathlib import Path
 
 import numpy as np
 import pytest
+from rahola_lab.experiments.common import load_result
+
+from rahola.config import SeaState
 
 _SPEC = importlib.util.spec_from_file_location(
     "rahola_d4b_producer", Path(__file__).resolve().parents[3] / "d4b.py"
@@ -24,6 +27,30 @@ bisect_threshold = _D4B.bisect_threshold
 cluster_groups = _D4B.cluster_groups
 detect_groups = _D4B.detect_groups
 embed_group = _D4B.embed_group
+synthesize_extended_jonswap = _D4B.synthesize_extended_jonswap
+
+
+def test_committed_d4b_artifact_graph_is_current() -> None:
+    results = Path(__file__).resolve().parents[3] / "results"
+    load_result(results, "d4b_uncertainty_d4b")
+    load_result(results, "d4b_observability_d4b")
+
+
+def test_extended_synthesis_is_step_halving_invariant() -> None:
+    state = SeaState(hs_m=4.0, tp_s=4.0, gamma=3.3)
+    common = {
+        "sea_state": state,
+        "duration_s": 64.0,
+        "seed": 180_000,
+        "period_factor": 8,
+        "max_frequency_rad_s": 20.0 * np.pi,
+    }
+    coarse = synthesize_extended_jonswap(dt_s=0.05, **common)
+    fine = synthesize_extended_jonswap(dt_s=0.025, **common)
+
+    assert coarse.fft_period_s == fine.fft_period_s == 512.0
+    np.testing.assert_allclose(coarse.elevation_m, fine.elevation_m[::2], rtol=0.0, atol=2e-14)
+    np.testing.assert_allclose(coarse.slope_rad, fine.slope_rad[::2], rtol=0.0, atol=2e-14)
 
 
 def test_hand_placed_wave_groups_recover_count_and_parameters() -> None:
