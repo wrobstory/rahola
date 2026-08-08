@@ -5,6 +5,8 @@ import pytest
 from rahola_lab.experiments.d4b import (
     D4B_TEST_RANGES,
     ExtendedSea,
+    _auc,
+    _fit_logistic,
     bisect_threshold,
     cluster_groups,
     detect_groups,
@@ -132,3 +134,13 @@ def test_d4b_test_ranges_are_fresh_ordinary_seeds() -> None:
     for start, stop in D4B_TEST_RANGES:
         assert 200_000 <= start < stop <= 300_000
         assert all(stop <= used_start or start >= used_stop for used_start, used_stop in ledgered)
+
+
+def test_penalized_logistic_fit_is_finite_and_orders_known_signal() -> None:
+    features = np.arange(-4.0, 5.0, dtype=np.float64)[:, None]
+    labels = features[:, 0] > 0.0
+    fit = _fit_logistic(features, labels, penalty=1e-4)
+    scores = fit.predict(features)
+    assert np.all(np.isfinite(fit.coefficients))
+    assert np.all(np.diff(scores) > 0.0)
+    assert _auc(labels, scores) == pytest.approx(1.0)

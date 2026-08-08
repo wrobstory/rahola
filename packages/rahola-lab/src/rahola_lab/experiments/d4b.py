@@ -12,8 +12,10 @@ from pathlib import Path
 import jax
 import numpy as np
 from numpy.typing import NDArray
+from scipy.optimize import minimize
 from scipy.signal import hilbert
-from scipy.stats import ks_2samp, nbinom
+from scipy.special import expit
+from scipy.stats import ks_2samp, nbinom, rankdata
 
 from rahola.config import SeaState
 from rahola.dynamics import integrate_rk4_batch
@@ -64,6 +66,18 @@ class CompositeRecord:
     target_stop_index: int
     plateau_start_index: int
     plateau_stop_index: int
+
+
+@dataclass(frozen=True)
+class LogisticFit:
+    mean: FloatArray
+    scale: FloatArray
+    coefficients: FloatArray
+
+    def predict(self, features: NDArray[np.floating]) -> FloatArray:
+        values = np.asarray(features, dtype=np.float64)
+        standardized = (values - self.mean) / self.scale
+        return expit(self.coefficients[0] + standardized @ self.coefficients[1:])
 
 
 def _repository_root() -> Path:
@@ -1240,6 +1254,354 @@ def run_c5(output_root: Path) -> dict[str, object]:
     return payload
 
 
+def _fit_logistic(features: FloatArray, labels: NDArray[np.bool_], penalty: float) -> LogisticFit:
+    values = np.asarray(features, dtype=np.float64)
+    target = np.asarray(labels, dtype=np.float64)
+    mean = np.mean(values, axis=0)
+    scale = np.std(values, axis=0)
+    scale = np.where(scale > 0.0, scale, 1.0)
+    standardized = (values - mean) / scale
+    design = np.column_stack((np.ones(len(values)), standardized))
+
+    def objective(coefficients: FloatArray) -> tuple[float, FloatArray]:
+        logits = design @ coefficients
+        value = np.sum(np.logaddexp(0.0, logits) - target * logits)
+        value += 0.5 * penalty * float(np.dot(coefficients[1:], coefficients[1:]))
+        gradient = design.T @ (expit(logits) - target)
+        gradient[1:] += penalty * coefficients[1:]
+        return float(value), np.asarray(gradient, dtype=np.float64)
+
+    result = minimize(
+        objective,
+        np.zeros(design.shape[1], dtype=np.float64),
+        method="L-BFGS-B",
+        jac=True,
+        options={"maxiter": 2_000, "ftol": 1e-12, "gtol": 1e-8},
+    )
+    if not result.success or not np.all(np.isfinite(result.x)):
+        raise RuntimeError(f"logistic fit did not converge: {result.message}")
+    return LogisticFit(mean, scale, np.asarray(result.x, dtype=np.float64))
+
+
+def _auc(labels: NDArray[np.bool_], scores: FloatArray) -> float:
+    target = np.asarray(labels, dtype=np.bool_)
+    positives = int(np.sum(target))
+    negatives = len(target) - positives
+    if positives == 0 or negatives == 0:
+        return float("nan")
+    ranks = rankdata(scores, method="average")
+    rank_sum = np.sum(ranks[target]) - positives * (positives + 1) / 2.0
+    return float(rank_sum / (positives * negatives))
+
+
+def _reliability_edges(scores: FloatArray) -> FloatArray:
+    edges = np.unique(np.quantile(scores, np.linspace(0.0, 1.0, 6)))
+    if len(edges) < 3:
+        minimum, maximum = float(np.min(scores)), float(np.max(scores))
+        if minimum == maximum:
+            return np.asarray([-np.inf, np.inf], dtype=np.float64)
+        edges = np.linspace(minimum, maximum, 6)
+    edges[0], edges[-1] = -np.inf, np.inf
+    return edges
+
+
+def _reliability(
+    labels: NDArray[np.bool_], scores: FloatArray, edges: FloatArray
+) -> dict[str, object]:
+    assignments = np.digitize(scores, edges[1:-1])
+    rows = []
+    absolute_error = 0.0
+    for index in range(len(edges) - 1):
+        selected = assignments == index
+        if not np.any(selected):
+            continue
+        predicted = float(np.mean(scores[selected]))
+        observed = float(np.mean(labels[selected]))
+        count = int(np.sum(selected))
+        absolute_error += count * abs(predicted - observed)
+        rows.append(
+            {
+                "bin": index,
+                "count": count,
+                "predicted": predicted,
+                "observed": observed,
+            }
+        )
+    return {"weighted_mean_absolute_error": absolute_error / len(scores), "bins": rows}
+
+
+def _group_features(class_row: dict[str, object], height_m: float) -> list[float]:
+    medoid = class_row["medoid"]
+    return [
+        float(medoid["carrier_period_s"]),
+        height_m,
+        float(medoid["cycle_count"]),
+        *[float(value) for value in medoid["envelope_shape"]],
+    ]
+
+
+def _entry_features(row: dict[str, object]) -> list[float]:
+    return [
+        float(row["roll_rad"]),
+        float(row["roll_rate_rad_s"]),
+        float(row["danger_margin_rad"]),
+        float(row["energy_reserve"]),
+    ]
+
+
+def _calibration_trials(
+    library: dict[str, object],
+    strata: dict[str, object],
+    response: dict[str, object],
+    multipliers: FloatArray,
+) -> tuple[FloatArray, NDArray[np.bool_], list[dict[str, object]]]:
+    entries = {
+        (int(row["class"]), int(row["seed"])): row
+        for row in strata["entries"]
+        if row["valid_entry"]
+    }
+    features = []
+    labels = []
+    metadata = []
+    for critical in response["critical_heights"]:
+        if not critical["valid_entry"]:
+            continue
+        class_index = int(critical["class"])
+        seed = int(critical["seed"])
+        class_row = library["classes"][class_index]
+        native_height = float(class_row["medoid"]["central_height_m"])
+        threshold = np.inf if critical["critical_height_m"] is None else float(
+            critical["critical_height_m"]
+        )
+        for multiplier in multipliers:
+            height = native_height * float(multiplier)
+            features.append(
+                _entry_features(entries[(class_index, seed)])
+                + _group_features(class_row, height)
+            )
+            labels.append(height >= threshold)
+            metadata.append({"seed": seed, "class": class_index, "height_m": height})
+    return (
+        np.asarray(features, dtype=np.float64),
+        np.asarray(labels, dtype=np.bool_),
+        metadata,
+    )
+
+
+def _fit_payload(fit: LogisticFit, columns: list[int], edges: FloatArray) -> dict[str, object]:
+    return {
+        "columns": columns,
+        "mean": fit.mean.tolist(),
+        "scale": fit.scale.tolist(),
+        "coefficients": fit.coefficients.tolist(),
+        "reliability_edges": edges.tolist(),
+    }
+
+
+def _fit_from_payload(payload: dict[str, object]) -> LogisticFit:
+    return LogisticFit(
+        np.asarray(payload["mean"], dtype=np.float64),
+        np.asarray(payload["scale"], dtype=np.float64),
+        np.asarray(payload["coefficients"], dtype=np.float64),
+    )
+
+
+def run_c6_fit(output_root: Path) -> dict[str, object]:
+    prereg = _preregistration()
+    library = load_result(output_root, "d4b_group_library_d4b")
+    strata = load_result(output_root, "d4b_entry_strata_d4b")
+    response = load_result(output_root, "d4b_response_maps_d4b")
+    multipliers = np.asarray(prereg["c4_response"]["height_multipliers"], dtype=np.float64)
+    features, labels, _ = _calibration_trials(library, strata, response, multipliers)
+    column_sets = {
+        "entry_only": list(range(4)),
+        "group_only": list(range(4, features.shape[1])),
+        "both": list(range(features.shape[1])),
+    }
+    models = {}
+    for name, columns in column_sets.items():
+        fit = _fit_logistic(features[:, columns], labels, penalty=1e-4)
+        scores = fit.predict(features[:, columns])
+        models[name] = _fit_payload(fit, columns, _reliability_edges(scores)) | {
+            "calibration_auc": _auc(labels, scores),
+            "calibration_brier": float(np.mean(np.square(scores - labels))),
+        }
+    payload: dict[str, object] = {
+        "experiment": "D4b C6 calibration-only observability fit",
+        "_governing_inputs": _governing_inputs(),
+        "calibration_trials": len(labels),
+        "calibration_capsizes": int(np.sum(labels)),
+        "models": models,
+    }
+    write_result(
+        output_root,
+        "d4b_observability_fit_d4b",
+        payload,
+        upstream_results={
+            "d4b_group_library_d4b": library,
+            "d4b_entry_strata_d4b": strata,
+            "d4b_response_maps_d4b": response,
+        },
+    )
+    return payload
+
+
+def _metric_vector(labels: NDArray[np.bool_], scores: FloatArray, edges: FloatArray) -> FloatArray:
+    return np.asarray(
+        [
+            _auc(labels, scores),
+            np.mean(np.square(scores - labels)),
+            _reliability(labels, scores, edges)["weighted_mean_absolute_error"],
+        ],
+        dtype=np.float64,
+    )
+
+
+def run_c6(output_root: Path) -> dict[str, object]:
+    prereg = _preregistration()
+    controls = prereg["c2_embedding"]
+    reference = prereg["reference_configuration"]
+    sea_state = SeaState(**reference["sea_state"])
+    library = load_result(output_root, "d4b_group_library_d4b")
+    embedding = load_result(output_root, "d4b_embedding_d4b")
+    fit_artifact = load_result(output_root, "d4b_observability_fit_d4b")
+    config_path = (
+        _repository_root()
+        / "packages/rahola-lab/src/rahola_lab/campaigns/configs/softening_evaluation.yaml"
+    )
+    config = load_campaign_definition(config_path).simulation
+    dt_s = 0.5 * config.integration_dt_s
+    duration_s = float(embedding["configuration"]["duration_s"])
+    test_start, test_stop = D4B_TEST_RANGES[1]
+    seeds = range(test_start, test_stop)
+    preludes = [
+        synthesize_extended_jonswap(
+            sea_state,
+            duration_s,
+            dt_s,
+            seed,
+            period_factor=int(reference["extended_period_factor"]),
+            max_frequency_rad_s=40.0 * config.omega_n_rad_s,
+        )
+        for seed in seeds
+    ]
+    states, cap_steps = _integrate_slopes(np.stack([row.slope_rad for row in preludes]), config)
+    entry_rows = _entry_rows(
+        states,
+        cap_steps,
+        seeds=seeds,
+        class_index=None,
+        arrival_s=float(controls["group_arrival_s"]),
+        config=config,
+    )
+    valid = np.asarray([row["valid_entry"] for row in entry_rows], dtype=np.bool_)
+    multipliers = np.asarray(prereg["c4_response"]["height_multipliers"], dtype=np.float64)
+    trial_features = []
+    trial_labels = []
+    trial_metadata = []
+    for class_index, class_row in enumerate(library["classes"]):
+        elevation = np.asarray(class_row["waveform_elevation_m"], dtype=np.float64)
+        slope = np.asarray(class_row["waveform_slope_rad"], dtype=np.float64)
+        native_height = float(class_row["medoid"]["central_height_m"])
+        for multiplier in multipliers:
+            outcomes = _simulate_scaled_targets(
+                preludes,
+                elevation,
+                slope,
+                np.full(len(preludes), multiplier),
+                arrival_s=float(controls["group_arrival_s"]),
+                blend_half_width_s=float(controls["blend_half_width_s"]),
+                config=config,
+            )
+            height = native_height * float(multiplier)
+            for index in np.flatnonzero(valid):
+                trial_features.append(
+                    _entry_features(entry_rows[int(index)]) + _group_features(class_row, height)
+                )
+                trial_labels.append(bool(outcomes[index]))
+                trial_metadata.append(
+                    {"seed": int(seeds[index]), "class": class_index, "height_m": height}
+                )
+    features = np.asarray(trial_features, dtype=np.float64)
+    labels = np.asarray(trial_labels, dtype=np.bool_)
+    model_results = {}
+    trial_predictions: dict[str, FloatArray] = {}
+    rng = np.random.default_rng(20_260_808)
+    unique_seeds = np.asarray(sorted({row["seed"] for row in trial_metadata}), dtype=np.int64)
+    row_seeds = np.asarray([row["seed"] for row in trial_metadata], dtype=np.int64)
+    for name, model_payload in fit_artifact["models"].items():
+        columns = np.asarray(model_payload["columns"], dtype=np.int64)
+        fit = _fit_from_payload(model_payload)
+        scores = fit.predict(features[:, columns])
+        trial_predictions[name] = scores
+        edges = np.asarray(model_payload["reliability_edges"], dtype=np.float64)
+        estimate = _metric_vector(labels, scores, edges)
+        samples = np.empty((1_000, 3), dtype=np.float64)
+        for replicate in range(1_000):
+            sampled_seeds = rng.choice(unique_seeds, size=len(unique_seeds), replace=True)
+            indices = np.concatenate([np.flatnonzero(row_seeds == seed) for seed in sampled_seeds])
+            samples[replicate] = _metric_vector(labels[indices], scores[indices], edges)
+        model_results[name] = {
+            "auc": float(estimate[0]),
+            "auc_interval": np.quantile(samples[:, 0], [0.025, 0.975]).tolist(),
+            "brier": float(estimate[1]),
+            "brier_interval": np.quantile(samples[:, 1], [0.025, 0.975]).tolist(),
+            "reliability": _reliability(labels, scores, edges),
+            "reliability_error_interval": np.quantile(
+                samples[:, 2], [0.025, 0.975]
+            ).tolist(),
+        }
+    both_auc = float(model_results["both"]["auc"])
+    entry_auc = float(model_results["entry_only"]["auc"])
+    group_auc = float(model_results["group_only"]["auc"])
+    substantial = float(prereg["c6_observability"]["substantial_auc_margin"])
+    prediction_i = both_auc >= max(entry_auc, group_auc) + substantial
+    prediction_ii = group_auc > entry_auc
+    sharp = both_auc >= 0.80
+    headline = (
+        "The encounter channel is confirmed valuable and quantifies the Upwave sensing target."
+        if sharp
+        else "Motion-plus-encounter observability is jointly insufficient in this model and the "
+        "program's negative answer is complete."
+    )
+    trials = [
+        metadata
+        | {"capsized": bool(labels[index])}
+        | {name: float(scores[index]) for name, scores in trial_predictions.items()}
+        for index, metadata in enumerate(trial_metadata)
+    ]
+    payload: dict[str, object] = {
+        "experiment": "D4b C6 observability decomposition",
+        "_governing_inputs": _governing_inputs(),
+        "configuration": {
+            "test_seed_range": [test_start, test_stop],
+            "valid_test_preludes": int(np.sum(valid)),
+            "pre_entry_capsizes": int(np.sum(~valid)),
+            "test_trials": len(labels),
+            "test_capsizes": int(np.sum(labels)),
+        },
+        "models": model_results,
+        "predictions": {
+            "i_both_substantially_exceeds_either_alone": prediction_i,
+            "ii_group_only_exceeds_entry_only": prediction_ii,
+            "iii_both_auc_at_least_0_80": sharp,
+        },
+        "headline_verdict_verbatim": headline,
+        "trials": trials,
+    }
+    write_result(
+        output_root,
+        "d4b_observability_d4b",
+        payload,
+        upstream_results={
+            "d4b_group_library_d4b": library,
+            "d4b_embedding_d4b": embedding,
+            "d4b_observability_fit_d4b": fit_artifact,
+        },
+    )
+    return payload
+
+
 def run_c1(output_root: Path) -> dict[str, object]:
     prereg = _preregistration()
     controls = prereg["c1_group_library"]
@@ -1337,7 +1699,9 @@ def run_c1(output_root: Path) -> dict[str, object]:
 
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="python -m rahola_lab.experiments.d4b")
-    parser.add_argument("phase", choices=("c1", "c2", "c3", "c4", "c5"))
+    parser.add_argument(
+        "phase", choices=("c1", "c2", "c3", "c4", "c5", "c6-fit", "c6")
+    )
     parser.add_argument("--out", type=Path, default=Path("results"))
     return parser
 
@@ -1354,6 +1718,10 @@ def main(argv: list[str] | None = None) -> int:
         run_c4(args.out)
     elif args.phase == "c5":
         run_c5(args.out)
+    elif args.phase == "c6-fit":
+        run_c6_fit(args.out)
+    elif args.phase == "c6":
+        run_c6(args.out)
     return 0
 
 
