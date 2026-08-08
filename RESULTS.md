@@ -1540,3 +1540,105 @@ producer-replay test regenerates all three JSON artifacts and four figures and r
 agreement with the committed graph. Separate known-answer tests cover the centered Gaussian
 variance moments, the sampled-crossing input boundary, and the independence of W1's spectrum
 reference from the production evaluator.
+
+# D4b addendum — critical wave groups with natural initial conditions
+
+D4b was preregistered in commit `bd348b2` before any D4b TEST seed was synthesized. Three
+CALIBRATION-only defects were corrected and committed before TEST: the target window was expanded
+to contain the complete retained group (`27093d8`), entry sampling was aligned to the start of the
+blend before target forcing acts (`f20ad85`), and a fixed untuned `1e-4` coefficient penalty made
+the separated logistic fit finite (`b79966a`). The final calibration fit was committed in
+`07fa603`; C5 and C6 then each materialized its disjoint TEST range once.
+
+## C1 — frozen group library
+
+Four 7,200-second wave-only records used the regular 8x-period construction, giving eight exposure
+hours and 733 declustered groups. The deterministic farthest-first medoids produced six frozen
+classes. Count intervals are the preregistered one-hour Gamma--Poisson predictive intervals.
+
+| Class | Count | Rate/h | One-hour count interval | Carrier period (s) | Central height (m) | Cycles |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 0 | 251 | 31.375 | [20, 44] | 4.0695 | 3.4422 | 1.4867 |
+| 1 | 11 | 1.375 | [0, 4] | 2.5888 | 4.0109 | 10.2752 |
+| 2 | 143 | 17.875 | [10, 27] | 2.4363 | 5.1091 | 3.2016 |
+| 3 | 87 | 10.875 | [5, 18] | 3.7918 | 5.9523 | 10.9182 |
+| 4 | 4 | 0.500 | [0, 3] | 3.9657 | 6.7919 | 20.6899 |
+| 5 | 237 | 29.625 | [19, 42] | 3.6813 | 9.0031 | 2.9609 |
+
+## C2 and C3 — embedding and entry strata
+
+All 1,200 CALIBRATION composites preserved the pre-blend elevation and imposed target plateau
+byte-for-byte. Maximum added spectral energy above 2.5 times the peak frequency was 0.00161 of
+composite variance against the 0.05 limit. The 99th-percentile carrier-period and central-height
+relative errors were 0.00573 and 0.00645; the maximum errors were 0.05209 and 0.00789. C2 passes its
+frozen embedding gate.
+
+One of 200 calibration preludes capsized before the 320-second entry time and was excluded
+consistently across all six paired shapes. The 1,194 valid embedded entries and 199 unconditional
+entries have identical energy-reserve distributions (descriptive KS statistic 0). Frozen internal
+quartile edges are 0.14214, 0.19346, and 0.22235 in nondimensional reserve energy.
+
+## C4 — response maps
+
+No valid prelude violated monotonicity on the six-height grid. Bisection found 534 finite critical
+heights within the 12 m upper bracket; 660 were right-censored above it. The last grid point is
+shape-dependent, so the table reports its height and the entry-stratum-averaged capsize
+probability. Classes 4 and 5 have no finite critical height below 12 m even though their final grid
+points lie above that bracket.
+
+| Class | Last grid height (m) | Mean P(capsize) at last point | Finite critical heights | Right-censored |
+| ---: | ---: | ---: | ---: | ---: |
+| 0 | 6.884 | 0.000 | 104 | 95 |
+| 1 | 8.022 | 0.005 | 188 | 11 |
+| 2 | 10.218 | 0.116 | 98 | 101 |
+| 3 | 11.905 | 0.709 | 144 | 55 |
+| 4 | 13.584 | 1.000 | 0 | 199 |
+| 5 | 18.006 | 0.925 | 0 | 199 |
+
+## C5 — encounter-conditioned rate
+
+The one-shot `[202500, 204000)` campaign realized 39 capsizes in 1,500 trajectories, or 0.156 per
+exposure hour. Every library group lies below the lowest finite critical height for its class and
+stratum, so the empirical encounter composition is exactly 0/h and its nonparametric predictive
+count interval is `[0, 0]`.
+
+**C5 verdict, verbatim:** “The encounter-conditioned predictive interval did not capture the
+realized matched unconditional capsize count; the oracle-group decomposition fails its
+predeclared C5 gate.” This failure with oracle class and height information is the required major
+negative. It also shows that the selected group definition/library does not partition the direct
+capsize mechanism.
+
+## C6 — observability decomposition
+
+The calibration-only models were evaluated once on 199 valid held-out preludes paired across six
+shapes and six heights (7,164 trials; 580 capsizes). Intervals resample whole preludes.
+
+| Predictor | AUC [95% interval] | Brier [95% interval] | Reliability MAE [95% interval] |
+| --- | --- | --- | --- |
+| Entry only | 0.513 [0.503, 0.524] | 0.0777 [0.0756, 0.0800] | 0.0578 [0.0554, 0.0601] |
+| Group only | 0.934 [0.930, 0.938] | 0.0630 [0.0616, 0.0644] | 0.0588 [0.0562, 0.0611] |
+| Both | 0.938 [0.934, 0.941] | 0.0629 [0.0614, 0.0644] | 0.0579 [0.0554, 0.0602] |
+
+Preregistered prediction (i), “both will substantially exceed either alone,” is **not confirmed**:
+the AUC margin over group-only is 0.0037, below the frozen 0.05 threshold. Prediction (ii),
+“group-only will exceed entry-only,” is **confirmed**. Prediction (iii)'s sharpness gate is met.
+
+**C6 headline verdict, verbatim:** “The encounter channel is confirmed valuable and quantifies the
+Upwave sensing target.” The value belongs almost entirely to the oracle group description; entry
+state adds little on these embedded trials.
+
+## C7 — uncertainty propagation
+
+The nested bootstrap resampled source wave records, calibration response preludes, and
+unconditional entry trajectories. Because no native library group reached a finite empirical
+critical height, every joint and one-source-at-a-time rate draw is zero. The joint rate interval is
+`[0, 0]`/h and all three isolated variance components are zero. This is a transparent degenerate
+bootstrap, not a principled interval for an unseen response probability; D4b therefore does not
+establish the proposed confidence-interval methodological contribution.
+
+Numeric records are `results/d4b_group_library_d4b.json`, `d4b_embedding_d4b.json`,
+`d4b_entry_strata_d4b.json`, `d4b_response_maps_d4b.json`, `d4b_rate_validation_d4b.json`,
+`d4b_observability_fit_d4b.json`, `d4b_observability_d4b.json`, and
+`d4b_uncertainty_d4b.json`. Each generated artifact records exact upstream artifact digests and
+hashes both the preregistration and `d4b.py`. Reserves, frozen artifacts, the paper, and the
+explainer were untouched.

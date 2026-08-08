@@ -272,3 +272,8 @@ The group library uses TRAIN seeds `[90000, 90004)` and the fitting preludes use
 `[180000, 180200)`. D4b requires the regular 8x-period construction diagnosed in W1; the production
 single-period field is prohibited. The full frozen protocol is
 `results/d4b_preregistration_d4b.json`. Neither reserve block may be opened or generated.
+
+Both D4b TEST slices were materialized once from the committed calibration graph. The matched
+unconditional slice realized 39 capsizes in 1,500 trajectories. The embedded slice retained 199 of
+200 preludes after one pre-entry capsize and produced 7,164 paired shape/height trials. Neither
+slice was redrawn or supplemented, and neither reserve block was opened.
