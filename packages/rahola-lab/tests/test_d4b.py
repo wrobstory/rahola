@@ -3,6 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 from rahola_lab.experiments.d4b import (
+    D4B_TEST_RANGES,
     ExtendedSea,
     bisect_threshold,
     cluster_groups,
@@ -104,3 +105,30 @@ def test_bisection_recovers_known_critical_height() -> None:
     assert threshold == pytest.approx(3.125, abs=1e-6)
     with pytest.raises(ValueError, match="false at lower and true at upper"):
         bisect_threshold(lambda _: False, 0.0, 1.0, tolerance=0.01, max_iterations=8)
+
+
+def test_d4b_test_ranges_are_fresh_ordinary_seeds() -> None:
+    ledgered = (
+        (200_000, 201_000),
+        (201_000, 202_500),
+        (205_000, 206_000),
+        (206_000, 209_200),
+        (210_000, 211_000),
+        (211_000, 220_000),
+        (221_000, 222_700),
+        (225_000, 226_000),
+        (230_000, 231_000),
+        (235_000, 238_000),
+        (238_000, 241_000),
+        (241_000, 244_000),
+        (244_000, 247_000),
+        (250_000, 255_000),
+        (260_000, 265_000),
+        (268_000, 269_000),
+        (270_000, 275_000),
+        (276_000, 277_000),
+        (277_000, 299_900),
+    )
+    for start, stop in D4B_TEST_RANGES:
+        assert 200_000 <= start < stop <= 300_000
+        assert all(stop <= used_start or start >= used_stop for used_start, used_stop in ledgered)

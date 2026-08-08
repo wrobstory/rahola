@@ -25,6 +25,7 @@ from rahola_lab.experiments.h1_common import _pava
 FloatArray = NDArray[np.float64]
 
 PREREGISTRATION_PATH = "results/d4b_preregistration_d4b.json"
+D4B_TEST_RANGES = ((202_500, 204_000), (204_000, 204_200))
 
 
 @dataclass(frozen=True)
@@ -1015,6 +1016,230 @@ def run_c4(output_root: Path) -> dict[str, object]:
     return payload
 
 
+def _response_samples(response: dict[str, object]) -> dict[tuple[int, int], FloatArray]:
+    samples: dict[tuple[int, int], list[float]] = {}
+    for row in response["critical_heights"]:
+        if not row["valid_entry"]:
+            continue
+        key = (int(row["class"]), int(row["stratum"]))
+        value = row["critical_height_m"]
+        samples.setdefault(key, []).append(np.inf if value is None else float(value))
+    return {key: np.asarray(values, dtype=np.float64) for key, values in samples.items()}
+
+
+def _entry_weights(strata: NDArray[np.int64]) -> FloatArray:
+    counts = np.bincount(strata, minlength=4).astype(np.float64)
+    return counts / np.sum(counts)
+
+
+def _composed_rate(
+    classes: NDArray[np.int64],
+    heights: FloatArray,
+    group_weights: FloatArray,
+    response: dict[tuple[int, int], FloatArray],
+    entry_weights: FloatArray,
+    exposure_hours: float,
+) -> float:
+    total = 0.0
+    for class_index in range(6):
+        selected = classes == class_index
+        if not np.any(selected):
+            continue
+        probability = np.zeros(np.sum(selected), dtype=np.float64)
+        selected_heights = heights[selected]
+        for stratum in range(4):
+            critical = np.sort(response[(class_index, stratum)])
+            probability += entry_weights[stratum] * (
+                np.searchsorted(critical, selected_heights, side="right") / len(critical)
+            )
+        total += float(np.dot(group_weights[selected], probability))
+    return total / exposure_hours
+
+
+def _rate_uncertainty(
+    library: dict[str, object],
+    strata: dict[str, object],
+    response: dict[str, object],
+    *,
+    replicates: int,
+    seed: int,
+    count_exposure_hours: float,
+) -> dict[str, object]:
+    groups = library["groups"]
+    classes = np.asarray([row["class"] for row in groups], dtype=np.int64)
+    heights = np.asarray([row["central_height_m"] for row in groups], dtype=np.float64)
+    source_seeds = np.asarray([row["source_seed"] for row in groups], dtype=np.int64)
+    unique_sources = np.unique(source_seeds)
+    fixed_group_weights = np.ones(len(groups), dtype=np.float64)
+    fixed_response = _response_samples(response)
+    entry_strata = np.asarray(
+        [row["stratum"] for row in strata["unconditional_entries"] if row["valid_entry"]],
+        dtype=np.int64,
+    )
+    fixed_entry_weights = _entry_weights(entry_strata)
+    exposure_hours = float(library["exposure_hours"])
+    point_rate = _composed_rate(
+        classes,
+        heights,
+        fixed_group_weights,
+        fixed_response,
+        fixed_entry_weights,
+        exposure_hours,
+    )
+    joint = np.empty(replicates, dtype=np.float64)
+    group_only = np.empty(replicates, dtype=np.float64)
+    entry_only = np.empty(replicates, dtype=np.float64)
+    response_only = np.empty(replicates, dtype=np.float64)
+    rng = np.random.default_rng(seed)
+    for replicate in range(replicates):
+        sampled_sources = rng.choice(unique_sources, size=len(unique_sources), replace=True)
+        source_counts = {
+            source: int(np.sum(sampled_sources == source)) for source in unique_sources
+        }
+        sampled_group_weights = np.asarray(
+            [source_counts[source] for source in source_seeds], dtype=np.float64
+        )
+        sampled_entry = _entry_weights(
+            rng.choice(entry_strata, size=len(entry_strata), replace=True)
+        )
+        sampled_response = {
+            key: rng.choice(values, size=len(values), replace=True)
+            for key, values in fixed_response.items()
+        }
+        group_only[replicate] = _composed_rate(
+            classes,
+            heights,
+            sampled_group_weights,
+            fixed_response,
+            fixed_entry_weights,
+            exposure_hours,
+        )
+        entry_only[replicate] = _composed_rate(
+            classes,
+            heights,
+            fixed_group_weights,
+            fixed_response,
+            sampled_entry,
+            exposure_hours,
+        )
+        response_only[replicate] = _composed_rate(
+            classes,
+            heights,
+            fixed_group_weights,
+            sampled_response,
+            fixed_entry_weights,
+            exposure_hours,
+        )
+        joint[replicate] = _composed_rate(
+            classes,
+            heights,
+            sampled_group_weights,
+            sampled_response,
+            sampled_entry,
+            exposure_hours,
+        )
+    predictive_counts = rng.poisson(joint * count_exposure_hours)
+    return {
+        "point_rate_per_hour": point_rate,
+        "joint_rate_draws_per_hour": joint.tolist(),
+        "group_rate_only_draws_per_hour": group_only.tolist(),
+        "entry_distribution_only_draws_per_hour": entry_only.tolist(),
+        "response_map_only_draws_per_hour": response_only.tolist(),
+        "predictive_count_draws": predictive_counts.tolist(),
+        "rate_interval_per_hour": np.quantile(joint, [0.025, 0.975]).tolist(),
+        "predictive_count_interval": [
+            int(np.quantile(predictive_counts, 0.025, method="inverted_cdf")),
+            int(np.quantile(predictive_counts, 0.975, method="inverted_cdf")),
+        ],
+    }
+
+
+def run_c5(output_root: Path) -> dict[str, object]:
+    prereg = _preregistration()
+    controls = prereg["c5_rate_validation"]
+    reference = prereg["reference_configuration"]
+    sea_state = SeaState(**reference["sea_state"])
+    library = load_result(output_root, "d4b_group_library_d4b")
+    strata = load_result(output_root, "d4b_entry_strata_d4b")
+    response = load_result(output_root, "d4b_response_maps_d4b")
+    config_path = (
+        _repository_root()
+        / "packages/rahola-lab/src/rahola_lab/campaigns/configs/softening_evaluation.yaml"
+    )
+    config = load_campaign_definition(config_path).simulation
+    duration_s = float(controls["unconditional_duration_s"])
+    dt_s = 0.5 * config.integration_dt_s
+    test_start, test_stop = D4B_TEST_RANGES[0]
+    test_seeds = range(test_start, test_stop)
+    direct_rows = []
+    for chunk_start in range(test_start, test_stop, 250):
+        chunk_seeds = range(chunk_start, min(chunk_start + 250, test_stop))
+        records = [
+            synthesize_extended_jonswap(
+                sea_state,
+                duration_s,
+                dt_s,
+                seed,
+                period_factor=int(reference["extended_period_factor"]),
+                max_frequency_rad_s=40.0 * config.omega_n_rad_s,
+            )
+            for seed in chunk_seeds
+        ]
+        _, cap_steps = _integrate_slopes(np.stack([record.slope_rad for record in records]), config)
+        direct_rows.extend(
+            {"seed": seed, "capsized": bool(cap_step >= 0)}
+            for seed, cap_step in zip(chunk_seeds, cap_steps, strict=True)
+        )
+    realized_count = sum(row["capsized"] for row in direct_rows)
+    exposure_hours = len(test_seeds) * duration_s / 3600.0
+    uncertainty = _rate_uncertainty(
+        library,
+        strata,
+        response,
+        replicates=int(prereg["c7_uncertainty"]["nested_bootstrap_replicates"]),
+        seed=int(prereg["c7_uncertainty"]["nested_bootstrap_seed"]),
+        count_exposure_hours=exposure_hours,
+    )
+    interval = uncertainty["predictive_count_interval"]
+    captured = bool(interval[0] <= realized_count <= interval[1])
+    verdict = (
+        "The encounter-conditioned predictive interval captured the realized matched "
+        "unconditional capsize count."
+        if captured
+        else "The encounter-conditioned predictive interval did not capture the realized matched "
+        "unconditional capsize count; the oracle-group decomposition fails its predeclared C5 gate."
+    )
+    payload: dict[str, object] = {
+        "experiment": "D4b C5 encounter-conditioned rate validation",
+        "_governing_inputs": _governing_inputs(),
+        "configuration": {
+            "test_seed_range": [test_start, test_stop],
+            "trajectories": len(test_seeds),
+            "duration_s": duration_s,
+            "exposure_hours": exposure_hours,
+            "expected_event_floor": float(controls["expected_event_floor"]),
+            "extended_period_factor": int(reference["extended_period_factor"]),
+        },
+        "encounter_conditioned": uncertainty,
+        "direct_count": realized_count,
+        "direct_rate_per_hour": realized_count / exposure_hours,
+        "captured": captured,
+        "verdict_verbatim": verdict,
+        "direct_trials": direct_rows,
+    }
+    write_result(
+        output_root,
+        "d4b_rate_validation_d4b",
+        payload,
+        upstream_results={
+            "d4b_group_library_d4b": library,
+            "d4b_entry_strata_d4b": strata,
+            "d4b_response_maps_d4b": response,
+        },
+    )
+    return payload
+
+
 def run_c1(output_root: Path) -> dict[str, object]:
     prereg = _preregistration()
     controls = prereg["c1_group_library"]
@@ -1112,7 +1337,7 @@ def run_c1(output_root: Path) -> dict[str, object]:
 
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="python -m rahola_lab.experiments.d4b")
-    parser.add_argument("phase", choices=("c1", "c2", "c3", "c4"))
+    parser.add_argument("phase", choices=("c1", "c2", "c3", "c4", "c5"))
     parser.add_argument("--out", type=Path, default=Path("results"))
     return parser
 
@@ -1127,6 +1352,8 @@ def main(argv: list[str] | None = None) -> int:
         run_c3(args.out)
     elif args.phase == "c4":
         run_c4(args.out)
+    elif args.phase == "c5":
+        run_c5(args.out)
     return 0
 
 
