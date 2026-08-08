@@ -1,0 +1,40 @@
+{
+  "experiment": "W1 wave-field validity and estimand audit",
+  "status": "preregistered before diagnostic execution",
+  "campaign_scope": [
+    "*_stationary.yaml reference sea states",
+    "*_evaluation.yaml reference sea states",
+    "softening_bandwidth_gamma_*.yaml reference sea states"
+  ],
+  "sampling": {
+    "duration_s": 600.0,
+    "dt_s": 0.05,
+    "phase_realizations": 500,
+    "predictive_calibration_realizations": 250,
+    "predictive_evaluation_realizations": 250,
+    "test_seed_start": 290000,
+    "test_seed_stop_exclusive": 290500
+  },
+  "tolerances": {
+    "confidence_level": 0.99,
+    "initial_decay_peak_periods": 5.0,
+    "maximum_scored_unit_lag_s": 440.0,
+    "normalized_autocovariance_envelope_max": 0.05,
+    "empirical_theory_autocovariance_max_abs": 0.05,
+    "rice_mean_must_be_inside_predictive_interval": true,
+    "variance_predictive_passing_rate_min": 0.90,
+    "crossing_predictive_passing_rate_min": 0.90
+  },
+  "estimand_rule": "Fixed-energy variance suppression is quantified against an unconditional Gaussian process but is not an additional undeclared gate; the production estimand is already conditional on deterministic amplitudes and random phases.",
+  "phase_2": {
+    "extended_period_factors": [8, 16],
+    "jittered_bin_embedding_factor": 16,
+    "jitter_grid_seed": 20260808,
+    "step_transition_ramp_peak_periods": 5.0
+  },
+  "labeled_window_exposure": "D1/D5/F1 use at most 60 natural periods of history plus 50 natural periods of outcome: 440 s at the anchored 4 s natural period. The recurrence gate is therefore evaluated through 440 s, while the full 0--600 s curve and endpoint recovery are still reported.",
+  "pass_decision_verbatim": "Every preregistered Phase-1 gate passed on the production construction. Record invariance; keep all campaigns; W1 closes as a validity note with the fixed-energy, random-phase, periodic discrete-spectrum estimand unchanged.",
+  "fail_decision_verbatim": "At least one preregistered Phase-1 gate failed materially on the production construction. Quantify exposed downstream statistics and regenerate only exposed campaigns under the extended-period construction on fresh ordinary TEST seeds as _w1 versions; frozen experiments remain untouched and are annotated for exposure only.",
+  "reserves": "RESERVE and RESERVE2 are prohibited; only fresh ordinary TEST seeds 290000--290499 may be synthesized.",
+  "artifact_policy": "New result and figure names begin with w1_ and end with _w1; existing artifacts are immutable."
+}

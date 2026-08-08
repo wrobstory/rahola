@@ -23,9 +23,7 @@ def _reference_jonswap(omega_rad_s: np.ndarray, sea_state: SeaState) -> np.ndarr
         where=omega > 0.0,
     )
     spread = _reference_sigma(scaled_frequency)
-    peak_enhancement = np.exp(
-        -0.5 * ((scaled_frequency - 1.0) / spread) ** 2
-    )
+    peak_enhancement = np.exp(-0.5 * ((scaled_frequency - 1.0) / spread) ** 2)
     base = (
         (9.80665 / peak_frequency) ** 2
         * np.exp(-1.25 / scaled_frequency**4)
@@ -135,3 +133,30 @@ def test_deep_water_slope_fourier_coefficients_have_expected_magnitude_and_sign(
     )
     expected = -1j * elevation_coefficients[active] * omega[active] ** 2 / gravity
     np.testing.assert_allclose(slope_coefficients[active], expected, rtol=1e-11, atol=1e-11)
+
+
+def test_zero_upcrossing_rate_matches_rice_formula_predictive_interval() -> None:
+    """Permanent analytic crossing-rate oracle for the synthesized spectrum path."""
+    sea_state = SeaState(hs_m=4.0, tp_s=4.0, gamma=3.3)
+    duration_s = 256.0
+    counts = []
+    expected_rates = []
+    for seed in range(128):
+        realization = synthesize_jonswap(
+            sea_state,
+            duration_s=duration_s,
+            dt_s=0.05,
+            seed=seed,
+            max_frequency_rad_s=20.0,
+        )
+        values = realization.elevation_m[:-1]
+        counts.append(np.count_nonzero((values[:-1] < 0.0) & (values[1:] >= 0.0)))
+        delta_omega = realization.frequencies_rad_s[1]
+        energy = realization.target_spectrum_m2_s * delta_omega
+        m0 = np.sum(energy)
+        m2 = np.sum(energy * realization.frequencies_rad_s**2)
+        expected_rates.append(np.sqrt(m2 / m0) / (2.0 * np.pi))
+
+    expected_count = float(np.mean(expected_rates)) * duration_s
+    standard_error = float(np.std(counts, ddof=1)) / np.sqrt(len(counts))
+    assert np.mean(counts) == pytest.approx(expected_count, abs=3.5 * standard_error)
