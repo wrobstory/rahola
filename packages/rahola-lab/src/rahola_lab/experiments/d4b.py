@@ -8,13 +8,16 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
+import jax
 import numpy as np
 from numpy.typing import NDArray
 from scipy.signal import hilbert
-from scipy.stats import nbinom
+from scipy.stats import ks_2samp, nbinom
 
 from rahola.config import SeaState
+from rahola.dynamics import integrate_rk4_batch
 from rahola.spectrum import jonswap_spectrum
+from rahola_lab.campaigns import load_campaign_definition
 from rahola_lab.experiments.common import load_result, write_result
 
 FloatArray = NDArray[np.float64]
@@ -531,6 +534,200 @@ def run_c2(output_root: Path) -> dict[str, object]:
     return payload
 
 
+def _integrate_slopes(
+    slopes: FloatArray, config: object
+) -> tuple[FloatArray, NDArray[np.int32]]:
+    rows = np.asarray(slopes, dtype=np.float64)
+    if rows.ndim != 2 or rows.shape[1] < 3 or rows.shape[1] % 2 == 0:
+        raise ValueError("slope records must be an odd-length matrix")
+    forcing = config.forcing.effective_wave_slope * rows / config.escape_angle_rad
+    zeros = np.zeros_like(forcing)
+    ones = np.ones_like(forcing)
+    initial = np.zeros((len(rows), 2), dtype=np.float64)
+    states, cap_steps = integrate_rk4_batch(
+        jax.device_put(forcing),
+        jax.device_put(zeros),
+        jax.device_put(ones),
+        config.omega_n_rad_s * config.integration_dt_s,
+        jax.device_put(initial),
+        config.damping_ratio,
+        config.quadratic_damping,
+        config.bias_moment,
+        config.quintic_coefficient,
+        1.0,
+        config.negative_escape_rad / config.escape_angle_rad,
+        family_code=0,
+        linear_restoring=config.linear_restoring,
+    )
+    return np.asarray(states, dtype=np.float64), np.asarray(cap_steps, dtype=np.int32)
+
+
+def _entry_rows(
+    states: FloatArray,
+    cap_steps: NDArray[np.int32],
+    *,
+    seeds: range,
+    class_index: int | None,
+    arrival_s: float,
+    config: object,
+) -> list[dict[str, object]]:
+    entry_step = round(arrival_s / config.integration_dt_s)
+    if entry_step >= states.shape[1]:
+        raise ValueError("entry time falls outside integrated states")
+    x = states[:, entry_step, 0]
+    velocity = states[:, entry_step, 1]
+    energy = 0.5 * np.square(velocity) + 0.5 * np.square(x) - 0.25 * np.power(x, 4)
+    reserve = 0.25 - energy
+    return [
+        {
+            "seed": seed,
+            "class": class_index,
+            "valid_entry": bool(cap_step < 0 or cap_step >= entry_step),
+            "roll_rad": float(x[index] * config.escape_angle_rad),
+            "roll_rate_rad_s": float(
+                velocity[index] * config.escape_angle_rad * config.omega_n_rad_s
+            ),
+            "danger_margin_rad": float(config.escape_angle_rad * (1.0 - abs(x[index]))),
+            "energy_reserve": float(reserve[index]),
+            "pre_entry_capsize": bool(0 <= cap_step < entry_step),
+        }
+        for index, (seed, cap_step) in enumerate(zip(seeds, cap_steps, strict=True))
+    ]
+
+
+def run_c3(output_root: Path) -> dict[str, object]:
+    prereg = _preregistration()
+    controls = prereg["c2_embedding"]
+    reference = prereg["reference_configuration"]
+    sea_state = SeaState(**reference["sea_state"])
+    library = load_result(output_root, "d4b_group_library_d4b")
+    embedding = load_result(output_root, "d4b_embedding_d4b")
+    if not embedding["passes_embedding_checks"]:
+        raise ValueError("C3 requires a passing C2 embedding gate")
+    config_path = (
+        _repository_root()
+        / "packages/rahola-lab/src/rahola_lab/campaigns/configs/softening_evaluation.yaml"
+    )
+    config = load_campaign_definition(config_path).simulation
+    dt_s = 0.5 * config.integration_dt_s
+    targets = [
+        (
+            np.asarray(row["waveform_elevation_m"], dtype=np.float64),
+            np.asarray(row["waveform_slope_rad"], dtype=np.float64),
+            int(row["waveform_group_start_index"]),
+        )
+        for row in library["classes"]
+    ]
+    duration_s = float(embedding["configuration"]["duration_s"])
+    seeds = range(180_000, 180_200)
+    preludes = [
+        synthesize_extended_jonswap(
+            sea_state,
+            duration_s,
+            dt_s,
+            seed,
+            period_factor=int(reference["extended_period_factor"]),
+            max_frequency_rad_s=40.0 * config.omega_n_rad_s,
+        )
+        for seed in seeds
+    ]
+    arrival_s = float(controls["group_arrival_s"])
+    rows = []
+    for class_index, (elevation, slope, group_start) in enumerate(targets):
+        composite_slopes = np.stack(
+            [
+                embed_group(
+                    prelude,
+                    elevation,
+                    slope,
+                    arrival_s=arrival_s,
+                    blend_half_width_s=float(controls["blend_half_width_s"]),
+                    group_start_index=group_start,
+                ).slope_rad
+                for prelude in preludes
+            ]
+        )
+        states, cap_steps = _integrate_slopes(composite_slopes, config)
+        rows.extend(
+            _entry_rows(
+                states,
+                cap_steps,
+                seeds=seeds,
+                class_index=class_index,
+                arrival_s=arrival_s,
+                config=config,
+            )
+        )
+    unconditional_states, unconditional_cap_steps = _integrate_slopes(
+        np.stack([prelude.slope_rad for prelude in preludes]), config
+    )
+    unconditional_rows = _entry_rows(
+        unconditional_states,
+        unconditional_cap_steps,
+        seeds=seeds,
+        class_index=None,
+        arrival_s=arrival_s,
+        config=config,
+    )
+    valid = [row for row in rows if row["valid_entry"]]
+    valid_unconditional = [row for row in unconditional_rows if row["valid_entry"]]
+    reserves = np.asarray([row["energy_reserve"] for row in valid], dtype=np.float64)
+    unconditional_reserves = np.asarray(
+        [row["energy_reserve"] for row in valid_unconditional], dtype=np.float64
+    )
+    edges = np.quantile(reserves, [0.25, 0.5, 0.75])
+    if len(np.unique(edges)) != 3:
+        raise ValueError("energy reserve does not support four distinct strata")
+    for row in rows:
+        row["stratum"] = (
+            int(np.digitize(float(row["energy_reserve"]), edges)) if row["valid_entry"] else None
+        )
+    for row in unconditional_rows:
+        row["stratum"] = (
+            int(np.digitize(float(row["energy_reserve"]), edges)) if row["valid_entry"] else None
+        )
+    comparison = ks_2samp(reserves, unconditional_reserves)
+    payload: dict[str, object] = {
+        "experiment": "D4b C3 entry-state strata",
+        "_governing_inputs": _governing_inputs(),
+        "configuration": {
+            "arrival_s": arrival_s,
+            "calibration_seed_range": [180_000, 180_200],
+            "energy_reserve_definition": prereg["c3_entry_strata"]["energy_reserve"],
+        },
+        "energy_reserve_internal_edges": edges.tolist(),
+        "embedded_valid_entries": len(valid),
+        "embedded_pre_entry_capsizes": len(rows) - len(valid),
+        "unconditional_valid_entries": len(valid_unconditional),
+        "unconditional_pre_entry_capsizes": len(unconditional_rows) - len(valid_unconditional),
+        "representativeness": {
+            "embedded_mean_energy_reserve": float(np.mean(reserves)),
+            "unconditional_mean_energy_reserve": float(np.mean(unconditional_reserves)),
+            "two_sample_ks_statistic_descriptive": float(comparison.statistic),
+            "two_sample_ks_pvalue_descriptive": float(comparison.pvalue),
+            "embedded_stratum_fractions": (
+                np.bincount(np.digitize(reserves, edges), minlength=4) / len(reserves)
+            ).tolist(),
+            "unconditional_stratum_fractions": (
+                np.bincount(np.digitize(unconditional_reserves, edges), minlength=4)
+                / len(unconditional_reserves)
+            ).tolist(),
+        },
+        "entries": rows,
+        "unconditional_entries": unconditional_rows,
+    }
+    write_result(
+        output_root,
+        "d4b_entry_strata_d4b",
+        payload,
+        upstream_results={
+            "d4b_group_library_d4b": library,
+            "d4b_embedding_d4b": embedding,
+        },
+    )
+    return payload
+
+
 def run_c1(output_root: Path) -> dict[str, object]:
     prereg = _preregistration()
     controls = prereg["c1_group_library"]
@@ -628,7 +825,7 @@ def run_c1(output_root: Path) -> dict[str, object]:
 
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="python -m rahola_lab.experiments.d4b")
-    parser.add_argument("phase", choices=("c1", "c2"))
+    parser.add_argument("phase", choices=("c1", "c2", "c3"))
     parser.add_argument("--out", type=Path, default=Path("results"))
     return parser
 
@@ -639,6 +836,8 @@ def main(argv: list[str] | None = None) -> int:
         run_c1(args.out)
     elif args.phase == "c2":
         run_c2(args.out)
+    elif args.phase == "c3":
+        run_c3(args.out)
     return 0
 
 
