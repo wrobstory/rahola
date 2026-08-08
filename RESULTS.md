@@ -1450,3 +1450,75 @@ Four clarifications; no result value changes and no reopened experiment.
 4. U1, U1-r2, and H1 remain frozen negative evidence. Their parameterizations are not to be
    reopened; structurally different estimators (encounter-conditioned methods) are the
    sanctioned continuation.
+
+# W1 addendum — wave-field validity and estimand audit
+
+W1 was preregistered in commit `fc10e10` before any diagnostic ran. Phase 1 is commit `fe5be2e`
+and Phase 2 is commit `9df5e1f`. The audit synthesized 500 fresh ordinary TEST seeds
+`290000:290500` for each unique stationary, evaluation, and bandwidth sea state at the production
+600-second, 0.05-second grid. The first 250 records fixed crossing-count predictive dispersion;
+the other 250 evaluated Rice agreement and passing rates. Neither reserve block nor any stored
+campaign trajectory was read.
+
+The envelope is the magnitude of the complex discrete-spectrum covariance divided by `m0`.
+The preregistered analysis interval begins at five peak periods and ends at 440 seconds, the
+largest within-unit lag used by D1/D5/F1 (60 four-second periods of history plus 50 periods of
+outcome). Empirical/theory ACF error is the largest absolute normalized discrepancy on a
+0.5-second lag grid. Crossing and variance passing rates use 99% predictive intervals and must be
+at least 0.90.
+
+| Hs (m) | Tp (s) | gamma | envelope max | empirical/theory ACF max error | Rice / empirical upcrossings (Hz) | variance suppression | variance / crossing passing | Gate verdict |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| 1 | 2 | 3.3 | 0.05164 | 0.00755 | 0.64237 / 0.63895 | 9.83e-30 | 1.000 / 0.988 | fail: envelope, Rice mean |
+| 2 | 4 | 1 | 0.00118 | 0.01008 | 0.35179 / 0.35089 | 1.58e-30 | 1.000 / 0.976 | pass |
+| 2 | 4 | 3.3 | 0.05164 | 0.01033 | 0.32149 / 0.32118 | 2.06e-30 | 1.000 / 0.992 | fail: envelope |
+| 2 | 4 | 7 | 0.11498 | 0.01011 | 0.30168 / 0.30101 | 3.22e-30 | 1.000 / 0.988 | fail: envelope |
+| 2 | 4 | 15 | 0.19640 | 0.01137 | 0.28433 / 0.28395 | 2.75e-31 | 1.000 / 0.992 | fail: envelope |
+| 2 | 4 | 30 | 0.27507 | 0.01239 | 0.27240 / 0.27209 | 2.10e-30 | 1.000 / 0.996 | fail: envelope |
+| 4 | 4 | 3.3 | 0.05164 | 0.01033 | 0.32149 / 0.32118 | 2.06e-30 | 1.000 / 0.992 | fail: envelope |
+
+The production field therefore fails the frozen Phase-1 rule. The high-gamma failures are not
+periodic self-repetition: the envelope has not completed its physical narrowband initial decay at
+the predeclared five-Tp cutoff. After it falls below 5%, terminal recurrence begins between 563.9
+and 591.3 seconds. That is later than the 440-second D1/D5/F1 within-unit lag, so those labeled
+windows are not exposed to boundary recurrence. The `Tp=2`, gamma=3.3 sampled crossing rate is
+0.53% below the continuous-time Rice rate and its 99% mean predictive interval excludes the Rice
+expectation. All empirical-ACF and predictive passing-rate gates pass. As designed, full-period
+fixed amplitudes suppress record-variance scatter essentially to roundoff; this is an estimand
+characterization, not an undeclared additional gate.
+
+## Phase-2 sensitivity
+
+| Construction | envelope-max range | variance-suppression range | variance passing | crossing passing | Interpretation |
+| --- | ---: | ---: | ---: | ---: | --- |
+| Regular 8x period | 0.00118--0.27507 | 0.763--0.898 | 0.984--1.000 | 0.984--1.000 | moves recurrence outside the window; does not change physical early decay |
+| Regular 16x period | 0.00118--0.27507 | 0.857--0.958 | 0.992--1.000 | 0.988--1.000 | nearly restores unconditional variance scatter; does not change physical early decay |
+| Fixed jittered bins on 16x embedding | 0.12071--0.27542 | 0.142--0.232 | 1.000 | 0.968--0.992 | worse long-lag envelope and weak variance restoration |
+
+The `Tp=2` crossing discrepancy persists in the extended arms at the same 0.05-second sampling;
+period extension is not a remedy for it. For the softening step from `Hs=2` to 5 m, replacing the
+independent-phase splice by a continuous-phase 20-second amplitude ramp reduces the mean absolute
+boundary first difference from 1.0410 to 0.0677 m. In the surrounding ten-Tp window, mean variance
+changes from 0.8978 to 0.8409 m2 and mean upcrossings from 13.018 to 12.786.
+
+## Phase-3 decision, exposure, and supersession
+
+Decision taken verbatim: **“At least one preregistered Phase-1 gate failed materially on the
+production construction. Quantify exposed downstream statistics and regenerate only exposed
+campaigns under the extended-period construction on fresh ordinary TEST seeds as _w1 versions;
+frozen experiments remain untouched and are annotated for exposure only.”**
+
+| Failed or sensitive mechanism | Downstream exposure | `_w1` replacement / supersession |
+| --- | --- | --- |
+| Envelope above 5% at five Tp | Physical narrowband coherence, unchanged by 8x/16x periods; terminal recurrence begins after every D1/D5/F1 within-unit lag | none |
+| `Tp=2` sampled Rice shortfall | Any sampled elevation zero-upcrossing rate in the parametric sea inherits 0.53%; no frozen headline reports that quantity directly, and U1 counts roll-angle rather than elevation crossings | none; extended period does not remediate sampling |
+| Fixed-energy variance suppression | Severity calibration is conditional on the fixed-energy random-phase estimand already stated in README Section 2.2 | none; characterization was not a gate |
+| Independent-phase step splice | Boundary-local forcing is exposed; D5/F1 scoring begins 240 seconds after the step | none; annotate frozen step records only |
+
+The supersession table is empty. No downstream frozen headline is exposed to a failed mechanism
+that the prescribed extended-period construction remediates, so generating unrelated replacement
+campaigns would violate the “only exposed” clause. No frozen result, campaign artifact, or reserve
+was touched. W1 does not clear the separate D4b gate because the production construction did not
+pass every Phase-1 criterion. Numeric records are `results/w1_phase1_w1.json`,
+`results/w1_phase2_w1.json`, and `results/w1_decision_w1.json`; the preregistration is
+`results/w1_preregistration_w1.json`.

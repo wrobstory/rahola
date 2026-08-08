@@ -152,11 +152,13 @@ directly at the cost of avoidable finite-record variance. Two consequences shoul
 plainly. Each record spans exactly one period of its discrete Fourier field, and full-record
 spectral energy is fixed across seeds by construction. Every reported rate and probability is
 therefore conditional on a fixed-energy, random-phase, periodic discrete-spectrum realization
-rather than on unconditional draws from the JONSWAP process. A preregistered wave-field audit
-(W1) of self-repetition, crossing rates against the Rice formula, and ensemble variability is
-the planned check on this construction. The trade is treated by Shinozuka and
-Deodatis (1991). No fewer than 200 positive-frequency components are used. For a progressive Airy
-component in deep water, $k_j=\omega_j^2/g$, and spatial differentiation places the slope in
+rather than on unconditional draws from the JONSWAP process. The preregistered W1 audit in
+[`RESULTS.md`](RESULTS.md) measures self-repetition, Rice-formula crossing rates, and ensemble
+variability. It finds physical narrowband coherence and one sampled-rate discrepancy outside the
+frozen gates, while terminal recurrence begins beyond the D1/D5/F1 within-unit lag. The trade is
+treated by Shinozuka and Deodatis (1991). No fewer than 200 positive-frequency components are
+used. For a progressive Airy component in deep water, $k_j=\omega_j^2/g$, and spatial
+differentiation places the slope in
 quadrature (Dean and Dalrymple 1991). The simplified excitation chain is
 
 $$
