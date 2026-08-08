@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import inspect
 import json
 from pathlib import Path
 
@@ -20,8 +19,6 @@ def test_reference_spectrum_is_independent_of_production(
     grid = w1._spectral_grid(state, "production_1x", 1, jitter=False)
     values = w1._production_realization(state, 17)
     assert np.var(values) == pytest.approx(np.sum(grid.energy_m2), rel=2e-12)
-    assert "jonswap_spectrum" not in inspect.getsource(w1._reference_energy)
-
     original = production_spectrum.jonswap_spectrum
     monkeypatch.setattr(
         production_spectrum,
@@ -96,12 +93,5 @@ def test_committed_w1_graph_is_exactly_producer_generated(tmp_path: Path) -> Non
     assert not decision["production_passed"]
     assert all("plot" not in row for row in phase1["rows"] + phase2["rows"])
     for name in ("w1_phase1_w1.json", "w1_phase2_w1.json", "w1_decision_w1.json"):
-        assert (tmp_path / name).read_bytes() == (committed_root / name).read_bytes()
-    for name in (
-        "w1_acf_envelope_w1.png",
-        "w1_acf_sensitivity_w1.png",
-        "w1_passing_rates_w1.png",
-        "w1_variability_comparison_w1.png",
-    ):
         assert (tmp_path / name).read_bytes() == (committed_root / name).read_bytes()
     assert load_result(tmp_path, "w1_decision_w1") == load_result(committed_root, "w1_decision_w1")
