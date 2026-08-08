@@ -33,6 +33,7 @@ PASSING_RATE_MIN = 0.90
 JITTER_GRID_SEED = 20_260_808
 NATURAL_PERIOD_S = 4.0
 MAX_FREQUENCY_RAD_S = 40.0 * 2.0 * np.pi / NATURAL_PERIOD_S
+PREREGISTRATION_PATH = "results/w1_preregistration_w1.json"
 
 
 @dataclass(frozen=True)
@@ -46,6 +47,11 @@ class SpectralGrid:
 
 def _repository_root() -> Path:
     return Path(__file__).resolve().parents[5]
+
+
+def _governing_inputs() -> dict[str, str]:
+    path = _repository_root() / PREREGISTRATION_PATH
+    return {PREREGISTRATION_PATH: hashlib.sha256(path.read_bytes()).hexdigest()}
 
 
 def _campaign_states() -> tuple[list[dict[str, object]], list[SeaState]]:
@@ -169,16 +175,19 @@ def _variance_prediction(covariance: np.ndarray) -> tuple[float, float, list[flo
     covariance = np.asarray(covariance, dtype=np.float64)
     if covariance.ndim != 1 or covariance.size == 0 or not np.all(np.isfinite(covariance)):
         raise ValueError("covariance must be a finite nonempty vector")
-    n = covariance.size
+    shifted = covariance - covariance[-1]
+    n = shifted.size
     weights = np.arange(n - 1, 0, -1, dtype=np.float64)
-    trace_k2 = n * covariance[0] ** 2 + 2.0 * np.dot(weights, covariance[1:] ** 2)
-    row_sums = matmul_toeplitz((covariance, covariance), np.ones(n))
+    trace_k2 = n * shifted[0] ** 2 + 2.0 * np.dot(weights, shifted[1:] ** 2)
+    row_sums = matmul_toeplitz((shifted, shifted), np.ones(n))
     total = float(np.sum(row_sums))
     trace_centered_k2 = trace_k2 - 2.0 * np.dot(row_sums, row_sums) / n + total**2 / n**2
-    mean = float(covariance[0] - total / n**2)
+    mean = float(shifted[0] - total / n**2)
     variance = float(2.0 * trace_centered_k2 / n**2)
-    tolerance = 64.0 * np.finfo(np.float64).eps * max(covariance[0] ** 2, mean**2, 1.0)
-    if mean < -tolerance or variance < -tolerance:
+    moment_scale = max(trace_k2, 2.0 * np.dot(row_sums, row_sums) / n, total**2 / n**2)
+    variance_tolerance = 128.0 * np.finfo(np.float64).eps * moment_scale / n**2
+    mean_tolerance = 64.0 * np.finfo(np.float64).eps * max(abs(shifted[0]), abs(total / n**2))
+    if mean < -mean_tolerance or variance < -variance_tolerance:
         raise ValueError("covariance produced negative sample-variance moments")
     mean = max(0.0, mean)
     variance = max(0.0, variance)
@@ -192,6 +201,15 @@ def _variance_prediction(covariance: np.ndarray) -> tuple[float, float, list[flo
 
 
 def _sampled_upcrossing_rate(covariance: np.ndarray) -> float:
+    covariance = np.asarray(covariance, dtype=np.float64)
+    if (
+        covariance.ndim != 1
+        or covariance.size < 2
+        or not np.all(np.isfinite(covariance[:2]))
+        or covariance[0] <= 0.0
+        or abs(covariance[1]) > covariance[0] * (1.0 + 8.0 * np.finfo(np.float64).eps)
+    ):
+        raise ValueError("covariance must contain a valid finite lag-zero and lag-one pair")
     correlation = float(np.clip(covariance[1] / covariance[0], -1.0, 1.0))
     return float(np.arccos(correlation) / (2.0 * np.pi * DT_S))
 
@@ -395,11 +413,12 @@ def run_phase1(output_root: Path) -> dict[str, object]:
     _plot_acf(plots, figure, "W1 production covariance-envelope audit")
     payload: dict[str, object] = {
         "experiment": "W1 Phase 1 wave-only diagnostics",
-        "preregistration": "results/w1_preregistration_w1.json",
+        "preregistration": PREREGISTRATION_PATH,
+        "_governing_inputs": _governing_inputs(),
         "campaign_config_sources": sources,
         "realizations": REALIZATIONS,
         "predictive_split": [CALIBRATION_REALIZATIONS, REALIZATIONS - CALIBRATION_REALIZATIONS],
-        "figure": str(figure),
+        "figure": figure.name,
         "rows": rows,
         "all_preregistered_gates_pass": all(
             bool(row["passes_preregistered_gates"]) for row in rows
@@ -540,7 +559,7 @@ def _plot_comparison(rows: list[dict[str, object]], output_root: Path) -> list[s
         path = output_root / filename
         figure.savefig(path, dpi=180)
         plt.close(figure)
-        figures.append(str(path))
+        figures.append(path.name)
     return figures
 
 
@@ -565,14 +584,15 @@ def run_phase2(output_root: Path) -> dict[str, object]:
         output_root / "w1_acf_sensitivity_w1.png",
         "W1 construction-sensitivity covariance envelopes",
     )
-    figures.append(str(output_root / "w1_acf_sensitivity_w1.png"))
+    figures.append("w1_acf_sensitivity_w1.png")
     step = _step_transition(
         SeaState(hs_m=2.0, tp_s=4.0, gamma=3.3),
         SeaState(hs_m=5.0, tp_s=4.0, gamma=3.3),
     )
     payload: dict[str, object] = {
         "experiment": "W1 Phase 2 construction sensitivity",
-        "preregistration": "results/w1_preregistration_w1.json",
+        "preregistration": PREREGISTRATION_PATH,
+        "_governing_inputs": _governing_inputs(),
         "rows": rows,
         "step_transition": step,
         "figures": figures,
@@ -673,6 +693,7 @@ def _decision_payload(
     ]
     return {
         "experiment": "W1 Phase 3 decision",
+        "_governing_inputs": _governing_inputs(),
         "production_passed": passed,
         "decision_verbatim": preregistration[
             "pass_decision_verbatim" if passed else "fail_decision_verbatim"
@@ -707,9 +728,7 @@ def _decision_payload(
 def run_decision(output_root: Path) -> dict[str, object]:
     phase1 = load_result(output_root, "w1_phase1_w1")
     phase2 = load_result(output_root, "w1_phase2_w1")
-    preregistration = json.loads(
-        (_repository_root() / "results" / "w1_preregistration_w1.json").read_text()
-    )
+    preregistration = json.loads((_repository_root() / PREREGISTRATION_PATH).read_text())
     payload = _decision_payload(phase1, phase2, preregistration)
     write_result(
         output_root,

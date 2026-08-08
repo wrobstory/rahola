@@ -278,6 +278,21 @@ def _load_result(output_root: Path, name: str, *, ancestors: frozenset[str]) -> 
         raise ValueError(f"{path} does not record exact upstream artifact dependencies")
     if payload.get("_artifact_sha256") != _artifact_digest(payload):
         raise ValueError(f"{path} content does not match its artifact digest")
+    governing_inputs = payload.get("_governing_inputs", {})
+    if not isinstance(governing_inputs, dict):
+        raise ValueError(f"{path} has invalid governing inputs")
+    repository_root = Path(__file__).resolve().parents[5]
+    for relative, recorded_digest in governing_inputs.items():
+        if not isinstance(relative, str) or not isinstance(recorded_digest, str):
+            raise ValueError(f"{path} has an invalid governing input")
+        input_path = (repository_root / relative).resolve()
+        if (
+            Path(relative).is_absolute()
+            or not input_path.is_relative_to(repository_root)
+            or not input_path.is_file()
+            or hashlib.sha256(input_path.read_bytes()).hexdigest() != recorded_digest
+        ):
+            raise ValueError(f"{path} does not match current governing input {relative}")
     for upstream_name, recorded_digest in upstream_artifacts.items():
         if not isinstance(upstream_name, str) or not isinstance(recorded_digest, str):
             raise ValueError(f"{path} has an invalid upstream artifact dependency")

@@ -1,21 +1,24 @@
 {
-  "_artifact_sha256": "b9515347c7b0c3d18a4507e075b687f11200539876953296ec52505d30161a7b",
+  "_artifact_sha256": "12ddf7070ba94ca14b8cb0c96c0c3e374b8eda5eef65dd6159493baf54486329",
+  "_governing_inputs": {
+    "results/w1_preregistration_w1.json": "620e74f68d74096e9b80e21749ef7574e83dd70e8b8715fcd0a141aca95c73c8"
+  },
   "_provenance": {
     "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
     "reference_h1_anchor_sha256": "81491c11171c3516a461c1938a943b1af04fcf9859d5d6bd2cfe2c5ec8939f5b",
     "reference_u1r2_anchor_sha256": "2f68a4ce89ab90997c91bd98ca614bfe26b7fba923c69c6e439c865b4432cd5d",
     "reference_v02_anchor_sha256": "96fdcc7a93cd4b0a760750320cf41c7f1ce15d52708b2bfc8791c3b3a9d10dfd",
     "schema_version": 1,
-    "source_sha256": "04e935fc7649b81c75123847579d4b5f6b6b8ac5e98259b061a37d0afbf6f21b",
+    "source_sha256": "9ce533b9df206e4ab24b5a671ccc5fc7e2121093d23202a9369759f463e2b574",
     "upstream_artifacts": {
-      "w1_phase1_w1": "a7e29274903a5463d87a15373f4b9a76a5cfdf6bf9b28ab485df7bff2e4b424e"
+      "w1_phase1_w1": "1c501346516cf66011f06ec67db2913bd54e5e007ea8de4390c78173db1f1153"
     }
   },
   "experiment": "W1 Phase 2 construction sensitivity",
   "figures": [
-    "results/w1_passing_rates_w1.png",
-    "results/w1_variability_comparison_w1.png",
-    "results/w1_acf_sensitivity_w1.png"
+    "w1_passing_rates_w1.png",
+    "w1_variability_comparison_w1.png",
+    "w1_acf_sensitivity_w1.png"
   ],
   "preregistration": "results/w1_preregistration_w1.json",
   "rows": [
@@ -75,9 +78,9 @@
       "unconditional_gaussian_variance_empirical_coverage": 0.992,
       "unconditional_gaussian_variance_predictive_interval": [
         0.051660687986550206,
-        0.07452242468132987
+        0.07452242468132989
       ],
-      "unconditional_gaussian_variance_predictive_mean": 0.06249996970575968,
+      "unconditional_gaussian_variance_predictive_mean": 0.062499969705759675,
       "unconditional_gaussian_variance_predictive_variance": 1.9695533938660484e-05
     },
     {
@@ -106,7 +109,7 @@
       "fixed_amplitude_inside_unconditional_variance_interval_rate": 0.992,
       "fixed_amplitude_record_variance_empirical_mean": 0.06298539379117506,
       "fixed_amplitude_record_variance_empirical_variance": 1.8632148179945074e-05,
-      "fixed_amplitude_variance_suppression_factor": 0.9460087878768995,
+      "fixed_amplitude_variance_suppression_factor": 0.9460087878768997,
       "m0_m2": 0.06250000000667107,
       "m2_m2_s2": 1.0181616676774385,
       "passes_corrected_diagnostic_gates": true,
@@ -135,11 +138,11 @@
       },
       "unconditional_gaussian_variance_empirical_coverage": 0.988,
       "unconditional_gaussian_variance_predictive_interval": [
-        0.05166068798212933,
+        0.05166068798212932,
         0.07452242467202853
       ],
-      "unconditional_gaussian_variance_predictive_mean": 0.06249996969908794,
-      "unconditional_gaussian_variance_predictive_variance": 1.9695533930250978e-05
+      "unconditional_gaussian_variance_predictive_mean": 0.062499969699087936,
+      "unconditional_gaussian_variance_predictive_variance": 1.9695533930250975e-05
     },
     {
       "acf_envelope_max_analysis": 0.12894441101324686,
@@ -295,7 +298,7 @@
       "fixed_amplitude_inside_unconditional_variance_interval_rate": 1.0,
       "fixed_amplitude_record_variance_empirical_mean": 0.062497742638707506,
       "fixed_amplitude_record_variance_empirical_variance": 6.012218154597687e-06,
-      "fixed_amplitude_variance_suppression_factor": 0.23189946967235536,
+      "fixed_amplitude_variance_suppression_factor": 0.2318994696723554,
       "m0_m2": 0.0625,
       "m2_m2_s2": 1.0181608620156903,
       "passes_corrected_diagnostic_gates": true,
@@ -328,7 +331,7 @@
         0.07639319777415182
       ],
       "unconditional_gaussian_variance_predictive_mean": 0.06249997007227638,
-      "unconditional_gaussian_variance_predictive_variance": 2.592596767509728e-05
+      "unconditional_gaussian_variance_predictive_variance": 2.5925967675097275e-05
     },
     {
       "acf_envelope_max_analysis": 0.0011806827754364513,
@@ -407,7 +410,7 @@
       "fixed_amplitude_inside_unconditional_variance_interval_rate": 0.996,
       "fixed_amplitude_record_variance_empirical_mean": 0.25348857079212006,
       "fixed_amplitude_record_variance_empirical_variance": 0.0003209446656524103,
-      "fixed_amplitude_variance_suppression_factor": 0.8568979517952696,
+      "fixed_amplitude_variance_suppression_factor": 0.8568979517952698,
       "m0_m2": 0.2500000000025433,
       "m2_m2_s2": 1.2214265248430851,
       "passes_corrected_diagnostic_gates": true,
@@ -436,11 +439,11 @@
       },
       "unconditional_gaussian_variance_empirical_coverage": 0.988,
       "unconditional_gaussian_variance_predictive_interval": [
-        0.2029644373129898,
+        0.20296443731298983,
         0.30265909241696637
       ],
       "unconditional_gaussian_variance_predictive_mean": 0.24999955352500433,
-      "unconditional_gaussian_variance_predictive_variance": 0.00037454245862066256
+      "unconditional_gaussian_variance_predictive_variance": 0.0003745424586206625
     },
     {
       "acf_envelope_max_analysis": 0.12071222947813176,
@@ -580,7 +583,7 @@
       "fixed_amplitude_inside_unconditional_variance_interval_rate": 1.0,
       "fixed_amplitude_record_variance_empirical_mean": 0.24961908199939387,
       "fixed_amplitude_record_variance_empirical_variance": 8.79994570748206e-05,
-      "fixed_amplitude_variance_suppression_factor": 0.188012262329686,
+      "fixed_amplitude_variance_suppression_factor": 0.18801226232968604,
       "m0_m2": 0.24999999999999992,
       "m2_m2_s2": 1.2214214906607008,
       "passes_corrected_diagnostic_gates": true,
@@ -609,11 +612,11 @@
       },
       "unconditional_gaussian_variance_empirical_coverage": 0.992,
       "unconditional_gaussian_variance_predictive_interval": [
-        0.19779066996361092,
+        0.19779066996361094,
         0.30923604247299313
       ],
       "unconditional_gaussian_variance_predictive_mean": 0.24999960588648984,
-      "unconditional_gaussian_variance_predictive_variance": 0.0004680516897377178
+      "unconditional_gaussian_variance_predictive_variance": 0.0004680516897377177
     },
     {
       "acf_envelope_max_analysis": 0.05163555190119125,
@@ -839,7 +842,7 @@
       "fixed_amplitude_inside_unconditional_variance_interval_rate": 1.0,
       "fixed_amplitude_record_variance_empirical_mean": 0.24947062922581836,
       "fixed_amplitude_record_variance_empirical_variance": 0.0001259376827021981,
-      "fixed_amplitude_variance_suppression_factor": 0.16445840758267838,
+      "fixed_amplitude_variance_suppression_factor": 0.16445840758267843,
       "m0_m2": 0.24999999999999994,
       "m2_m2_s2": 1.0200555738192256,
       "passes_corrected_diagnostic_gates": true,
@@ -868,11 +871,11 @@
       },
       "unconditional_gaussian_variance_empirical_coverage": 0.984,
       "unconditional_gaussian_variance_predictive_interval": [
-        0.18447393846990026,
-        0.3270168766165842
+        0.1844739384699003,
+        0.32701687661658413
       ],
       "unconditional_gaussian_variance_predictive_mean": 0.24999955712234623,
-      "unconditional_gaussian_variance_predictive_variance": 0.0007657722372076677
+      "unconditional_gaussian_variance_predictive_variance": 0.0007657722372076675
     },
     {
       "acf_envelope_max_analysis": 0.11498338578812835,
@@ -961,7 +964,7 @@
       "fixed_amplitude_inside_unconditional_variance_interval_rate": 1.0,
       "fixed_amplitude_record_variance_empirical_mean": 0.2546147356882622,
       "fixed_amplitude_record_variance_empirical_variance": 0.0009117227949793937,
-      "fixed_amplitude_variance_suppression_factor": 0.9575027069794988,
+      "fixed_amplitude_variance_suppression_factor": 0.9575027069794987,
       "m0_m2": 0.25000000000114303,
       "m2_m2_s2": 0.8982307330580525,
       "passes_corrected_diagnostic_gates": true,
@@ -990,11 +993,11 @@
       },
       "unconditional_gaussian_variance_empirical_coverage": 0.984,
       "unconditional_gaussian_variance_predictive_interval": [
-        0.17766950764517023,
-        0.3366140743522477
+        0.1776695076451702,
+        0.33661407435224766
       ],
       "unconditional_gaussian_variance_predictive_mean": 0.24999949327628782,
-      "unconditional_gaussian_variance_predictive_variance": 0.0009521882166322845
+      "unconditional_gaussian_variance_predictive_variance": 0.0009521882166322846
     },
     {
       "acf_envelope_max_analysis": 0.16415261416703705,
@@ -1074,7 +1077,7 @@
       "fixed_amplitude_inside_unconditional_variance_interval_rate": 1.0,
       "fixed_amplitude_record_variance_empirical_mean": 0.24944296313335226,
       "fixed_amplitude_record_variance_empirical_variance": 0.0001771147118463394,
-      "fixed_amplitude_variance_suppression_factor": 0.1541816328652691,
+      "fixed_amplitude_variance_suppression_factor": 0.154181632865269,
       "m0_m2": 0.25,
       "m2_m2_s2": 0.8982388287035431,
       "passes_corrected_diagnostic_gates": true,
@@ -1103,11 +1106,11 @@
       },
       "unconditional_gaussian_variance_empirical_coverage": 0.988,
       "unconditional_gaussian_variance_predictive_interval": [
-        0.17132544632749333,
-        0.345900988434192
+        0.1713254463274934,
+        0.3459009884341919
       ],
       "unconditional_gaussian_variance_predictive_mean": 0.24999952153706867,
-      "unconditional_gaussian_variance_predictive_variance": 0.0011487406674510333
+      "unconditional_gaussian_variance_predictive_variance": 0.001148740667451034
     },
     {
       "acf_envelope_max_analysis": 0.1964034192967577,
@@ -1164,10 +1167,10 @@
       },
       "unconditional_gaussian_variance_empirical_coverage": 0.996,
       "unconditional_gaussian_variance_predictive_interval": [
-        0.16460177311064603,
-        0.35612459106166666
+        0.16460177311064608,
+        0.35612459106166605
       ],
-      "unconditional_gaussian_variance_predictive_mean": 0.2499994746138408,
+      "unconditional_gaussian_variance_predictive_mean": 0.24999947461384084,
       "unconditional_gaussian_variance_predictive_variance": 0.0013826860137325175
     },
     {
@@ -1196,7 +1199,7 @@
       "fixed_amplitude_inside_unconditional_variance_interval_rate": 1.0,
       "fixed_amplitude_record_variance_empirical_mean": 0.2552109835372328,
       "fixed_amplitude_record_variance_empirical_variance": 0.0013237291335985,
-      "fixed_amplitude_variance_suppression_factor": 0.957360615837599,
+      "fixed_amplitude_variance_suppression_factor": 0.9573606158375989,
       "m0_m2": 0.2500000000007143,
       "m2_m2_s2": 0.7979187678396085,
       "passes_corrected_diagnostic_gates": true,
@@ -1225,11 +1228,11 @@
       },
       "unconditional_gaussian_variance_empirical_coverage": 0.984,
       "unconditional_gaussian_variance_predictive_interval": [
-        0.16460177311048568,
+        0.16460177311048566,
         0.3561245910601684
       ],
       "unconditional_gaussian_variance_predictive_mean": 0.2499994746131265,
-      "unconditional_gaussian_variance_predictive_variance": 0.0013826860137131957
+      "unconditional_gaussian_variance_predictive_variance": 0.0013826860137131959
     },
     {
       "acf_envelope_max_analysis": 0.1966025355915935,
@@ -1335,10 +1338,10 @@
       "unconditional_gaussian_variance_empirical_coverage": 0.988,
       "unconditional_gaussian_variance_predictive_interval": [
         0.15756359277793283,
-        0.3672769774683943
+        0.3672769774683947
       ],
       "unconditional_gaussian_variance_predictive_mean": 0.24999948702535765,
-      "unconditional_gaussian_variance_predictive_variance": 0.001657927860055039
+      "unconditional_gaussian_variance_predictive_variance": 0.0016579278600550387
     },
     {
       "acf_envelope_max_analysis": 0.27506613468726254,
@@ -1427,7 +1430,7 @@
       "fixed_amplitude_inside_unconditional_variance_interval_rate": 1.0,
       "fixed_amplitude_record_variance_empirical_mean": 0.25574880686351353,
       "fixed_amplitude_record_variance_empirical_variance": 0.0017206194470118581,
-      "fixed_amplitude_variance_suppression_factor": 0.9530312324035147,
+      "fixed_amplitude_variance_suppression_factor": 0.9530312324035145,
       "m0_m2": 0.2500000000004366,
       "m2_m2_s2": 0.7323383889951688,
       "passes_corrected_diagnostic_gates": true,
@@ -1456,11 +1459,11 @@
       },
       "unconditional_gaussian_variance_empirical_coverage": 0.984,
       "unconditional_gaussian_variance_predictive_interval": [
-        0.1541023715478801,
-        0.3729411223341727
+        0.15410237154788006,
+        0.37294112233417226
       ],
       "unconditional_gaussian_variance_predictive_mean": 0.24999946239978504,
-      "unconditional_gaussian_variance_predictive_variance": 0.0018054176909528034
+      "unconditional_gaussian_variance_predictive_variance": 0.0018054176909528038
     },
     {
       "acf_envelope_max_analysis": 0.2754191518378637,
@@ -1775,7 +1778,7 @@
       "fixed_amplitude_inside_unconditional_variance_interval_rate": 1.0,
       "fixed_amplitude_record_variance_empirical_mean": 0.9978825169032735,
       "fixed_amplitude_record_variance_empirical_variance": 0.0020150029232351694,
-      "fixed_amplitude_variance_suppression_factor": 0.16445840758267838,
+      "fixed_amplitude_variance_suppression_factor": 0.16445840758267843,
       "m0_m2": 0.9999999999999998,
       "m2_m2_s2": 4.0802222952769025,
       "passes_corrected_diagnostic_gates": true,
@@ -1804,11 +1807,11 @@
       },
       "unconditional_gaussian_variance_empirical_coverage": 0.984,
       "unconditional_gaussian_variance_predictive_interval": [
-        0.737895753879601,
-        1.3080675064663367
+        0.7378957538796012,
+        1.3080675064663365
       ],
       "unconditional_gaussian_variance_predictive_mean": 0.9999982284893849,
-      "unconditional_gaussian_variance_predictive_variance": 0.012252355795322684
+      "unconditional_gaussian_variance_predictive_variance": 0.01225235579532268
     }
   ],
   "step_transition": {

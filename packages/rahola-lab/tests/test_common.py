@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 import sys
@@ -40,6 +41,18 @@ def test_result_loader_rejects_stale_provenance(tmp_path: Path) -> None:
     path.write_text(json.dumps(payload), encoding="utf-8")
     with pytest.raises(ValueError, match="current source"):
         load_result(tmp_path, "stale")
+
+
+def test_result_loader_rejects_stale_governing_input(tmp_path: Path) -> None:
+    relative = "results/w1_preregistration_w1.json"
+    governing_input = Path(__file__).resolve().parents[3] / relative
+    digest = hashlib.sha256(governing_input.read_bytes()).hexdigest()
+    write_result(tmp_path, "governed", {"_governing_inputs": {relative: digest}})
+    assert load_result(tmp_path, "governed")["_governing_inputs"] == {relative: digest}
+
+    write_result(tmp_path, "governed", {"_governing_inputs": {relative: "stale"}})
+    with pytest.raises(ValueError, match="governing input"):
+        load_result(tmp_path, "governed")
 
 
 def test_result_loader_rejects_content_mutation_and_records_upstream_digest(

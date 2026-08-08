@@ -1533,3 +1533,10 @@ was touched. W1 does not clear the separate D4b gate because the production cons
 pass every Phase-1 criterion. Numeric records are `results/w1_phase1_w1.json`,
 `results/w1_phase2_w1.json`, and `results/w1_decision_w1.json`; the preregistration is
 `results/w1_preregistration_w1.json`.
+
+Post-audit hardening did not change these physical verdicts or numeric rows. W1 artifacts now hash
+the preregistration as a governing input and use output-root-independent figure names. A full
+producer-replay test regenerates all three JSON artifacts and four figures and requires exact byte
+agreement with the committed graph. Separate known-answer tests cover the centered Gaussian
+variance moments, the sampled-crossing input boundary, and the independence of W1's spectrum
+reference from the production evaluator.
