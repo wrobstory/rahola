@@ -1,17 +1,28 @@
 from __future__ import annotations
 
+import importlib.util
+import sys
+from pathlib import Path
+
 import numpy as np
 import pytest
-from rahola_lab.experiments.d4b import (
-    D4B_TEST_RANGES,
-    ExtendedSea,
-    _auc,
-    _fit_logistic,
-    bisect_threshold,
-    cluster_groups,
-    detect_groups,
-    embed_group,
+
+_SPEC = importlib.util.spec_from_file_location(
+    "rahola_d4b_producer", Path(__file__).resolve().parents[3] / "d4b.py"
 )
+assert _SPEC is not None and _SPEC.loader is not None
+_D4B = importlib.util.module_from_spec(_SPEC)
+sys.modules[_SPEC.name] = _D4B
+_SPEC.loader.exec_module(_D4B)
+
+D4B_TEST_RANGES = _D4B.D4B_TEST_RANGES
+ExtendedSea = _D4B.ExtendedSea
+_auc = _D4B._auc
+_fit_logistic = _D4B._fit_logistic
+bisect_threshold = _D4B.bisect_threshold
+cluster_groups = _D4B.cluster_groups
+detect_groups = _D4B.detect_groups
+embed_group = _D4B.embed_group
 
 
 def test_hand_placed_wave_groups_recover_count_and_parameters() -> None:

@@ -12,6 +12,9 @@ from pathlib import Path
 import jax
 import numpy as np
 from numpy.typing import NDArray
+from rahola_lab.campaigns import load_campaign_definition
+from rahola_lab.experiments.common import load_result, write_result
+from rahola_lab.experiments.h1_common import _pava
 from scipy.optimize import minimize
 from scipy.signal import hilbert
 from scipy.special import expit
@@ -20,13 +23,11 @@ from scipy.stats import ks_2samp, nbinom, rankdata
 from rahola.config import SeaState
 from rahola.dynamics import integrate_rk4_batch
 from rahola.spectrum import jonswap_spectrum
-from rahola_lab.campaigns import load_campaign_definition
-from rahola_lab.experiments.common import load_result, write_result
-from rahola_lab.experiments.h1_common import _pava
 
 FloatArray = NDArray[np.float64]
 
 PREREGISTRATION_PATH = "results/d4b_preregistration_d4b.json"
+D4B_SOURCE_PATH = "d4b.py"
 D4B_TEST_RANGES = ((202_500, 204_000), (204_000, 204_200))
 
 
@@ -81,7 +82,7 @@ class LogisticFit:
 
 
 def _repository_root() -> Path:
-    return Path(__file__).resolve().parents[5]
+    return Path(__file__).resolve().parent
 
 
 def _preregistration() -> dict[str, object]:
@@ -89,8 +90,11 @@ def _preregistration() -> dict[str, object]:
 
 
 def _governing_inputs() -> dict[str, str]:
-    path = _repository_root() / PREREGISTRATION_PATH
-    return {PREREGISTRATION_PATH: hashlib.sha256(path.read_bytes()).hexdigest()}
+    root = _repository_root()
+    return {
+        relative: hashlib.sha256((root / relative).read_bytes()).hexdigest()
+        for relative in (PREREGISTRATION_PATH, D4B_SOURCE_PATH)
+    }
 
 
 def synthesize_extended_jonswap(
