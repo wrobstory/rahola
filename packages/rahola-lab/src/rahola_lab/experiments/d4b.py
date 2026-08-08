@@ -1602,6 +1602,50 @@ def run_c6(output_root: Path) -> dict[str, object]:
     return payload
 
 
+def run_c7(output_root: Path) -> dict[str, object]:
+    rate = load_result(output_root, "d4b_rate_validation_d4b")
+    uncertainty = rate["encounter_conditioned"]
+    draws = {
+        "group_rates": np.asarray(
+            uncertainty["group_rate_only_draws_per_hour"], dtype=np.float64
+        ),
+        "entry_distribution": np.asarray(
+            uncertainty["entry_distribution_only_draws_per_hour"], dtype=np.float64
+        ),
+        "response_map": np.asarray(
+            uncertainty["response_map_only_draws_per_hour"], dtype=np.float64
+        ),
+    }
+    component_variance = {name: float(np.var(values, ddof=1)) for name, values in draws.items()}
+    component_total = sum(component_variance.values())
+    joint = np.asarray(uncertainty["joint_rate_draws_per_hour"], dtype=np.float64)
+    payload: dict[str, object] = {
+        "experiment": "D4b C7 nested uncertainty propagation",
+        "_governing_inputs": _governing_inputs(),
+        "point_rate_per_hour": float(uncertainty["point_rate_per_hour"]),
+        "joint_rate_interval_per_hour": uncertainty["rate_interval_per_hour"],
+        "joint_rate_variance": float(np.var(joint, ddof=1)),
+        "predictive_count_interval": uncertainty["predictive_count_interval"],
+        "component_variance": component_variance,
+        "component_fraction_of_one_source_sum": {
+            name: (value / component_total if component_total > 0.0 else 0.0)
+            for name, value in component_variance.items()
+        },
+        "interpretation": (
+            "One-source-at-a-time variances need not sum to the joint variance because the "
+            "composition is nonlinear; fractions are normalized only across the three isolated "
+            "source variances."
+        ),
+    }
+    write_result(
+        output_root,
+        "d4b_uncertainty_d4b",
+        payload,
+        upstream_results={"d4b_rate_validation_d4b": rate},
+    )
+    return payload
+
+
 def run_c1(output_root: Path) -> dict[str, object]:
     prereg = _preregistration()
     controls = prereg["c1_group_library"]
@@ -1700,7 +1744,7 @@ def run_c1(output_root: Path) -> dict[str, object]:
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="python -m rahola_lab.experiments.d4b")
     parser.add_argument(
-        "phase", choices=("c1", "c2", "c3", "c4", "c5", "c6-fit", "c6")
+        "phase", choices=("c1", "c2", "c3", "c4", "c5", "c6-fit", "c6", "c7")
     )
     parser.add_argument("--out", type=Path, default=Path("results"))
     return parser
@@ -1722,6 +1766,8 @@ def main(argv: list[str] | None = None) -> int:
         run_c6_fit(args.out)
     elif args.phase == "c6":
         run_c6(args.out)
+    elif args.phase == "c7":
+        run_c7(args.out)
     return 0
 
 
