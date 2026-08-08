@@ -15,7 +15,7 @@ from scipy.stats import nbinom
 
 from rahola.config import SeaState
 from rahola.spectrum import jonswap_spectrum
-from rahola_lab.experiments.common import write_result
+from rahola_lab.experiments.common import load_result, write_result
 
 FloatArray = NDArray[np.float64]
 
@@ -44,6 +44,18 @@ class DetectedGroup:
     central_height_m: float
     cycle_count: float
     envelope_shape: tuple[float, ...]
+
+
+@dataclass(frozen=True)
+class CompositeRecord:
+    """An irregular prelude with one tapered target group and irregular tail."""
+
+    time_s: FloatArray
+    elevation_m: FloatArray
+    slope_rad: FloatArray
+    blend_start_index: int
+    target_start_index: int
+    target_stop_index: int
 
 
 def _repository_root() -> Path:
@@ -266,6 +278,223 @@ def _group_payload(group: DetectedGroup) -> dict[str, object]:
     }
 
 
+def embed_group(
+    prelude: ExtendedSea,
+    target_elevation_m: NDArray[np.floating],
+    target_slope_rad: NDArray[np.floating],
+    *,
+    arrival_s: float,
+    blend_half_width_s: float,
+    height_scale: float = 1.0,
+) -> CompositeRecord:
+    """Replace one target-sized interval through a two-sided raised-cosine crossfade."""
+    elevation = np.asarray(target_elevation_m, dtype=np.float64)
+    slope = np.asarray(target_slope_rad, dtype=np.float64)
+    if elevation.ndim != 1 or slope.shape != elevation.shape or len(elevation) < 3:
+        raise ValueError("target elevation and slope must be matching vectors")
+    if not np.all(np.isfinite(elevation)) or not np.all(np.isfinite(slope)):
+        raise ValueError("target waveforms must be finite")
+    if not np.isfinite(height_scale) or height_scale <= 0.0:
+        raise ValueError("height_scale must be positive and finite")
+    dt_s = float(np.median(np.diff(prelude.time_s)))
+    target_start = round((arrival_s - 0.5 * (len(elevation) - 1) * dt_s) / dt_s)
+    target_stop = target_start + len(elevation)
+    if target_start < 0 or target_stop > len(prelude.time_s):
+        raise ValueError("target window must fit inside the prelude record")
+    blend_samples = round(blend_half_width_s / dt_s)
+    if blend_samples < 1 or 2 * blend_samples >= len(elevation):
+        raise ValueError("blend windows must leave a nonempty target plateau")
+    weights = np.ones(len(elevation), dtype=np.float64)
+    phase = np.linspace(0.0, np.pi, blend_samples + 1)
+    weights[: blend_samples + 1] = 0.5 * (1.0 - np.cos(phase))
+    weights[-(blend_samples + 1) :] = 0.5 * (1.0 + np.cos(phase))
+    composite_elevation = prelude.elevation_m.copy()
+    composite_slope = prelude.slope_rad.copy()
+    selected = slice(target_start, target_stop)
+    composite_elevation[selected] = (
+        (1.0 - weights) * composite_elevation[selected] + weights * height_scale * elevation
+    )
+    composite_slope[selected] = (
+        (1.0 - weights) * composite_slope[selected] + weights * height_scale * slope
+    )
+    return CompositeRecord(
+        time_s=prelude.time_s,
+        elevation_m=composite_elevation,
+        slope_rad=composite_slope,
+        blend_start_index=target_start,
+        target_start_index=target_start,
+        target_stop_index=target_stop,
+    )
+
+
+def spectral_distortion(
+    original_elevation_m: NDArray[np.floating],
+    composite_elevation_m: NDArray[np.floating],
+    dt_s: float,
+    peak_period_s: float,
+) -> float:
+    """Return added high-frequency energy as a fraction of composite variance."""
+    original = np.asarray(original_elevation_m, dtype=np.float64)
+    composite = np.asarray(composite_elevation_m, dtype=np.float64)
+    if original.shape != composite.shape or original.ndim != 1:
+        raise ValueError("spectral records must be matching vectors")
+    frequencies = np.fft.rfftfreq(len(original), d=dt_s)
+    high = frequencies > 2.5 / peak_period_s
+    original_power = np.square(np.abs(np.fft.rfft(original - np.mean(original))))
+    composite_power = np.square(np.abs(np.fft.rfft(composite - np.mean(composite))))
+    increase = max(0.0, float(np.sum(composite_power[high] - original_power[high])))
+    total = float(np.sum(composite_power))
+    return increase / total if total > 0.0 else 0.0
+
+
+def _nearest_center_group(
+    composite: CompositeRecord, sea_state: SeaState, source_seed: int
+) -> DetectedGroup | None:
+    selected = slice(composite.target_start_index, composite.target_stop_index)
+    local_time = composite.time_s[selected] - composite.time_s[composite.target_start_index]
+    groups = detect_groups(
+        local_time,
+        composite.elevation_m[selected],
+        source_seed=source_seed,
+        significant_height_m=sea_state.hs_m,
+        peak_period_s=sea_state.tp_s,
+    )
+    target_center = 0.5 * (len(local_time) - 1)
+    if not groups:
+        return None
+    return min(groups, key=lambda group: abs(group.center_index - target_center))
+
+
+def run_c2(output_root: Path) -> dict[str, object]:
+    prereg = _preregistration()
+    controls = prereg["c2_embedding"]
+    reference = prereg["reference_configuration"]
+    sea_state = SeaState(**reference["sea_state"])
+    library = load_result(output_root, "d4b_group_library_d4b")
+    dt_s = float(library["construction"]["dt_s"])
+    duration_s = (
+        float(controls["group_arrival_s"])
+        + 0.5 * float(controls["embedded_group_window_s"])
+        + float(controls["tail_s"])
+    )
+    targets = [
+        (
+            np.asarray(row["waveform_elevation_m"], dtype=np.float64),
+            np.asarray(row["waveform_slope_rad"], dtype=np.float64),
+        )
+        for row in library["classes"]
+    ]
+    target_parameters = []
+    for class_index, (elevation, _) in enumerate(targets):
+        time = np.arange(len(elevation), dtype=np.float64) * dt_s
+        groups = detect_groups(
+            time,
+            elevation,
+            source_seed=class_index,
+            significant_height_m=sea_state.hs_m,
+            peak_period_s=sea_state.tp_s,
+        )
+        if not groups:
+            raise ValueError(f"class {class_index} medoid waveform has no retained group")
+        center = 0.5 * (len(time) - 1)
+        target_parameters.append(min(groups, key=lambda group: abs(group.center_index - center)))
+    rows = []
+    for seed in range(180_000, 180_200):
+        prelude = synthesize_extended_jonswap(
+            sea_state,
+            duration_s,
+            dt_s,
+            seed,
+            period_factor=int(reference["extended_period_factor"]),
+            max_frequency_rad_s=40.0 * 2.0 * np.pi / 4.0,
+        )
+        for class_index, (elevation, slope) in enumerate(targets):
+            composite = embed_group(
+                prelude,
+                elevation,
+                slope,
+                arrival_s=float(controls["group_arrival_s"]),
+                blend_half_width_s=float(controls["blend_half_width_s"]),
+            )
+            observed = _nearest_center_group(composite, sea_state, seed)
+            target = target_parameters[class_index]
+            rows.append(
+                {
+                    "seed": seed,
+                    "class": class_index,
+                    "prefix_byte_exact": bool(
+                        np.array_equal(
+                            composite.elevation_m[: composite.blend_start_index],
+                            prelude.elevation_m[: composite.blend_start_index],
+                        )
+                    ),
+                    "spectral_distortion": spectral_distortion(
+                        prelude.elevation_m,
+                        composite.elevation_m,
+                        dt_s,
+                        sea_state.tp_s,
+                    ),
+                    "carrier_period_relative_error": None
+                    if observed is None
+                    else abs(observed.carrier_period_s / target.carrier_period_s - 1.0),
+                    "central_height_relative_error": None
+                    if observed is None
+                    else abs(observed.central_height_m / target.central_height_m - 1.0),
+                }
+            )
+    distortions = np.asarray([row["spectral_distortion"] for row in rows], dtype=np.float64)
+    period_errors = np.asarray(
+        [row["carrier_period_relative_error"] for row in rows], dtype=np.float64
+    )
+    height_errors = np.asarray(
+        [row["central_height_relative_error"] for row in rows], dtype=np.float64
+    )
+    limit = float(controls["spectral_distortion_limit"])
+    payload: dict[str, object] = {
+        "experiment": "D4b C2 natural-initial-condition embedding",
+        "_governing_inputs": _governing_inputs(),
+        "configuration": {
+            "duration_s": duration_s,
+            "dt_s": dt_s,
+            "calibration_seed_range": [180_000, 180_200],
+            "extended_period_factor": int(reference["extended_period_factor"]),
+            "arrival_s": float(controls["group_arrival_s"]),
+            "blend_half_width_s": float(controls["blend_half_width_s"]),
+        },
+        "records": len(rows),
+        "all_prefixes_byte_exact": all(row["prefix_byte_exact"] for row in rows),
+        "missing_center_groups": sum(row["carrier_period_relative_error"] is None for row in rows),
+        "spectral_distortion": {
+            "maximum": float(np.max(distortions)),
+            "quantiles": np.quantile(distortions, [0.5, 0.9, 0.99]).tolist(),
+            "limit": limit,
+        },
+        "carrier_period_relative_error": {
+            "maximum": float(np.nanmax(period_errors)),
+            "quantiles": np.nanquantile(period_errors, [0.5, 0.9, 0.99]).tolist(),
+        },
+        "central_height_relative_error": {
+            "maximum": float(np.nanmax(height_errors)),
+            "quantiles": np.nanquantile(height_errors, [0.5, 0.9, 0.99]).tolist(),
+        },
+        "passes_embedding_checks": bool(
+            all(row["prefix_byte_exact"] for row in rows)
+            and np.all(np.isfinite(period_errors))
+            and np.all(np.isfinite(height_errors))
+            and np.max(period_errors) <= 0.05
+            and np.max(height_errors) <= 0.10
+            and np.max(distortions) <= limit
+        ),
+    }
+    write_result(
+        output_root,
+        "d4b_embedding_d4b",
+        payload,
+        upstream_results={"d4b_group_library_d4b": library},
+    )
+    return payload
+
+
 def run_c1(output_root: Path) -> dict[str, object]:
     prereg = _preregistration()
     controls = prereg["c1_group_library"]
@@ -357,7 +586,7 @@ def run_c1(output_root: Path) -> dict[str, object]:
 
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="python -m rahola_lab.experiments.d4b")
-    parser.add_argument("phase", choices=("c1",))
+    parser.add_argument("phase", choices=("c1", "c2"))
     parser.add_argument("--out", type=Path, default=Path("results"))
     return parser
 
@@ -366,6 +595,8 @@ def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     if args.phase == "c1":
         run_c1(args.out)
+    elif args.phase == "c2":
+        run_c2(args.out)
     return 0
 
 
