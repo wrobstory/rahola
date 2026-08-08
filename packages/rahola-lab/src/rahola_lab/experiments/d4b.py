@@ -290,7 +290,6 @@ def embed_group(
     *,
     arrival_s: float,
     blend_half_width_s: float,
-    group_start_index: int | None = None,
     height_scale: float = 1.0,
 ) -> CompositeRecord:
     """Replace one target-sized interval through a two-sided raised-cosine crossfade."""
@@ -303,11 +302,7 @@ def embed_group(
     if not np.isfinite(height_scale) or height_scale <= 0.0:
         raise ValueError("height_scale must be positive and finite")
     dt_s = float(np.median(np.diff(prelude.time_s)))
-    if group_start_index is None:
-        group_start_index = (len(elevation) - 1) // 2
-    if not 0 <= group_start_index < len(elevation):
-        raise ValueError("group_start_index must lie inside the target waveform")
-    target_start = round(arrival_s / dt_s) - group_start_index
+    target_start = round(arrival_s / dt_s)
     target_stop = target_start + len(elevation)
     if target_start < 0 or target_stop > len(prelude.time_s):
         raise ValueError("target window must fit inside the prelude record")
@@ -396,10 +391,12 @@ def run_c2(output_root: Path) -> dict[str, object]:
         )
         for row in library["classes"]
     ]
-    duration_s = float(controls["group_arrival_s"]) + max(
-        (len(elevation) - group_start) * dt_s
-        for elevation, _, group_start, _ in targets
-    ) + float(controls["tail_s"])
+    required_duration_s = (
+        float(controls["group_arrival_s"])
+        + max((len(elevation) - 1) * dt_s for elevation, _, _, _ in targets)
+        + float(controls["tail_s"])
+    )
+    duration_s = float(np.ceil(required_duration_s / (2.0 * dt_s)) * (2.0 * dt_s))
     target_parameters = []
     for class_index, (elevation, _, _, group_center) in enumerate(targets):
         time = np.arange(len(elevation), dtype=np.float64) * dt_s
@@ -425,14 +422,13 @@ def run_c2(output_root: Path) -> dict[str, object]:
             period_factor=int(reference["extended_period_factor"]),
             max_frequency_rad_s=40.0 * 2.0 * np.pi / 4.0,
         )
-        for class_index, (elevation, slope, group_start, group_center) in enumerate(targets):
+        for class_index, (elevation, slope, _, group_center) in enumerate(targets):
             composite = embed_group(
                 prelude,
                 elevation,
                 slope,
                 arrival_s=float(controls["group_arrival_s"]),
                 blend_half_width_s=float(controls["blend_half_width_s"]),
-                group_start_index=group_start,
             )
             observed = _nearest_center_group(composite, sea_state, seed, group_center)
             target = target_parameters[class_index]
@@ -633,7 +629,7 @@ def run_c3(output_root: Path) -> dict[str, object]:
     ]
     arrival_s = float(controls["group_arrival_s"])
     rows = []
-    for class_index, (elevation, slope, group_start) in enumerate(targets):
+    for class_index, (elevation, slope, _) in enumerate(targets):
         composite_slopes = np.stack(
             [
                 embed_group(
@@ -642,7 +638,6 @@ def run_c3(output_root: Path) -> dict[str, object]:
                     slope,
                     arrival_s=arrival_s,
                     blend_half_width_s=float(controls["blend_half_width_s"]),
-                    group_start_index=group_start,
                 ).slope_rad
                 for prelude in preludes
             ]

@@ -62,7 +62,6 @@ def test_embedding_preserves_prefix_and_target_parameters() -> None:
         np.zeros_like(target),
         arrival_s=50.0,
         blend_half_width_s=4.0,
-        group_start_index=target_groups[0].start_index,
     )
 
     np.testing.assert_array_equal(
