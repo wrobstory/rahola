@@ -1,7 +1,7 @@
 <!-- DRAFT v0.2 — ISSW / STAB&S submission. References verified against primary records
      2026-08-03; remaining flags noted at the head of the reference list. -->
 
-# Motion-Only Capsize Warning on an Audited Synthetic Benchmark: Ranking Skill Without Threshold Transfer
+# Motion-Only Capsize Warning on an Audited Synthetic Benchmark: Observable Vulnerability, Encounter-Decided Timing
 
 **W. R. Story**
 
@@ -30,8 +30,17 @@ closed-form criticality model overestimates the lethality of a crossing by rough
 four, and in 92 percent of capsizes the crossing that matters arrives less than ten seconds
 before the event. An audit during the study found our own first results inflated by test-set
 threshold selection; every number reported here is the corrected value. The picture that
-survives is simple: motion reveals the slowly building vulnerability, and only the sea knows
-the moment.
+survives is simple, and the final experiment measures it. Embedding a frozen library of wave
+groups into independent irregular preludes, so that the vessel arrives at each group naturally,
+capsize within the group is predicted at AUC 0.513 from the vessel's entry state, 0.934 from
+the group's parameters, and 0.938 from both. Motion reveals the slowly building vulnerability;
+the arriving group decides the rest, and this paper measures exactly how much.
+
+*Highlights:* five motion-only capsize detectors under a preregistered, audited protocol;
+ranking skill survives every forcing bandwidth, but alarm thresholds do not transfer; within an
+established severe regime, every motion statistic times capsize at chance; the split-time
+decomposition, operated online for the first time, miscalibrates by a factor of four; wave-group
+knowledge predicts capsize at AUC 0.93 while the vessel's entry state adds 0.004.
 
 *Keywords:* capsize, intact stability, real-time warning, split-time method, preregistered
 evaluation, synthetic benchmark.
@@ -261,6 +270,39 @@ factor of the decomposition is the part that works.
 
 ![Reliability of the offline-calibrated hybrid and its comparators on fresh test data (H1): predicted capsize probability per bin against the realized fraction. The hybrid under-predicts throughout; the crossing-rate-only map tracks the diagonal; the variance map scatters. The observable factor of the split-time decomposition — the crossing rate — carries the calibration.](../../results/h1_reliability_h1.png)
 
+**The exponent's clean trial (F1).** The 2009 thread deserved one experiment its era could not
+run: the finite-time Lyapunov exponent computed exactly, from the model's analytic Jacobian,
+with tangent perturbations receiving the identical realized forcing (the standard construction
+of Babaee et al. 2017). One preregistered ablation evaluated the margin level, its closure
+rate, time to closure, energy reserve and depletion, level-plus-rate combinations, the
+instantaneous strain normal to the escape boundary, and generic and escape-directed finite-time
+exponents, in both an operational causal setting and an oracle setting with the true state and
+tangent map. On the fully post-step severe-regime geometry, every statistic scored between
+0.501 and 0.507 — including the acausal true-tangent exponents, which use information from the
+future itself. The conditional plan to audit the 2009 estimator's implementation was therefore
+retired by its own trigger: the true quantity's ceiling was already at the floor, so any
+historical implementation defect was immaterial. The thesis's empirical pivot away from
+exponents was correct at the level of the underlying quantity.
+
+**The other side of the decomposition (D4b).** A final experiment asked the question every
+negative above implies: if the arriving wave group were known, how much would it decide? A
+frozen library of six envelope-mined group shapes was embedded into hundreds of independent
+irregular preludes, in the natural-initial-condition manner of Silva and Maki (2024), so that
+the vessel and its response history arrive at each group naturally; group heights were swept
+across the critical range and monotone response maps fitted per entry-state stratum. Evaluated
+once on held-out preludes (7,164 trials, 580 capsizes), capsize within the group was predicted
+at AUC 0.513 [0.503, 0.524] from the vessel's entry state alone — chance — at 0.934
+[0.930, 0.938] from the group's parameters alone, and at 0.938 [0.934, 0.941] from both.
+The preregistered expectation that the combination would substantially exceed either input was
+honestly not confirmed: the entry state adds 0.004 of AUC once the group is known. A companion
+rate composition over the library's naturally occurring groups failed its capture criterion in
+the informative direction — every library class fell below its critical height, so real
+capsizes arise from sequences beyond the mined classes — a coverage result about the library,
+not the method. A preregistered wave-field audit preceded these runs: the periodic record's
+recurrence begins beyond every labeled lag, elevation upcrossing rates match the Rice formula,
+and the fixed-energy conditioning of the deterministic-amplitude ensemble is stated as part of
+the estimand.
+
 A companion study of conformalized forecast intervals on the same benchmark (following Romano,
 Patterson and Candès 2019; Gibbs and Candès 2021) found stationary marginal coverage accurate to
 0.75 percentage points in the mean, while every online adaptation scheme tested failed a
@@ -325,11 +367,30 @@ critical wave-group encounters. A test-selected evaluation had earlier made the 
 appear two and one half times cheaper in false alarms than it is. The split-time experiments
 sharpen the same conclusion from inside the method: the upcrossing rate survives as a simple,
 usable vulnerability measure, while the severity term that would time the event arrives, in 92
-percent of capsizes, after the event has begun. Further progress on the timing
+percent of capsizes, after the event has begun. The natural-initial-condition experiment then
+closes the argument from the other side: with the arriving group fully known, capsize within
+the group is predicted at AUC 0.934, and the vessel's entry state raises this by 0.004. The
+division of the problem is no longer an interpretation but a measurement, and it prices the
+instrument the field should build next: a forward sensor that resolves the height and period of
+the oncoming group captures essentially the entire predictable fraction. Further progress on the timing
 question appears to require information about the incident wave field rather than refinement of
 motion-only architectures; shipboard sea-state estimation is an established literature (Nielsen
 2017), and the benchmark, with its frozen splits and audited protocol, is suited to that study
 without modification.
+
+## Declarations
+
+**Data availability.** The benchmark code, campaign definitions, preregistrations, and the
+complete numerical record, including corrected and superseded results retained as immutable
+history, will be public at github.com/wrobstory/rahola on publication.
+
+**Declaration of competing interest.** The author declares no competing financial interests or
+personal relationships that could have influenced this work.
+
+**CRediT author statement.** W. R. Story: conceptualization, methodology, software,
+validation, formal analysis, investigation, data curation, writing, visualization.
+
+**Funding.** This research received no external funding.
 
 ## Acknowledgments
 
@@ -343,6 +404,7 @@ pre-audit results retained as historical artifacts, are available from the autho
      and Shinozuka & Deodatis DOI strings to be re-checked at submission. -->
 
 - Anastopoulos, P. A., and Spyrou, K. J. (2019). Evaluation of the critical wave groups method in calculating the probability of ship capsize in beam seas. *Ocean Engineering* 187, 106213.
+- Babaee, H., Farazmand, M., Haller, G., and Sapsis, T. P. (2017). Reduced-order description of transient instabilities and computation of finite-time Lyapunov exponents. *Chaos* 27, 063103.
 - Anastopoulos, P. A., Spyrou, K. J., Bassler, C. C., and Belenky, V. (2016). Towards an improved critical wave groups method for the probabilistic assessment of large ship motions in irregular seas. *Probabilistic Engineering Mechanics* 44, 18–27.
 - Bačkalov, I., Bulian, G., Rosén, A., Shigunov, V., and Themelis, N. (2016). Improvement of ship stability and safety in intact condition through operational measures: challenges and opportunities. *Ocean Engineering* 120, 353–361.
 - Belenky, V. L., and Sevastianov, N. B. (2007). *Stability and Safety of Ships: Risk of Capsizing*, 2nd ed. SNAME, Jersey City.
@@ -372,6 +434,7 @@ pre-audit results retained as historical artifacts, are available from the autho
 - Romano, Y., Patterson, E., and Candès, E. J. (2019). Conformalized quantile regression. *Advances in Neural Information Processing Systems* 32, 3538–3548.
 - Shigunov, V. (2023). Intact stability operational measures: criteria, standards and examples. *Ocean Engineering* 279, 114446.
 - Shinozuka, M., and Deodatis, G. (1991). Simulation of stochastic processes by spectral representation. *Applied Mechanics Reviews* 44(4), 191–204.
+- Silva, K. M., and Maki, K. J. (2024). Implementation of the critical wave groups method with computational fluid dynamics and neural networks. *Ocean Engineering* 292, 116468.
 - Silva, K. M., and Maki, K. J. (2024). Implementation of the critical wave groups method with computational fluid dynamics and neural networks. *Ocean Engineering* 292, 116468.
 - Story, W. R. (2009). *Application of Lyapunov Exponents to Strange Attractors and Intact & Damaged Ship Stability*. M.S. thesis, Aerospace and Ocean Engineering, Virginia Polytechnic Institute and State University, Blacksburg.
 - Terada, D., Tamashima, M., Nakao, I., and Matsuda, A. (2016). Estimation of the metacentric height by using onboard monitoring roll data based on time series analysis. *Proceedings of the 15th International Ship Stability Workshop*, Stockholm, 209–215.
