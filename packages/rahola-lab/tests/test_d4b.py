@@ -19,6 +19,7 @@ D4B_TEST_RANGES = _D4B.D4B_TEST_RANGES
 ExtendedSea = _D4B.ExtendedSea
 _auc = _D4B._auc
 _fit_logistic = _D4B._fit_logistic
+_reliability_edges = _D4B._reliability_edges
 bisect_threshold = _D4B.bisect_threshold
 cluster_groups = _D4B.cluster_groups
 detect_groups = _D4B.detect_groups
@@ -155,3 +156,4 @@ def test_penalized_logistic_fit_is_finite_and_orders_known_signal() -> None:
     assert np.all(np.isfinite(fit.coefficients))
     assert np.all(np.diff(scores) > 0.0)
     assert _auc(labels, scores) == pytest.approx(1.0)
+    assert np.all(np.isfinite(_reliability_edges(scores)))

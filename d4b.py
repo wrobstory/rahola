@@ -1303,9 +1303,9 @@ def _reliability_edges(scores: FloatArray) -> FloatArray:
     if len(edges) < 3:
         minimum, maximum = float(np.min(scores)), float(np.max(scores))
         if minimum == maximum:
-            return np.asarray([-np.inf, np.inf], dtype=np.float64)
+            return np.asarray([-1.0, 2.0], dtype=np.float64)
         edges = np.linspace(minimum, maximum, 6)
-    edges[0], edges[-1] = -np.inf, np.inf
+    edges[0], edges[-1] = -1.0, 2.0
     return edges
 
 
