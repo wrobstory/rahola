@@ -1,0 +1,40 @@
+{
+  "_artifact_sha256": "20282aafc8378a46f402b19b1bcf5763301a992977bde9ad36318fd30b519ccf",
+  "_governing_inputs": {
+    "d4b.py": "b962b73dc09c00daf168eb33677351aec4f773a33160089ad8b4518a5a343611",
+    "results/d4b_preregistration_d4b.json": "f63ea7044b9315cc1f4004723073dd375f9267371d1ddc0ccad86fdbadd95c68"
+  },
+  "_provenance": {
+    "reference_anchor_sha256": "97df5c1fd4fe7eb6a00902608d46ab1456073d1b48781e47b8adda707b26c0f5",
+    "reference_h1_anchor_sha256": "81491c11171c3516a461c1938a943b1af04fcf9859d5d6bd2cfe2c5ec8939f5b",
+    "reference_u1r2_anchor_sha256": "2f68a4ce89ab90997c91bd98ca614bfe26b7fba923c69c6e439c865b4432cd5d",
+    "reference_v02_anchor_sha256": "96fdcc7a93cd4b0a760750320cf41c7f1ce15d52708b2bfc8791c3b3a9d10dfd",
+    "schema_version": 1,
+    "source_sha256": "9ce533b9df206e4ab24b5a671ccc5fc7e2121093d23202a9369759f463e2b574",
+    "upstream_artifacts": {
+      "d4b_rate_validation_d4b": "ba6d48d26d71a3d2e5b8f612b4cae14bb362955184804509bb32f15556026fe3"
+    }
+  },
+  "component_fraction_of_one_source_sum": {
+    "entry_distribution": 0.0,
+    "group_rates": 0.0,
+    "response_map": 0.0
+  },
+  "component_variance": {
+    "entry_distribution": 0.0,
+    "group_rates": 0.0,
+    "response_map": 0.0
+  },
+  "experiment": "D4b C7 nested uncertainty propagation",
+  "interpretation": "One-source-at-a-time variances need not sum to the joint variance because the composition is nonlinear; fractions are normalized only across the three isolated source variances.",
+  "joint_rate_interval_per_hour": [
+    0.0,
+    0.0
+  ],
+  "joint_rate_variance": 0.0,
+  "point_rate_per_hour": 0.0,
+  "predictive_count_interval": [
+    0,
+    0
+  ]
+}
