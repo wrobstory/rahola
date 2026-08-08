@@ -69,6 +69,11 @@ def test_embedding_preserves_prefix_and_target_parameters() -> None:
         composite.elevation_m[: composite.blend_start_index],
         prelude.elevation_m[: composite.blend_start_index],
     )
+    blend_samples = round(4.0 / dt_s)
+    np.testing.assert_array_equal(
+        composite.elevation_m[composite.plateau_start_index : composite.plateau_stop_index],
+        target[blend_samples:-blend_samples],
+    )
     embedded_window = composite.elevation_m[
         composite.target_start_index : composite.target_stop_index
     ]

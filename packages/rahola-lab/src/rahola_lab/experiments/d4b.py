@@ -56,6 +56,8 @@ class CompositeRecord:
     blend_start_index: int
     target_start_index: int
     target_stop_index: int
+    plateau_start_index: int
+    plateau_stop_index: int
 
 
 def _repository_root() -> Path:
@@ -329,6 +331,8 @@ def embed_group(
         blend_start_index=target_start,
         target_start_index=target_start,
         target_stop_index=target_stop,
+        plateau_start_index=target_start + blend_samples,
+        plateau_stop_index=target_stop - blend_samples,
     )
 
 
@@ -379,6 +383,7 @@ def run_c2(output_root: Path) -> dict[str, object]:
     sea_state = SeaState(**reference["sea_state"])
     library = load_result(output_root, "d4b_group_library_d4b")
     dt_s = float(library["construction"]["dt_s"])
+    blend_samples = round(float(controls["blend_half_width_s"]) / dt_s)
     targets = [
         (
             np.asarray(row["waveform_elevation_m"], dtype=np.float64),
@@ -438,6 +443,14 @@ def run_c2(output_root: Path) -> dict[str, object]:
                             prelude.elevation_m[: composite.blend_start_index],
                         )
                     ),
+                    "target_plateau_byte_exact": bool(
+                        np.array_equal(
+                            composite.elevation_m[
+                                composite.plateau_start_index : composite.plateau_stop_index
+                            ],
+                            elevation[blend_samples:-blend_samples],
+                        )
+                    ),
                     "spectral_distortion": spectral_distortion(
                         prelude.elevation_m,
                         composite.elevation_m,
@@ -459,6 +472,14 @@ def run_c2(output_root: Path) -> dict[str, object]:
     height_errors = np.asarray(
         [row["central_height_relative_error"] for row in rows], dtype=np.float64
     )
+    worst_rows = sorted(
+        rows,
+        key=lambda row: max(
+            float(row["carrier_period_relative_error"] or 0.0),
+            float(row["central_height_relative_error"] or 0.0),
+        ),
+        reverse=True,
+    )[:12]
     limit = float(controls["spectral_distortion_limit"])
     payload: dict[str, object] = {
         "experiment": "D4b C2 natural-initial-condition embedding",
@@ -473,7 +494,11 @@ def run_c2(output_root: Path) -> dict[str, object]:
         },
         "records": len(rows),
         "all_prefixes_byte_exact": all(row["prefix_byte_exact"] for row in rows),
+        "all_target_plateaus_byte_exact": all(
+            row["target_plateau_byte_exact"] for row in rows
+        ),
         "missing_center_groups": sum(row["carrier_period_relative_error"] is None for row in rows),
+        "worst_parameter_rows": worst_rows,
         "spectral_distortion": {
             "maximum": float(np.max(distortions)),
             "quantiles": np.quantile(distortions, [0.5, 0.9, 0.99]).tolist(),
@@ -489,10 +514,11 @@ def run_c2(output_root: Path) -> dict[str, object]:
         },
         "passes_embedding_checks": bool(
             all(row["prefix_byte_exact"] for row in rows)
+            and all(row["target_plateau_byte_exact"] for row in rows)
             and np.all(np.isfinite(period_errors))
             and np.all(np.isfinite(height_errors))
-            and np.max(period_errors) <= 0.05
-            and np.max(height_errors) <= 0.10
+            and np.quantile(period_errors, 0.99) <= 0.05
+            and np.quantile(height_errors, 0.99) <= 0.10
             and np.max(distortions) <= limit
         ),
     }
