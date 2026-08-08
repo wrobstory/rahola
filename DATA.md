@@ -253,3 +253,22 @@ one-shot materialization then produced:
 Softening and parametric evaluation realized fewer than 30 capsizes. They were neither redrawn nor
 supplemented; the pooled F1b campaign retains 79 events, while any earned family-specific F1c row
 must carry the corresponding power shortfall. Neither reserve block was opened or generated.
+
+## D4b fresh TEST slice — predeclared 2026-08-08
+
+D4b freezes 1,700 ordinary TEST seeds before materialization. The interval occupies the untouched
+gap between F1's softening and parametric evaluation slices and is disjoint from every v0.1, v0.2,
+U1-r2, H1, and F1 TEST interval. The 1,500 unconditional trajectories meet the predeclared power
+floor of 30 expected capsizes at the softening evaluation state's ledgered 2.000% rate. The 200
+held-out preludes are paired across the six frozen group shapes and are scored once after all
+library, stratum, response, and predictor choices are fixed on TRAIN/CALIBRATION seeds.
+
+| D4b role | Count | TEST offset | Absolute seed range |
+| --- | ---: | ---: | --- |
+| matched unconditional count | 1,500 | 2,500 | `[202500, 204000)` |
+| held-out embedded preludes | 200 | 4,000 | `[204000, 204200)` |
+
+The group library uses TRAIN seeds `[90000, 90004)` and the fitting preludes use CALIBRATION seeds
+`[180000, 180200)`. D4b requires the regular 8x-period construction diagnosed in W1; the production
+single-period field is prohibited. The full frozen protocol is
+`results/d4b_preregistration_d4b.json`. Neither reserve block may be opened or generated.
