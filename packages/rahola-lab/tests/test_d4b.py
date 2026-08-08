@@ -4,6 +4,7 @@ import numpy as np
 import pytest
 from rahola_lab.experiments.d4b import (
     ExtendedSea,
+    bisect_threshold,
     cluster_groups,
     detect_groups,
     embed_group,
@@ -90,3 +91,16 @@ def test_embedding_preserves_prefix_and_target_parameters() -> None:
     assert embedded_groups[0].central_height_m == pytest.approx(
         target_groups[0].central_height_m, rel=0.02
     )
+
+
+def test_bisection_recovers_known_critical_height() -> None:
+    threshold = bisect_threshold(
+        lambda height: height >= 3.125,
+        0.0,
+        10.0,
+        tolerance=1e-6,
+        max_iterations=32,
+    )
+    assert threshold == pytest.approx(3.125, abs=1e-6)
+    with pytest.raises(ValueError, match="false at lower and true at upper"):
+        bisect_threshold(lambda _: False, 0.0, 1.0, tolerance=0.01, max_iterations=8)

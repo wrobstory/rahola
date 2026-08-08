@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -19,6 +20,7 @@ from rahola.dynamics import integrate_rk4_batch
 from rahola.spectrum import jonswap_spectrum
 from rahola_lab.campaigns import load_campaign_definition
 from rahola_lab.experiments.common import load_result, write_result
+from rahola_lab.experiments.h1_common import _pava
 
 FloatArray = NDArray[np.float64]
 
@@ -723,6 +725,296 @@ def run_c3(output_root: Path) -> dict[str, object]:
     return payload
 
 
+def bisect_threshold(
+    oracle: Callable[[float], bool],
+    lower: float,
+    upper: float,
+    *,
+    tolerance: float,
+    max_iterations: int,
+) -> float:
+    """Return the smallest bracketed true threshold to absolute tolerance."""
+    if not lower < upper or tolerance <= 0.0 or max_iterations < 1:
+        raise ValueError("bisection requires an ordered bracket and positive controls")
+    if oracle(lower) or not oracle(upper):
+        raise ValueError("bisection oracle must be false at lower and true at upper")
+    left, right = lower, upper
+    for _ in range(max_iterations):
+        if right - left <= tolerance:
+            break
+        middle = 0.5 * (left + right)
+        if oracle(middle):
+            right = middle
+        else:
+            left = middle
+    return right
+
+
+def _group_outcomes(
+    cap_steps: NDArray[np.int32],
+    *,
+    arrival_s: float,
+    target_duration_s: float,
+    integration_dt_s: float,
+) -> NDArray[np.bool_]:
+    start = round(arrival_s / integration_dt_s)
+    stop = round((arrival_s + target_duration_s) / integration_dt_s)
+    return (cap_steps >= start) & (cap_steps <= stop)
+
+
+def _simulate_scaled_targets(
+    preludes: list[ExtendedSea],
+    target_elevation: FloatArray,
+    target_slope: FloatArray,
+    scales: FloatArray,
+    *,
+    arrival_s: float,
+    blend_half_width_s: float,
+    config: object,
+) -> NDArray[np.bool_]:
+    if scales.shape != (len(preludes),):
+        raise ValueError("one target scale is required per prelude")
+    slopes = np.stack(
+        [
+            embed_group(
+                prelude,
+                target_elevation,
+                target_slope,
+                arrival_s=arrival_s,
+                blend_half_width_s=blend_half_width_s,
+                height_scale=float(scale),
+            ).slope_rad
+            for prelude, scale in zip(preludes, scales, strict=True)
+        ]
+    )
+    _, cap_steps = _integrate_slopes(slopes, config)
+    target_duration_s = (len(target_elevation) - 1) * 0.5 * config.integration_dt_s
+    return _group_outcomes(
+        cap_steps,
+        arrival_s=arrival_s,
+        target_duration_s=target_duration_s,
+        integration_dt_s=config.integration_dt_s,
+    )
+
+
+def _response_curve(
+    outcomes: NDArray[np.bool_],
+    selected: NDArray[np.bool_],
+    *,
+    replicates: int,
+    seed: int,
+) -> tuple[FloatArray, FloatArray, FloatArray]:
+    rows = outcomes[:, selected]
+    if rows.shape[1] == 0:
+        raise ValueError("every response stratum requires calibration preludes")
+    weights = np.full(rows.shape[0], rows.shape[1], dtype=np.float64)
+    point = _pava(np.mean(rows, axis=1), weights)
+    samples = np.empty((replicates, rows.shape[0]), dtype=np.float64)
+    rng = np.random.default_rng(seed)
+    for replicate in range(replicates):
+        indices = rng.integers(0, rows.shape[1], rows.shape[1])
+        samples[replicate] = _pava(np.mean(rows[:, indices], axis=1), weights)
+    return point, np.quantile(samples, 0.025, axis=0), np.quantile(samples, 0.975, axis=0)
+
+
+def _critical_heights(
+    preludes: list[ExtendedSea],
+    target_elevation: FloatArray,
+    target_slope: FloatArray,
+    native_height_m: float,
+    valid: NDArray[np.bool_],
+    *,
+    upper_height_m: float,
+    tolerance_m: float,
+    max_iterations: int,
+    arrival_s: float,
+    blend_half_width_s: float,
+    config: object,
+) -> tuple[FloatArray, NDArray[np.bool_], NDArray[np.bool_]]:
+    count = len(preludes)
+    lower = np.zeros(count, dtype=np.float64)
+    upper = np.full(count, upper_height_m, dtype=np.float64)
+    low_outcome = _simulate_scaled_targets(
+        preludes,
+        target_elevation,
+        target_slope,
+        np.full(count, 1e-9),
+        arrival_s=arrival_s,
+        blend_half_width_s=blend_half_width_s,
+        config=config,
+    )
+    high_outcome = _simulate_scaled_targets(
+        preludes,
+        target_elevation,
+        target_slope,
+        upper / native_height_m,
+        arrival_s=arrival_s,
+        blend_half_width_s=blend_half_width_s,
+        config=config,
+    )
+    bracketed = valid & ~low_outcome & high_outcome
+    active = bracketed.copy()
+    for _ in range(max_iterations):
+        active &= upper - lower > tolerance_m
+        if not np.any(active):
+            break
+        middle = 0.5 * (lower + upper)
+        outcome = _simulate_scaled_targets(
+            preludes,
+            target_elevation,
+            target_slope,
+            np.maximum(middle / native_height_m, 1e-9),
+            arrival_s=arrival_s,
+            blend_half_width_s=blend_half_width_s,
+            config=config,
+        )
+        upper = np.where(active & outcome, middle, upper)
+        lower = np.where(active & ~outcome, middle, lower)
+    critical = np.where(bracketed, upper, np.where(valid & low_outcome, 0.0, np.nan))
+    return critical, valid & low_outcome, valid & ~high_outcome
+
+
+def run_c4(output_root: Path) -> dict[str, object]:
+    prereg = _preregistration()
+    controls = prereg["c2_embedding"]
+    response_controls = prereg["c4_response"]
+    reference = prereg["reference_configuration"]
+    sea_state = SeaState(**reference["sea_state"])
+    library = load_result(output_root, "d4b_group_library_d4b")
+    embedding = load_result(output_root, "d4b_embedding_d4b")
+    strata = load_result(output_root, "d4b_entry_strata_d4b")
+    config_path = (
+        _repository_root()
+        / "packages/rahola-lab/src/rahola_lab/campaigns/configs/softening_evaluation.yaml"
+    )
+    config = load_campaign_definition(config_path).simulation
+    dt_s = 0.5 * config.integration_dt_s
+    duration_s = float(embedding["configuration"]["duration_s"])
+    seeds = range(180_000, 180_200)
+    preludes = [
+        synthesize_extended_jonswap(
+            sea_state,
+            duration_s,
+            dt_s,
+            seed,
+            period_factor=int(reference["extended_period_factor"]),
+            max_frequency_rad_s=40.0 * config.omega_n_rad_s,
+        )
+        for seed in seeds
+    ]
+    multipliers = np.asarray(response_controls["height_multipliers"], dtype=np.float64)
+    arrival_s = float(controls["group_arrival_s"])
+    blend_half_width_s = float(controls["blend_half_width_s"])
+    replicates = int(response_controls["bootstrap_replicates"])
+    response_maps = []
+    critical_rows = []
+    monotonicity_violations = 0
+    for class_index, class_row in enumerate(library["classes"]):
+        elevation = np.asarray(class_row["waveform_elevation_m"], dtype=np.float64)
+        slope = np.asarray(class_row["waveform_slope_rad"], dtype=np.float64)
+        native_height = float(class_row["medoid"]["central_height_m"])
+        grid_outcomes = np.stack(
+            [
+                _simulate_scaled_targets(
+                    preludes,
+                    elevation,
+                    slope,
+                    np.full(len(preludes), multiplier),
+                    arrival_s=arrival_s,
+                    blend_half_width_s=blend_half_width_s,
+                    config=config,
+                )
+                for multiplier in multipliers
+            ]
+        )
+        entry_rows = sorted(
+            (row for row in strata["entries"] if row["class"] == class_index),
+            key=lambda row: row["seed"],
+        )
+        valid = np.asarray([row["valid_entry"] for row in entry_rows], dtype=np.bool_)
+        assignments = np.asarray(
+            [-1 if row["stratum"] is None else row["stratum"] for row in entry_rows],
+            dtype=np.int64,
+        )
+        monotonicity_violations += int(
+            np.sum(np.any(np.diff(grid_outcomes.astype(np.int8), axis=0) < 0, axis=0) & valid)
+        )
+        for stratum in range(4):
+            selected = valid & (assignments == stratum)
+            point, lower, upper = _response_curve(
+                grid_outcomes,
+                selected,
+                replicates=replicates,
+                seed=20_260_808 + 4 * class_index + stratum,
+            )
+            response_maps.append(
+                {
+                    "class": class_index,
+                    "stratum": stratum,
+                    "preludes": int(np.sum(selected)),
+                    "height_m": (native_height * multipliers).tolist(),
+                    "capsizes": np.sum(grid_outcomes[:, selected], axis=1).tolist(),
+                    "probability": point.tolist(),
+                    "lower": lower.tolist(),
+                    "upper": upper.tolist(),
+                }
+            )
+        critical, left_censored, right_censored = _critical_heights(
+            preludes,
+            elevation,
+            slope,
+            native_height,
+            valid,
+            upper_height_m=float(response_controls["upper_bracket_hs_fraction"])
+            * sea_state.hs_m,
+            tolerance_m=float(response_controls["bisection_absolute_tolerance_m"]),
+            max_iterations=int(response_controls["bisection_max_iterations"]),
+            arrival_s=arrival_s,
+            blend_half_width_s=blend_half_width_s,
+            config=config,
+        )
+        critical_rows.extend(
+            {
+                "seed": seed,
+                "class": class_index,
+                "stratum": None if assignments[index] < 0 else int(assignments[index]),
+                "critical_height_m": None
+                if not np.isfinite(critical[index])
+                else float(critical[index]),
+                "left_censored": bool(left_censored[index]),
+                "right_censored": bool(right_censored[index]),
+                "valid_entry": bool(valid[index]),
+            }
+            for index, seed in enumerate(seeds)
+        )
+    payload: dict[str, object] = {
+        "experiment": "D4b C4 monotone response maps",
+        "_governing_inputs": _governing_inputs(),
+        "configuration": {
+            "height_multipliers": multipliers.tolist(),
+            "bisection_absolute_tolerance_m": float(
+                response_controls["bisection_absolute_tolerance_m"]
+            ),
+            "bisection_max_iterations": int(response_controls["bisection_max_iterations"]),
+            "bootstrap_replicates": replicates,
+        },
+        "grid_monotonicity_violating_preludes": monotonicity_violations,
+        "response_maps": response_maps,
+        "critical_heights": critical_rows,
+    }
+    write_result(
+        output_root,
+        "d4b_response_maps_d4b",
+        payload,
+        upstream_results={
+            "d4b_group_library_d4b": library,
+            "d4b_embedding_d4b": embedding,
+            "d4b_entry_strata_d4b": strata,
+        },
+    )
+    return payload
+
+
 def run_c1(output_root: Path) -> dict[str, object]:
     prereg = _preregistration()
     controls = prereg["c1_group_library"]
@@ -820,7 +1112,7 @@ def run_c1(output_root: Path) -> dict[str, object]:
 
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="python -m rahola_lab.experiments.d4b")
-    parser.add_argument("phase", choices=("c1", "c2", "c3"))
+    parser.add_argument("phase", choices=("c1", "c2", "c3", "c4"))
     parser.add_argument("--out", type=Path, default=Path("results"))
     return parser
 
@@ -833,6 +1125,8 @@ def main(argv: list[str] | None = None) -> int:
         run_c2(args.out)
     elif args.phase == "c3":
         run_c3(args.out)
+    elif args.phase == "c4":
+        run_c4(args.out)
     return 0
 
 
