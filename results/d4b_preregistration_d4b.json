@@ -59,13 +59,14 @@
     "unconditional_duration_s": 600.0
   },
   "c6_observability": {
+    "amendment_before_test": "C4 CALIBRATION outcomes were separated across most of the frozen height grid, so the unpenalized logistic MLE had no finite optimum. Before TEST materialization a fixed untuned 1e-4 L2 coefficient penalty was added; the intercept remains unpenalized.",
     "evaluation": "one-shot held-out TEST preludes; all fitting and reliability-bin edges use calibration preludes only",
     "metrics": [
       "AUC",
       "Brier score",
       "five-bin reliability"
     ],
-    "model": "unpenalized logistic regression with standardized continuous inputs and an intercept",
+    "model": "logistic regression with standardized continuous inputs, an unpenalized intercept, and fixed L2 coefficient penalty 1e-4",
     "predictors": {
       "both": "entry state plus group parameters",
       "entry_only": "roll, roll rate, danger margin, energy reserve",
