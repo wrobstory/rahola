@@ -1,0 +1,85 @@
+{
+  "commit": "c351be60aa809242aafd3e05f925168b7ee8c9e6",
+  "command": "PYTHONPATH=src uv run python examples/validation_acceptance.py",
+  "gates": {
+    "significant_wave_height": {
+      "target_hs_m": 4.0,
+      "recovered_hs_m": 4.000120980144593,
+      "attained_rel_error": 3.024503614823537e-05,
+      "threshold_rel_error": 0.02,
+      "passed": true
+    },
+    "linear_limit_response_variance": {
+      "simulated_variance": 2.9925128941324458e-05,
+      "analytic_variance": 2.9471750564674576e-05,
+      "attained_rel_error": 0.015383489883132675,
+      "threshold_rel_error": 0.06,
+      "passed": true
+    },
+    "mathieu_principal_boundary": {
+      "predicted_threshold": 0.08,
+      "simulated_crossing": 0.082,
+      "attained_rel_error": 0.025000000000000022,
+      "threshold_rel_error": 0.1,
+      "passed": true
+    },
+    "melnikov_necessary_condition": {
+      "no_capsize_below_threshold": [
+        {
+          "damping_ratio": 0.015,
+          "frequency_ratio": 0.7,
+          "capsize_fraction_at_0p95_threshold": 0.0
+        },
+        {
+          "damping_ratio": 0.015,
+          "frequency_ratio": 1.0,
+          "capsize_fraction_at_0p95_threshold": 0.0
+        },
+        {
+          "damping_ratio": 0.015,
+          "frequency_ratio": 1.3,
+          "capsize_fraction_at_0p95_threshold": 0.0
+        },
+        {
+          "damping_ratio": 0.04,
+          "frequency_ratio": 0.7,
+          "capsize_fraction_at_0p95_threshold": 0.0
+        },
+        {
+          "damping_ratio": 0.04,
+          "frequency_ratio": 1.0,
+          "capsize_fraction_at_0p95_threshold": 0.0
+        },
+        {
+          "damping_ratio": 0.04,
+          "frequency_ratio": 1.3,
+          "capsize_fraction_at_0p95_threshold": 0.0
+        }
+      ],
+      "boundary_margins": [
+        {
+          "frequency_ratio": 0.7,
+          "melnikov_threshold": 0.020571648561168082,
+          "simulated_boundary": 0.12816966004384128,
+          "boundary_at_or_above": true
+        },
+        {
+          "frequency_ratio": 1.0,
+          "melnikov_threshold": 0.029004905659958464,
+          "simulated_boundary": 0.14153140330187372,
+          "boundary_at_or_above": true
+        },
+        {
+          "frequency_ratio": 1.3,
+          "melnikov_threshold": 0.04382735450587713,
+          "simulated_boundary": 0.3778397320096517,
+          "boundary_at_or_above": true
+        }
+      ],
+      "shape_correlation": 0.9496422438971623,
+      "shape_correlation_threshold": 0.8,
+      "passed": true
+    }
+  },
+  "all_passed": true
+}
