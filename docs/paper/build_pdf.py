@@ -10,6 +10,8 @@ TEX = Path(__file__).parent / "issw-stabs-draft.tex"
 PREAMBLE = r"""\documentclass[11pt]{article}
 \usepackage[margin=1.1in]{geometry}
 \usepackage{amsmath,amssymb}
+\usepackage{array}
+\usepackage{float}
 \usepackage{mathpazo}
 \usepackage[T1]{fontenc}
 \usepackage{microtype}
@@ -30,7 +32,7 @@ UNICODE_MAP = {
     "\u2208": r"$\in$", "\u00b7": r"$\cdot$", "\u2026": r"\ldots{}",
     "\u03b3": r"$\gamma$", "\u03c6": r"$\phi$", "\u03c9": r"$\omega$",
     "\u03b6": r"$\zeta$", "\u00a0": "~",
-    "\u010d": r"\v{c}", "\u00e9": r"\'e", "\u00fc": r"\"u", "\u00f8": r"\o{}",
+    "\u010d": r"\v{c}", "\u0107": r"\'c", "\u00e9": r"\'e", "\u00fc": r"\"u", "\u00f8": r"\o{}",
     "\u00e4": r"\"a", "\u00ed": r"\'i", "\u00f3": r"\'o", "\u00e1": r"\'a",
     "\u00f6": r"\"o", "\u00e8": r"\`e", "\u00e7": r"\c{c}", "\u00f1": r"\~n",
     "\u00b0": r"\textdegree{}",
@@ -110,12 +112,46 @@ def convert(md: str) -> str:
                 i += 1
                 item += " " + inline(lines[i].strip())
             out.append("\\hangindent=1.5em\\hangafter=1\\noindent " + item + "\\par")
+        elif line.startswith("- "):
+            items = []
+            while i < len(lines) and lines[i].startswith("- "):
+                item = lines[i][2:]
+                while i + 1 < len(lines) and lines[i + 1].startswith("  "):
+                    i += 1
+                    item += " " + lines[i].strip()
+                items.append(inline(item))
+                i += 1
+            i -= 1
+            out.append("\\begin{itemize}\\setlength{\\itemsep}{1pt}"
+                       + "".join("\\item " + it for it in items) + "\\end{itemize}")
+        elif line.startswith("|"):
+            rows = []
+            while i < len(lines) and lines[i].startswith("|"):
+                cells = [c.strip() for c in lines[i].strip().strip("|").split("|")]
+                if not set("".join(cells)) <= set("-: "):
+                    rows.append(cells)
+                i += 1
+            caption = ""
+            if i < len(lines) and lines[i].startswith("Table: "):
+                caption = inline(lines[i][7:])
+            else:
+                i -= 1
+            ncol = max(len(r) for r in rows)
+            spec = ncol * (">{\\raggedright\\arraybackslash}p{%.3f\\linewidth}"
+                           % (0.92 / ncol))
+            body = ["\\textbf{" + "} & \\textbf{".join(inline(c) for c in rows[0])
+                    + "} \\\\\\hline"]
+            body += [" & ".join(inline(c) for c in r) + " \\\\" for r in rows[1:]]
+            out.append("\\begin{table}[H]\\footnotesize"
+                       + ("\\caption{" + caption + "}" if caption else "")
+                       + "\\begin{tabular}{" + spec + "}\\hline\n"
+                       + "\n".join(body) + "\n\\hline\\end{tabular}\\end{table}")
         elif line.strip() == "":
             out.append("")
         else:
             para = inline(line)
             while i + 1 < len(lines) and lines[i + 1].strip() != "" and not \
-                    lines[i + 1].startswith(("#", "$$", "- ")):
+                    lines[i + 1].startswith(("#", "$$", "- ", "|")):
                 i += 1
                 para += "\n" + inline(lines[i])
             out.append(para)
